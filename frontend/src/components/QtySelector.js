@@ -1,0 +1,197 @@
+import React, { useState, useEffect } from "react"
+import arrow from "../img/gobackArrow.svg"
+import styled from "styled-components"
+import { useDispatch } from "react-redux"
+import { updateQtyAction } from "../actions/cart"
+
+const QtySelector = ({
+  product,
+  cartItems,
+  qty,
+  setQty,
+  cartCount,
+  setCartCount,
+}) => {
+  const match = cartItems
+    ? cartItems.find((each) => each._id === product._id)
+    : false
+  const dispatch = useDispatch()
+
+  const [toggle, setToggle] = useState(false)
+  document.body.addEventListener("click", (e) => {
+    e.stopPropagation()
+    if (
+      !e.target.classList.contains("selectValue") &&
+      !e.target.classList.contains("select") &&
+      !e.target.classList.contains("arrowImg") &&
+      !e.target.classList.contains("drop-menu") &&
+      !e.target.classList.contains("option")
+    ) {
+      if (toggle) {
+        setToggle(false)
+      }
+    }
+  })
+
+  let dropmenuArr
+  const dropmenu = () => {
+    dropmenuArr = []
+    for (let i = 1; i < product.countInStock + 1; i++) {
+      dropmenuArr.push(
+        <p
+          className='option'
+          key={`selectOption${dropmenuArr.length}`}
+          onClick={(e) => {
+            setQty(e.target.innerText)
+            if (match) {
+              const chosenQty = Number(e.target.innerText)
+              if (chosenQty <= match.qty) {
+                setCartCount(cartCount - (match.qty - chosenQty))
+              } else {
+                console.log("FN", setCartCount)
+                setCartCount(cartCount + (chosenQty - match.qty))
+              }
+            }
+          }}
+        >
+          {i}
+        </p>
+      )
+    }
+    return dropmenuArr
+  }
+  useEffect(() => {
+    if (cartItems) {
+      if (match) {
+        dispatch(updateQtyAction(match, Number(qty)))
+      }
+    }
+  }, [qty])
+  return (
+    <StyledSelect>
+      <div className='select' onClick={() => setToggle(!toggle)}>
+        <h1 className='selectValue'>{qty}</h1>
+        <img className='arrowImg' src={arrow} alt='arrow' />
+        <div className={`drop-menu ${toggle ? "active" : ""}`}>
+          {dropmenu()}
+        </div>
+      </div>
+    </StyledSelect>
+  )
+}
+const StyledSelect = styled.div`
+  .select {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.25rem 1.5rem;
+    background: #f4f4f4;
+    position: relative;
+    border-radius: 5px;
+    cursor: pointer;
+    h1 {
+      font-weight: 400;
+      color: #1a1a1a;
+    }
+    .drop-menu {
+      z-index: 2;
+      padding-top: 0.2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(52, 58, 64, 0.2);
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      transform: translate(0, 100%);
+      display: none;
+      background: #ffff;
+      width: 120%;
+      max-height: 180px;
+      overflow-y: scroll;
+      border-radius: 5px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      &.active {
+        display: block;
+      }
+      p {
+        font-size: calc(0.9rem + 0.3vw);
+        padding: 0.3rem 0;
+        padding-left: 1rem;
+        &:last-child {
+          margin-bottom: 0;
+          margin-bottom: 0.2rem;
+        }
+        &:hover {
+          background: #f5f5f5;
+        }
+      }
+    }
+    img {
+      transform: rotate(270deg);
+      height: 14px;
+    }
+    h1 {
+      margin-right: 0.7rem;
+      font-size: calc(1rem + 0.3vw) !important;
+    }
+  }
+  @media screen and (max-width: 1050px) {
+    .select {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.32rem 1.4rem;
+      background: #f4f4f4;
+      position: relative;
+      border-radius: 5px;
+
+      cursor: pointer;
+      .drop-menu {
+        padding-top: 0.2rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(52, 58, 64, 0.2);
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: translate(-20%, -100%);
+        display: none;
+        background: #ffff;
+        width: 120%;
+        height: 140px;
+        overflow-y: scroll;
+        border-radius: 5px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        &.active {
+          display: block;
+        }
+        p {
+          font-size: calc(0.9rem + 0.3vw);
+          padding: 0.35rem 0;
+          padding-left: 1rem;
+          margin-bottom: 0.2rem;
+          border-bottom: 0.2px solid rgba(0, 0, 0, 0.15);
+          &:last-child {
+            margin-bottom: 0;
+            margin-bottom: 0.2rem;
+            border-bottom: unset;
+          }
+          &:hover {
+            background: #f5f5f5;
+          }
+        }
+      }
+      img {
+        transform: rotate(270deg);
+        width: 6px !important;
+        height: unset !important;
+      }
+      h1 {
+        margin-right: 0.7rem;
+        font-size: calc(1rem + 0.3vw) !important;
+      }
+    }
+  }
+`
+
+export default QtySelector
