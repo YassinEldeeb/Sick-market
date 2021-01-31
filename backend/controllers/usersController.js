@@ -159,7 +159,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     delete userObj.password
     res.send(userObj)
   } else {
-    throw new Error("Incorrect Email or Password")
+    throw new Error("Incorrect Password")
   }
 })
 
