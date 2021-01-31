@@ -38,7 +38,7 @@ const ChangeEmail = () => {
     if (updated) history.push(redirect)
   }, [updated])
   useEffect(() => {
-    if (!user) {
+    if (!user || user.status !== "pending") {
       history.push("/")
     }
   }, [user])
