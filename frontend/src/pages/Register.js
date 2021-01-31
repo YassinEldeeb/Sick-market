@@ -29,8 +29,12 @@ const Register = () => {
     if (passwordValue !== confirmPasswordValue) {
       SetpasswordMatch("Password & Confirm Password don't match")
     } else {
-      SetpasswordMatch(null)
-      dispatch(userRegisterAction(name, emailValue, passwordValue, null, 890))
+      if (!isNaN(name)) {
+        SetpasswordMatch("Name must be alphabetical letters!")
+      } else {
+        SetpasswordMatch(null)
+        dispatch(userRegisterAction(name, emailValue, passwordValue))
+      }
     }
   }
 
