@@ -286,7 +286,7 @@ const StyledVerify = styled.div`
   }
   @media screen and (max-width: 1050px) {
     .emailSentMessage {
-      font-size: calc(0.9rem + 0.2vw);
+      font-size: calc(0.8rem + 0.2vw);
     }
     .message {
       display: flex !important;
