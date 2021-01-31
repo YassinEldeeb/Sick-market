@@ -118,7 +118,7 @@ const ChangeEmail = () => {
               }}
             />
           </div>
-          <button type='submit'>Login {updateLoading && <Loader />}</button>
+          <button type='submit'>Update {updateLoading && <Loader />}</button>
         </form>
       </StyledLogin>
     </>
