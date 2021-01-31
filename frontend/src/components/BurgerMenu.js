@@ -33,7 +33,11 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
             <div className='profile-mobile'>
               <div className='profile-mobile-pic'>
                 <img
-                  src={`/api/users/profilePic/${userInfo.user._id}`}
+                  src={
+                    userInfo.user.profilePicLink
+                      ? userInfo.user.profilePicLink
+                      : `/api/users/profilePic/${userInfo.user._id}`
+                  }
                   alt=''
                 />
               </div>
