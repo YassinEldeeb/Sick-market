@@ -286,7 +286,7 @@ const StyledVerify = styled.div`
   }
   @media screen and (max-width: 1050px) {
     .emailSentMessage {
-      font-size: calc(0.75rem + 0.2vw);
+      font-size: calc(0.9rem + 0.2vw);
     }
     .message {
       display: flex !important;
@@ -333,11 +333,6 @@ const StyledVerify = styled.div`
       display: flex;
       flex-direction: column;
       width: 100%;
-      .btns {
-        p {
-          font-size: calc(1.15rem + 0.2vw);
-        }
-      }
     }
   }
 `
