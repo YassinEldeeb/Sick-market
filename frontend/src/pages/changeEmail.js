@@ -44,7 +44,7 @@ const ChangeEmail = () => {
   }, [user])
   return (
     <>
-      <Goback providedClassName='gobackMessage' />
+      <Goback providedClassName='gobackMessage' toPath='/verify' />
       <StyledLogin>
         <form onSubmit={submitHandler}>
           <div className='signInDiv'>
