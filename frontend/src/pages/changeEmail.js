@@ -37,6 +37,11 @@ const ChangeEmail = () => {
   useEffect(() => {
     if (updated) history.push(redirect)
   }, [updated])
+  useEffect(() => {
+    if (!user) {
+      history.push("/")
+    }
+  }, [user])
   return (
     <StyledLogin>
       <Goback providedClassName='gobackMessage' />
