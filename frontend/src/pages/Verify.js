@@ -329,6 +329,16 @@ const StyledVerify = styled.div`
       border-radius: 12px;
       box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.2);
     }
+    .verifyBtns {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      .btns {
+        p {
+          font-size: calc(1rem + 0.2vw);
+        }
+      }
+    }
   }
 `
 
