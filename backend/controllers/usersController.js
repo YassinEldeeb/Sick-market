@@ -26,6 +26,10 @@ const getUser = asyncHandler(async (req, res) => {
 //Register User - /api/users @Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, profilePicLink, status } = req.body
+
+  if (typeof name === "number") {
+    throw new Error("Name must be alphabetical letters!")
+  }
   if (!name || !email || !password) {
     console.log(name, email, password)
     throw new Error("name, Email and Password are Required")
