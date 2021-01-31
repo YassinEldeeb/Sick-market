@@ -43,83 +43,85 @@ const ChangeEmail = () => {
     }
   }, [user])
   return (
-    <StyledLogin>
+    <>
       <Goback providedClassName='gobackMessage' />
-      <form onSubmit={submitHandler}>
-        <div className='signInDiv'>
-          <h1>Change Email</h1>
-        </div>
-        <Message
-          vibrating='true'
-          visiblity={updateError ? true : false}
-          msg={
-            updateError
-              ? updateError.includes("timed out")
-                ? "Network Error"
-                : updateError.includes("mongo")
-                ? "Server Error"
-                : updateError
-              : "Ok"
-          }
-          type='error'
-        />
-        <div className='email'>
-          <label htmlFor='email'>New Email Address</label>
-          <input
-            value={emailValue}
-            id='email'
-            type='text'
-            onChange={(e) => setEmailValue(e.target.value)}
+      <StyledLogin>
+        <form onSubmit={submitHandler}>
+          <div className='signInDiv'>
+            <h1>Change Email</h1>
+          </div>
+          <Message
+            vibrating='true'
+            visiblity={updateError ? true : false}
+            msg={
+              updateError
+                ? updateError.includes("timed out")
+                  ? "Network Error"
+                  : updateError.includes("mongo")
+                  ? "Server Error"
+                  : updateError
+                : "Ok"
+            }
+            type='error'
           />
-          <img
-            onClick={() => setEmailValue("")}
-            style={{ display: `${emailValue.length ? "block" : "none"}` }}
-            className='xSign2'
-            src={xSign}
-            alt='X icon'
-          />
-        </div>
-        <div className='password'>
-          <label htmlFor='password'>Password</label>
-          <input
-            ref={inputRef}
-            value={passwordValue}
-            id='password'
-            type={`${show ? "text" : "password"}`}
-            onChange={(e) => setPasswordValue(e.target.value)}
-          />
-          <img
-            style={{ display: `${show ? "none" : "block"}` }}
-            className='eye eye1'
-            src={closedEye}
-            alt='closedEye'
-            draggable='false'
-            onClick={() => {
-              inputRef.current.focus()
-              setShow(!show)
-              setTimeout(function () {
-                inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
-              }, 0)
-            }}
-          />
-          <img
-            style={{ display: `${!show ? "none" : "block"}` }}
-            className='eye eye2'
-            src={eye}
-            alt='eye'
-            draggable='false'
-            onClick={() => {
-              inputRef.current.focus()
-              setShow(!show)
-              setTimeout(function () {
-                inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
-              }, 0)
-            }}
-          />
-        </div>
-        <button type='submit'>Login {updateLoading && <Loader />}</button>
-      </form>
-    </StyledLogin>
+          <div className='email'>
+            <label htmlFor='email'>New Email Address</label>
+            <input
+              value={emailValue}
+              id='email'
+              type='text'
+              onChange={(e) => setEmailValue(e.target.value)}
+            />
+            <img
+              onClick={() => setEmailValue("")}
+              style={{ display: `${emailValue.length ? "block" : "none"}` }}
+              className='xSign2'
+              src={xSign}
+              alt='X icon'
+            />
+          </div>
+          <div className='password'>
+            <label htmlFor='password'>Password</label>
+            <input
+              ref={inputRef}
+              value={passwordValue}
+              id='password'
+              type={`${show ? "text" : "password"}`}
+              onChange={(e) => setPasswordValue(e.target.value)}
+            />
+            <img
+              style={{ display: `${show ? "none" : "block"}` }}
+              className='eye eye1'
+              src={closedEye}
+              alt='closedEye'
+              draggable='false'
+              onClick={() => {
+                inputRef.current.focus()
+                setShow(!show)
+                setTimeout(function () {
+                  inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
+                }, 0)
+              }}
+            />
+            <img
+              style={{ display: `${!show ? "none" : "block"}` }}
+              className='eye eye2'
+              src={eye}
+              alt='eye'
+              draggable='false'
+              onClick={() => {
+                inputRef.current.focus()
+                setShow(!show)
+                setTimeout(function () {
+                  inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
+                }, 0)
+              }}
+            />
+          </div>
+          <button type='submit'>Login {updateLoading && <Loader />}</button>
+        </form>
+      </StyledLogin>
+    </>
   )
 }
 

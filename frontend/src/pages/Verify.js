@@ -335,7 +335,7 @@ const StyledVerify = styled.div`
       width: 100%;
       .btns {
         p {
-          font-size: calc(1rem + 0.2vw);
+          font-size: calc(1.15rem + 0.2vw);
         }
       }
     }

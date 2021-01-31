@@ -70,9 +70,6 @@ a{
   .gobackMessage {
     display: inline-flex !important;
     margin-left:5vw;
-    position: absolute;
-    left: 0%;
-    top: 0%;
   }
 @media screen and (max-width:1050px){
     *{   
