@@ -158,6 +158,17 @@ const StyledBurger = styled.div`
     .thirdBar.active {
       transform: translate(0%, -210%) rotate(45deg);
     }
+    @media screen and (max-height: 650px) and (max-width: 1050px) {
+      .firstBar.active {
+        width: 1.95rem !important;
+      }
+      .secondBar.active {
+        width: 1.95rem !important;
+      }
+      .thirdBar.active {
+        width: 1.95rem !important;
+      }
+    }
   }
 `
 

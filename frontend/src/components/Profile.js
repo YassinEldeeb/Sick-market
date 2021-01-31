@@ -49,7 +49,14 @@ const Profile = () => {
             )}
           </div>
           <h1 className='name'>{truncate(userInfo.user.name)}</h1>
-          <img className='arrowProfile' src={arrow} alt='arrow' />
+          <img
+            style={{
+              transform: `rotate${dropDown ? "(180deg)" : "(0deg)"}`,
+            }}
+            className='arrowProfile'
+            src={arrow}
+            alt='arrow'
+          />
           <div className={`dropMenu ${dropDown ? "active" : ""}`}>
             <div className='account'>
               <h1>Account</h1>
@@ -103,6 +110,7 @@ const StyledProfile = styled.div`
     align-items: center;
     position: relative;
     .arrowProfile {
+      transition: 0.1s ease;
       margin-left: calc(0.3rem + 0.1vw);
       filter: brightness(1000000%);
       transform: translateY(25%);
@@ -122,8 +130,8 @@ const StyledProfile = styled.div`
         position: absolute;
         top: 0;
         right: 0;
-        border-radius: 4px;
-        font-size: 0.7rem;
+        border-radius: 3px;
+        font-size: 0.65rem;
         padding: 0.1rem 0.2rem;
         transform: translate(60%, -40%);
         filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 8%));
@@ -147,10 +155,11 @@ const StyledProfile = styled.div`
       background: #343a40;
       border-radius: 5px;
       overflow: hidden;
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-      opacity: 0;
+      box-shadow: 0 0 7px rgba(0, 0, 0, 0.25);
+      display: none;
+
       &.active {
-        opacity: 1;
+        display: block;
       }
       h1 {
         color: #ffffff;
@@ -158,8 +167,11 @@ const StyledProfile = styled.div`
         padding: 0.5rem 0.8rem;
         font-size: calc(0.9rem + 0.1vw);
         font-weight: 400;
+        &:first-child {
+          margin-top: 0.15rem;
+        }
         &:hover {
-          background: #30363b;
+          background: #2f353a;
         }
       }
     }

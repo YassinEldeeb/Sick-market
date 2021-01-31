@@ -13,6 +13,7 @@ import {
   getSecurityCode,
   getNewSecurityCode,
   updateProfile,
+  continueWithGoogle,
 } from "../controllers/usersController.js"
 import protect from "../middleware/authMiddleware.js"
 
@@ -31,6 +32,7 @@ const upload = multer({
 
 userRouter.post("/", registerUser)
 userRouter.post("/login", getUser)
+userRouter.post("/googleOauth", continueWithGoogle)
 userRouter.get("/profile", protect, getProfile)
 userRouter.patch("/profile", protect, updateProfile)
 

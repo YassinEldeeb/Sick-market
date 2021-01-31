@@ -9,8 +9,8 @@ import Message from "../components/message"
 import Loader from "../components/loader"
 import { useHistory, useLocation, Link } from "react-router-dom"
 import { GoogleLogin } from "react-google-login"
-import userRegisterAction from "../actions/register"
 import dotenv from "dotenv"
+import loginWithGoogle from "../actions/loginWithGoogle"
 
 const Login = () => {
   dotenv.config()
@@ -46,18 +46,12 @@ const Login = () => {
       if (response.error === "popup_closed_by_user") {
         return
       }
-      dispatch({
-        type: "USER_LOGIN_FAIL",
-        payload: "Couldn't login using Google",
-      })
     } else {
       dispatch(
-        userRegisterAction(
+        loginWithGoogle(
           response.profileObj.givenName + " " + response.profileObj.familyName,
           response.profileObj.email,
-          process.env.REACT_APP_GOOGLE_PASSWORD,
-          response.profileObj.imageUrl,
-          process.env.REACT_APP_GOOGLE_LOGIN_TYPE_SECRET
+          response.profileObj.imageUrl
         )
       )
       localStorage.setItem("sickUserInfo", JSON.stringify(userObj))

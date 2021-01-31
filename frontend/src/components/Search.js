@@ -20,8 +20,11 @@ const Search = () => {
     }
   }, [inputValue, activeDelete])
 
+  const formSubmitHandler = (e) => {
+    e.preventDefault()
+  }
   return (
-    <StyledSearch className='searchForm'>
+    <StyledSearch className='searchForm' onSubmit={formSubmitHandler}>
       <div className='dropDown' onClick={() => setToggle(!toggle)}>
         <p>{toggleValue}</p>
         <img src={arrow} alt='arrow' />

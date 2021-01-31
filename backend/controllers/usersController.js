@@ -9,18 +9,11 @@ import bcrypt from "bcryptjs"
 
 //Get User - /api/users/login @Public
 const getUser = asyncHandler(async (req, res) => {
-  const { email, password, loginMethod, profilePicLink } = req.body
+  const { email, password } = req.body
   if (!email || !password) {
     throw new Error("Email & Password are Required")
   } else {
-    const trimmedEmail = email
-
-    const user = await User.findByCredentials(
-      trimmedEmail,
-      password,
-      loginMethod,
-      profilePicLink
-    )
+    const user = await User.findByCredentials(email, password)
 
     if (user) {
       res.send(user)
@@ -43,16 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const userExists = await User.findOne({ email })
     if (userExists) {
       res.status(400)
-
-      if (userExists.profilePicLink) {
-        console.log("Google Signed In user before")
-        throw new Error("User already exists, Login below")
-      } else {
-        console.log(
-          "User signed in with our form before and tried using google sign in with the same email"
-        )
-        throw new Error("User already exists, Login below")
-      }
+      throw new Error("User already exists, Login below")
     }
     const user = new User({
       name,
@@ -61,12 +45,48 @@ const registerUser = asyncHandler(async (req, res) => {
       profilePicLink: profilePicLink ? profilePicLink : null,
       status: status ? status : "pending",
     })
-    if (user) {
-      const token = user.generateToken()
-      user.tokens.unshift({ token })
-      await user.save()
+    const token = user.generateToken()
+    user.tokens.unshift({ token })
+    await user.save()
 
-      res.status(201).send({ user, token })
+    res.status(201).send({ user, token })
+  }
+})
+
+//Continue with Google
+const continueWithGoogle = asyncHandler(async (req, res) => {
+  const { name, email, profilePicLink, googleSignture } = req.body
+  const googlePassword = process.env.REACT_APP_GOOGLE_PASSWORD
+  const existingUser = await User.findOne({ email })
+  console.log(googleSignture)
+  if (!existingUser) {
+    const newUser = new User({
+      name,
+      email,
+      password: googlePassword,
+      profilePicLink,
+      status: "Verified",
+    })
+    const token = newUser.generateToken()
+    newUser.tokens.unshift({ token })
+    await newUser.save()
+    res.status(201).send({ user: newUser, token })
+  } else {
+    console.log("Logged In")
+    if (googleSignture === process.env.GOOGLE_SIGNTURE) {
+      const user = await User.findByCredentials(
+        email,
+        googlePassword,
+        "googleSignin"
+      )
+      console.log("RAAAAN", user)
+      if (user) {
+        res.send(user)
+      } else {
+        res.status(401)
+      }
+    } else {
+      throw new Error("googleSignture is Required")
     }
   }
 })
@@ -239,4 +259,5 @@ export {
   getSecurityCode,
   getNewSecurityCode,
   updateProfile,
+  continueWithGoogle,
 }

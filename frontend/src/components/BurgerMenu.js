@@ -251,6 +251,42 @@ const StyledMenu = styled.div`
     @media screen and (min-width: 1050px) {
       display: none;
     }
+    @media screen and (max-height: 650px) and (max-width: 1050px) {
+      .profileStatus {
+        .signInSection,
+        .settingsSection {
+          margin-bottom: calc(1rem + 1vw);
+          a,
+          h1 {
+            font-size: calc(1.25rem + 1vw) !important;
+          }
+        }
+        .signInChildren h4 {
+          font-size: calc(0.8rem + 1vw) !important;
+        }
+        .settingChild h4 {
+          font-size: calc(0.8rem + 1vw) !important;
+        }
+      }
+      .logout h1 {
+        font-size: calc(0.8rem + 1vw) !important;
+      }
+      .check label {
+        font-size: calc(0.6rem + 1vw) !important;
+      }
+      width: 65% !important;
+      .profile-mobile-pic {
+        width: 56px !important;
+        height: 56px !important;
+      }
+      .profile-desc-mobile h1 {
+        font-size: calc(1.25rem + 0.1vw) !important;
+      }
+      .rank-mobile h1 {
+        font-size: 0.6rem !important;
+        padding: 0.1rem 0.2rem !important;
+      }
+    }
   }
 `
 

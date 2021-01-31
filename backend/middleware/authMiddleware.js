@@ -14,7 +14,7 @@ const protect = asyncHandler(async (req, res, next) => {
         _id: decoded.id,
         "tokens.token": token,
       })
-
+      console.log("User with This token", user)
       if (user) {
         req.user = user
         req.token = token

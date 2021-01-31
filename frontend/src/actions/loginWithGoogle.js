@@ -1,6 +1,8 @@
 import axios from "axios"
+import dotenv from "dotenv"
 
-const userLoginAction = (email, password) => async (dispatch) => {
+const loginWithGoogle = (name, email, profilePic) => async (dispatch) => {
+  dotenv.config()
   try {
     dispatch({ type: "USER_LOGIN_REQUEST" })
     const config = {
@@ -8,9 +10,11 @@ const userLoginAction = (email, password) => async (dispatch) => {
         Content_Type: "application/json",
       },
     }
+    const googleSignture = "214GOOGLEyassinSIGNTURE123SICK.21S16123P9jhnG6h"
+    console.log(!googleSignture)
     const { data } = await axios.post(
-      "/api/users/login",
-      { email, password },
+      "/api/users/googleOauth",
+      { name, email, profilePicLink: profilePic, googleSignture },
       config
     )
     dispatch({ type: "USER_LOGIN_SUCCESS", payload: data })
@@ -26,4 +30,4 @@ const userLoginAction = (email, password) => async (dispatch) => {
     localStorage.setItem("sickUserInfo", JSON.stringify({}))
   }
 }
-export default userLoginAction
+export default loginWithGoogle

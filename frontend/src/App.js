@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { BrowserRouter, Route } from "react-router-dom"
+import { BrowserRouter, Route, useLocation } from "react-router-dom"
 import { LastLocationProvider } from "react-router-last-location"
 import Global from "./components/GlobalStyles"
 import Home from "./pages/Home"
@@ -39,6 +39,7 @@ const App = () => {
       !loading &&
       !validToken
     ) {
+      console.log(state.userInfo.token)
       dispatch(checkToken(state.userInfo.token))
     }
   }, [dispatch, state.userInfo])

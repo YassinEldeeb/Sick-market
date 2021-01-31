@@ -80,12 +80,7 @@ userSchema.methods.generateToken = function () {
   return token
 }
 
-userSchema.statics.findByCredentials = async function (
-  email,
-  password,
-  loginMethod,
-  profilePicLink
-) {
+userSchema.statics.findByCredentials = async function (email, password, type) {
   if (validator.isEmail(email)) {
     const user = await User.findOne({ email })
 
@@ -100,14 +95,12 @@ userSchema.statics.findByCredentials = async function (
     } else {
       if (password !== user.password && user.profilePicLink) {
         throw new Error("Try Logging in with Google")
-      } else if (!loginMethod && !profilePicLink) {
-        throw new Error("Incorrect Email or Password")
-      } else if (
-        password !== user.password &&
-        user &&
-        loginMethod === process.env.GOOGLE_LOGIN_TYPE_SECRET
-      ) {
-        throw new Error("Email already exist, Login below")
+      } else if (password !== user.password && !user.profilePicLink) {
+        if (type) {
+          throw new Error("Email already Exists, Login below")
+        } else {
+          throw new Error("Incorrect Email or Password")
+        }
       }
     }
   } else {

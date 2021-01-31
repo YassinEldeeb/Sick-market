@@ -6,12 +6,13 @@ import Cart from "./Cart"
 import Profile from "./Profile"
 import BurgerMenu from "./BurgerMenu"
 import { useLocation, Link } from "react-router-dom"
-import danger from "../img/warningBarIcon.svg"
+
 import { useSelector } from "react-redux"
+import PopupMessage from "./PopupMessage"
 
 const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   const { user } = useSelector((state) => state.userInfo)
-  const status = user ? user.status : "n"
+  const status = user ? user.status : ""
   const location = useLocation()
   useEffect(() => {
     if (location.pathname.split("/")[1]) {
@@ -29,55 +30,35 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   )
 
   return (
-    <Header>
-      {status !== "Verified" && user && (
-        <div
-          className='danger'
-          style={{ display: `${warning ? "all" : "none"}` }}
-        >
-          <div className='danger-text'>
-            <img src={danger} alt='danger' />
-            <p>
-              Your Email isn't verified!, You can't order or update your profile
-              unless you go to{" "}
-              <Link className='verifyLink' to='/verify'>
-                Verify your Email
-              </Link>
-            </p>
-            <svg
-              onClick={() => {
-                localStorage.setItem("showWarning", false)
-                setWarning(false)
-              }}
-              viewBox='0 0 91 95'
-              fill='none'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <circle
-                cx='45.5'
-                cy='49.5'
-                r='45.5'
-                fill='white'
-                fillOpacity='0.85'
-              />
-              <path
-                d='M31.3682 66C31.0661 66 30.8962 65.9245 30.8584 65.7734C30.8206 65.6035 30.8395 65.4902 30.915 65.4336L42.5547 50.5088L30.915 35.5557C30.8584 35.499 30.8206 35.4329 30.8018 35.3574C30.8018 35.0931 30.9906 34.9609 31.3682 34.9609H35.5312C36.0033 34.9609 36.3903 35.1592 36.6924 35.5557L45.4717 46.7988L54.2793 35.5557C54.5814 35.1781 54.9684 34.9798 55.4404 34.9609H59.6035C59.9811 34.9609 60.1699 35.0931 60.1699 35.3574C60.1699 35.4329 60.1416 35.499 60.085 35.5557L48.3604 50.5088L60.085 65.4336C60.1416 65.4902 60.1699 65.5563 60.1699 65.6318C60.1699 65.8773 59.9811 66 59.6035 66H55.4404C54.9684 66 54.5814 65.8112 54.2793 65.4336L45.4717 54.2188L36.6924 65.4336C36.3903 65.8112 36.0033 66 35.5312 66H31.3682Z'
-                fill='black'
-              />
-            </svg>
-          </div>
+    <>
+      {status !== "Verified" &&
+        user &&
+        warning &&
+        location.pathname.split("/")[1] !== "verify" && (
+          <PopupMessage
+            setWarning={setWarning}
+            desc={
+              <p>
+                Your Email isn't verified!, You can't order or update your
+                profile unless you go to{" "}
+                <Link to='/verify'>Verify your Email.</Link>
+              </p>
+            }
+            title='Alert'
+          />
+        )}
+      <Header>
+        <div className='actualNav'>
+          <BurgerMenu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+          <nav>
+            <Logo activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+            <Search />
+            <Cart cartCount={cartCount} />
+            <Profile />
+          </nav>
         </div>
-      )}
-      <div className='actualNav'>
-        <BurgerMenu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
-        <nav>
-          <Logo activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
-          <Search />
-          <Cart cartCount={cartCount} />
-          <Profile />
-        </nav>
-      </div>
-    </Header>
+      </Header>
+    </>
   )
 }
 const Header = styled.div`
