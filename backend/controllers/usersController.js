@@ -106,47 +106,61 @@ const getProfile = asyncHandler(async (req, res) => {
   delete userObj.password
   res.send(userObj)
 })
+
 //Patch Profile - /api/users/profile @Protected
 const updateProfile = asyncHandler(async (req, res) => {
-  const updates = Object.keys(req.body)
-  const allowedUpdates = ["name", "email", "password"]
+  if (!req.body.password) {
+    throw new Error("Password is required to Change Profile Info")
+  }
+  if (req.body.email) {
+    const existingEmail = await User.findOne({ email: req.body.email })
+    if (existingEmail) {
+      throw new Error("User with this email Exists!")
+    }
+  }
+  const updates = Object.keys(req.body).filter((e) => e !== "password")
+  const allowedUpdates = ["name", "email"]
   let invalidUpdates = []
 
-  updates.forEach((update) => {
-    if (!allowedUpdates.includes(update)) {
-      invalidUpdates.push(update)
-    }
-  })
-  //valid updates
-  const validUpdates = updates.every((update) =>
-    allowedUpdates.includes(update)
-  )
-  if (!validUpdates) {
-    res.status(400)
-    throw new Error(`Unable to update ${invalidUpdates.join(" ,")}`)
-  }
-  const lastPassword = req.user.password
-  //Valid updates
-  updates.forEach((update) => (req.user[update] = req.body[update]))
-  await req.user.save()
-
-  if (!(await bcrypt.compare(req.body.password, lastPassword))) {
-    console.log("Different Password is Assigned")
-    const foundToken = req.user.tokens.find(
-      (token) => token.token === req.token
+  if (await bcrypt.compare(req.body.password, req.user.password)) {
+    updates.forEach((update) => {
+      if (!allowedUpdates.includes(update)) {
+        invalidUpdates.push(update)
+      }
+    })
+    //valid updates
+    const validUpdates = updates.every((update) =>
+      allowedUpdates.includes(update)
     )
-    req.user.tokens = [foundToken]
-    req.user.save()
-  }
+    if (!validUpdates) {
+      res.status(400)
+      throw new Error(`Unable to update ${invalidUpdates.join(" ,")}`)
+    }
+    const lastPassword = req.user.password
+    //Valid updates
+    updates.forEach((update) => (req.user[update] = req.body[update]))
+    await req.user.save()
 
-  const userObj = req.user.toObject()
-  delete userObj.tokens
-  delete userObj.profilePic
-  delete userObj.createdAt
-  delete userObj.updatedAt
-  delete userObj.__v
-  delete userObj.password
-  res.send(userObj)
+    if (!(await bcrypt.compare(req.body.password, lastPassword))) {
+      console.log("Different Password is Assigned")
+      const foundToken = req.user.tokens.find(
+        (token) => token.token === req.token
+      )
+      req.user.tokens = [foundToken]
+      req.user.save()
+    }
+
+    const userObj = req.user.toObject()
+    delete userObj.tokens
+    delete userObj.profilePic
+    delete userObj.createdAt
+    delete userObj.updatedAt
+    delete userObj.__v
+    delete userObj.password
+    res.send(userObj)
+  } else {
+    throw new Error("Incorrect Email or Password")
+  }
 })
 
 // Post Upload avatar - /api/users/me/profilePic

@@ -53,6 +53,7 @@ const StyledPopup = styled.div`
   justify-content: center;
   align-items: flex-start;
   svg {
+    box-shadow: 0 0 5px #ffffff0f;
     position: absolute;
     right: 5%;
     top: 8%;

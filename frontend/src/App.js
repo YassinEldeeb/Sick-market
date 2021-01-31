@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux"
 import checkToken from "./actions/checkToken"
 import Register from "./pages/Register"
 import Verify from "./pages/Verify"
+import ChangeEmail from "./pages/changeEmail"
 
 const App = () => {
   const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
@@ -74,6 +75,9 @@ const App = () => {
           </Route>
           <Route path='/verify'>
             <Verify />
+          </Route>
+          <Route path='/changeEmail'>
+            <ChangeEmail />
           </Route>
         </LastLocationProvider>
       </BrowserRouter>

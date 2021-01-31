@@ -47,12 +47,33 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         newCodeLoading: false,
+        newCodeError: null,
       }
     case "NEW_VERIFY_CODE_FAIL":
       return {
         ...state,
         newCodeLoading: false,
         newCodeError: action.payload,
+      }
+    case "UPDATE_USER_REQUEST":
+      return {
+        ...state,
+        updateLoading: true,
+      }
+    case "UPDATE_USER_SUCCESS":
+      console.log("Payload", action.payload)
+      state.user = action.payload
+      return {
+        ...state,
+        updateLoading: false,
+        updated: true,
+      }
+    case "UPDATE_USER_FAIL":
+      return {
+        ...state,
+        updateLoading: false,
+        updateError: action.payload,
+        updated: false,
       }
     default:
       return state

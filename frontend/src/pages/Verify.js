@@ -135,7 +135,7 @@ const Verify = () => {
               {user && newCodeLoading === false && !newCodeError && (
                 <p className='emailSentMessage'>
                   Email Sent to '{user.email}'{" "}
-                  <Link to='/changeEmail'>Change Email</Link>
+                  <Link to='/changeEmail?redirect=verify'>Change Email</Link>
                 </p>
               )}
               <input

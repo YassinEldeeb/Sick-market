@@ -34,7 +34,8 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
       {status !== "Verified" &&
         user &&
         warning &&
-        location.pathname.split("/")[1] !== "verify" && (
+        location.pathname.split("/")[1] !== "verify" &&
+        location.pathname.split("/")[1] !== "changeEmail" && (
           <PopupMessage
             setWarning={setWarning}
             desc={
