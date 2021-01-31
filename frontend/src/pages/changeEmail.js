@@ -164,7 +164,7 @@ const StyledLogin = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex: 1 1 auto;
   form {
     display: flex;
@@ -173,7 +173,7 @@ const StyledLogin = styled.div`
     width: 35%;
     justify-content: center;
     margin-bottom: 1rem;
-
+    margin-top: calc(1.2rem + 1vh);
     h1 {
       color: #1a1a1a;
       font-weight: 500;
