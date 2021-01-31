@@ -173,7 +173,6 @@ const StyledLogin = styled.div`
     width: 35%;
     justify-content: center;
     margin-bottom: 1rem;
-    margin-top: 3rem;
 
     h1 {
       color: #1a1a1a;
