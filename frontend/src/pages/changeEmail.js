@@ -276,7 +276,6 @@ const StyledLogin = styled.div`
       padding: 0.6rem;
       transform: translate(-12%, -36%) !important;
     }
-    justify-content: space-around;
     form {
       width: 90%;
       h1 {
