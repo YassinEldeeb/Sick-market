@@ -5,7 +5,7 @@ import Search from "./Search"
 import Cart from "./Cart"
 import Profile from "./Profile"
 import BurgerMenu from "./BurgerMenu"
-import { useLocation, Link } from "react-router-dom"
+import { useLocation, Link, useHistory } from "react-router-dom"
 
 import { useSelector } from "react-redux"
 import PopupMessage from "./PopupMessage"
@@ -14,6 +14,7 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   const { user } = useSelector((state) => state.userInfo)
   const status = user ? user.status : ""
   const location = useLocation()
+  const history = useHistory()
   useEffect(() => {
     if (location.pathname.split("/")[1]) {
       window.scroll({
@@ -28,6 +29,16 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   const [warning, setWarning] = useState(
     localStorage.getItem("showWarning") ? false : true
   )
+  useEffect(() => {
+    if (location.pathname.split("/")[1] === "account" && !user) {
+      history.push("/")
+    } else if (
+      location.pathname === "/account" ||
+      location.pathname === "/account/"
+    ) {
+      history.push("/account/edit-profile")
+    }
+  }, [location.pathname])
 
   return (
     <>

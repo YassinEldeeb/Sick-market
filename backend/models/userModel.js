@@ -16,6 +16,11 @@ const userSchema = mongoose.Schema(
     profilePic: {
       type: Buffer,
     },
+    availablePic: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     profilePicLink: {
       type: String,
     },

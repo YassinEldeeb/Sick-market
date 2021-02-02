@@ -27,24 +27,26 @@ const getUser = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, profilePicLink, status } = req.body
 
+  const editedEmail = email ? email.toLowerCase() : null
   if (typeof name === "number") {
     throw new Error("Name must be alphabetical letters!")
   }
-  if (!name || !email || !password) {
-    console.log(name, email, password)
+  if (!name || !editedEmail || !password) {
+    console.log(name, editedEmail, password)
     throw new Error("name, Email and Password are Required")
   } else {
-    if (!validator.isEmail(email)) {
+    if (!validator.isEmail(editedEmail)) {
       throw new Error("Email isn't an actual email")
     }
-    const userExists = await User.findOne({ email })
+    console.log(editedEmail)
+    const userExists = await User.findOne({ email: editedEmail })
     if (userExists) {
       res.status(400)
       throw new Error("User already exists, Login below")
     }
     const user = new User({
       name,
-      email,
+      email: editedEmail,
       password,
       profilePicLink: profilePicLink ? profilePicLink : null,
       status: status ? status : "pending",
@@ -112,9 +114,10 @@ const updateProfile = asyncHandler(async (req, res) => {
   if (!req.body.password) {
     throw new Error("Password is required to Change Profile Info")
   }
+  const editedEmail = req.body.email ? req.body.email.toLowerCase() : null
   if (req.body.email) {
-    const existingEmail = await User.findOne({ email: req.body.email })
-    if (existingEmail) {
+    const existingEmail = await User.findOne({ email: editedEmail })
+    if (existingEmail && editedEmail !== req.user.email) {
       throw new Error("User with this email Exists!")
     }
   }
@@ -139,6 +142,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     const lastPassword = req.user.password
     //Valid updates
     updates.forEach((update) => (req.user[update] = req.body[update]))
+    req.user.email = editedEmail
     await req.user.save()
 
     if (!(await bcrypt.compare(req.body.password, lastPassword))) {
@@ -170,6 +174,7 @@ const uploadProfilePic = asyncHandler(async (req, res) => {
     .png()
     .toBuffer()
 
+  req.user.availablePic = true
   req.user.profilePic = buffer
   await req.user.save()
   res.send()
@@ -177,6 +182,7 @@ const uploadProfilePic = asyncHandler(async (req, res) => {
 // DELETE Delete avatar - /api/users/me/profilePic
 const deleteProfilePic = asyncHandler(async (req, res) => {
   req.user.profilePic = undefined
+  req.user.availablePic = false
   await req.user.save()
   res.send()
 })

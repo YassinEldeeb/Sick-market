@@ -13,6 +13,7 @@ import checkToken from "./actions/checkToken"
 import Register from "./pages/Register"
 import Verify from "./pages/Verify"
 import ChangeEmail from "./pages/changeEmail"
+import EditProfile from "./pages/edit-profile"
 
 const App = () => {
   const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
@@ -78,6 +79,9 @@ const App = () => {
           </Route>
           <Route path='/changeEmail'>
             <ChangeEmail />
+          </Route>
+          <Route path='/account/edit-profile'>
+            <EditProfile />
           </Route>
         </LastLocationProvider>
       </BrowserRouter>

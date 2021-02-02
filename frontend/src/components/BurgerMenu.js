@@ -60,7 +60,9 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
             <h4>
               <Link to='/'>Home</Link>
             </h4>
-            <h4>Account</h4>
+            <h4>
+              <Link to='/account'>Account</Link>
+            </h4>
             <h4>Categories</h4>
           </div>
           <div className='settingsSection'>

@@ -71,6 +71,13 @@ a{
     display: inline-flex !important;
     margin-left:5vw;
   }
+  .filepond--drop-label label{
+    font-size:calc(0.74rem + 0.3vw) !important;
+  }
+  .browseTextFilePond{
+    cursor: pointer;
+    text-decoration:underline;
+  }
 @media screen and (max-width:1050px){
     *{   
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0.05);
@@ -81,6 +88,9 @@ a{
     -ms-user-select: none; 
     user-select: none;
     }
+      .filepond--drop-label label{
+    font-size:calc(0.64rem + 0.3vw) !important;
+  }
     .xSign{
         width: calc(2.1rem + 1vw) !important;
         padding:0.6rem !important;

@@ -45,7 +45,6 @@ const userUpdateAction = (name, email, password) => async (
           ? error.response.data.message
           : error.message,
     })
-    localStorage.setItem("sickUserInfo", JSON.stringify({}))
   }
 }
 export default userUpdateAction

@@ -59,7 +59,7 @@ const Profile = () => {
           />
           <div className={`dropMenu ${dropDown ? "active" : ""}`}>
             <div className='account'>
-              <h1>Account</h1>
+              <Link to='/account'>Account</Link>
             </div>
             <div
               className='logout'
@@ -161,7 +161,8 @@ const StyledProfile = styled.div`
       &.active {
         display: block;
       }
-      h1 {
+      h1,
+      a {
         color: #ffffff;
         margin: 0;
         padding: 0.5rem 0.8rem;
@@ -173,6 +174,10 @@ const StyledProfile = styled.div`
         &:hover {
           background: #2f353a;
         }
+      }
+      a {
+        display: flex;
+        justify-content: flex-start;
       }
     }
   }

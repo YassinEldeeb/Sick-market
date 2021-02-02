@@ -42,12 +42,12 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         newCodeLoading: true,
+        newCodeError: null,
       }
     case "NEW_VERIFY_CODE_SUCCESS":
       return {
         ...state,
         newCodeLoading: false,
-        newCodeError: null,
       }
     case "NEW_VERIFY_CODE_FAIL":
       return {
@@ -59,6 +59,8 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         updateLoading: true,
+        updated: null,
+        updateError: null,
       }
     case "UPDATE_USER_SUCCESS":
       console.log("Payload", action.payload)
@@ -74,6 +76,48 @@ const userReducer = (state = initialState, action) => {
         updateLoading: false,
         updateError: action.payload,
         updated: false,
+      }
+    case "USER_PROFILE_REQUEST":
+      return {
+        ...state,
+        profileLoading: true,
+        updated: null,
+      }
+    case "USER_PROFILE_SUCCESS":
+      console.log("Payload", action.payload)
+      state.user = action.payload
+      return {
+        ...state,
+        profileLoading: false,
+      }
+    case "USER_PROFILE_FAIL":
+      return {
+        ...state,
+        updateLoading: false,
+        profileError: action.payload,
+        updated: false,
+      }
+    case "DELETE_PROFILE_PIC_REQUEST":
+      return {
+        ...state,
+        deleteProfilePicLoading: true,
+      }
+    case "DELETE_PROFILE_PIC_SUCCESS":
+      state.user.availablePic = false
+      return {
+        ...state,
+        deleteProfilePicLoading: false,
+      }
+    case "DELETE_PROFILE_PIC_FAIL":
+      return {
+        ...state,
+        deleteProfilePicLoading: false,
+        deleteProfileError: action.payload,
+      }
+    case "PROFILE_PIC_UPLOADED":
+      state.user.availablePic = true
+      return {
+        ...state,
       }
     default:
       return state
