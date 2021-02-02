@@ -407,8 +407,8 @@ const StyledEdit = styled.div`
         font-size: calc(1.3rem + 0.3vw);
       }
       button {
-        font-size: calc(1.2rem + 0.3vw);
-        padding: 0.4rem 1.3rem;
+        font-size: calc(0.95rem + 0.3vw);
+        padding: 0.6rem 0.8rem;
         border-radius: 6px;
       }
       #email,
