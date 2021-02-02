@@ -365,7 +365,13 @@ const StyledEdit = styled.div`
       padding-right: 2.8rem;
     }
   }
+  .slider-Burger {
+    display: none;
+  }
   @media screen and (max-width: 1050px) {
+    .slider-Burger {
+      display: flex;
+    }
     .message {
       padding: 0.5rem 0.7rem !important;
     }
