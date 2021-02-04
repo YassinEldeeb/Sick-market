@@ -9,9 +9,17 @@ import dotenv from "dotenv"
 import userUpdateAction from "../actions/update"
 import SlideBar from "../components/slidebar"
 import PopupMessage from "../components/PopupMessage"
+import { useLocation, useHistory } from "react-router-dom"
 
 const ChangePassword = () => {
   dotenv.config()
+  const location = useLocation()
+  const history = useHistory()
+
+  const { updateError, updateLoading, updated, user } = useSelector(
+    (state) => state.userInfo
+  )
+
   const inputRef = useRef(null)
   const inputRef2 = useRef(null)
   const [oldPasswordValue, setOldPasswordValue] = useState("")
@@ -21,6 +29,15 @@ const ChangePassword = () => {
 
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    if (
+      (location.pathname === "/account/change-password" &&
+        user.profilePicLink) ||
+      (location.pathname === "/account/change-password/" && user.profilePicLink)
+    ) {
+      history.push("/account/edit-profile")
+    }
+  }, [])
   const submitHandler = (e) => {
     e.preventDefault()
     setWarning(true)
@@ -34,9 +51,6 @@ const ChangePassword = () => {
     }
   }
 
-  const { updateError, updateLoading, updated } = useSelector(
-    (state) => state.userInfo
-  )
   const [slider, setSlider] = useState(false)
   const [warning, setWarning] = useState(true)
 

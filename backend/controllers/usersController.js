@@ -29,13 +29,16 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const editedEmail = email ? email.toLowerCase() : null
   if (typeof name === "number") {
+    res.status(400)
     throw new Error("Name must be alphabetical letters!")
   }
   if (!name || !editedEmail || !password) {
     console.log(name, editedEmail, password)
+    res.status(400)
     throw new Error("name, Email and Password are Required")
   } else {
     if (!validator.isEmail(editedEmail)) {
+      res.status(400)
       throw new Error("Email isn't an actual email")
     }
     console.log(editedEmail)
@@ -92,6 +95,7 @@ const continueWithGoogle = asyncHandler(async (req, res) => {
         res.status(401)
       }
     } else {
+      res.status(400)
       throw new Error("googleSignture is Required")
     }
   }
@@ -113,6 +117,7 @@ const getProfile = asyncHandler(async (req, res) => {
 const updateProfile = asyncHandler(async (req, res) => {
   console.log(req.body)
   if (!req.body.password) {
+    res.status(401)
     throw new Error("Password is required to Change Profile Info")
   }
   const editedEmail = req.body.email
@@ -122,6 +127,7 @@ const updateProfile = asyncHandler(async (req, res) => {
   if (req.body.email) {
     const existingEmail = await User.findOne({ email: editedEmail })
     if (existingEmail && editedEmail !== req.user.email) {
+      res.status(400)
       throw new Error("User with this email Exists!")
     }
   }
@@ -130,6 +136,7 @@ const updateProfile = asyncHandler(async (req, res) => {
   let invalidUpdates = []
 
   if (typeof req.body.name === "number") {
+    res.status(400)
     throw new Error("Name must be alphabetical letters!")
   }
 
@@ -176,6 +183,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     delete userObj.password
     res.send(userObj)
   } else {
+    res.status(401)
     throw new Error("Incorrect Password")
   }
 })

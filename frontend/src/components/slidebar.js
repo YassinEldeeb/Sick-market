@@ -6,8 +6,10 @@ import edit from "../img/edit.svg"
 import { Link, useLocation, useHistory } from "react-router-dom"
 import styled from "styled-components"
 import Goback from "../components/Goback"
+import { useSelector } from "react-redux"
 
 const SlideBar = ({ slider, setSlider }) => {
+  const { user } = useSelector((state) => state.userInfo)
   const history = useHistory()
   const location = useLocation().pathname
   const secondLocation = useLocation().pathname.split("/")[2]
@@ -19,6 +21,7 @@ const SlideBar = ({ slider, setSlider }) => {
   useEffect(() => {
     if (slider) setSlider(false)
   }, [location])
+
   return (
     <StyledSlider className={`${slider ? "active" : ""}`}>
       <Goback toPath='/' providedClassName='goBackSlider' text='Go Home' />
@@ -45,15 +48,17 @@ const SlideBar = ({ slider, setSlider }) => {
         <img src={settings} alt='gear Icon' />
         <h1>Account Settings</h1>
       </Link>
-      <Link
-        className={`link ${
-          secondLocation === "change-password" ? "active" : ""
-        }`}
-        to='change-password'
-      >
-        <img src={key} alt='key Icon' />
-        <h1>Password</h1>
-      </Link>
+      {!user.profilePicLink && (
+        <Link
+          className={`link ${
+            secondLocation === "change-password" ? "active" : ""
+          }`}
+          to='change-password'
+        >
+          <img src={key} alt='key Icon' />
+          <h1>Password</h1>
+        </Link>
+      )}
     </StyledSlider>
   )
 }

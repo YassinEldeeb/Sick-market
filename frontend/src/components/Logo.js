@@ -9,7 +9,6 @@ const Logo = ({ activeMenu, setActiveMenu }) => {
         className={`burger ${activeMenu ? "active" : ""}`}
         onClick={() => {
           setActiveMenu(!activeMenu)
-          console.log(activeMenu)
         }}
       >
         <span className={`firstBar ${activeMenu ? "active" : ""}`}></span>

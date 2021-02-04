@@ -29,7 +29,6 @@ const userUpdateAction = (name, email, password, newPassword) => async (
       }
       return passedObj
     }
-    console.log(passedObjFN())
     const { data } = await axios.patch(
       "/api/users/profile",
       passedObjFN(),
