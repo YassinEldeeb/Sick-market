@@ -33,10 +33,10 @@ const Login = () => {
   const search = location.search.split("=")[1]
   const redirect = search ? search : "/"
   useEffect(() => {
-    if (user) {
+    if (user.name) {
       history.push(redirect)
     }
-  }, [user])
+  }, [user, history, redirect])
   const responseGoogle = (response) => {
     let userObj
     if (

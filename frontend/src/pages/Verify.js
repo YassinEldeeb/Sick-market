@@ -22,16 +22,15 @@ const Verify = () => {
   const [startTimer, setStartTimer] = useState(false)
   const status = user ? user.status : ""
 
-  const [timerSeconds, setTimerSeconds] = useState(
+  const [timerSeconds] = useState(
     localStorage.getItem("sickTimerSeconds")
       ? JSON.parse(localStorage.getItem("sickTimerSeconds"))
       : 60
   )
 
-  let timerInterval
   useEffect(() => {
-    if (startTimer && !timerInterval) {
-      timerInterval = setTimeout(() => {
+    if (startTimer) {
+      setTimeout(() => {
         if (timer > 0) {
           setTimer((prevTime) => prevTime - 1)
           localStorage.setItem("sickTimerSeconds", timer)
@@ -66,7 +65,6 @@ const Verify = () => {
   const history = useHistory()
 
   useEffect(() => {
-    console.log("USER", user)
     if (user) {
       if (status === "Verified") {
         history.push("/")
@@ -74,18 +72,18 @@ const Verify = () => {
     } else {
       history.push("/")
     }
-  }, [status, user])
+  }, [status, user, history])
 
   useEffect(() => {
     dispatch(newCodeAction())
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (!startTimer && newCodeError) {
       setTimer(timerSeconds)
       setStartTimer(true)
     }
-  }, [newCodeError])
+  }, [newCodeError, startTimer, timerSeconds])
 
   useEffect(() => {
     if (newCodeLoading === false && !newCodeError) {
@@ -94,7 +92,7 @@ const Verify = () => {
     } else if (newCodeError === "Email already Verified") {
       history.push("/")
     }
-  }, [newCodeLoading])
+  }, [newCodeLoading, history, newCodeError, startTimer])
 
   return (
     <StyledVerify>

@@ -5,18 +5,23 @@ import settings from "../img/settings.svg"
 import edit from "../img/edit.svg"
 import { Link, useLocation, useHistory } from "react-router-dom"
 import styled from "styled-components"
+import Goback from "../components/Goback"
 
 const SlideBar = ({ slider, setSlider }) => {
   const history = useHistory()
-  const location = useLocation().pathname.split("/")[1]
+  const location = useLocation().pathname
   const secondLocation = useLocation().pathname.split("/")[2]
   useEffect(() => {
-    if (location === "account") {
+    if (location === "/account" || location === "/account/") {
       history.push("/account/edit-profile")
     }
+  }, [location, history])
+  useEffect(() => {
+    if (slider) setSlider(false)
   }, [location])
   return (
-    <StyledSlider>
+    <StyledSlider className={`${slider ? "active" : ""}`}>
+      <Goback toPath='/' providedClassName='goBackSlider' text='Go Home' />
       <Link
         className={`link ${secondLocation === "edit-profile" ? "active" : ""}`}
         to='edit-profile'
@@ -53,16 +58,26 @@ const SlideBar = ({ slider, setSlider }) => {
   )
 }
 const StyledSlider = styled.div`
+  position: relative;
+  z-index: 6;
+  .goBackSlider {
+    display: inline-flex;
+    padding-left: calc(1.7rem + 0.4vw);
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f6f6f6;
+  }
   display: flex;
   flex-direction: column;
   background: #fff !important;
   box-shadow: 0px 0px 20px rgba(52, 58, 64, 0.12);
   width: max-content;
   padding: calc(0.5rem + 0.4vw) 0;
-  position: fixed;
-  height: 100%;
-  z-index: 7;
+  overflow-y: scroll;
+  flex: 0 1 auto;
 
+  &.active {
+    transform: translateX(0%);
+  }
   .link {
     display: flex;
     justify-content: flex-start;
@@ -92,9 +107,17 @@ const StyledSlider = styled.div`
     }
   }
   @media screen and (max-width: 1050px) {
+    .goBackSlider {
+      display: none;
+    }
     transform: translateX(-100%);
     box-shadow: unset;
-    left: 0;
+    height: 100%;
+    position: absolute;
+    top: 0%;
+    z-index: 7;
+    transition: transform 0.3s ease;
+    padding-top: calc(8.5vw + 49px);
   }
 `
 

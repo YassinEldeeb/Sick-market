@@ -30,7 +30,7 @@ if (savedUserInfo)
 else
   initialState = {
     cart: { cartItems: savedCart ? savedCart : [] },
-    userInfo: {},
+    userInfo: { user: {} },
   }
 
 const middleware = [thunk]

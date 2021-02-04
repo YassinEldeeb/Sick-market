@@ -7,7 +7,7 @@ const Home = ({ scrolled, setScrolled }) => {
       top: scrolled,
       left: 0,
     })
-  }, [])
+  }, [scrolled])
   return (
     <>
       <ProductList setScrolled={setScrolled} />

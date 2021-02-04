@@ -72,6 +72,7 @@ const continueWithGoogle = asyncHandler(async (req, res) => {
       password: googlePassword,
       profilePicLink,
       status: "Verified",
+      availablePic: true,
     })
     const token = newUser.generateToken()
     newUser.tokens.unshift({ token })
@@ -85,7 +86,6 @@ const continueWithGoogle = asyncHandler(async (req, res) => {
         googlePassword,
         "googleSignin"
       )
-      console.log("RAAAAN", user)
       if (user) {
         res.send(user)
       } else {
@@ -111,10 +111,14 @@ const getProfile = asyncHandler(async (req, res) => {
 
 //Patch Profile - /api/users/profile @Protected
 const updateProfile = asyncHandler(async (req, res) => {
+  console.log(req.body)
   if (!req.body.password) {
     throw new Error("Password is required to Change Profile Info")
   }
-  const editedEmail = req.body.email ? req.body.email.toLowerCase() : null
+  const editedEmail = req.body.email
+    ? req.body.email.toLowerCase()
+    : req.user.email
+
   if (req.body.email) {
     const existingEmail = await User.findOne({ email: editedEmail })
     if (existingEmail && editedEmail !== req.user.email) {
@@ -122,8 +126,12 @@ const updateProfile = asyncHandler(async (req, res) => {
     }
   }
   const updates = Object.keys(req.body).filter((e) => e !== "password")
-  const allowedUpdates = ["name", "email"]
+  const allowedUpdates = ["name", "email", "newPassword"]
   let invalidUpdates = []
+
+  if (typeof req.body.name === "number") {
+    throw new Error("Name must be alphabetical letters!")
+  }
 
   if (await bcrypt.compare(req.body.password, req.user.password)) {
     updates.forEach((update) => {
@@ -131,6 +139,7 @@ const updateProfile = asyncHandler(async (req, res) => {
         invalidUpdates.push(update)
       }
     })
+
     //valid updates
     const validUpdates = updates.every((update) =>
       allowedUpdates.includes(update)
@@ -143,15 +152,19 @@ const updateProfile = asyncHandler(async (req, res) => {
     //Valid updates
     updates.forEach((update) => (req.user[update] = req.body[update]))
     req.user.email = editedEmail
+    req.user.password = req.body.newPassword
+      ? req.body.newPassword
+      : req.user.password
     await req.user.save()
 
-    if (!(await bcrypt.compare(req.body.password, lastPassword))) {
-      console.log("Different Password is Assigned")
-      const foundToken = req.user.tokens.find(
-        (token) => token.token === req.token
-      )
-      req.user.tokens = [foundToken]
-      req.user.save()
+    if (req.body.newPassword) {
+      if (!(await bcrypt.compare(req.body.newPassword, lastPassword))) {
+        const foundToken = req.user.tokens.find(
+          (token) => token.token === req.token
+        )
+        req.user.tokens = [foundToken]
+        await req.user.save()
+      }
     }
 
     const userObj = req.user.toObject()
@@ -198,8 +211,11 @@ const serveProfilePic = asyncHandler(async (req, res) => {
     })
     return
   }
-  res.set("Content-Type", "image/png")
-  res.send(user.profilePic)
+  if (!user.profilePicLink) res.set("Content-Type", "image/png")
+
+  res.send(
+    user.profilePicLink ? { link: user.profilePicLink } : user.profilePic
+  )
 })
 
 // POST Logout user - /api/users/logout

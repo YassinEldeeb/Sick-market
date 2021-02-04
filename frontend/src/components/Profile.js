@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import arrow from "../img/arrow2.svg"
-import { Link } from "react-router-dom"
+import { Link, useHistory, useLocation } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { userLogoutAction, userLogoutAllAction } from "../actions/logout"
 
@@ -9,9 +9,18 @@ const Profile = () => {
   const [dropDown, setDropDown] = useState(false)
   const dispatch = useDispatch()
   const userInfo = useSelector((state) => state.userInfo)
-  function truncate(str) {
+  function truncate(str = "") {
     return str.length > 11 ? str.substr(0, 11 - 1) + ".." : str
   }
+  const history = useHistory()
+  const location = useLocation()
+
+  useEffect(() => {
+    if (!userInfo.user && location.pathname.split("/")[1] === "account") {
+      history.push("/login")
+    }
+  }, [location.pathname])
+
   document.body.addEventListener("click", (e) => {
     e.stopPropagation()
     if (
@@ -30,7 +39,7 @@ const Profile = () => {
 
   return (
     <StyledProfile className='profile'>
-      {userInfo.user && (
+      {userInfo.user.name && (
         <div className='profile' onClick={(e) => setDropDown(!dropDown)}>
           <div className='profilePic'>
             <img
@@ -76,7 +85,7 @@ const Profile = () => {
           </div>
         </div>
       )}
-      {!userInfo.user && (
+      {!userInfo.user.name && (
         <Link to='/login'>
           <h1>Sign in</h1>
         </Link>

@@ -24,6 +24,7 @@ const ChangeEmail = () => {
 
   const submitHandler = (e) => {
     e.preventDefault()
+
     dispatch(userUpdateAction(null, emailValue, passwordValue))
   }
 
@@ -36,12 +37,13 @@ const ChangeEmail = () => {
 
   useEffect(() => {
     if (updated) history.push(redirect)
-  }, [updated])
+  }, [updated, history, redirect])
+
   useEffect(() => {
     if (!user || user.status !== "pending") {
       history.push("/")
     }
-  }, [user])
+  }, [user, history, redirect])
   return (
     <>
       <Goback providedClassName='gobackMessage' toPath='/verify' />

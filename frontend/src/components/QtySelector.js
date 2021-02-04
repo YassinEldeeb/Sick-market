@@ -48,7 +48,6 @@ const QtySelector = ({
               if (chosenQty <= match.qty) {
                 setCartCount(cartCount - (match.qty - chosenQty))
               } else {
-                console.log("FN", setCartCount)
                 setCartCount(cartCount + (chosenQty - match.qty))
               }
             }
@@ -66,7 +65,8 @@ const QtySelector = ({
         dispatch(updateQtyAction(match, Number(qty)))
       }
     }
-  }, [qty])
+  }, [qty, cartItems, dispatch, match])
+
   return (
     <StyledSelect>
       <div className='select' onClick={() => setToggle(!toggle)}>

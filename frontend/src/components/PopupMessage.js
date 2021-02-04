@@ -1,16 +1,34 @@
-import React from "react"
-import { Link } from "react-router-dom"
+import React, { useState } from "react"
 import styled from "styled-components"
 import danger from "../img/warningBarIcon.svg"
+import trueSVG from "../img/true.svg"
 
-const PopupMessage = ({ title, desc, setWarning }) => {
+const PopupMessage = ({
+  title,
+  desc,
+  setWarning,
+  type = "warning",
+  timer,
+  warning,
+  oneTime = true,
+}) => {
+  const [value, setValue] = useState(null)
+  const [hovered, setHovered] = useState(false)
+  setTimeout(() => {
+    setValue("hideIt")
+  }, timer * 1000)
+
   return (
-    <StyledPopup className='alert'>
+    <StyledPopup
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={`alert ${value && !hovered ? value : ""}`}
+    >
       <div className='title'>
         <svg
           onClick={() => {
             setWarning(false)
-            localStorage.setItem("showWarning", "hide")
+            if (oneTime) localStorage.setItem("showWarning", "hide")
           }}
           viewBox='0 0 91 95'
           fill='none'
@@ -28,7 +46,10 @@ const PopupMessage = ({ title, desc, setWarning }) => {
             fill='black'
           />
         </svg>
-        <img src={danger} alt='dangerIcon' />
+        <img
+          src={type === "warning" ? danger : trueSVG}
+          alt={type === "warning" ? "Warning Icon" : "Ok Icon"}
+        />
         <h1>{title}</h1>
       </div>
       <div className='desc'>
@@ -52,6 +73,14 @@ const StyledPopup = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  transition: transform 1s ease;
+  &.hideIt {
+    transform: translateX(150%);
+  }
+  &.removeIt {
+    transition: unset;
+    display: none;
+  }
   svg {
     box-shadow: 0 0 5px #ffffff0f;
     position: absolute;

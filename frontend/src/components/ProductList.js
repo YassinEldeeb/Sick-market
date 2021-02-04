@@ -10,18 +10,12 @@ const ProductList = ({ setScrolled }) => {
   const dispatch = useDispatch()
 
   const { products, error, loading } = useSelector((state) => state.productList)
-  const condition = () => {
-    if (products) {
-      return !products.length
-    } else {
-      return !error
-    }
-  }
+
   useEffect(() => {
-    if (condition()) {
+    if (products ? !products.length && !loading : !error && !loading) {
       dispatch(productListAction())
     }
-  }, [dispatch])
+  }, [dispatch, error, products, loading])
 
   return (
     <StyledList>

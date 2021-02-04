@@ -3,17 +3,17 @@ const initialState = {}
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case "USER_LOGIN_REQUEST":
-      return { loading: true, error: null }
+      return { ...state, loading: true, error: null }
     case "USER_LOGIN_SUCCESS":
-      return { loading: false, ...action.payload }
+      return { ...state, loading: false, ...action.payload }
     case "USER_LOGIN_FAIL":
-      return { loading: false, error: action.payload }
+      return { ...state, loading: false, error: action.payload }
     case "USER_LOGOUT":
       localStorage.removeItem("sickUserInfo")
-      return {}
+      return { user: {} }
     case "USER_LOGOUT_ALL":
       localStorage.removeItem("sickUserInfo")
-      return {}
+      return { user: {} }
     case "CHECK_TOKEN_REQUEST":
       return { ...state, loading: true }
     case "CHECK_TOKEN_SUCCESS":
@@ -29,7 +29,6 @@ const userReducer = (state = initialState, action) => {
     case "VERIFY_REQUEST":
       return { ...state, verifyLoading: true, verificationError: null }
     case "VERIFY_SUCCESS":
-      console.log(state)
       state.user.status = "Verified"
       return { ...state, verifyLoading: false }
     case "VERIFY_FAIL":
@@ -63,7 +62,6 @@ const userReducer = (state = initialState, action) => {
         updateError: null,
       }
     case "UPDATE_USER_SUCCESS":
-      console.log("Payload", action.payload)
       state.user = action.payload
       return {
         ...state,
@@ -84,7 +82,6 @@ const userReducer = (state = initialState, action) => {
         updated: null,
       }
     case "USER_PROFILE_SUCCESS":
-      console.log("Payload", action.payload)
       state.user = action.payload
       return {
         ...state,
@@ -118,6 +115,17 @@ const userReducer = (state = initialState, action) => {
       state.user.availablePic = true
       return {
         ...state,
+      }
+    case "CLEAR_ERRORS":
+      return {
+        ...state,
+        deleteProfileError: null,
+        profileError: null,
+        updateError: null,
+        newCodeError: null,
+        verificationError: null,
+        error: null,
+        updated: null,
       }
     default:
       return state

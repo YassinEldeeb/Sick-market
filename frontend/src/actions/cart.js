@@ -4,7 +4,6 @@ export const cartAction = (id, qty) => async (dispatch, getState) => {
   const state = getState().product.product
   let product = state
   if (Object.keys(product).length === 0) {
-    console.log("Unfortunatly we're gonna use your internet :(")
     const { data } = await axios.get(`/api/products/${id}`)
     product = data
   }

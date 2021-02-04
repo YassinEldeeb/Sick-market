@@ -13,10 +13,8 @@ const Search = () => {
   useEffect(() => {
     if (inputValue === "" && activeDelete === true) {
       setActiveDelete(false)
-      console.log("set to false")
     } else if (inputValue !== "" && activeDelete === false) {
       setActiveDelete(true)
-      console.log("set to true")
     }
   }, [inputValue, activeDelete])
 

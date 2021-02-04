@@ -13,7 +13,6 @@ const checkToken = (token) => async (dispatch) => {
     dispatch({ type: "CHECK_TOKEN_SUCCESS", payload: true })
   } catch (error) {
     if (error.response.status === 401) {
-      console.log(error)
       dispatch({ type: "USER_LOGOUT" })
       localStorage.removeItem("sickUserInfo")
       dispatch({ type: "CHECK_TOKEN_SUCCESS", payload: false })

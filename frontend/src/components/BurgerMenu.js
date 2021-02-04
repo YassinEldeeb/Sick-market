@@ -11,25 +11,25 @@ import trueSVG from "../img/true.svg"
 
 const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
   const dispatch = useDispatch()
-  function truncate(str) {
+  function truncate(str = "") {
     return str.length > 13 ? str.substr(0, 13 - 1) + ".." : str
   }
   const userInfo = useSelector((state) => state.userInfo)
   const [check, setCheck] = useState(false)
   const bgIdentify = () => (check ? trueSVG : falseSVG)
+
   return (
     <StyledMenu
       bg={bgIdentify()}
       className={`allBoxModel ${activeMenu ? "active" : ""}`}
       onClick={(e) => {
-        console.log(e.target)
         if (e.target.classList.contains("allBoxModel") && activeMenu)
           setActiveMenu(!activeMenu)
       }}
     >
       <div className='shadowDiv'>
         <div className='profileStatus'>
-          {userInfo.user && (
+          {userInfo.user.name && (
             <div className='profile-mobile'>
               <div className='profile-mobile-pic'>
                 <img
@@ -51,7 +51,7 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
               </div>
             </div>
           )}
-          {!userInfo.user && (
+          {!userInfo.user.name && (
             <div className='signInSection'>
               <Link to='/login'>Sign in</Link>
             </div>

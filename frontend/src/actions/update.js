@@ -1,10 +1,9 @@
 import axios from "axios"
 
-const userUpdateAction = (name, email, password) => async (
+const userUpdateAction = (name, email, password, newPassword) => async (
   dispatch,
   getState
 ) => {
-  console.log("Update Password", password)
   const userInfo = getState().userInfo
   try {
     dispatch({ type: "UPDATE_USER_REQUEST" })
@@ -25,8 +24,12 @@ const userUpdateAction = (name, email, password) => async (
       if (password) {
         passedObj.password = password
       }
+      if (newPassword) {
+        passedObj.newPassword = newPassword
+      }
       return passedObj
     }
+    console.log(passedObjFN())
     const { data } = await axios.patch(
       "/api/users/profile",
       passedObjFN(),

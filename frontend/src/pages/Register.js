@@ -29,11 +29,15 @@ const Register = () => {
     if (passwordValue !== confirmPasswordValue) {
       SetpasswordMatch("Password & Confirm Password don't match")
     } else {
-      if (!isNaN(name)) {
-        SetpasswordMatch("Name must be alphabetical letters!")
+      if ((!name, !emailValue, !passwordValue)) {
+        SetpasswordMatch("name, Email and Password are Required")
       } else {
-        SetpasswordMatch(null)
-        dispatch(userRegisterAction(name, emailValue, passwordValue))
+        if (!isNaN(name)) {
+          SetpasswordMatch("Name must be alphabetical letters!")
+        } else {
+          SetpasswordMatch(null)
+          dispatch(userRegisterAction(name, emailValue, passwordValue))
+        }
       }
     }
   }
@@ -44,10 +48,10 @@ const Register = () => {
   const redirect = search ? search : "/verify"
 
   useEffect(() => {
-    if (user) {
+    if (user.name) {
       history.push(redirect)
     }
-  }, [user])
+  }, [user, history, redirect])
 
   const errorFunctionHandler = () => {
     if (passwordMatch) {
@@ -76,7 +80,6 @@ const Register = () => {
   }
 
   useEffect(() => {
-    console.log(passwordMatch, error)
     if (passwordMatch || error) {
       window.scroll({
         top: 0,

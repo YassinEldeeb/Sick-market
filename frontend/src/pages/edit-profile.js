@@ -11,6 +11,8 @@ import Message from "../components/message"
 import Loader from "../components/loader"
 import userUpdateAction from "../actions/update"
 import deleteProfilePicAction from "../actions/deleteProfilePic"
+import { useLocation, useHistory } from "react-router-dom"
+import PopupMessage from "../components/PopupMessage"
 
 const EditProfile = () => {
   const inputRef = useRef(null)
@@ -22,18 +24,30 @@ const EditProfile = () => {
     updated,
     deleteProfilePicLoading,
   } = useSelector((state) => state.userInfo)
+  const userInfo = useSelector((state) => state.userInfo)
   const [emailValue, setEmailValue] = useState("")
   const [nameValue, setNameValue] = useState("")
   const [passwordValue, setPasswordValue] = useState("")
   const [show, setShow] = useState(false)
 
-  function truncate(str) {
+  function truncate(str = "") {
     return str.length > 15 ? str.substr(0, 15 - 1) + ".." : str
   }
+
+  const location = useLocation()
+  const history = useHistory()
+
   const dispatch = useDispatch()
+  const [error, setError] = useState("")
+
   useEffect(() => {
-    dispatch(userProfileAction())
+    if (userInfo) {
+      dispatch(userProfileAction())
+    } else {
+      history.push("/login")
+    }
   }, [dispatch])
+
   useEffect(() => {
     if (user) {
       setNameValue(user.name)
@@ -42,11 +56,18 @@ const EditProfile = () => {
   }, [user])
   const submitHandler = (e) => {
     e.preventDefault()
-    dispatch(userUpdateAction(nameValue, emailValue, passwordValue))
+    setError(null)
+    setWarning(true)
+    if (!isNaN(nameValue)) {
+      setError("Name must be alphabetical letters!")
+    } else {
+      dispatch(userUpdateAction(nameValue, emailValue, passwordValue))
+    }
   }
+
   useEffect(() => {
     if (updateError || updated) {
-      window.scroll({
+      document.querySelector(".content").scroll({
         top: 0,
         left: 0,
         behavior: `${updated ? "smooth" : "auto"}`,
@@ -57,41 +78,86 @@ const EditProfile = () => {
   const removePictureHandler = () => {
     dispatch(deleteProfilePicAction())
   }
+
   useEffect(() => {
     if (!deleteProfilePicLoading) {
-      document.querySelector(".profilePic img").src =
-        `/api/users/profilePic/${user._id}?` + new Date().getTime()
+      const img1 = document.querySelector(".profilePic img")
+      if (img1) {
+        img1.src = user.profilePicLink
+          ? user.profilePicLink
+          : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+      }
+      const img2 = document.querySelector(".profile-mobile-pic img")
+      if (img2) {
+        img2.src = user.profilePicLink
+          ? user.profilePicLink
+          : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+      }
     }
-  }, [deleteProfilePicLoading])
+  }, [deleteProfilePicLoading, user._id, user.profilePicLink])
 
-  const [slider, setSlider] = useState(false)
+  const [slider2, setSlider2] = useState(false)
+
+  useEffect(() => {
+    setSlider2(false)
+  }, [location.pathname])
+
+  const [warning, setWarning] = useState(true)
+
   return (
-    <StyledEdit>
-      <SlideBar setSlider={setSlider} slider={slider} />
-      <div className='slider-Burger'>
-        <span></span>
-        <span></span>
-        <span></span>
+    <StyledEdit
+      onClick={(e) => {
+        if (e.target.classList.contains("slider-shadow") && slider2)
+          setSlider2(false)
+      }}
+    >
+      {updated && warning && (
+        <PopupMessage
+          warning={warning}
+          setWarning={setWarning}
+          title='Updated'
+          type='ok'
+          desc='Your Profile Info has been updated Successfully!'
+          timer={5}
+          oneTime={false}
+        />
+      )}
+      <SlideBar slider={slider2} />
+
+      <div className='slider-Burger' onClick={() => setSlider2(!slider2)}>
+        <span
+          className={`first-slider-burger ${slider2 ? "active" : ""}`}
+        ></span>
+        <span
+          className={`third-slider-burger ${slider2 ? "active" : ""}`}
+        ></span>
       </div>
       <div className='content'>
         {profileLoading && <Loader />}
         {!profileLoading && (
           <div className='wrapper'>
             <div className='profile-section'>
-              <FilePondUpload />
+              <FilePondUpload imgLink={user.profilePicLink} />
+
               <div className='desc'>
                 {user && <h1>{truncate(user.name)}</h1>}
                 {user.availablePic && (
-                  <button onClick={removePictureHandler}>
-                    Remove {deleteProfilePicLoading && <Loader />}
+                  <button
+                    onClick={removePictureHandler}
+                    style={{
+                      background: `${deleteProfilePicLoading ? "#ff5555" : ""}`,
+                      color: `${deleteProfilePicLoading ? "white" : ""}`,
+                    }}
+                  >
+                    Default Avatar {deleteProfilePicLoading && <Loader />}
                   </button>
                 )}
               </div>
             </div>
             <Message
               vibrating='true'
-              visiblity={updateError ? true : false}
-              msg={updateError}
+              visiblity={error ? error : updateError ? true : false}
+              msg={error ? error : updateError}
               type='error'
             />
             <form onSubmit={submitHandler}>
@@ -171,11 +237,37 @@ const EditProfile = () => {
           </div>
         )}
       </div>
+      <div
+        className='slider-shadow'
+        style={{
+          pointerEvents: `${slider2 ? "all" : "none"}`,
+          background: `${slider2 ? "rgba(0, 0, 0, 0.2)" : "unset"}`,
+        }}
+      ></div>
     </StyledEdit>
   )
 }
 const StyledEdit = styled.div`
+  height: 0px;
+  position: relative;
+
+  .slider-shadow {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    transition: 0.3s ease 0.15s;
+  }
+  .first-slider-burger.active {
+    transform: translate(0%, 142%) rotate(-135deg);
+  }
+  .third-slider-burger.active {
+    transform: translate(0%, -140%) rotate(135deg);
+  }
   .slider-Burger {
+    z-index: 7;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -184,48 +276,49 @@ const StyledEdit = styled.div`
     margin-left: 5vw;
     margin-top: 5vw;
     background: #1a1a1a;
-    padding: 0.5rem;
+    padding: 1rem 0.5rem;
     width: 49px;
     height: 49px;
     border-radius: 50%;
     span {
       width: 1.8rem !important;
-      height: 0.15rem !important;
-      margin: 0.15rem 0 !important;
+      height: 0.18rem !important;
+      margin: 0.18rem 0 !important;
       background: white;
       border-radius: 1px;
+      transition: 0.3s ease;
     }
   }
   .message {
     height: max-content !important;
     margin-top: calc(0.5rem + 0.5vh);
   }
-  .eye2 {
-    transform: translate(-50%, 8%) !important;
-  }
   .eye {
     position: absolute;
     right: 0%;
     top: 50%;
-    transform: translate(-50%, -6%);
-    width: calc(1.8rem + 0.3vw);
     cursor: pointer;
+    padding: 0.6rem;
+    transform: translate(-18%, -29%);
+    width: calc(2.8rem + 1vw);
+  }
+  .eye2 {
+    transform: translate(-18%, -25%) !important;
   }
   .wrapper {
     width: 50%;
     max-width: 606px;
     min-width: max-content;
-    margin-top: 1.5rem;
   }
   display: flex;
   flex: 1 1 auto;
   .content {
     flex: 1 1 auto;
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-left: calc(14rem + 2vw);
+    overflow-y: scroll;
+    padding-top: 2.5rem;
   }
   .filepond--wrapper {
     width: calc(6rem + 7vw) !important;
@@ -251,7 +344,7 @@ const StyledEdit = styled.div`
         font-weight: 500;
         color: #1a1a1a;
         margin-bottom: 0.45rem;
-        font-size: calc(2.4rem + 0.5vw);
+        font-size: calc(2.2rem + 0.5vw);
       }
       button {
         display: flex;
@@ -367,6 +460,7 @@ const StyledEdit = styled.div`
   }
   .slider-Burger {
     display: none;
+    cursor: pointer;
   }
   @media screen and (max-width: 1050px) {
     .slider-Burger {
@@ -431,7 +525,8 @@ const StyledEdit = styled.div`
     .content {
       margin-left: unset !important;
       justify-content: flex-start;
-      margin-top: calc(1rem + 0.4vw);
+      margin-top: calc(0.85rem + 0.4vw);
+      padding-top: unset;
     }
     form {
       margin-top: unset !important;

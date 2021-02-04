@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { BrowserRouter, Route, useLocation } from "react-router-dom"
+import { BrowserRouter, Route } from "react-router-dom"
 import { LastLocationProvider } from "react-router-last-location"
 import Global from "./components/GlobalStyles"
 import Home from "./pages/Home"
@@ -14,6 +14,7 @@ import Register from "./pages/Register"
 import Verify from "./pages/Verify"
 import ChangeEmail from "./pages/changeEmail"
 import EditProfile from "./pages/edit-profile"
+import ChangePassword from "./pages/changePassword"
 
 const App = () => {
   const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
@@ -32,19 +33,15 @@ const App = () => {
   document.body.style.overflow = activeMenu ? "hidden" : "auto"
   const state = useSelector((state) => state)
   const dispatch = useDispatch()
-  const { loading, error, validToken } = useSelector((state) => state.userInfo)
+  const { loading, validToken, user } = useSelector((state) => state.userInfo)
 
   useEffect(() => {
-    if (
-      state.userInfo.token &&
-      !state.userInfo.user.profilePic &&
-      !loading &&
-      !validToken
-    ) {
-      console.log(state.userInfo.token)
+    if (state.userInfo.token && !loading && !validToken) {
       dispatch(checkToken(state.userInfo.token))
     }
-  }, [dispatch, state.userInfo])
+  }, [dispatch, state.userInfo, loading, validToken])
+
+  const [slider, setSlider] = useState(false)
 
   return (
     <div className='App'>
@@ -81,7 +78,10 @@ const App = () => {
             <ChangeEmail />
           </Route>
           <Route path='/account/edit-profile'>
-            <EditProfile />
+            <EditProfile slider2={slider} setSlider2={setSlider} />
+          </Route>
+          <Route path='/account/change-password'>
+            <ChangePassword slider={slider} setSlider={setSlider} />
           </Route>
         </LastLocationProvider>
       </BrowserRouter>

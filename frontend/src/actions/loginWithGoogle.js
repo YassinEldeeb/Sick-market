@@ -11,7 +11,6 @@ const loginWithGoogle = (name, email, profilePic) => async (dispatch) => {
       },
     }
     const googleSignture = "214GOOGLEyassinSIGNTURE123SICK.21S16123P9jhnG6h"
-    console.log(!googleSignture)
     const { data } = await axios.post(
       "/api/users/googleOauth",
       { name, email, profilePicLink: profilePic, googleSignture },

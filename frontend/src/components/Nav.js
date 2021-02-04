@@ -6,8 +6,7 @@ import Cart from "./Cart"
 import Profile from "./Profile"
 import BurgerMenu from "./BurgerMenu"
 import { useLocation, Link, useHistory } from "react-router-dom"
-
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import PopupMessage from "./PopupMessage"
 
 const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
@@ -15,31 +14,39 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   const status = user ? user.status : ""
   const location = useLocation()
   const history = useHistory()
+
+  const dispatch = useDispatch()
   useEffect(() => {
     if (location.pathname.split("/")[1]) {
       window.scroll({
         top: 0,
         left: 0,
       })
+      if (activeMenu) {
+        setActiveMenu(false)
+      }
     }
-    if (activeMenu) {
-      setActiveMenu(false)
-    }
-  }, [location.pathname])
+  }, [location.pathname, setActiveMenu])
+
   const [warning, setWarning] = useState(
     localStorage.getItem("showWarning") ? false : true
   )
   useEffect(() => {
-    if (location.pathname.split("/")[1] === "account" && !user) {
-      history.push("/")
+    if (location.pathname.split("/")[1] === "account" && !user.name) {
+      history.push("/login")
     } else if (
       location.pathname === "/account" ||
       location.pathname === "/account/"
     ) {
       history.push("/account/edit-profile")
     }
-  }, [location.pathname])
+  }, [location.pathname, activeMenu, setActiveMenu, history, user])
 
+  useEffect(() => {
+    dispatch({
+      type: "CLEAR_ERRORS",
+    })
+  }, [location.pathname, dispatch])
   return (
     <>
       {status !== "Verified" &&
@@ -74,6 +81,7 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   )
 }
 const Header = styled.div`
+  position: relative;
   .verifyLink {
     color: #00b2d8;
     text-decoration: underline;

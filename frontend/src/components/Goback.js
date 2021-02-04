@@ -4,7 +4,7 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 import { useLastLocation } from "react-router-last-location"
 
-const Goback = ({ toPath, providedClassName }) => {
+const Goback = ({ toPath, providedClassName, text = "Go back" }) => {
   const lastLocation = useLastLocation()
   let linkValue
   if (toPath) {
@@ -22,7 +22,7 @@ const Goback = ({ toPath, providedClassName }) => {
     <StyledGo className={`${providedClassName ? providedClassName : ""}`}>
       <Link to={linkValue} className='flexCont'>
         <img src={arrow} alt='arrow' />
-        <h1>Go back</h1>
+        <h1>{text}</h1>
       </Link>
     </StyledGo>
   )
@@ -30,8 +30,8 @@ const Goback = ({ toPath, providedClassName }) => {
 const StyledGo = styled.div`
   display: inline-block;
   margin-top: 1rem;
-  cursor: pointer;
   .flexCont {
+    cursor: pointer;
     border-radius: 7px;
     padding: 0.7rem 0.9rem;
     display: flex;

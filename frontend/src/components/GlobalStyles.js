@@ -78,6 +78,7 @@ a{
     cursor: pointer;
     text-decoration:underline;
   }
+ 
 @media screen and (max-width:1050px){
     *{   
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0.05);

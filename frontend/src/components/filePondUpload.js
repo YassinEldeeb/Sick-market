@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { FilePond, registerPlugin, FileStatus } from "react-filepond"
+import { FilePond, registerPlugin } from "react-filepond"
 import "filepond/dist/filepond.min.css"
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
@@ -16,22 +16,25 @@ registerPlugin(
   FilePondPluginImagePreview,
   FilePondPluginImageCrop
 )
-const FilePondUpload = () => {
+const FilePondUpload = ({ imgLink }) => {
   const dispatch = useDispatch()
-  const { user, token, deleteProfilePicLoading } = useSelector(
-    (state) => state.userInfo
-  )
+  const { user, token } = useSelector((state) => state.userInfo)
 
   const [files, setFiles] = useState(
-    user ? [{ source: `/api/users/profilePic/${user._id}` }] : []
+    user
+      ? user.profilePicLink
+        ? [{ source: `${user.profilePicLink}` }]
+        : [{ source: `/api/users/profilePic/${user._id}` }]
+      : []
   )
+
   useEffect(() => {
-    if (!deleteProfilePicLoading) {
+    if (!user.availablePic) {
       setFiles([
         { source: `/api/users/profilePic/${user._id}?${new Date().getTime()}` },
       ])
     }
-  }, [deleteProfilePicLoading])
+  }, [user.availablePic, user._id])
 
   return (
     <>
@@ -45,16 +48,27 @@ const FilePondUpload = () => {
         styleProgressIndicatorPosition='right bottom'
         styleButtonRemoveItemPosition='left bottom'
         styleButtonProcessItemPosition='right bottom'
-        instantUpload='false'
+        instantUpload={false}
         imageResizeTargetWidth='200'
         imageResizeTargetHeight='200'
         imageCropAspectRatio='1:1'
         imagePreviewHeight='170'
         accept='image/png, image/jpeg, image/gif'
         maxFileSize='5MB'
-        imageEditEditor
         name='files'
         labelIdle='Drag & Drop your Image or <span class="browseTextFilePond">Browse</span>'
+        iconRemove={`<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0)">
+<path d="M106.242 70.7541L129.246 93.7576L79.2946 143.709L58.7851 145.973C56.0395 146.277 53.7197 143.955 54.0252 141.21L56.3072 120.686L106.242 70.7541V70.7541ZM143.474 67.3292L132.673 56.5282C129.303 53.1591 123.839 53.1591 120.47 56.5282L110.309 66.6895L133.312 89.6931L143.474 79.5318C146.843 76.1609 146.843 70.6984 143.474 67.3292V67.3292Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="clip0">
+<rect width="92" height="92" fill="white" transform="translate(54 54)"/>
+</clipPath>
+</defs>
+</svg>
+
+`}
         server={{
           process: (
             fieldName,
@@ -101,8 +115,15 @@ const FilePondUpload = () => {
           dispatch({
             type: "PROFILE_PIC_UPLOADED",
           })
-          document.querySelector(".profilePic img").src =
-            `/api/users/profilePic/${user._id}?` + new Date().getTime()
+          document.querySelector(".profilePic img").src = user.profilePicLink
+            ? user.profilePicLink
+            : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+
+          document.querySelector(
+            ".profile-mobile-pic img"
+          ).src = user.profilePicLink
+            ? user.profilePicLink
+            : `/api/users/profilePic/${user._id}?` + new Date().getTime()
         }}
       />
     </>

@@ -27,17 +27,21 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   const dispatch = useDispatch()
   const { product, error, loading } = useSelector((state) => state.product)
   const { cartItems } = useSelector((state) => state.cart)
+  const [fetching, setFetching] = useState(false)
+
   useEffect(() => {
     const fetchProduct = async () => {
-      console.log(product._id, id)
       if (
-        Object.keys(product).length === 0 ||
-        location.search.split("=")[1] === "cart"
-      )
-        dispatch(productDetailAction(id))
+        (Object.keys(product).length === 0 && !fetching) ||
+        (location.search.split("=")[1] === "cart" && !fetching)
+      ) {
+        setFetching(true)
+        await dispatch(productDetailAction(id))
+        setFetching(false)
+      }
     }
     fetchProduct()
-  }, [location.pathname])
+  }, [location.pathname, dispatch, id, location.search, product, fetching])
 
   const buyNowHandler = () => {
     history.push("/shipping")
