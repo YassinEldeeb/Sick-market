@@ -16,25 +16,50 @@ registerPlugin(
   FilePondPluginImagePreview,
   FilePondPluginImageCrop
 )
-const FilePondUpload = ({ imgLink }) => {
+const FilePondUpload = () => {
   const dispatch = useDispatch()
   const { user, token } = useSelector((state) => state.userInfo)
 
-  const [files, setFiles] = useState(
-    user
-      ? user.profilePicLink
-        ? [{ source: `${user.profilePicLink}` }]
-        : [{ source: `/api/users/profilePic/${user._id}` }]
-      : []
-  )
+  const [numUpload, setNumUpload] = useState(0)
+
+  const filesState = () => {
+    if (user) {
+      if (user.availablePic) {
+        if (user.profilePicLink && user.profilePicLink !== "cleared") {
+          return [{ source: `${user.profilePicLink}` }]
+        } else {
+          return [{ source: `/api/users/profilePic/${user._id}` }]
+        }
+      } else {
+        return [{ source: `/api/users/profilePic/${user._id}` }]
+      }
+    } else {
+      return []
+    }
+  }
+  const [files, setFiles] = useState(filesState())
 
   useEffect(() => {
     if (!user.availablePic) {
+      setNumUpload(0)
       setFiles([
         { source: `/api/users/profilePic/${user._id}?${new Date().getTime()}` },
       ])
     }
   }, [user.availablePic, user._id])
+
+  const [uploadIcon, setUploadIcon] = useState(false)
+
+  const serverProp = () => {
+    if (numUpload >= 1) {
+      setUploadIcon(true)
+    } else {
+      setUploadIcon(false)
+    }
+  }
+  useEffect(() => {
+    serverProp()
+  }, [numUpload])
 
   return (
     <>
@@ -69,61 +94,67 @@ const FilePondUpload = ({ imgLink }) => {
 </svg>
 
 `}
-        server={{
-          process: (
-            fieldName,
-            file,
-            metadata,
-            load,
-            error,
-            progress,
-            abort,
-            transfer,
-            options
-          ) => {
-            const formData = new FormData()
-            formData.append("profilePic", file)
+        onupdatefiles={() => setNumUpload(numUpload + 1)}
+        server={
+          uploadIcon
+            ? {
+                process: (
+                  fieldName,
+                  file,
+                  metadata,
+                  load,
+                  error,
+                  progress,
+                  abort,
+                  transfer,
+                  options
+                ) => {
+                  const formData = new FormData()
+                  formData.append("profilePic", file)
 
-            const request = new XMLHttpRequest()
-            request.open("POST", "/api/users/me/profilePic")
-            request.setRequestHeader("Authorization", `Bearer ${token}`)
-            request.upload.onprogress = (e) => {
-              progress(e.lengthComputable, e.loaded, e.total)
-            }
-            request.onload = function () {
-              if (request.status >= 200 && request.status < 300) {
-                // the load method accepts either a string (id) or an object
-                load(request.responseText)
-              } else {
-                // Can call the error method if something is wrong, should exit after
-                error("oh no")
+                  const request = new XMLHttpRequest()
+                  request.open("POST", "/api/users/me/profilePic")
+                  request.setRequestHeader("Authorization", `Bearer ${token}`)
+                  request.upload.onprogress = (e) => {
+                    progress(e.lengthComputable, e.loaded, e.total)
+                  }
+                  request.onload = function () {
+                    if (request.status >= 200 && request.status < 300) {
+                      // the load method accepts either a string (id) or an object
+                      load(request.responseText)
+                    } else {
+                      // Can call the error method if something is wrong, should exit after
+                      error("oh no")
+                    }
+                  }
+                  request.send(formData)
+                  return {
+                    abort: () => {
+                      // This function is entered if the user has tapped the cancel button
+                      request.abort()
+
+                      // Let FilePond know the request has been cancelled
+                      abort()
+                    },
+                  }
+                },
               }
-            }
-            request.send(formData)
-            return {
-              abort: () => {
-                // This function is entered if the user has tapped the cancel button
-                request.abort()
-
-                // Let FilePond know the request has been cancelled
-                abort()
-              },
-            }
-          },
-        }}
+            : null
+        }
         onprocessfile={() => {
           dispatch({
             type: "PROFILE_PIC_UPLOADED",
           })
-          document.querySelector(".profilePic img").src = user.profilePicLink
-            ? user.profilePicLink
-            : `/api/users/profilePic/${user._id}?` + new Date().getTime()
 
-          document.querySelector(
-            ".profile-mobile-pic img"
-          ).src = user.profilePicLink
-            ? user.profilePicLink
-            : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+          document.querySelector(".profilePic img").src =
+            user.profilePicLink && user.profilePicLink !== "cleared"
+              ? user.profilePicLink
+              : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+
+          document.querySelector(".profile-mobile-pic img").src =
+            user.profilePicLink && user.profilePicLink !== "cleared"
+              ? user.profilePicLink
+              : `/api/users/profilePic/${user._id}?` + new Date().getTime()
         }}
       />
     </>

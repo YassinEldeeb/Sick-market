@@ -33,7 +33,6 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Name must be alphabetical letters!")
   }
   if (!name || !editedEmail || !password) {
-    console.log(name, editedEmail, password)
     res.status(400)
     throw new Error("name, Email and Password are Required")
   } else {
@@ -41,7 +40,6 @@ const registerUser = asyncHandler(async (req, res) => {
       res.status(400)
       throw new Error("Email isn't an actual email")
     }
-    console.log(editedEmail)
     const userExists = await User.findOne({ email: editedEmail })
     if (userExists) {
       res.status(400)
@@ -67,7 +65,7 @@ const continueWithGoogle = asyncHandler(async (req, res) => {
   const { name, email, profilePicLink, googleSignture } = req.body
   const googlePassword = process.env.REACT_APP_GOOGLE_PASSWORD
   const existingUser = await User.findOne({ email })
-  console.log(googleSignture)
+
   if (!existingUser) {
     const newUser = new User({
       name,
@@ -82,7 +80,6 @@ const continueWithGoogle = asyncHandler(async (req, res) => {
     await newUser.save()
     res.status(201).send({ user: newUser, token })
   } else {
-    console.log("Logged In")
     if (googleSignture === process.env.GOOGLE_SIGNTURE) {
       const user = await User.findByCredentials(
         email,
@@ -115,8 +112,7 @@ const getProfile = asyncHandler(async (req, res) => {
 
 //Patch Profile - /api/users/profile @Protected
 const updateProfile = asyncHandler(async (req, res) => {
-  console.log(req.body)
-  if (!req.body.password) {
+  if (!req.body.password && !req.user.profilePicLink) {
     res.status(401)
     throw new Error("Password is required to Change Profile Info")
   }
@@ -139,8 +135,10 @@ const updateProfile = asyncHandler(async (req, res) => {
     res.status(400)
     throw new Error("Name must be alphabetical letters!")
   }
-
-  if (await bcrypt.compare(req.body.password, req.user.password)) {
+  if (
+    !req.user.profilePicLink &&
+    (await bcrypt.compare(req.body.password, req.user.password))
+  ) {
     updates.forEach((update) => {
       if (!allowedUpdates.includes(update)) {
         invalidUpdates.push(update)
@@ -151,17 +149,23 @@ const updateProfile = asyncHandler(async (req, res) => {
     const validUpdates = updates.every((update) =>
       allowedUpdates.includes(update)
     )
+
     if (!validUpdates) {
       res.status(400)
       throw new Error(`Unable to update ${invalidUpdates.join(" ,")}`)
     }
     const lastPassword = req.user.password
+
+    if (req.user.email !== req.body.email) {
+      req.user.status = "pending"
+    }
     //Valid updates
     updates.forEach((update) => (req.user[update] = req.body[update]))
     req.user.email = editedEmail
     req.user.password = req.body.newPassword
       ? req.body.newPassword
       : req.user.password
+
     await req.user.save()
 
     if (req.body.newPassword) {
@@ -182,6 +186,34 @@ const updateProfile = asyncHandler(async (req, res) => {
     delete userObj.__v
     delete userObj.password
     res.send(userObj)
+  } else if (req.user.profilePicLink) {
+    const allowedUpdates = ["name"]
+    let invalidUpdates = []
+
+    updates.forEach((update) => {
+      if (!allowedUpdates.includes(update)) {
+        invalidUpdates.push(update)
+      }
+    })
+
+    //valid updates
+    const validUpdates = updates.every((update) =>
+      allowedUpdates.includes(update)
+    )
+
+    if (!validUpdates) {
+      res.status(400)
+      throw new Error(`Unable to update ${invalidUpdates.join(" ,")}`)
+    }
+    if (req.body.email && req.user.email !== req.body.email) {
+      req.user.status = "pending"
+    }
+    //Valid updates
+    updates.forEach((update) => (req.user[update] = req.body[update]))
+    req.user.email = editedEmail
+
+    await req.user.save()
+    res.send(req.user)
   } else {
     res.status(401)
     throw new Error("Incorrect Password")
@@ -196,14 +228,16 @@ const uploadProfilePic = asyncHandler(async (req, res) => {
     .toBuffer()
 
   req.user.availablePic = true
+  req.user.profilePicLink = "cleared"
   req.user.profilePic = buffer
   await req.user.save()
   res.send()
 })
 // DELETE Delete avatar - /api/users/me/profilePic
 const deleteProfilePic = asyncHandler(async (req, res) => {
-  req.user.profilePic = undefined
+  req.user.profilePic = null
   req.user.availablePic = false
+  req.user.profilePicLink = "cleared"
   await req.user.save()
   res.send()
 })
@@ -219,11 +253,9 @@ const serveProfilePic = asyncHandler(async (req, res) => {
     })
     return
   }
-  if (!user.profilePicLink) res.set("Content-Type", "image/png")
+  res.set("Content-Type", "image/png")
 
-  res.send(
-    user.profilePicLink ? { link: user.profilePicLink } : user.profilePic
-  )
+  res.send(user.profilePic)
 })
 
 // POST Logout user - /api/users/logout
@@ -274,10 +306,8 @@ const getNewSecurityCode = asyncHandler(async (req, res) => {
     let randomCode = Math.floor(1000 + Math.random() * 9000)
 
     const secretCode = await SecretCode.findOne({ email: req.user.email })
-    console.log(secretCode)
     if (secretCode) {
       await SecretCode.deleteOne({ email: req.user.email })
-      console.log("Deleted", secretCode, req.user.email)
     }
     const secretC = new SecretCode({
       email: req.user.email,

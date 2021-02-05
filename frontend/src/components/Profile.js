@@ -36,21 +36,23 @@ const Profile = () => {
       }
     }
   })
+  const imgSrcCondition = () => {
+    if (
+      userInfo.user.profilePicLink &&
+      userInfo.user.profilePicLink !== "cleared"
+    ) {
+      return userInfo.user.profilePicLink
+    } else {
+      return `/api/users/profilePic/${userInfo.user._id}`
+    }
+  }
 
   return (
     <StyledProfile className='profile'>
       {userInfo.user.name && (
         <div className='profile' onClick={(e) => setDropDown(!dropDown)}>
           <div className='profilePic'>
-            <img
-              className='profilePicImg'
-              src={
-                userInfo.user.profilePicLink
-                  ? userInfo.user.profilePicLink
-                  : `/api/users/profilePic/${userInfo.user._id}`
-              }
-              alt=''
-            />
+            <img className='profilePicImg' src={imgSrcCondition()} alt='' />
             {userInfo.user.rank && userInfo.user.rank !== "user" && (
               <div className='rank'>
                 <span className='rank'>{userInfo.user.rank}</span>

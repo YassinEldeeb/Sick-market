@@ -48,7 +48,7 @@ const SlideBar = ({ slider, setSlider }) => {
         <img src={settings} alt='gear Icon' />
         <h1>Account Settings</h1>
       </Link>
-      {!user.profilePicLink && (
+      {!user.profilePicLink && user.profilePicLink !== "cleared" && (
         <Link
           className={`link ${
             secondLocation === "change-password" ? "active" : ""

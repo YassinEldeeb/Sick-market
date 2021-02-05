@@ -26,7 +26,7 @@ const loginWithGoogle = (name, email, profilePic) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     })
-    localStorage.setItem("sickUserInfo", JSON.stringify({}))
+    localStorage.removeItem("sickUserInfo")
   }
 }
 export default loginWithGoogle

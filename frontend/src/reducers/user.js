@@ -101,10 +101,16 @@ const userReducer = (state = initialState, action) => {
       }
     case "DELETE_PROFILE_PIC_SUCCESS":
       state.user.availablePic = false
+      state.user.profilePicLink = "cleared"
+      localStorage.setItem(
+        "sickUserInfo",
+        JSON.stringify({ user: state.user, token: state.token })
+      )
       return {
         ...state,
         deleteProfilePicLoading: false,
       }
+
     case "DELETE_PROFILE_PIC_FAIL":
       return {
         ...state,
@@ -113,6 +119,11 @@ const userReducer = (state = initialState, action) => {
       }
     case "PROFILE_PIC_UPLOADED":
       state.user.availablePic = true
+      state.user.profilePicLink = "cleared"
+      localStorage.setItem(
+        "sickUserInfo",
+        JSON.stringify({ user: state.user, token: state.token })
+      )
       return {
         ...state,
       }

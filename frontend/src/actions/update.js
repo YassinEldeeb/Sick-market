@@ -29,12 +29,14 @@ const userUpdateAction = (name, email, password, newPassword) => async (
       }
       return passedObj
     }
+    console.log(passedObjFN())
     const { data } = await axios.patch(
       "/api/users/profile",
       passedObjFN(),
       config
     )
     dispatch({ type: "UPDATE_USER_SUCCESS", payload: data })
+
     localStorage.setItem(
       "sickUserInfo",
       JSON.stringify({ user: data, token: userInfo.token })

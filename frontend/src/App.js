@@ -31,15 +31,16 @@ const App = () => {
     initialCartValue ? initialCartValue : 0
   )
   document.body.style.overflow = activeMenu ? "hidden" : "auto"
-  const state = useSelector((state) => state)
   const dispatch = useDispatch()
-  const { loading, validToken, user } = useSelector((state) => state.userInfo)
+  const { loading, validToken, user, token } = useSelector(
+    (state) => state.userInfo
+  )
 
   useEffect(() => {
-    if (state.userInfo.token && !loading && !validToken) {
-      dispatch(checkToken(state.userInfo.token))
+    if (token && !loading && !validToken) {
+      dispatch(checkToken(token))
     }
-  }, [dispatch, state.userInfo, loading, validToken])
+  }, [dispatch, user.token, loading, validToken])
 
   const [slider, setSlider] = useState(false)
 

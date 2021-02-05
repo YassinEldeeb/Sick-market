@@ -13,6 +13,7 @@ import userUpdateAction from "../actions/update"
 import deleteProfilePicAction from "../actions/deleteProfilePic"
 import { useLocation, useHistory } from "react-router-dom"
 import PopupMessage from "../components/PopupMessage"
+import { GoogleLogin } from "react-google-login"
 
 const EditProfile = () => {
   const inputRef = useRef(null)
@@ -61,19 +62,25 @@ const EditProfile = () => {
     if (!isNaN(nameValue)) {
       setError("Name must be alphabetical letters!")
     } else {
-      dispatch(userUpdateAction(nameValue, emailValue, passwordValue))
+      dispatch(
+        userUpdateAction(
+          nameValue,
+          emailValue !== user.email ? emailValue : null,
+          passwordValue.length ? passwordValue : null
+        )
+      )
     }
   }
 
   useEffect(() => {
-    if (updateError || updated) {
+    if (updateError || updated || error) {
       document.querySelector(".content").scroll({
         top: 0,
         left: 0,
         behavior: `${updated ? "smooth" : "auto"}`,
       })
     }
-  }, [updateError, updated])
+  }, [updateError, updated, error])
 
   const removePictureHandler = () => {
     dispatch(deleteProfilePicAction())
@@ -83,15 +90,17 @@ const EditProfile = () => {
     if (!deleteProfilePicLoading) {
       const img1 = document.querySelector(".profilePic img")
       if (img1) {
-        img1.src = user.profilePicLink
-          ? user.profilePicLink
-          : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+        img1.src =
+          user.profilePicLink && user.profilePicLink !== "cleared"
+            ? user.profilePicLink
+            : `/api/users/profilePic/${user._id}?` + new Date().getTime()
       }
       const img2 = document.querySelector(".profile-mobile-pic img")
       if (img2) {
-        img2.src = user.profilePicLink
-          ? user.profilePicLink
-          : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+        img2.src =
+          user.profilePicLink && user.profilePicLink !== "cleared"
+            ? user.profilePicLink
+            : `/api/users/profilePic/${user._id}?` + new Date().getTime()
       }
     }
   }, [deleteProfilePicLoading, user._id, user.profilePicLink])
@@ -177,61 +186,81 @@ const EditProfile = () => {
                   alt='X icon'
                 />
               </div>
-              <div className='email'>
-                <label htmlFor='email'>Email Address</label>
-                <input
-                  value={emailValue}
-                  id='email'
-                  type='text'
-                  onChange={(e) => setEmailValue(e.target.value)}
-                />
-                <img
-                  onClick={() => setEmailValue("")}
-                  style={{ display: `${emailValue.length ? "block" : "none"}` }}
-                  className='xSign2'
-                  src={xSign}
-                  alt='X icon'
-                />
-              </div>
-              <div className='password'>
-                <label htmlFor='password'>Password</label>
-                <input
-                  ref={inputRef}
-                  value={passwordValue}
-                  id='password'
-                  type={`${show ? "text" : "password"}`}
-                  onChange={(e) => setPasswordValue(e.target.value)}
-                />
-                <img
-                  style={{ display: `${show ? "none" : "block"}` }}
-                  className='eye eye1'
-                  src={closedEye}
-                  alt='closedEye'
-                  draggable='false'
-                  onClick={() => {
-                    inputRef.current.focus()
-                    setShow(!show)
-                    setTimeout(function () {
-                      inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
-                    }, 0)
-                  }}
-                />
-                <img
-                  style={{ display: `${!show ? "none" : "block"}` }}
-                  className='eye eye2'
-                  src={eye}
-                  alt='eye'
-                  draggable='false'
-                  onClick={() => {
-                    inputRef.current.focus()
-                    setShow(!show)
-                    setTimeout(function () {
-                      inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
-                    }, 0)
-                  }}
-                />
-              </div>
-
+              {user.profilePicLink && (
+                <>
+                  <div className='email'>
+                    <label htmlFor='email'>Email Address</label>
+                    <input
+                      onChange={() => "s"}
+                      value={emailValue}
+                      id='email'
+                      type='text'
+                      disabled={true}
+                      className='google-input'
+                    />
+                  </div>
+                </>
+              )}
+              {!user.profilePicLink && (
+                <div className='email'>
+                  <label htmlFor='email'>Email Address</label>
+                  <input
+                    value={emailValue}
+                    id='email'
+                    type='text'
+                    onChange={(e) => setEmailValue(e.target.value)}
+                  />
+                  <img
+                    onClick={() => setEmailValue("")}
+                    style={{
+                      display: `${emailValue.length ? "block" : "none"}`,
+                    }}
+                    className='xSign2'
+                    src={xSign}
+                    alt='X icon'
+                  />
+                </div>
+              )}
+              {!user.profilePicLink && (
+                <div className='password'>
+                  <label htmlFor='password'>Password</label>
+                  <input
+                    ref={inputRef}
+                    value={passwordValue}
+                    id='password'
+                    type={`${show ? "text" : "password"}`}
+                    onChange={(e) => setPasswordValue(e.target.value)}
+                  />
+                  <img
+                    style={{ display: `${show ? "none" : "block"}` }}
+                    className='eye eye1'
+                    src={closedEye}
+                    alt='closedEye'
+                    draggable='false'
+                    onClick={() => {
+                      inputRef.current.focus()
+                      setShow(!show)
+                      setTimeout(function () {
+                        inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
+                      }, 0)
+                    }}
+                  />
+                  <img
+                    style={{ display: `${!show ? "none" : "block"}` }}
+                    className='eye eye2'
+                    src={eye}
+                    alt='eye'
+                    draggable='false'
+                    onClick={() => {
+                      inputRef.current.focus()
+                      setShow(!show)
+                      setTimeout(function () {
+                        inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
+                      }, 0)
+                    }}
+                  />
+                </div>
+              )}
               <button>Save Changes {updateLoading && <Loader />}</button>
             </form>
           </div>
@@ -248,6 +277,13 @@ const EditProfile = () => {
   )
 }
 const StyledEdit = styled.div`
+  .google-input {
+    color: #1a1a1a;
+    cursor: not-allowed !important;
+  }
+  .message {
+    padding: 0.55rem 0.9rem !important;
+  }
   height: 0px;
   position: relative;
 
@@ -299,11 +335,11 @@ const StyledEdit = styled.div`
     top: 50%;
     cursor: pointer;
     padding: 0.6rem;
-    transform: translate(-18%, -29%);
-    width: calc(2.8rem + 1vw);
+    transform: translate(-18%, -26%);
+    width: calc(2.4rem + 1vw);
   }
   .eye2 {
-    transform: translate(-18%, -25%) !important;
+    transform: translate(-18%, -22%) !important;
   }
   .wrapper {
     width: 50%;
@@ -430,7 +466,7 @@ const StyledEdit = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.72rem 0.8rem;
+      padding: 0.62rem 0.8rem;
       border: none;
       background: #00b2d8;
       color: white;
@@ -475,13 +511,12 @@ const StyledEdit = styled.div`
       top: 50%;
       cursor: pointer;
       padding: 0.6rem;
-      transform: translate(-18%, -36%);
+      transform: translate(-14%, -36%);
       width: calc(2.8rem + 1vw);
     }
-    .eye1 {
-      transform: translate(-18%, -35%) !important;
+    .eye2 {
+      transform: translate(-14%, -36%) !important;
     }
-
     .xSign2,
     .xSign1 {
       transform: translate(-50%, -24%) !important;

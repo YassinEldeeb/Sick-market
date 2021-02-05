@@ -65,9 +65,9 @@ const Verify = () => {
   const history = useHistory()
 
   useEffect(() => {
-    if (user) {
+    if (user.name) {
       if (status === "Verified") {
-        history.push("/")
+        history.push("/login")
       }
     } else {
       history.push("/")

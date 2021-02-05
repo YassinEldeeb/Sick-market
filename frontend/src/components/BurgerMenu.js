@@ -18,6 +18,16 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
   const [check, setCheck] = useState(false)
   const bgIdentify = () => (check ? trueSVG : falseSVG)
 
+  const imgSrcCondition = () => {
+    if (
+      userInfo.user.profilePicLink &&
+      userInfo.user.profilePicLink !== "cleared"
+    ) {
+      return userInfo.user.profilePicLink
+    } else {
+      return `/api/users/profilePic/${userInfo.user._id}`
+    }
+  }
   return (
     <StyledMenu
       bg={bgIdentify()}
@@ -32,14 +42,7 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
           {userInfo.user.name && (
             <div className='profile-mobile'>
               <div className='profile-mobile-pic'>
-                <img
-                  src={
-                    userInfo.user.profilePicLink
-                      ? userInfo.user.profilePicLink
-                      : `/api/users/profilePic/${userInfo.user._id}`
-                  }
-                  alt=''
-                />
+                <img src={imgSrcCondition()} alt='' />
               </div>
               <div className='profile-desc-mobile'>
                 <h1>{truncate(userInfo.user.name)}</h1>

@@ -9,14 +9,15 @@ const PopupMessage = ({
   setWarning,
   type = "warning",
   timer,
-  warning,
   oneTime = true,
 }) => {
   const [value, setValue] = useState(null)
   const [hovered, setHovered] = useState(false)
-  setTimeout(() => {
-    setValue("hideIt")
-  }, timer * 1000)
+  if (timer) {
+    setTimeout(() => {
+      setValue("hideIt")
+    }, timer * 1000)
+  }
 
   return (
     <StyledPopup

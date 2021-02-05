@@ -50,7 +50,7 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   return (
     <>
       {status !== "Verified" &&
-        user &&
+        user.name &&
         warning &&
         location.pathname.split("/")[1] !== "verify" &&
         location.pathname.split("/")[1] !== "changeEmail" && (
