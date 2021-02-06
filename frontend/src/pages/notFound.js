@@ -1,5 +1,6 @@
 import React, { useRef } from "react"
 import styled from "styled-components"
+import gif from "../img/noise.gif"
 
 const NotFound = () => {
   const torch = useRef(null)
@@ -17,7 +18,7 @@ const NotFound = () => {
     }
   })
   return (
-    <StyledNotFound>
+    <StyledNotFound gif={gif}>
       <h1 className='errorCode'>404</h1>
       <h1 className='notFound'>Not Found</h1>
       <div ref={torch} className='torch'></div>
@@ -28,12 +29,13 @@ const NotFound = () => {
 }
 const StyledNotFound = styled.div`
   cursor: none;
+
   .promo-code {
     position: absolute;
     right: 1%;
     bottom: 1%;
     font-size: 0.75rem;
-    color: rgba(0, 0, 0, 0.45);
+    color: rgba(0, 0, 0, 0.35);
     pointer-events: none;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -86,6 +88,16 @@ const StyledNotFound = styled.div`
     background: rgba(0, 0, 0, 0.1);
     transform: translate(18%, 16%);
 
+    &:before {
+      content: "";
+      display: block;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      opacity: 0.08;
+      background: url(${(props) => props.gif});
+      background-size: 100px;
+    }
     &:after {
       content: "";
       display: block;
@@ -94,7 +106,6 @@ const StyledNotFound = styled.div`
       height: 100%;
       top: 0px;
       left: 0px;
-
       box-shadow: inset 0 0 20px 2px rgba(0, 0, 0, 0.7),
         0 0 20px 4px rgba(13, 13, 10, 0.2);
     }

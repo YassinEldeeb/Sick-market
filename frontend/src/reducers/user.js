@@ -101,7 +101,9 @@ const userReducer = (state = initialState, action) => {
       }
     case "DELETE_PROFILE_PIC_SUCCESS":
       state.user.availablePic = false
-      state.user.profilePicLink = "cleared"
+      if (state.user.profilePicLink) {
+        state.user.profilePicLink = "cleared"
+      }
       localStorage.setItem(
         "sickUserInfo",
         JSON.stringify({ user: state.user, token: state.token })

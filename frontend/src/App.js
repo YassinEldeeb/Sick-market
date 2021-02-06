@@ -89,6 +89,8 @@ const App = () => {
             <Route path='/account/change-password'>
               <ChangePassword slider={slider} setSlider={setSlider} />
             </Route>
+            <Route path='/account'></Route>
+
             <Route>
               <NotFound />
             </Route>

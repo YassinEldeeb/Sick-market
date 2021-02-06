@@ -228,7 +228,9 @@ const uploadProfilePic = asyncHandler(async (req, res) => {
     .toBuffer()
 
   req.user.availablePic = true
-  req.user.profilePicLink = "cleared"
+  if (req.user.profilePicLink) {
+    req.user.profilePicLink = "cleared"
+  }
   req.user.profilePic = buffer
   await req.user.save()
   res.send()
@@ -237,7 +239,9 @@ const uploadProfilePic = asyncHandler(async (req, res) => {
 const deleteProfilePic = asyncHandler(async (req, res) => {
   req.user.profilePic = null
   req.user.availablePic = false
-  req.user.profilePicLink = "cleared"
+  if (req.user.profilePicLink) {
+    req.user.profilePicLink = "cleared"
+  }
   await req.user.save()
   res.send()
 })
