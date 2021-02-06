@@ -16,22 +16,15 @@ let initialState
 
 const savedUserInfo = JSON.parse(localStorage.getItem("sickUserInfo"))
 const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
-if (savedCart) initialState = { cart: { cartItems: savedCart } }
-else
-  initialState = {
-    cart: { cartItems: [] },
-  }
+const savedAddress = JSON.parse(localStorage.getItem("sickAddress"))
 
-if (savedUserInfo)
-  initialState = {
-    cart: { cartItems: savedCart ? savedCart : [] },
-    userInfo: savedUserInfo,
-  }
-else
-  initialState = {
-    cart: { cartItems: savedCart ? savedCart : [] },
-    userInfo: { user: {} },
-  }
+initialState = {
+  cart: {
+    cartItems: savedCart ? savedCart : [],
+    address: savedAddress ? savedAddress : {},
+  },
+  userInfo: savedUserInfo ? savedUserInfo : { user: {} },
+}
 
 const middleware = [thunk]
 

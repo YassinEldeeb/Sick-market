@@ -20,7 +20,10 @@ const NotFound = () => {
   return (
     <StyledNotFound gif={gif}>
       <h1 className='errorCode'>404</h1>
-      <h1 className='notFound'>Not Found</h1>
+      <h1 className='notFound'>
+        Looks like you've <br />
+        lost your direction
+      </h1>
       <div ref={torch} className='torch'></div>
       <div ref={torch2} className='torch-mobile'></div>
       <div className='promo-code'>10% Promo Code: 4Sgfav</div>
@@ -50,10 +53,11 @@ const StyledNotFound = styled.div`
   align-items: center;
   flex-direction: column;
   .errorCode {
-    font-size: calc(6.5rem + 1vw);
+    font-size: calc(5.5rem + 1vw);
   }
   .notFound {
-    font-size: calc(4.5rem + 1vw);
+    font-size: calc(3rem + 1vw);
+    text-align: center;
   }
   .notFound,
   .errorCode {
@@ -130,7 +134,7 @@ const StyledNotFound = styled.div`
       font-size: calc(4rem + 1vw);
     }
     .notFound {
-      font-size: calc(3rem + 1vw);
+      font-size: calc(1.7rem + 1vw);
     }
   }
 `

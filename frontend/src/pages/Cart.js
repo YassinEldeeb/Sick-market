@@ -80,7 +80,7 @@ const StyledCart = styled.div`
     margin-top: 0.7rem;
   }
   .title {
-    margin-top: 0.3rem;
+    margin-top: 0.7rem;
     color: #1a1a1a;
     font-weight: 500;
     font-size: calc(1.5rem + 1vw);
