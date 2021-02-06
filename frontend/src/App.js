@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { BrowserRouter, Route } from "react-router-dom"
+import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { LastLocationProvider } from "react-router-last-location"
 import Global from "./components/GlobalStyles"
 import Home from "./pages/Home"
@@ -15,6 +15,7 @@ import Verify from "./pages/Verify"
 import ChangeEmail from "./pages/changeEmail"
 import EditProfile from "./pages/edit-profile"
 import ChangePassword from "./pages/changePassword"
+import NotFound from "./pages/notFound"
 
 const App = () => {
   const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
@@ -40,7 +41,7 @@ const App = () => {
     if (token && !loading && !validToken) {
       dispatch(checkToken(token))
     }
-  }, [dispatch, user.token, loading, validToken])
+  }, [dispatch, token, loading, validToken])
 
   const [slider, setSlider] = useState(false)
 
@@ -54,36 +55,44 @@ const App = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
           />
-          <Route path='/' exact>
-            <Home scrolled={scrolled} setScrolled={setScrolled} />
-          </Route>
-          <Route path='/products/:id'>
-            <ProductDetail cartCount={cartCount} setCartCount={setCartCount} />
-          </Route>
-          <Route path='/product-description/:id'>
-            <Description />
-          </Route>
-          <Route path='/cart'>
-            <Cart cartCount={cartCount} setCartCount={setCartCount} />
-          </Route>
-          <Route path='/login'>
-            <Login />
-          </Route>
-          <Route path='/register'>
-            <Register />
-          </Route>
-          <Route path='/verify'>
-            <Verify />
-          </Route>
-          <Route path='/changeEmail'>
-            <ChangeEmail />
-          </Route>
-          <Route path='/account/edit-profile'>
-            <EditProfile slider2={slider} setSlider2={setSlider} />
-          </Route>
-          <Route path='/account/change-password'>
-            <ChangePassword slider={slider} setSlider={setSlider} />
-          </Route>
+          <Switch>
+            <Route path='/' exact>
+              <Home scrolled={scrolled} setScrolled={setScrolled} />
+            </Route>
+            <Route path='/products/:id'>
+              <ProductDetail
+                cartCount={cartCount}
+                setCartCount={setCartCount}
+              />
+            </Route>
+            <Route path='/product-description/:id'>
+              <Description />
+            </Route>
+            <Route path='/cart'>
+              <Cart cartCount={cartCount} setCartCount={setCartCount} />
+            </Route>
+            <Route path='/login'>
+              <Login />
+            </Route>
+            <Route path='/register'>
+              <Register />
+            </Route>
+            <Route path='/verify'>
+              <Verify />
+            </Route>
+            <Route path='/changeEmail'>
+              <ChangeEmail />
+            </Route>
+            <Route path='/account/edit-profile'>
+              <EditProfile slider2={slider} setSlider2={setSlider} />
+            </Route>
+            <Route path='/account/change-password'>
+              <ChangePassword slider={slider} setSlider={setSlider} />
+            </Route>
+            <Route>
+              <NotFound />
+            </Route>
+          </Switch>
         </LastLocationProvider>
       </BrowserRouter>
     </div>

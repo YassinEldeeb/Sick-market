@@ -85,22 +85,27 @@ const EditProfile = () => {
   const removePictureHandler = () => {
     dispatch(deleteProfilePicAction())
   }
-
+  const imgSrcCondition = () => {
+    if (
+      userInfo.user.profilePicLink &&
+      userInfo.user.profilePicLink !== "cleared"
+    ) {
+      return userInfo.user.profilePicLink
+    } else {
+      return (
+        `/api/users/profilePic/${userInfo.user._id}?` + new Date().getTime()
+      )
+    }
+  }
   useEffect(() => {
     if (!deleteProfilePicLoading) {
       const img1 = document.querySelector(".profilePic img")
       if (img1) {
-        img1.src =
-          user.profilePicLink && user.profilePicLink !== "cleared"
-            ? user.profilePicLink
-            : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+        img1.src = imgSrcCondition()
       }
       const img2 = document.querySelector(".profile-mobile-pic img")
       if (img2) {
-        img2.src =
-          user.profilePicLink && user.profilePicLink !== "cleared"
-            ? user.profilePicLink
-            : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+        img2.src = imgSrcCondition()
       }
     }
   }, [deleteProfilePicLoading, user._id, user.profilePicLink])

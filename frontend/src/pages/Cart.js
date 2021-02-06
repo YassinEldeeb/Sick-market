@@ -4,12 +4,15 @@ import Message from "../components/message"
 import Goback from "../components/Goback"
 import { useSelector } from "react-redux"
 import CartProduct from "../components/CartProduct"
+import { Link } from "react-router-dom"
 
 const Cart = ({ cartCount, setCartCount }) => {
   const { cartItems } = useSelector((state) => state.cart)
+  const { user } = useSelector((state) => state.userInfo)
   const pricesArr = cartItems.map((each) => each.price * each.qty)
   const qtyArr = cartItems.map((each) => each.qty)
 
+  const redirect = user.name ? "/shipping" : "/login?redirect=shipping"
   return (
     <StyledCart>
       <Goback />
@@ -22,9 +25,9 @@ const Cart = ({ cartCount, setCartCount }) => {
             </h3>
             <h4>${pricesArr.reduce((acc, price) => acc + price).toFixed(2)}</h4>
           </div>
-          <div className='proceed-btn-mobile'>
+          <Link to={redirect} className='proceed-btn-mobile'>
             <h3>Proceed to checkout</h3>
-          </div>
+          </Link>
           <div className='line'></div>
         </>
       )}
@@ -57,9 +60,9 @@ const Cart = ({ cartCount, setCartCount }) => {
                   ${pricesArr.reduce((acc, price) => acc + price).toFixed(2)}
                 </h4>
               </div>
-              <div className='proceed-btn'>
+              <Link to={redirect} className='proceed-btn'>
                 <h3>Proceed to checkout</h3>
-              </div>
+              </Link>
             </div>
           </div>
         )}

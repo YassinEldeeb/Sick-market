@@ -156,7 +156,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     }
     const lastPassword = req.user.password
 
-    if (req.user.email !== req.body.email) {
+    if (req.body.email && req.user.email !== req.body.email) {
       req.user.status = "pending"
     }
     //Valid updates

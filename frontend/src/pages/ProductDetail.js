@@ -31,10 +31,8 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      if (
-        (Object.keys(product).length === 0 && !fetching) ||
-        (location.search.split("=")[1] === "cart" && !fetching)
-      ) {
+      if (!product.price && !fetching) {
+        console.log(location.search.split("=")[1], fetching)
         setFetching(true)
         await dispatch(productDetailAction(id))
         setFetching(false)

@@ -32,6 +32,7 @@ const Login = () => {
 
   const search = location.search.split("=")[1]
   const redirect = search ? search : "/"
+
   useEffect(() => {
     if (user.name) {
       history.push(redirect)
@@ -144,14 +145,14 @@ const Login = () => {
         <p className='desktop'>
           New Customer?{" "}
           <span className='register'>
-            <Link to='register'>Register</Link>
+            <Link to={`/register?${redirect}`}>Register</Link>
           </span>
         </p>
       </form>
       <p className='mobile'>
         New Customer?{" "}
         <span className='register'>
-          <Link to='register'>Register</Link>
+          <Link to={`/register?${redirect}`}>Register</Link>
         </span>
       </p>
     </StyledLogin>

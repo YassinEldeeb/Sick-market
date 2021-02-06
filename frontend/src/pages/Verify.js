@@ -5,7 +5,7 @@ import danger from "../img/danger.svg"
 import { useDispatch, useSelector } from "react-redux"
 import Message from "../components/message"
 import Loader from "../components/loader"
-import { Link, useHistory } from "react-router-dom"
+import { Link, useHistory, useLocation } from "react-router-dom"
 import newCodeAction from "../actions/newCode"
 
 const Verify = () => {
@@ -28,6 +28,7 @@ const Verify = () => {
       : 60
   )
 
+  const location = useLocation()
   useEffect(() => {
     if (startTimer) {
       setTimeout(() => {
@@ -64,13 +65,17 @@ const Verify = () => {
 
   const history = useHistory()
 
+  const redirect = location.search.split("=")[1]
+    ? location.search.split("=")[1]
+    : "/"
+
   useEffect(() => {
     if (user.name) {
       if (status === "Verified") {
-        history.push("/login")
+        history.push(redirect)
       }
     } else {
-      history.push("/")
+      history.push("/login")
     }
   }, [status, user, history])
 
@@ -90,7 +95,7 @@ const Verify = () => {
       setTimer(60)
       if (!startTimer) setStartTimer(true)
     } else if (newCodeError === "Email already Verified") {
-      history.push("/")
+      history.push(redirect)
     }
   }, [newCodeLoading, history, newCodeError, startTimer])
 

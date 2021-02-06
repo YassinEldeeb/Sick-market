@@ -11,7 +11,7 @@ import PopupMessage from "./PopupMessage"
 
 const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   const { user } = useSelector((state) => state.userInfo)
-  const status = user ? user.status : ""
+  const status = user.status
   const location = useLocation()
   const history = useHistory()
 
@@ -31,9 +31,11 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   const [warning, setWarning] = useState(
     localStorage.getItem("showWarning") ? false : true
   )
+  const search = location.search.split("=")[1]
+  const redirect = search ? search : "/"
   useEffect(() => {
     if (location.pathname.split("/")[1] === "account" && !user.name) {
-      history.push("/login")
+      history.push(`/login?redirect=${location.pathname.replace("/", "")}`)
     } else if (
       location.pathname === "/account" ||
       location.pathname === "/account/"
@@ -47,6 +49,7 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
       type: "CLEAR_ERRORS",
     })
   }, [location.pathname, dispatch])
+
   return (
     <>
       {status !== "Verified" &&
@@ -60,7 +63,9 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
               <p>
                 Your Email isn't verified!, You can't order or update your
                 profile unless you go to{" "}
-                <Link to='/verify'>Verify your Email.</Link>
+                <Link to={`/verify?redirect=${redirect.replace("/", "")}`}>
+                  Verify your Email.
+                </Link>
               </p>
             }
             title='Alert'

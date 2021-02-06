@@ -1,4 +1,4 @@
-const initialState = {}
+const initialState = { user: {} }
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -21,7 +21,7 @@ const userReducer = (state = initialState, action) => {
     case "CHECK_TOKEN_FAIL":
       return { ...state, loading: false, error: action.payload }
     case "REGISTER_REQUEST":
-      return { loading: true, error: null }
+      return { loading: true, error: null, user: {} }
     case "REGISTER_SUCCESS":
       return { ...state, ...action.payload }
     case "REGISTER_FAIL":
@@ -119,7 +119,9 @@ const userReducer = (state = initialState, action) => {
       }
     case "PROFILE_PIC_UPLOADED":
       state.user.availablePic = true
-      state.user.profilePicLink = "cleared"
+      if (state.user.profilePicLink) {
+        state.user.profilePicLink = "cleared"
+      }
       localStorage.setItem(
         "sickUserInfo",
         JSON.stringify({ user: state.user, token: state.token })
