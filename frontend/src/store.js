@@ -17,11 +17,13 @@ let initialState
 const savedUserInfo = JSON.parse(localStorage.getItem("sickUserInfo"))
 const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
 const savedAddress = JSON.parse(localStorage.getItem("sickAddress"))
+const savedPaymentMethod = JSON.parse(localStorage.getItem("sickPaymentMethod"))
 
 initialState = {
   cart: {
     cartItems: savedCart ? savedCart : [],
     address: savedAddress ? savedAddress : {},
+    paymentMethod: savedPaymentMethod ? savedPaymentMethod : {},
   },
   userInfo: savedUserInfo ? savedUserInfo : { user: {} },
 }

@@ -4,6 +4,7 @@ import xSign from "../img/xSign.svg"
 import { useLocation, useHistory } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import userSaveAddress from "../actions/saveAddress"
+import CheckoutSteps from "../components/CheckoutSteps"
 
 const Shipping = () => {
   const cart = useSelector((state) => state.cart)
@@ -33,106 +34,111 @@ const Shipping = () => {
   const submitHandler = (e) => {
     e.preventDefault()
     dispatch(userSaveAddress({ address, city, country, phoneNumber }))
+    history.push("/payment")
   }
   return (
-    <StyledShipping>
-      <form onSubmit={submitHandler}>
-        <h1>Shipping</h1>
-        <div className='address'>
-          <label htmlFor='address'>Address</label>
-          <input
-            value={address}
-            id='address'
-            type='text'
-            required
-            onChange={(e) => setAddress(e.target.value)}
-          />
-          <img
-            onClick={() => setAddress("")}
-            style={{ display: `${address.length ? "block" : "none"}` }}
-            className='xSign2'
-            src={xSign}
-            alt='X icon'
-          />
-        </div>
-        <div className='city'>
-          <label htmlFor='city'>City</label>
-          <input
-            value={city}
-            id='city'
-            type='text'
-            required
-            onChange={(e) => setCity(e.target.value)}
-          />
-          <img
-            onClick={() => setCity("")}
-            style={{ display: `${city.length ? "block" : "none"}` }}
-            className='xSign2'
-            src={xSign}
-            alt='X icon'
-          />
-        </div>
-        <div className='country'>
-          <label htmlFor='country'>Country</label>
-          <input
-            value={country}
-            id='country'
-            type='text'
-            required
-            onChange={(e) => setCountry(e.target.value)}
-          />
-          <img
-            onClick={() => setCountry("")}
-            style={{ display: `${country.length ? "block" : "none"}` }}
-            className='xSign2'
-            src={xSign}
-            alt='X icon'
-          />
-        </div>
-        <div className='phoneNumber'>
-          <label htmlFor='phoneNumber'>Phone Number</label>
-          <input
-            value={phoneNumber}
-            id='phoneNumber'
-            type='number'
-            required
-            onChange={(e) => setPhoneNumber(e.target.value)}
-          />
-          <img
-            onClick={() => setPhoneNumber("")}
-            style={{ display: `${phoneNumber.length ? "block" : "none"}` }}
-            className='xSign2'
-            src={xSign}
-            alt='X icon'
-          />
-        </div>
-        <button type='submit'>Continue</button>
-      </form>
-    </StyledShipping>
+    <>
+      <CheckoutSteps step1 step2 current='step2' />
+
+      <StyledShipping>
+        <form onSubmit={submitHandler}>
+          <h1>Shipping</h1>
+          <div className='address'>
+            <label htmlFor='address'>Address</label>
+            <input
+              value={address}
+              id='address'
+              type='text'
+              required
+              onChange={(e) => setAddress(e.target.value)}
+            />
+            <img
+              onClick={() => setAddress("")}
+              style={{ display: `${address.length ? "block" : "none"}` }}
+              className='xSign2'
+              src={xSign}
+              alt='X icon'
+            />
+          </div>
+          <div className='city'>
+            <label htmlFor='city'>City</label>
+            <input
+              value={city}
+              id='city'
+              type='text'
+              required
+              onChange={(e) => setCity(e.target.value)}
+            />
+            <img
+              onClick={() => setCity("")}
+              style={{ display: `${city.length ? "block" : "none"}` }}
+              className='xSign2'
+              src={xSign}
+              alt='X icon'
+            />
+          </div>
+          <div className='country'>
+            <label htmlFor='country'>Country</label>
+            <input
+              value={country}
+              id='country'
+              type='text'
+              required
+              onChange={(e) => setCountry(e.target.value)}
+            />
+            <img
+              onClick={() => setCountry("")}
+              style={{ display: `${country.length ? "block" : "none"}` }}
+              className='xSign2'
+              src={xSign}
+              alt='X icon'
+            />
+          </div>
+          <div className='phoneNumber'>
+            <label htmlFor='phoneNumber'>Phone Number</label>
+            <input
+              value={phoneNumber}
+              id='phoneNumber'
+              type='number'
+              required
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+            <img
+              onClick={() => setPhoneNumber("")}
+              style={{ display: `${phoneNumber.length ? "block" : "none"}` }}
+              className='xSign2'
+              src={xSign}
+              alt='X icon'
+            />
+          </div>
+          <button type='submit'>Continue</button>
+        </form>
+      </StyledShipping>
+    </>
   )
 }
 const StyledShipping = styled.div`
+  flex-direction: column;
   width: 90%;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 1 1 auto;
-  margin-top: clamp(15px, 10vh, 70px);
 
   form {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 40%;
+    width: 52%;
     justify-content: center;
     margin-bottom: 1rem;
     max-width: 750px;
-
+    margin-top: 1.8rem;
     h1 {
       color: #1a1a1a;
       font-weight: 500;
-      font-size: calc(2rem + 1vw);
+      font-size: calc(2.5rem + 1vw);
       margin-bottom: 1.2rem;
     }
     .signInDiv {
@@ -176,14 +182,6 @@ const StyledShipping = styled.div`
       &:hover {
         background: #00a8ce;
       }
-      #loader:first-child {
-        width: calc(0.9rem + 0.5vw);
-        height: calc(0.9rem + 0.5vw);
-        margin-left: 0.45rem;
-        #greybackground path {
-          stroke: white;
-        }
-      }
     }
     #country,
     #city,
@@ -206,7 +204,7 @@ const StyledShipping = styled.div`
 
   @media screen and (max-width: 1050px) {
     margin-top: unset !important;
-
+    justify-content: flex-start;
     .xSign2 {
       transform: translate(-50%, -24%) !important;
       width: calc(2rem + 1vw);
@@ -216,6 +214,7 @@ const StyledShipping = styled.div`
     }
     form {
       width: 100%;
+      margin-top: 1.2rem;
       h1 {
         font-size: calc(2.5rem + 1vw);
       }

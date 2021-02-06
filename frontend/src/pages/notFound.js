@@ -123,6 +123,9 @@ const StyledNotFound = styled.div`
     display: block;
   }
   @media screen and (max-width: 1050px) {
+    .promo-code {
+      right: 3% !important;
+    }
     .torch {
       display: none;
     }

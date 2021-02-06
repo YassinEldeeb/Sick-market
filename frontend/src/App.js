@@ -17,6 +17,7 @@ import EditProfile from "./pages/edit-profile"
 import ChangePassword from "./pages/changePassword"
 import NotFound from "./pages/notFound"
 import Shipping from "./pages/Shipping"
+import Payment from "./pages/Payment"
 
 const App = () => {
   const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
@@ -34,9 +35,7 @@ const App = () => {
   )
   document.body.style.overflow = activeMenu ? "hidden" : "auto"
   const dispatch = useDispatch()
-  const { loading, validToken, user, token } = useSelector(
-    (state) => state.userInfo
-  )
+  const { loading, validToken, token } = useSelector((state) => state.userInfo)
 
   useEffect(() => {
     if (token && !loading && !validToken) {
@@ -93,6 +92,10 @@ const App = () => {
             <Route path='/shipping'>
               <Shipping />
             </Route>
+            <Route path='/payment'>
+              <Payment />
+            </Route>
+
             <Route path='/account'></Route>
 
             <Route>

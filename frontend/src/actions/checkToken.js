@@ -1,8 +1,6 @@
 import axios from "axios"
 
 const checkToken = (token) => async (dispatch) => {
-  console.log("Token:", token)
-
   try {
     dispatch({ type: "CHECK_TOKEN_REQUEST" })
     const config = {
@@ -11,16 +9,10 @@ const checkToken = (token) => async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     }
-    await axios.post("/api/users/checkToken", null, config)
+    const data = await axios.post("/api/users/checkToken", null, config)
     dispatch({ type: "CHECK_TOKEN_SUCCESS", payload: true })
   } catch (error) {
-    if (
-      error.response.status === 401 &&
-      error.response &&
-      error.response.data.message
-        ? error.response.data.message
-        : error.message === "invalid token"
-    ) {
+    if (error.response.status === 401) {
       dispatch({ type: "USER_LOGOUT" })
       localStorage.removeItem("sickUserInfo")
       dispatch({ type: "CHECK_TOKEN_SUCCESS", payload: false })

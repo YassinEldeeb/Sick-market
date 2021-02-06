@@ -95,7 +95,7 @@ userSchema.statics.findByCredentials = async function (email, password, type) {
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = user.generateToken()
       user.tokens.unshift({ token })
-      user.save()
+      await user.save()
       return { user, token: user.tokens[0].token }
     } else {
       if (password !== user.password && user.profilePicLink) {
