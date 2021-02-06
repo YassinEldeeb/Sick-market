@@ -27,7 +27,7 @@ const NotFound = () => {
   )
 }
 const StyledNotFound = styled.div`
-  /* cursor: none; */
+  cursor: none;
   .promo-code {
     position: absolute;
     right: 1%;
