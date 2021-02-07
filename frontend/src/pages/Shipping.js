@@ -138,7 +138,7 @@ const StyledShipping = styled.div`
     h1 {
       color: #1a1a1a;
       font-weight: 500;
-      font-size: calc(2.5rem + 1vw);
+      font-size: calc(2rem + 1vw);
       margin-bottom: 1.2rem;
     }
     .signInDiv {

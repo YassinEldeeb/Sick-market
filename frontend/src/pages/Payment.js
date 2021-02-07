@@ -98,7 +98,7 @@ const StyledPayment = styled.div`
     label {
       margin-bottom: 0.7rem;
       position: relative;
-      font-size: calc(0.68rem + 1vw);
+      font-size: calc(0.61rem + 1vw);
       font-weight: 400;
       cursor: pointer;
       color: #1a1a1a;
@@ -144,7 +144,7 @@ const StyledPayment = styled.div`
   h1 {
     color: #1a1a1a;
     font-weight: 500;
-    font-size: calc(2.5rem + 1vw);
+    font-size: calc(2rem + 1vw);
     margin-bottom: 1.2rem;
   }
   @media screen and (max-width: 1050px) {
