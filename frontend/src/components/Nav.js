@@ -22,9 +22,9 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
         top: 0,
         left: 0,
       })
-      if (activeMenu) {
-        setActiveMenu(false)
-      }
+    }
+    if (activeMenu) {
+      setActiveMenu(false)
     }
   }, [location.pathname, setActiveMenu])
 

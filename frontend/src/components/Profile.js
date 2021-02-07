@@ -63,6 +63,7 @@ const Profile = () => {
           <img
             style={{
               transform: `rotate${dropDown ? "(180deg)" : "(0deg)"}`,
+              width: "19px",
             }}
             className='arrowProfile'
             src={arrow}
@@ -121,8 +122,8 @@ const StyledProfile = styled.div`
     align-items: center;
     position: relative;
     .arrowProfile {
-      transition: 0.1s ease;
-      margin-left: calc(0.3rem + 0.1vw);
+      transition: 0.02s ease;
+      margin-left: calc(0.1rem);
       filter: brightness(1000000%);
       transform: translateY(25%);
     }

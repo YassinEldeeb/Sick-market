@@ -33,7 +33,10 @@ const Product = ({ data, setScrolled }) => {
           <h1>{truncate(data.name)}</h1>
         </Link>
         <Rating ratingValue={data.rating} numOfReviews={data.numReviews} />
-        <h4>${data.price}</h4>
+        <h4>
+          {data.price}
+          <span className='currency'>EGP</span>
+        </h4>
       </div>
     </StyledProduct>
   )
@@ -79,10 +82,17 @@ const StyledProduct = styled.div`
       }
     }
     h4 {
-      width: 100%;
       color: #005568;
       font-weight: 400;
       font-size: calc(1rem + 0.4vw);
+      position: relative;
+      .currency {
+        font-size: calc(0.55rem + 0.4vw);
+        position: absolute;
+        right: 0;
+        top: 0;
+        transform: translate(105%, 10%);
+      }
     }
   }
   a:first-child {

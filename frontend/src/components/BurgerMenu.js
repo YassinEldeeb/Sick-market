@@ -74,7 +74,7 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
           <div className='settingsChildren'>
             <div className='settingChild'>
               <img src={flag} alt='country' />
-              <h4>United States</h4>
+              <h4>Egypt</h4>
             </div>
             <div className='settingChild'>
               <img src={lang} alt='USA flag' />
@@ -82,7 +82,7 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
             </div>
             <div className='settingChild'>
               <img src={dollar} alt='dollar' />
-              <h4>U.S.D</h4>
+              <h4>EGP</h4>
             </div>
           </div>
         </div>
@@ -208,6 +208,12 @@ const StyledMenu = styled.div`
     .settingChild {
       display: flex;
       margin-bottom: calc(0.7rem + 1vh);
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 25px;
+        height: 25px;
+      }
       h4 {
         padding-left: 0.5rem;
         white-space: nowrap;

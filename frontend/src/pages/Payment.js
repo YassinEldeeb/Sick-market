@@ -11,7 +11,7 @@ const Payment = () => {
   const { user } = useSelector((state) => state.userInfo)
 
   const [method, setMethod] = useState(
-    paymentMethod.length ? paymentMethod : "Paypal"
+    paymentMethod.length ? paymentMethod : "PayPal or Credit & Debit Cards"
   )
   const dispatch = useDispatch()
   const history = useHistory()
@@ -43,19 +43,21 @@ const Payment = () => {
             <div className='select'>
               <input type='radio' id='credit' />
               <label
-                className={`${method === "Paypal" ? "active" : ""}`}
+                className={`${
+                  method === "PayPal or Credit & Debit Cards" ? "active" : ""
+                }`}
                 htmlFor='credit'
-                onClick={() => setMethod("Paypal")}
+                onClick={() => setMethod("PayPal or Credit & Debit Cards")}
               >
-                PayPal or Credit Card & Debit
+                PayPal or Credit & Debit Cards
               </label>
               <input type='radio' id='delivery' />
               <label
-                className={`${method === "Delivery" ? "active" : ""}`}
-                htmlFor='delivery'
-                onClick={() => setMethod("Delivery")}
+                className={`${method === "Cash on Delivery" ? "active" : ""}`}
+                htmlFor='Cash on Delivery'
+                onClick={() => setMethod("Cash on Delivery")}
               >
-                Pay on Delivery
+                Cash on Delivery
               </label>
             </div>
             <button onClick={continueHandler}>Continue</button>
