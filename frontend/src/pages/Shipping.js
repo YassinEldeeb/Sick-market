@@ -271,7 +271,9 @@ const StyledShipping = styled.div`
     cursor: pointer;
     padding: 0.2rem;
   }
-
+  .css-yk16xz-control * {
+    padding: 0 !important;
+  }
   @media screen and (max-width: 1050px) {
     margin-top: unset !important;
     justify-content: flex-start;
@@ -297,7 +299,6 @@ const StyledShipping = styled.div`
       .css-yk16xz-control,
       .css-1pahdxg-control {
         padding: 0.25rem 1rem !important;
-        padding-right: 0.5rem !important;
       }
       .css-1uccc91-singleValue {
         color: #000 !important;
