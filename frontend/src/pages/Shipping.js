@@ -393,21 +393,7 @@ const StyledShipping = styled.div`
       stroke: white;
     }
   }
-  .title {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.2rem;
-    button {
-      padding: 0.5rem;
-      border-radius: 6px;
-      img {
-        width: 1.7rem;
-        height: 1.7rem;
-      }
-    }
-  }
+
   /* .css-yk16xz-control *,
   .css-1pahdxg-control * {
     padding: 0 !important;
@@ -514,6 +500,22 @@ const StyledShipping = styled.div`
         margin-left: 0.45rem !important;
         #greybackground path {
           stroke: white !important;
+        }
+      }
+    }
+    .title {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      button {
+        padding: 0.5rem;
+        border-radius: 6px;
+        img {
+          margin-left: 0rem !important;
+          width: 1.7rem !important;
+          height: 1.7rem !important;
         }
       }
     }
