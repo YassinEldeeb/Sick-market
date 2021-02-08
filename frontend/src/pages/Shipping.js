@@ -508,6 +508,14 @@ const StyledShipping = styled.div`
       &:hover {
         background: #00a8ce;
       }
+      #loader:first-child {
+        width: calc(0.9rem + 0.5vw);
+        height: calc(0.9rem + 0.5vw);
+        margin-left: 0.45rem;
+        #greybackground path {
+          stroke: white;
+        }
+      }
     }
     #governorate,
     #city,
