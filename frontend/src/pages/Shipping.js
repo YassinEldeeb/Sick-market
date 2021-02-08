@@ -374,7 +374,7 @@ const Shipping = () => {
             />
           </div>
           <button type='submit'>
-            Continue {forwardGeocoding && <Loader />}
+            Continue <Loader />
           </button>
         </form>
       </StyledShipping>
@@ -509,11 +509,11 @@ const StyledShipping = styled.div`
         background: #00a8ce;
       }
       #loader:first-child {
-        width: calc(0.9rem + 0.5vw);
-        height: calc(0.9rem + 0.5vw);
-        margin-left: 0.45rem;
+        width: calc(0.9rem + 0.5vw) !important;
+        height: calc(0.9rem + 0.5vw) !important;
+        margin-left: 0.45rem !important;
         #greybackground path {
-          stroke: white;
+          stroke: white !important;
         }
       }
     }
