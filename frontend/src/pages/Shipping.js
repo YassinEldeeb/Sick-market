@@ -374,7 +374,7 @@ const Shipping = () => {
             />
           </div>
           <button type='submit'>
-            Continue {geocodingLoading && <Loader />}
+            Continue {forwardGeocoding && <Loader />}
           </button>
         </form>
       </StyledShipping>
