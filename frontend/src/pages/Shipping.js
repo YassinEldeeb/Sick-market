@@ -90,44 +90,114 @@ const Shipping = () => {
     }),
   }
 
-  const geolocationHandler = () => {
-    if (navigator.geolocation) {
-      dispatch({ type: "GEOCODING_REQUEST" })
-      navigator.geolocation.getCurrentPosition(showPosition)
-
-      async function showPosition(position) {
-        try {
-          const latitude = position.coords.latitude
-          const longitude = position.coords.longitude
-          const { data } = await axios.get(
-            `https://us1.locationiq.com/v1/reverse.php?key=pk.49f42f5ce86c30300b67591afd65161c&lat=${latitude}&lon=${longitude}&format=json`
-          )
-          dispatch({
-            type: "GEOCODING_SUCCESS",
-            payload: {
-              display_address: data.display_name,
-              address: `${data.address.house_number} ${data.address.road}, ${data.address.neighbourhood}, ${data.address.suburb}`,
-              city: data.address.city,
-              governorate:
-                data.address.state === "Gharbiyya Governorate"
-                  ? "Gharbia"
-                  : data.address.state,
-              phoneNumber: address.phoneNumber ? address.phoneNumber : null,
-            },
-          })
-        } catch (error) {
-          console.log(error)
-          dispatch({
-            type: "GEOCODING_FAIL",
-            payload:
-              error.response && error.response.data.message
-                ? error.response.data.message
-                : error.message,
-          })
-        }
-      }
+  const cleanGovernorate = (data) => {
+    if (data.toLowerCase().includes("sharqia")) {
+      return "Ash Sharqia"
+    } else if (data.toLowerCase().includes("north sinai")) {
+      return "North Sinai"
+    } else if (data.toLowerCase().includes("gharbiyya")) {
+      return "Gharbia"
+    } else if (data.toLowerCase().includes("dakahlia")) {
+      return "Dakahlia"
+    } else if (data.toLowerCase().includes("alexandria")) {
+      return "Alexandria"
+    } else if (data.toLowerCase().includes("asyut")) {
+      return "Asyut"
+    } else if (data.toLowerCase().includes("assouan")) {
+      return "Aswan"
+    } else if (data.toLowerCase().includes("assouan")) {
+      return "Aswan"
+    } else if (data.toLowerCase().includes("beni suef")) {
+      return "Beni Suef"
+    } else if (data.toLowerCase().includes("qalyubia")) {
+      return "Qalyubia"
+    } else if (data.toLowerCase().includes("cairo")) {
+      return "Cairo"
+    } else if (data.toLowerCase().includes("beheira")) {
+      return "Beheira"
+    } else if (data.toLowerCase().includes("damietta")) {
+      return "Damietta"
+    } else if (data.toLowerCase().includes("new valley")) {
+      return "New Valley"
+    } else if (data.toLowerCase().includes("faiyum")) {
+      return "Faiyum"
+    } else if (data.toLowerCase().includes("red sea")) {
+      return "Red Sea"
+    } else if (data.toLowerCase().includes("ismailia")) {
+      return "Ismailia"
+    } else if (data.toLowerCase().includes("kafr el-sheikh")) {
+      return "Kafr El Sheikh"
+    } else if (data.toLowerCase().includes("luxor")) {
+      return "Luxor"
+    } else if (data.toLowerCase().includes("matrouh")) {
+      return "Matrouh"
+    } else if (data.toLowerCase().includes("minya")) {
+      return "Minya"
+    } else if (data.toLowerCase().includes("port said")) {
+      return "Port Said"
+    } else if (data.toLowerCase().includes("qena")) {
+      return "Qena"
+    } else if (data.toLowerCase().includes("monufia")) {
+      return "Menofia"
+    } else if (data.toLowerCase().includes("south sinai")) {
+      return "South Sinai"
+    } else if (data.toLowerCase().includes("sohag")) {
+      return "Sohag"
+    } else if (data.toLowerCase().includes("suez")) {
+      return "Suez"
     } else {
-      alert("Geolocation is not supported by this browser.")
+      return ""
+    }
+  }
+  const geolocationHandler = () => {
+    if (!geocodingLoading) {
+      if (navigator.geolocation) {
+        dispatch({ type: "GEOCODING_REQUEST" })
+        navigator.geolocation.getCurrentPosition(showPosition)
+
+        async function showPosition(position) {
+          try {
+            const latitude = position.coords.latitude
+            const longitude = position.coords.longitude
+            const { data } = await axios.get(
+              `https://us1.locationiq.com/v1/reverse.php?key=pk.49f42f5ce86c30300b67591afd65161c&lat=${latitude}&lon=${longitude}&format=json`
+            )
+            dispatch({
+              type: "GEOCODING_SUCCESS",
+              payload: {
+                display_address: data.display_name,
+                address: `${
+                  data.address.house_number ? data.address.house_number : ""
+                }${data.address.road ? " " + data.address.road + "," : ""}${
+                  data.address.neighbourhood
+                    ? " " + data.address.neighbourhood + ","
+                    : ""
+                }${data.address.suburb ? " " + data.address.suburb : ""}`,
+                city: `${data.address.city ? data.address.city : ""}`,
+                governorate: cleanGovernorate(
+                  data.address.state
+                    ? data.address.state
+                    : data.address.town
+                    ? data.address.town
+                    : ""
+                ),
+                phoneNumber: address.phoneNumber ? address.phoneNumber : null,
+              },
+            })
+          } catch (error) {
+            console.log(error)
+            dispatch({
+              type: "GEOCODING_FAIL",
+              payload:
+                error.response && error.response.data.message
+                  ? error.response.data.message
+                  : error.message,
+            })
+          }
+        }
+      } else {
+        alert("Geolocation is not supported by this browser.")
+      }
     }
   }
 

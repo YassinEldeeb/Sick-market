@@ -9,10 +9,15 @@ const checkToken = (token) => async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     }
-    const data = await axios.post("/api/users/checkToken", null, config)
+    await axios.post("/api/users/checkToken", null, config)
     dispatch({ type: "CHECK_TOKEN_SUCCESS", payload: true })
   } catch (error) {
     if (error.response.status === 401) {
+      console.log(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      )
       dispatch({ type: "USER_LOGOUT" })
       localStorage.removeItem("sickUserInfo")
       dispatch({ type: "CHECK_TOKEN_SUCCESS", payload: false })
