@@ -280,7 +280,7 @@ const StyledDetail = styled.div`
   }
   .table {
     padding: calc(1rem + 0.3vw);
-    border: 1px solid rgba(0, 0, 0, 0.18);
+    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     align-items: stretch !important;
 

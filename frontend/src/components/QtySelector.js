@@ -39,7 +39,7 @@ const QtySelector = ({
     for (let i = 1; i < product.countInStock + 1; i++) {
       dropmenuArr.push(
         <p
-          className='option'
+          className={`option ${qty === i ? "active" : ""}`}
           key={`selectOption${dropmenuArr.length}`}
           onClick={(e) => {
             setQty(e.target.innerText)
@@ -96,8 +96,8 @@ const StyledSelect = styled.div`
     .drop-menu {
       z-index: 2;
       padding-top: 0.2rem;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(52, 58, 64, 0.2);
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.16);
+      border: 1px solid rgba(52, 58, 64, 0.16);
       position: absolute;
       left: 0;
       bottom: 0;
@@ -108,8 +108,8 @@ const StyledSelect = styled.div`
       max-height: 180px;
       overflow-y: scroll;
       border-radius: 5px;
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
       &.active {
         display: block;
       }
@@ -117,12 +117,19 @@ const StyledSelect = styled.div`
         font-size: calc(0.9rem + 0.3vw);
         padding: 0.3rem 0;
         padding-left: 1rem;
+        border-radius: 4px;
+        margin: 0.2rem;
+        color: #253858;
         &:last-child {
           margin-bottom: 0;
           margin-bottom: 0.2rem;
         }
         &:hover {
-          background: #f5f5f5;
+          background: rgba(222, 235, 255, 0.5);
+        }
+        &.active {
+          background: #00b2d8;
+          color: white;
         }
       }
     }

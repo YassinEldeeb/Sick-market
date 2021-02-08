@@ -66,6 +66,19 @@ const Shipping = () => {
     { value: "Sohag", label: "Sohag" },
     { value: "Suez", label: "Suez" },
   ]
+  const customStyles = {
+    control: () => ({
+      display: "flex",
+      padding: "0.4rem 1rem !important",
+      background: "#f3f3f3",
+      color: "#000",
+      borderRadius: "6px",
+      paddingRight: "0.4rem !important",
+      marginBottom: "1rem",
+      marginTop: "0.3rem",
+    }),
+    // valueContainer: () => ({}),
+  }
   return (
     <>
       <CheckoutSteps step1 step2 current='step2' />
@@ -110,6 +123,7 @@ const Shipping = () => {
           <div className='governorate'>
             <label htmlFor='governorate'>Governorate</label>
             <Select
+              styles={customStyles}
               onChange={(e) => setGovernorate(e.value)}
               value={
                 governorate.length
@@ -158,12 +172,19 @@ const Shipping = () => {
   )
 }
 const StyledShipping = styled.div`
+  /* .css-yk16xz-control *,
+  .css-1pahdxg-control * {
+    padding: 0 !important;
+  }
+  .css-tlfecz-indicatorContainer {
+    padding: 0 0.4rem !important;
+  }
   .css-tlfecz-indicatorContainer {
     padding: 0px 8px;
   }
   .css-yk16xz-control,
   .css-1pahdxg-control {
-    padding: 0.405rem 1rem !important;
+    padding: 0.5rem 1rem !important;
     margin-bottom: 1rem !important;
     margin-top: 0.3rem !important;
     background: #f3f3f3;
@@ -173,7 +194,7 @@ const StyledShipping = styled.div`
     box-shadow: none !important;
     padding-right: 0.5rem !important;
     min-height: unset !important;
-  }
+  } */
 
   .css-1uccc91-singleValue {
     color: #000 !important;
@@ -271,9 +292,7 @@ const StyledShipping = styled.div`
     cursor: pointer;
     padding: 0.2rem;
   }
-  .css-yk16xz-control * {
-    padding: 0 !important;
-  }
+
   @media screen and (max-width: 1050px) {
     margin-top: unset !important;
     justify-content: flex-start;
@@ -298,7 +317,8 @@ const StyledShipping = styled.div`
       }
       .css-yk16xz-control,
       .css-1pahdxg-control {
-        padding: 0.25rem 1rem !important;
+        padding: 0.38rem 1rem !important;
+        padding-right: 0.4rem !important;
       }
       .css-1uccc91-singleValue {
         color: #000 !important;
