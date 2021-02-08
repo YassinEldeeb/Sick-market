@@ -6,20 +6,29 @@ import { useSelector, useDispatch } from "react-redux"
 import userSaveAddress from "../actions/saveAddress"
 import CheckoutSteps from "../components/CheckoutSteps"
 import Select from "react-select"
+import axios from "axios"
+import Loader from "../components/loader"
 
 const Shipping = () => {
-  const cart = useSelector((state) => state.cart)
-  const cartAddress = cart.address
-  const [address, setAddress] = useState(
-    cartAddress.address ? cartAddress.address : ""
+  const { address, geocodingLoading } = useSelector((state) => state.cart)
+
+  const [addressValue, setAddress] = useState(
+    address.address ? address.address : ""
   )
-  const [city, setCity] = useState(cartAddress.city ? cartAddress.city : "")
+  const [city, setCity] = useState(address.city ? address.city : "")
   const [governorate, setGovernorate] = useState(
-    cartAddress.governorate ? cartAddress.governorate : ""
+    address.governorate ? address.governorate : ""
   )
   const [phoneNumber, setPhoneNumber] = useState(
-    cartAddress.phoneNumber ? cartAddress.phoneNumber : ""
+    address.phoneNumber ? address.phoneNumber : ""
   )
+
+  useEffect(() => {
+    setAddress(address.address ? address.address : "")
+    setCity(address.city ? address.city : "")
+    setGovernorate(address.governorate ? address.governorate : "")
+    setPhoneNumber(address.phoneNumber ? address.phoneNumber : "")
+  }, [address])
 
   const { user } = useSelector((state) => state.userInfo)
   const location = useLocation()
@@ -34,7 +43,9 @@ const Shipping = () => {
   const dispatch = useDispatch()
   const submitHandler = (e) => {
     e.preventDefault()
-    dispatch(userSaveAddress({ address, city, governorate, phoneNumber }))
+    dispatch(
+      userSaveAddress({ address: addressValue, city, governorate, phoneNumber })
+    )
     history.push("/payment")
   }
   const options = [
@@ -77,19 +88,66 @@ const Shipping = () => {
       marginBottom: "1rem",
       marginTop: "0.3rem",
     }),
-    // valueContainer: () => ({}),
   }
+
+  const geolocationHandler = () => {
+    if (navigator.geolocation) {
+      dispatch({ type: "GEOCODING_REQUEST" })
+      navigator.geolocation.getCurrentPosition(showPosition)
+
+      async function showPosition(position) {
+        try {
+          const latitude = position.coords.latitude
+          const longitude = position.coords.longitude
+          const { data } = await axios.get(
+            `https://us1.locationiq.com/v1/reverse.php?key=pk.49f42f5ce86c30300b67591afd65161c&lat=${latitude}&lon=${longitude}&format=json`
+          )
+          dispatch({
+            type: "GEOCODING_SUCCESS",
+            payload: {
+              display_address: data.display_name,
+              address: `${data.address.house_number} ${data.address.road}, ${data.address.neighbourhood}, ${data.address.suburb}`,
+              city: data.address.city,
+              governorate:
+                data.address.state === "Gharbiyya Governorate"
+                  ? "Gharbia"
+                  : data.address.state,
+              phoneNumber: address.phoneNumber ? address.phoneNumber : null,
+            },
+          })
+        } catch (error) {
+          console.log(error)
+          dispatch({
+            type: "GEOCODING_FAIL",
+            payload:
+              error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message,
+          })
+        }
+      }
+    } else {
+      alert("Geolocation is not supported by this browser.")
+    }
+  }
+
   return (
     <>
       <CheckoutSteps step1 step2 current='step2' />
 
       <StyledShipping>
         <form onSubmit={submitHandler}>
-          <h1>Shipping</h1>
+          <div className='title'>
+            <h1>Shipping</h1>
+            <button type='button' onClick={geolocationHandler}>
+              Geocoding
+              {geocodingLoading && <Loader />}
+            </button>
+          </div>
           <div className='address'>
             <label htmlFor='address'>Address</label>
             <input
-              value={address}
+              value={addressValue}
               id='address'
               type='text'
               required
@@ -97,7 +155,7 @@ const Shipping = () => {
             />
             <img
               onClick={() => setAddress("")}
-              style={{ display: `${address.length ? "block" : "none"}` }}
+              style={{ display: `${addressValue.length ? "block" : "none"}` }}
               className='xSign2'
               src={xSign}
               alt='X icon'
@@ -172,6 +230,24 @@ const Shipping = () => {
   )
 }
 const StyledShipping = styled.div`
+  #loader:first-child {
+    width: calc(0.9rem + 0.5vw);
+    height: calc(0.9rem + 0.5vw);
+    margin-left: 0.45rem;
+    #greybackground path {
+      stroke: white;
+    }
+  }
+  .title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    button {
+      padding: 0.4rem 0.75rem;
+    }
+  }
   /* .css-yk16xz-control *,
   .css-1pahdxg-control * {
     padding: 0 !important;
@@ -227,7 +303,6 @@ const StyledShipping = styled.div`
       color: #1a1a1a;
       font-weight: 500;
       font-size: calc(2rem + 1vw);
-      margin-bottom: 1.2rem;
     }
     .signInDiv {
       display: flex;

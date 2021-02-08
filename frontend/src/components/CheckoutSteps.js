@@ -12,7 +12,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4, current }) => {
           }`}
         >
           <h1>
-            <Link>Sign In</Link>
+            <Link to='/login'>Sign In</Link>
           </h1>
         </Link>
         <div className={`line ${step2 ? "active" : ""}`}></div>
@@ -55,6 +55,9 @@ const CheckoutSteps = ({ step1, step2, step3, step4, current }) => {
   )
 }
 const StyledSteps = styled.div`
+  .circle1 {
+    pointer-events: none !important;
+  }
   h1 {
     font-weight: 300;
     font-size: calc(0.9rem + 0.2vw);
