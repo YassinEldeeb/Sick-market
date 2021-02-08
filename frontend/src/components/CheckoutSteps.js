@@ -6,7 +6,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4, current }) => {
   return (
     <StyledSteps>
       <div className='journeyLine'>
-        <Link
+        <div
           className={`circle circle1 ${step1 ? "active" : ""} ${
             current === "step1" ? "current" : ""
           }`}
@@ -14,9 +14,10 @@ const CheckoutSteps = ({ step1, step2, step3, step4, current }) => {
           <h1>
             <Link to='/login'>Sign In</Link>
           </h1>
-        </Link>
+        </div>
         <div className={`line ${step2 ? "active" : ""}`}></div>
         <Link
+          id='RouterNavLink'
           to='/shipping'
           className={`circle circle2 ${step2 ? "active" : ""} ${
             current === "step2" ? "current" : ""
@@ -28,6 +29,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4, current }) => {
         </Link>
         <div className={`line ${step3 ? "active" : ""}`}></div>
         <Link
+          id='RouterNavLink'
           to='/payment'
           className={`circle circle3 ${step3 ? "active" : ""} ${
             current === "step3" ? "current" : ""
@@ -43,6 +45,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4, current }) => {
           }`}
         ></div>
         <Link
+          id='RouterNavLink'
           to='/place-order'
           className={`circle circle4 ${step4 ? "active" : ""}`}
         >

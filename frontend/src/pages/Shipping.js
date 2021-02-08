@@ -8,6 +8,7 @@ import CheckoutSteps from "../components/CheckoutSteps"
 import Select from "react-select"
 import axios from "axios"
 import Loader from "../components/loader"
+import locationIcon from "../img/locationIcon.svg"
 
 const Shipping = () => {
   const { address, geocodingLoading } = useSelector((state) => state.cart)
@@ -41,12 +42,50 @@ const Shipping = () => {
   }, [history, location, user])
 
   const dispatch = useDispatch()
-  const submitHandler = (e) => {
+
+  const [latitude, setLatitude] = useState(0)
+  const [longitude, setLongitude] = useState(0)
+  const [display_address, setDisplay_address] = useState("")
+
+  const [forwardGeocoding, setForwardGeocoding] = useState(false)
+
+  const submitHandler = async (e) => {
     e.preventDefault()
+
+    const display_address_value = `${addressValue}, ${city}, ${
+      governorate + ","
+    } Egypt ${", " + phoneNumber}`
+
+    const latitudeAndLongValue = async () => {
+      if (!latitude && !longitude) {
+        setForwardGeocoding(true)
+        const { data } = await axios.get(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${addressValue}, ${city}, ${governorate}, Egypt.json?access_token=pk.eyJ1IjoieWFzc2luNzg5IiwiYSI6ImNraGNiZDc2cjBjcXoycm5nZDQzeWh5MGsifQ.vZNRBIwM6P8fwbZvoPgp1A`
+        )
+        const lon = data.features[0].center[0]
+        const lat = data.features[0].center[1]
+        setForwardGeocoding(false)
+        return { lat, lon }
+      } else {
+        return { lat: latitude, lon: longitude }
+      }
+    }
+
     dispatch(
-      userSaveAddress({ address: addressValue, city, governorate, phoneNumber })
+      userSaveAddress({
+        address: addressValue,
+        city,
+        governorate,
+        phoneNumber,
+        location: await latitudeAndLongValue(),
+        display_address: !display_address.length
+          ? display_address_value
+          : display_address,
+      })
     )
-    history.push("/payment")
+    if (!forwardGeocoding) {
+      history.push("/payment")
+    }
   }
   const options = [
     { value: "Ash Sharqia", label: "Ash Sharqia" },
@@ -153,19 +192,59 @@ const Shipping = () => {
     if (!geocodingLoading) {
       if (navigator.geolocation) {
         dispatch({ type: "GEOCODING_REQUEST" })
-        navigator.geolocation.getCurrentPosition(showPosition)
+        navigator.geolocation.getCurrentPosition(showPosition, errorCallback)
 
+        function errorCallback(error) {
+          if (error.code == 1) {
+            console.log(
+              "You've decided not to share your position, but it's OK. We won't ask you again."
+            )
+          } else if (error.code == 2) {
+            console.log(
+              "The network is down or the positioning service can't be reached."
+            )
+          } else if (error.code == 3) {
+            console.log(
+              "The attempt timed out before it could get the location data."
+            )
+          } else {
+            console.log("Geolocation failed due to unknown error.")
+          }
+        }
         async function showPosition(position) {
           try {
-            const latitude = position.coords.latitude
-            const longitude = position.coords.longitude
+            setLatitude(position.coords.latitude)
+            setLongitude(position.coords.longitude)
             const { data } = await axios.get(
               `https://us1.locationiq.com/v1/reverse.php?key=pk.49f42f5ce86c30300b67591afd65161c&lat=${latitude}&lon=${longitude}&format=json`
             )
+            const display_address_value = `${
+              data.address.house_number ? data.address.house_number : ""
+            }${data.address.road ? " " + data.address.road + "," : ""}${
+              data.address.neighbourhood
+                ? " " + data.address.neighbourhood + ","
+                : ""
+            }${data.address.suburb ? " " + data.address.suburb : ""}${
+              data.address.city ? " " + data.address.city + "," : ""
+            }${
+              data.address.state || data.address.town
+                ? " " +
+                  cleanGovernorate(
+                    data.address.state
+                      ? data.address.state
+                      : data.address.town
+                      ? data.address.town
+                      : ""
+                  ) +
+                  ", "
+                : ""
+            }Egypt${", " + phoneNumber}`
+            setDisplay_address(display_address_value)
             dispatch({
               type: "GEOCODING_SUCCESS",
               payload: {
-                display_address: data.display_name,
+                location: { lat: latitude, lon: longitude },
+                display_address: display_address_value,
                 address: `${
                   data.address.house_number ? data.address.house_number : ""
                 }${data.address.road ? " " + data.address.road + "," : ""}${
@@ -210,7 +289,7 @@ const Shipping = () => {
           <div className='title'>
             <h1>Shipping</h1>
             <button type='button' onClick={geolocationHandler}>
-              Geocoding
+              {!geocodingLoading && <img src={locationIcon} />}
               {geocodingLoading && <Loader />}
             </button>
           </div>
@@ -274,6 +353,7 @@ const Shipping = () => {
               }}
               value={governorate}
               required={true}
+              onChange={(e) => e}
             />
           </div>
           <div className='phoneNumber'>
@@ -293,17 +373,22 @@ const Shipping = () => {
               alt='X icon'
             />
           </div>
-          <button type='submit'>Continue</button>
+          <button type='submit'>
+            Continue {forwardGeocoding && <Loader />}
+          </button>
         </form>
       </StyledShipping>
     </>
   )
 }
 const StyledShipping = styled.div`
+  #loader {
+    animation: loaderAnim 0.9s infinite linear;
+  }
   #loader:first-child {
-    width: calc(0.9rem + 0.5vw);
-    height: calc(0.9rem + 0.5vw);
-    margin-left: 0.45rem;
+    width: 1.7rem !important;
+    height: 1.7rem !important;
+    margin-left: unset;
     #greybackground path {
       stroke: white;
     }
@@ -315,7 +400,12 @@ const StyledShipping = styled.div`
     align-items: center;
     margin-bottom: 1.2rem;
     button {
-      padding: 0.4rem 0.75rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      img {
+        width: 1.7rem;
+        height: 1.7rem;
+      }
     }
   }
   /* .css-yk16xz-control *,
