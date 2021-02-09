@@ -17,6 +17,7 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
   return (
     <StyledProduct>
       <Link
+        className='imgLink'
         to={`/products/${product._id}?redirect=cart`}
         onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
       >
@@ -25,6 +26,7 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
       <div className='desc'>
         <p>Brand: {product.brand}</p>
         <Link
+          className='descLink'
           to={`/products/${product._id}?redirect=cart`}
           onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
         >
@@ -36,7 +38,10 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
         />
       </div>
       <div className='priceQtyAndRemove'>
-        <h1>${product.price}</h1>
+        <h1>
+          {product.price}
+          <span className='currency'>EGP</span>
+        </h1>
         <div className='removeAndQty'>
           <QtySelector
             qty={qty}
@@ -61,6 +66,10 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
   )
 }
 const StyledProduct = styled.div`
+  .imgLink,
+  .descLink {
+    display: flex;
+  }
   padding: 0.5rem 0;
   border-bottom: 1px solid rgba(0, 0, 0, 12.5%);
   &:last-child {
@@ -104,6 +113,10 @@ const StyledProduct = styled.div`
       font-size: calc(1rem + 0.4vw);
       font-weight: 400;
       color: #1a1a1a;
+      .currency {
+        margin-left: 0.15rem;
+        font-size: calc(0.7rem + 0.4vw);
+      }
     }
     .removeAndQty .select .drop-menu {
       top: 0;
@@ -120,6 +133,10 @@ const StyledProduct = styled.div`
       justify-content: space-between !important;
       h1 {
         font-size: calc(0.8rem + 0.4vw);
+      }
+      .currency {
+        margin-left: 0.15rem;
+        font-size: calc(0.6rem + 0.4vw) !important;
       }
       .removeAndQty {
         .removeBtn {

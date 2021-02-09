@@ -7,7 +7,12 @@ import { useDispatch, useSelector } from "react-redux"
 import { useHistory, useLocation } from "react-router-dom"
 
 const Payment = () => {
-  const { paymentMethod, address } = useSelector((state) => state.cart)
+  const { paymentMethod, address, cartItems } = useSelector(
+    (state) => state.cart
+  )
+  const pricesArr = cartItems.map((each) => each.price * each.qty)
+  const totalPrice = pricesArr.reduce((acc, item) => acc + item)
+
   const { user } = useSelector((state) => state.userInfo)
 
   const [method, setMethod] = useState(
@@ -18,9 +23,20 @@ const Payment = () => {
   const location = useLocation()
 
   const continueHandler = () => {
-    dispatch(userSavePayment(method))
+    dispatch(
+      userSavePayment(
+        totalPrice < 20 || totalPrice > 17000
+          ? "PayPal or Credit & Debit Cards"
+          : method
+      )
+    )
     history.push("/place-order")
   }
+  useEffect(() => {
+    if (!cartItems.length) {
+      history.push("/cart")
+    }
+  }, [cartItems])
 
   useEffect(() => {
     if (location.pathname.split("/")[1] === "payment" && !user.name) {
@@ -53,12 +69,25 @@ const Payment = () => {
               </label>
               <input type='radio' id='delivery' />
               <label
-                className={`${method === "Cash on Delivery" ? "active" : ""}`}
+                className={`${method === "Cash on Delivery" ? "active" : ""} ${
+                  totalPrice < 20 || totalPrice > 17000 ? "disabled" : ""
+                }`}
                 htmlFor='Cash on Delivery'
-                onClick={() => setMethod("Cash on Delivery")}
+                onClick={() => {
+                  if (!totalPrice < 20 || totalPrice > 17000)
+                    setMethod("Cash on Delivery")
+                }}
               >
                 Cash on Delivery
               </label>
+              {totalPrice < 20 && (
+                <li className='explaningWhy'>Your order is less than 20 EGP</li>
+              )}
+              {totalPrice > 17000 && (
+                <li className='explaningWhy'>
+                  Your total cart value is above EGP 17,000
+                </li>
+              )}
             </div>
             <button onClick={continueHandler}>Continue</button>
           </div>
@@ -68,6 +97,15 @@ const Payment = () => {
   )
 }
 const StyledPayment = styled.div`
+  .explaningWhy {
+    color: #e65959;
+    font-size: calc(0.7rem + 0.3vw);
+    font-weight: 500;
+  }
+  .disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
   .align {
     display: flex;
     justify-content: center;

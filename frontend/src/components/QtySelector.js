@@ -32,6 +32,7 @@ const QtySelector = ({
       }
     }
   })
+  const [chosenQtyValue, setChosenQtyValue] = useState(qty)
 
   let dropmenuArr
   const dropmenu = () => {
@@ -39,10 +40,12 @@ const QtySelector = ({
     for (let i = 1; i < product.countInStock + 1; i++) {
       dropmenuArr.push(
         <p
-          className={`option ${qty === i ? "active" : ""}`}
+          className={`option ${chosenQtyValue === i ? "active" : ""}`}
           key={`selectOption${dropmenuArr.length}`}
           onClick={(e) => {
             setQty(e.target.innerText)
+            setChosenQtyValue(Number(e.target.innerText))
+
             if (match) {
               const chosenQty = Number(e.target.innerText)
               if (chosenQty <= match.qty) {
@@ -120,6 +123,7 @@ const StyledSelect = styled.div`
         border-radius: 4px;
         margin: 0.2rem;
         color: #253858;
+        border-bottom: unset !important;
         &:last-child {
           margin-bottom: 0;
           margin-bottom: 0.2rem;

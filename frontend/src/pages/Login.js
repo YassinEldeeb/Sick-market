@@ -52,7 +52,7 @@ const Login = () => {
         loginWithGoogle(
           response.profileObj.givenName + " " + response.profileObj.familyName,
           response.profileObj.email,
-          response.profileObj.imageUrl
+          response.profileObj.imageUrl.replace("s96", "s250")
         )
       )
       localStorage.setItem("sickUserInfo", JSON.stringify(userObj))

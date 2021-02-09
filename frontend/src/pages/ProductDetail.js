@@ -76,7 +76,10 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
           <div className='productImg'>
             <img src={product.image} alt='product' />
             <div className='bottomInfo'>
-              <h3>${product.price}</h3>
+              <h3>
+                {product.price}
+                <span className='currency'>EGP</span>
+              </h3>
 
               <div className='selectMobile'>
                 <h1>
@@ -137,7 +140,10 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
           <div className='table'>
             <div className='price'>
               <h1>Price:</h1>
-              <h3>${product.price}</h3>
+              <h3>
+                {product.price}
+                <span className='currency'>EGP</span>
+              </h3>
             </div>
             <div className='status'>
               <h1>Status:</h1>
@@ -180,6 +186,10 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   )
 }
 const StyledDetail = styled.div`
+  .currency {
+    font-size: calc(0.2rem + 1vw);
+    margin-left: 0.15rem;
+  }
   .mobile .starsRating,
   .bottomInfo,
   .mobile2 a {
@@ -339,6 +349,10 @@ const StyledDetail = styled.div`
     }
   }
   @media screen and (max-width: 1050px) {
+    .currency {
+      font-size: calc(0.7rem + 1vw);
+      margin-left: 0.15rem;
+    }
     .mobile-btn,
     .mobile-btn {
       display: grid !important;

@@ -25,7 +25,7 @@ const userRegisterAction = (name, email, password) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     })
-    localStorage.setItem("sickUserInfo", JSON.stringify({}))
+    localStorage.removeItem("sickUserInfo")
   }
 }
 export default userRegisterAction

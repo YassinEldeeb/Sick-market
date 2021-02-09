@@ -23,7 +23,10 @@ const Cart = ({ cartCount, setCartCount }) => {
             <h3>
               Subtotal ({qtyArr.reduce((acc, item) => acc + item)} items):
             </h3>
-            <h4>${pricesArr.reduce((acc, price) => acc + price).toFixed(2)}</h4>
+            <h4>
+              {pricesArr.reduce((acc, price) => acc + price).toFixed(2)}
+              <span className='currency'>EGP</span>
+            </h4>
           </div>
           <Link to={redirect} className='proceed-btn-mobile'>
             <h3>Proceed to checkout</h3>
@@ -57,7 +60,8 @@ const Cart = ({ cartCount, setCartCount }) => {
                   Subtotal ({qtyArr.reduce((acc, item) => acc + item)} items)
                 </h3>
                 <h4>
-                  ${pricesArr.reduce((acc, price) => acc + price).toFixed(2)}
+                  {pricesArr.reduce((acc, price) => acc + price).toFixed(2)}
+                  <span className='currency'>EGP</span>
                 </h4>
               </div>
               <Link to={redirect} className='proceed-btn'>
@@ -109,6 +113,11 @@ const StyledCart = styled.div`
       font-weight: 400;
       margin: 0.5rem 0;
       font-size: calc(1.05rem + 0.3vw);
+      .currency {
+        margin-left: 0.15rem;
+        display: inline-block;
+        font-size: calc(0.8rem + 0.4vw);
+      }
     }
   }
   .table-total {
@@ -143,6 +152,11 @@ const StyledCart = styled.div`
           font-weight: 200;
           margin: 0.5rem 0;
           font-size: calc(1.3rem + 0.3vw);
+          .currency {
+            display: inline-block;
+            font-size: calc(0.8rem + 0.4vw);
+            margin-left: 0.2rem;
+          }
         }
       }
       .proceed-btn {

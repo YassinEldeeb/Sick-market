@@ -11,8 +11,14 @@ import Loader from "../components/loader"
 import locationIcon from "../img/locationIcon.svg"
 
 const Shipping = () => {
-  const { address, geocodingLoading } = useSelector((state) => state.cart)
-
+  const { address, geocodingLoading, cartItems } = useSelector(
+    (state) => state.cart
+  )
+  useEffect(() => {
+    if (!cartItems.length) {
+      history.push("/cart")
+    }
+  }, [cartItems])
   const [addressValue, setAddress] = useState(
     address.address ? address.address : ""
   )
@@ -52,40 +58,44 @@ const Shipping = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault()
+    if (
+      phoneNumber.toString().startsWith("01") &&
+      phoneNumber.toString().length === 11
+    ) {
+      const display_address_value = `${addressValue}, ${city}, ${
+        governorate + ","
+      } Egypt ${", " + phoneNumber}`
 
-    const display_address_value = `${addressValue}, ${city}, ${
-      governorate + ","
-    } Egypt ${", " + phoneNumber}`
-
-    const latitudeAndLongValue = async () => {
-      if (!latitude && !longitude) {
-        setForwardGeocoding(true)
-        const { data } = await axios.get(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${addressValue}, ${city}, ${governorate}, Egypt.json?access_token=pk.eyJ1IjoieWFzc2luNzg5IiwiYSI6ImNraGNiZDc2cjBjcXoycm5nZDQzeWh5MGsifQ.vZNRBIwM6P8fwbZvoPgp1A`
-        )
-        const lon = data.features[0].center[0]
-        const lat = data.features[0].center[1]
-        setForwardGeocoding(false)
-        return { lat, lon }
-      } else {
-        return { lat: latitude, lon: longitude }
+      const latitudeAndLongValue = async () => {
+        if (!latitude && !longitude) {
+          setForwardGeocoding(true)
+          const { data } = await axios.get(
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${addressValue}, ${city}, ${governorate}, Egypt.json?access_token=pk.eyJ1IjoieWFzc2luNzg5IiwiYSI6ImNraGNiZDc2cjBjcXoycm5nZDQzeWh5MGsifQ.vZNRBIwM6P8fwbZvoPgp1A`
+          )
+          const lon = data.features[0].center[0]
+          const lat = data.features[0].center[1]
+          setForwardGeocoding(false)
+          return { lat, lon }
+        } else {
+          return { lat: latitude, lon: longitude }
+        }
       }
-    }
 
-    dispatch(
-      userSaveAddress({
-        address: addressValue,
-        city,
-        governorate,
-        phoneNumber,
-        location: await latitudeAndLongValue(),
-        display_address: !display_address.length
-          ? display_address_value
-          : display_address,
-      })
-    )
-    if (!forwardGeocoding) {
-      history.push("/payment")
+      dispatch(
+        userSaveAddress({
+          address: addressValue,
+          city,
+          governorate,
+          phoneNumber,
+          location: await latitudeAndLongValue(),
+          display_address: !display_address.length
+            ? display_address_value
+            : display_address,
+        })
+      )
+      if (!forwardGeocoding) {
+        history.push("/payment")
+      }
     }
   }
   const options = [
@@ -344,6 +354,15 @@ const Shipping = () => {
           <div className='phoneNumber'>
             <label htmlFor='phoneNumber'>Phone Number</label>
             <input
+              style={{
+                boxShadow: `${
+                  (!phoneNumber.toString().startsWith("01") &&
+                    phoneNumber.length) ||
+                  (phoneNumber.toString().length !== 11 && phoneNumber.length)
+                    ? "0 0 3px red"
+                    : "unset"
+                }`,
+              }}
               value={phoneNumber}
               id='phoneNumber'
               type='number'
