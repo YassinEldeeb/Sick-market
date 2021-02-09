@@ -25,6 +25,7 @@ const Shipping = () => {
   )
 
   useEffect(() => {
+    console.log(address)
     setAddress(address.address ? address.address : "")
     setCity(address.city ? address.city : "")
     setGovernorate(address.governorate ? address.governorate : "")
@@ -192,32 +193,16 @@ const Shipping = () => {
     if (!geocodingLoading) {
       if (navigator.geolocation) {
         dispatch({ type: "GEOCODING_REQUEST" })
-        navigator.geolocation.getCurrentPosition(showPosition, errorCallback)
+        navigator.geolocation.getCurrentPosition(showPosition)
 
-        function errorCallback(error) {
-          if (error.code == 1) {
-            console.log(
-              "You've decided not to share your position, but it's OK. We won't ask you again."
-            )
-          } else if (error.code == 2) {
-            console.log(
-              "The network is down or the positioning service can't be reached."
-            )
-          } else if (error.code == 3) {
-            console.log(
-              "The attempt timed out before it could get the location data."
-            )
-          } else {
-            console.log("Geolocation failed due to unknown error.")
-          }
-        }
         async function showPosition(position) {
           try {
             setLatitude(position.coords.latitude)
             setLongitude(position.coords.longitude)
             const { data } = await axios.get(
-              `https://us1.locationiq.com/v1/reverse.php?key=pk.49f42f5ce86c30300b67591afd65161c&lat=${latitude}&lon=${longitude}&format=json`
+              `https://us1.locationiq.com/v1/reverse.php?key=pk.49f42f5ce86c30300b67591afd65161c&lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json`
             )
+
             const display_address_value = `${
               data.address.house_number ? data.address.house_number : ""
             }${data.address.road ? " " + data.address.road + "," : ""}${
