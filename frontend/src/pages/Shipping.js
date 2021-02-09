@@ -517,6 +517,11 @@ const StyledShipping = styled.div`
           width: 1.7rem !important;
           height: 1.7rem !important;
         }
+        #loader:first-child {
+          height: 1.7rem !important;
+          width: 1.7rem !important;
+          margin-left: 0rem !important;
+        }
       }
     }
     #governorate,
