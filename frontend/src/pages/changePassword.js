@@ -77,7 +77,7 @@ const ChangePassword = () => {
           setWarning={setWarning}
           title='Updated'
           type='ok'
-          desc='Password Updated, All other devices except you signed in with this account have been signed out'
+          desc='Password Updated, All other devices signed in with this account have been signed out, except you'
           timer={5}
           oneTime={false}
         />

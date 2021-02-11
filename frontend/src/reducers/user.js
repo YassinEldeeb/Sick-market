@@ -143,14 +143,15 @@ const userReducer = (state = initialState, action) => {
         updated: null,
       }
     case "RESET_PASSWORD_REQUEST":
-      return { ...state, resetLoading: true, error: null }
+      return { ...state, resetLoading: true, error: null, sent: false }
     case "RESET_PASSWORD_SUCCESS":
-      return { ...state, resetLoading: false }
+      return { ...state, resetLoading: false, sent: true }
     case "RESET_PASSWORD_FAIL":
       return {
         ...state,
         resetLoading: false,
         error: action.payload,
+        sent: false,
       }
     case "RESET_PASSWORD_STEP2_REQUEST":
       return { ...state, reset2Loading: true, error: null, reset: false }

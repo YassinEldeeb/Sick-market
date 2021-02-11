@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import resetPasswordEmail from "../actions/resetPasswordEmail"
 import Goback from "../components/Goback"
 import { useHistory } from "react-router-dom"
+import PopupMessage from "../components/PopupMessage"
 
 const ForgotPassword = () => {
   const dispatch = useDispatch()
@@ -15,7 +16,9 @@ const ForgotPassword = () => {
     e.preventDefault()
     dispatch(resetPasswordEmail(emailValue))
   }
-  const { error, resetLoading, user } = useSelector((state) => state.userInfo)
+  const { error, resetLoading, user, sent } = useSelector(
+    (state) => state.userInfo
+  )
   const history = useHistory()
 
   useEffect(() => {
@@ -23,9 +26,24 @@ const ForgotPassword = () => {
       history.push("/")
     }
   }, [user])
+  const [warning, setWarning] = useState(false)
   return (
     <>
       <Goback providedClassName={"goBackForgotPassword"} />
+      {sent && (
+        <PopupMessage
+          setWarning={setWarning}
+          timer={5}
+          desc={
+            <p>
+              Check Your email to verify It's you
+              <br /> and Reset your Password
+            </p>
+          }
+          title='Email Sent'
+          type={"ok"}
+        />
+      )}
       <StyledForgot>
         <div className='cont'>
           <h1>Forgot Password</h1>
