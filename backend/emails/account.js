@@ -50,12 +50,12 @@ const sendResetPasswordEmail = async (email) => {
       refreshToken: process.env.OAUTH_REFRESH_TOKEN,
     },
   })
-  console.log(process.env.NODE_ENV)
+
   let mailOptions = {
     from: "yassineldeeb94@gmail.com",
     to: email,
     subject: `Sick Market Reset Password`,
-    html: `Sick Market, Follow the Link: <a href="${
+    html: `Sick Market, You've 10 minutes for the Link to expires, Follow the Link: <a href="${
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
         : "https://sick-market.herokuapp.com"
