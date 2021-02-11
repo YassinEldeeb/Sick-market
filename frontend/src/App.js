@@ -18,6 +18,7 @@ import ChangePassword from "./pages/changePassword"
 import NotFound from "./pages/notFound"
 import Shipping from "./pages/Shipping"
 import Payment from "./pages/Payment"
+import PlaceOrder from "./pages/PlaceOrder"
 
 const App = () => {
   const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
@@ -94,6 +95,9 @@ const App = () => {
             </Route>
             <Route path='/payment'>
               <Payment />
+            </Route>
+            <Route path='/placeOrder'>
+              <PlaceOrder />
             </Route>
 
             <Route path='/account'></Route>

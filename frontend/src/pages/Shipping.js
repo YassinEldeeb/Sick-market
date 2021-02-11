@@ -19,6 +19,7 @@ const Shipping = () => {
       history.push("/cart")
     }
   }, [cartItems])
+
   const [addressValue, setAddress] = useState(
     address.address ? address.address : ""
   )
@@ -31,11 +32,9 @@ const Shipping = () => {
   )
 
   useEffect(() => {
-    console.log(address)
     setAddress(address.address ? address.address : "")
     setCity(address.city ? address.city : "")
     setGovernorate(address.governorate ? address.governorate : "")
-    setPhoneNumber(address.phoneNumber ? address.phoneNumber : "")
   }, [address])
 
   const { user } = useSelector((state) => state.userInfo)
@@ -50,8 +49,12 @@ const Shipping = () => {
 
   const dispatch = useDispatch()
 
-  const [latitude, setLatitude] = useState(0)
-  const [longitude, setLongitude] = useState(0)
+  const [latitude, setLatitude] = useState(
+    address.location ? address.location.lat : 0
+  )
+  const [longitude, setLongitude] = useState(
+    address.location ? address.location.lon : 0
+  )
   const [display_address, setDisplay_address] = useState("")
 
   const [forwardGeocoding, setForwardGeocoding] = useState(false)

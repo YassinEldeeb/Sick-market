@@ -19,11 +19,26 @@ const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
 const savedAddress = JSON.parse(localStorage.getItem("sickAddress"))
 const savedPaymentMethod = JSON.parse(localStorage.getItem("sickPaymentMethod"))
 
+const pricesArr = savedCart
+  ? savedCart.map((each) => each.price * each.qty)
+  : null
+const totalPrice = pricesArr
+  ? pricesArr.reduce((acc, item) => acc + item).toFixed(2)
+  : null
+
 initialState = {
   cart: {
     cartItems: savedCart ? savedCart : [],
     address: savedAddress ? savedAddress : {},
-    paymentMethod: savedPaymentMethod ? savedPaymentMethod : {},
+    paymentMethod: totalPrice
+      ? savedPaymentMethod
+        ? 20 > totalPrice || totalPrice > 17000
+          ? savedPaymentMethod
+          : "PayPal or Credit & Debit Cards"
+        : {}
+      : savedPaymentMethod
+      ? savedPaymentMethod
+      : null,
   },
   userInfo: savedUserInfo ? savedUserInfo : { user: {} },
 }

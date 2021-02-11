@@ -13,7 +13,6 @@ import userUpdateAction from "../actions/update"
 import deleteProfilePicAction from "../actions/deleteProfilePic"
 import { useLocation, useHistory } from "react-router-dom"
 import PopupMessage from "../components/PopupMessage"
-import { GoogleLogin } from "react-google-login"
 
 const EditProfile = () => {
   const inputRef = useRef(null)

@@ -16,7 +16,11 @@ const Payment = () => {
   const { user } = useSelector((state) => state.userInfo)
 
   const [method, setMethod] = useState(
-    paymentMethod.length ? paymentMethod : "PayPal or Credit & Debit Cards"
+    paymentMethod
+      ? paymentMethod.length
+        ? paymentMethod
+        : "PayPal or Credit & Debit Cards"
+      : "PayPal or Credit & Debit Cards"
   )
   const dispatch = useDispatch()
   const history = useHistory()
@@ -30,7 +34,7 @@ const Payment = () => {
           : method
       )
     )
-    history.push("/place-order")
+    history.push("/placeOrder")
   }
   useEffect(() => {
     if (!cartItems.length) {

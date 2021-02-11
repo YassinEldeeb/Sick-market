@@ -39,15 +39,13 @@ const CheckoutSteps = ({ step1, step2, step3, step4, current }) => {
             <Link to='/payment'>Payment</Link>
           </h1>
         </Link>
-        <div
-          className={`line ${step4 ? "active" : ""} ${
-            current === "step4" ? "current" : ""
-          }`}
-        ></div>
+        <div className={`line ${step4 ? "active" : ""}`}></div>
         <Link
           id='RouterNavLink'
           to='/place-order'
-          className={`circle circle4 ${step4 ? "active" : ""}`}
+          className={`circle circle4 ${step4 ? "active" : ""}  ${
+            current === "step4" ? "current" : ""
+          }`}
         >
           <h1>
             <Link to='/place-order'>Place Order</Link>
