@@ -6,7 +6,7 @@ import eye from "../img/eye.svg"
 import Message from "../components/message"
 import Loader from "../components/loader"
 import resetPassword from "../actions/resetPassword"
-import { useHistory, useLocation } from "react-router-dom"
+import { useHistory, useLocation, Link } from "react-router-dom"
 
 const ResetPassword = () => {
   const inputRef = useRef(null)
@@ -26,6 +26,11 @@ const ResetPassword = () => {
 
   const token = location.search.split("=")[1]
 
+  useEffect(() => {
+    if (!token) {
+      history.push("/forgotPassword")
+    }
+  }, [])
   const submitHandler = (e) => {
     e.preventDefault()
     setConfirmPasswordValid("")
@@ -50,6 +55,30 @@ const ResetPassword = () => {
       history.push("/")
     }
   }, [user])
+  const messageError = () => {
+    if (confirmPasswordValid) {
+      return confirmPasswordValid
+    } else if (error) {
+      if (error.includes("timed out")) {
+        return "Network Error"
+      } else if (error.includes("mongo")) {
+        return "Server Error"
+      } else if (error.includes("jwt expired")) {
+        return (
+          <p>
+            Send a Reset Password Email at{" "}
+            <Link className='ForgotLink' to='forgotPassword'>
+              Forgot Password
+            </Link>
+          </p>
+        )
+      } else {
+        return error
+      }
+    } else {
+      return ""
+    }
+  }
   return (
     <StyledReset>
       <div className='content'>
@@ -59,17 +88,7 @@ const ResetPassword = () => {
           visiblity={
             confirmPasswordValid ? confirmPasswordValid : error ? true : false
           }
-          msg={
-            confirmPasswordValid
-              ? confirmPasswordValid
-              : error
-              ? error.includes("timed out")
-                ? "Network Error"
-                : error.includes("mongo")
-                ? "Server Error"
-                : error
-              : ""
-          }
+          msg={messageError()}
           type='error'
         />
         <form onSubmit={submitHandler}>
@@ -159,6 +178,16 @@ const ResetPassword = () => {
   )
 }
 const StyledReset = styled.div`
+  .ForgotLink {
+    color: rgba(113, 43, 41, 0.9);
+    text-decoration: underline;
+    &:hover {
+      color: rgba(113, 43, 41, 1);
+    }
+  }
+  .message {
+    margin-bottom: 0.5rem;
+  }
   width: 90%;
   margin: 0 auto;
   flex: 1 1 auto;
@@ -179,6 +208,8 @@ const StyledReset = styled.div`
     align-items: flex-start;
     flex-direction: column;
     margin-bottom: 0.5rem;
+    width: 100%;
+    max-width: 606px;
   }
   .eye2 {
     transform: translate(-50%, 8%) !important;

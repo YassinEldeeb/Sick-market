@@ -6,6 +6,7 @@ import { useLastLocation } from "react-router-last-location"
 
 const Goback = ({ toPath, providedClassName, text = "Go back" }) => {
   const lastLocation = useLastLocation()
+  console.log("LAST", lastLocation)
   let linkValue
   if (toPath) {
     linkValue = toPath

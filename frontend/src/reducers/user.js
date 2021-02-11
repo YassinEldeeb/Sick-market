@@ -160,7 +160,7 @@ const userReducer = (state = initialState, action) => {
     case "RESET_PASSWORD_STEP2_FAIL":
       return {
         ...state,
-        resetLoading: false,
+        reset2Loading: false,
         error: action.payload,
         reset: false,
       }

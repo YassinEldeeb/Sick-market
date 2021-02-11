@@ -344,6 +344,9 @@ const getResetLink = asyncHandler(async (req, res) => {
     if (!user) {
       res.status(404)
       throw new Error("No user with this email")
+    } else if (user.profilePicLink || user.profilePicLink === "cleared") {
+      res.status(404)
+      throw new Error("Google Accounts can't forgot their Password")
     }
     await sendResetPasswordEmail(email)
     res.send({ message: `Reset Password Link sent to ${user.email}` })

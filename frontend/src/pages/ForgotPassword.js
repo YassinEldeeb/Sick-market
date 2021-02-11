@@ -91,6 +91,8 @@ const ForgotPassword = () => {
 const StyledForgot = styled.div`
   .cont {
     margin-top: clamp(20px, 14vh, 80px);
+    width: 35%;
+    max-width: 606px;
   }
   display: flex;
   align-items: center;
