@@ -14,6 +14,8 @@ import {
   getNewSecurityCode,
   updateProfile,
   continueWithGoogle,
+  getResetLink,
+  resetPassword,
 } from "../controllers/usersController.js"
 import protect from "../middleware/authMiddleware.js"
 
@@ -54,5 +56,9 @@ userRouter.post("/checkToken", protect, checkToken)
 userRouter.post("/getSecurityCode", protect, getSecurityCode)
 
 userRouter.get("/getNewSecurityCode", protect, getNewSecurityCode)
+
+userRouter.post("/resetPasswordEmail", getResetLink)
+
+userRouter.post("/resetPassword", resetPassword)
 
 export default userRouter

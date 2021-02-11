@@ -3,9 +3,13 @@ import User from "../models/userModel.js"
 import sharp from "sharp"
 import fs from "fs"
 import validator from "validator"
-import sendWelcomeEmail from "../emails/account.js"
+import {
+  sendVerificationEmail,
+  sendResetPasswordEmail,
+} from "../emails/account.js"
 import SecretCode from "../models/secretCode.js"
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
 
 //Get User - /api/users/login @Public
 const getUser = asyncHandler(async (req, res) => {
@@ -320,11 +324,68 @@ const getNewSecurityCode = asyncHandler(async (req, res) => {
     })
 
     await secretC.save()
-    sendWelcomeEmail(req.user.email, req.user.name)
+    sendVerificationEmail(req.user.email, req.user.name)
     res.status(201).send({ message: "Code Succesfully Sent!" })
   } else {
     res.status(400)
     throw new Error("Email already Verified")
+  }
+})
+
+const getResetLink = asyncHandler(async (req, res) => {
+  const { email } = req.body
+
+  if (!email) {
+    res.status(400)
+    throw new Error("Email is required to reset Password")
+  }
+  if (validator.isEmail(email)) {
+    const user = await User.findOne({ email })
+    if (!user) {
+      res.status(404)
+      throw new Error("No user with this email")
+    }
+    await sendResetPasswordEmail(email)
+    res.send({ message: `Reset Password Link sent to ${user.email}` })
+  } else {
+    res.status(400)
+    throw new Error("Not a valid Email")
+  }
+})
+
+const resetPassword = asyncHandler(async (req, res) => {
+  const { password } = req.body
+  const passedToken = req.headers.authorization
+  const token = passedToken ? passedToken.split(" ")[1] : null
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+      const user = await User.findOne({
+        email: decoded.email,
+      })
+
+      if (user) {
+        if (!password) {
+          res.status(404)
+          throw new Error("Password is required to reset it")
+        }
+        user.tokens = []
+        user.password = password
+        await user.save()
+        res.send(user)
+      } else {
+        res.status(401)
+        throw new Error("Unauthorized, Invalid Token")
+      }
+    } catch (err) {
+      console.log(err)
+      res.status(401)
+      throw new Error(err.message)
+    }
+  } else {
+    throw new Error("Unauthorized, No Token")
   }
 })
 
@@ -342,4 +403,6 @@ export {
   getNewSecurityCode,
   updateProfile,
   continueWithGoogle,
+  getResetLink,
+  resetPassword,
 }

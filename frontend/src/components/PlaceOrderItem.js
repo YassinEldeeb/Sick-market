@@ -9,7 +9,12 @@ const PlaceOrderItem = ({ img, productName, qty, price, id }) => {
   return (
     <StyledItem>
       <div className='firstDiv'>
-        <img src={img} alt='product' />
+        <Link
+          onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
+          to={`/products/${id}`}
+        >
+          <img src={img} alt='product' />
+        </Link>
         <h1>
           <Link
             onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}

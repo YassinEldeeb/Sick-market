@@ -126,6 +126,9 @@ const Login = () => {
               }, 0)
             }}
           />
+          <Link to='/forgotPassword' className='forgotPassword'>
+            Forgot Password?
+          </Link>
           <img
             style={{ display: `${!show ? "none" : "block"}` }}
             className='eye eye2'
@@ -160,6 +163,13 @@ const Login = () => {
 }
 
 const StyledLogin = styled.div`
+  .forgotPassword {
+    text-align: end;
+    margin-bottom: 0.25rem;
+    margin-top: 0.5rem;
+    display: block;
+    color: #0084a0;
+  }
   .googleBtn {
     border-radius: 6px !important;
     div:first-child {
@@ -169,7 +179,7 @@ const StyledLogin = styled.div`
     }
   }
   .eye2 {
-    transform: translate(-50%, 8%) !important;
+    transform: translate(-50%, -55%) !important;
   }
   .xSign2 {
     position: absolute;
@@ -184,7 +194,7 @@ const StyledLogin = styled.div`
     position: absolute;
     right: 0%;
     top: 50%;
-    transform: translate(-50%, -6%);
+    transform: translate(-50%, -54%);
     width: calc(1.8rem + 0.3vw);
     cursor: pointer;
   }
@@ -205,7 +215,7 @@ const StyledLogin = styled.div`
     align-items: flex-start;
     width: 35%;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 
     h1 {
       color: #1a1a1a;
@@ -266,6 +276,9 @@ const StyledLogin = styled.div`
       margin-top: 0.3rem;
       padding-right: 2.8rem;
     }
+    #password {
+      margin-bottom: 0rem;
+    }
   }
   .desktop,
   .mobile {
@@ -287,6 +300,10 @@ const StyledLogin = styled.div`
     padding: 0.55rem 0.8rem !important;
   }
   @media screen and (max-width: 1050px) {
+    .forgotPassword {
+      margin-top: 0.65rem;
+      margin-bottom: 0.325rem;
+    }
     .message {
       padding: 0.5rem 0.7rem !important;
     }
@@ -296,11 +313,11 @@ const StyledLogin = styled.div`
       top: 50%;
       cursor: pointer;
       padding: 0.6rem;
-      transform: translate(-18%, -36%);
+      transform: translate(-18%, -60%);
       width: calc(2.8rem + 1vw);
     }
     .eye2 {
-      transform: translate(-18%, -35%) !important;
+      transform: translate(-18%, -60%) !important;
     }
     .xSign2 {
       transform: translate(-50%, -24%) !important;
@@ -329,6 +346,9 @@ const StyledLogin = styled.div`
       #email,
       #password {
         margin-bottom: 1.3rem;
+      }
+      #password {
+        margin-bottom: 0rem;
       }
     }
     .mobile {

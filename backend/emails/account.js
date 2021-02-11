@@ -1,14 +1,11 @@
 import dotenv from "dotenv"
-// import sgMail from "@sendgrid/mail"
 import SecretCode from "../models/secretCode.js"
-// import asyncHandler from "express-async-handler"
 import nodemailer from "nodemailer"
+import jwt from "jsonwebtoken"
 
 dotenv.config()
-// sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
-//Signup new user
 
-const sendWelcomeEmail = async (email, name) => {
+const sendVerificationEmail = async (email, name) => {
   const code = await SecretCode.find({ email })
   // Generate test SMTP service account from ethereal.email
   let transporter = nodemailer.createTransport({
@@ -36,17 +33,42 @@ const sendWelcomeEmail = async (email, name) => {
     }
   })
 }
-// const sendWelcomeEmail = asyncHandler(async (email, name) => {
-//   const code = await SecretCode.find({ email })
-//   try {
-//     await sgMail.send({
-//       from: "yassineldeeb94@gmail.com",
-//       to: email,
-//       subject: `Sick Market ${name} Email Verifcation Code`,
-//       html: `<h2>Sick Market, Verifcation Code: <h1>${code[0].code}</h1></h2>`,
-//     })
-//     console.info(`mail to ${email} is sent`)
-//   } catch (err) {}
-// })
 
-export default sendWelcomeEmail
+const sendResetPasswordEmail = async (email) => {
+  const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+    expiresIn: "600000",
+  })
+  // Generate test SMTP service account from ethereal.email
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: process.env.MAIL_USERNAME,
+      pass: process.env.MAIL_PASSWORD,
+      clientId: process.env.OAUTH_CLIENTID,
+      clientSecret: process.env.OAUTH_CLIENT_SECRET,
+      refreshToken: process.env.OAUTH_REFRESH_TOKEN,
+    },
+  })
+  console.log(process.env.NODE_ENV)
+  let mailOptions = {
+    from: "yassineldeeb94@gmail.com",
+    to: email,
+    subject: `Sick Market Reset Password`,
+    html: `Sick Market, Follow the Link: <a href="${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://sick-market.herokuapp.com"
+    }/resetPassword?token=${token}">Reset Password</a>`,
+  }
+
+  transporter.sendMail(mailOptions, function (err, data) {
+    if (err) {
+      console.log("Error " + err)
+    } else {
+      console.log("Email sent successfully")
+    }
+  })
+}
+
+export { sendVerificationEmail, sendResetPasswordEmail }

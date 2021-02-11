@@ -229,27 +229,6 @@ const Register = () => {
 }
 
 const StyledRegister = styled.div`
-  .filepond--drop-label.filepond--drop-label label {
-    padding: 1rem;
-  }
-  .filepond--wrapper {
-    align-self: center;
-    width: 14rem;
-  }
-
-  .filepond--credits {
-    display: none !important;
-  }
-  .filepond--root.filepond--hopper {
-    height: 14rem !important;
-    margin-bottom: 0.5rem !important;
-  }
-  .filepond--panel-root {
-    background: #f3f3f3;
-  }
-  .filepond--file-action-button {
-    background-color: rgb(0, 178, 216);
-  }
   .eye2 {
     transform: translate(-50%, 8%) !important;
   }

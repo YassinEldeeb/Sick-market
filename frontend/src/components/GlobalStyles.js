@@ -78,7 +78,12 @@ a{
     cursor: pointer;
     text-decoration:underline;
   }
- 
+  .goBackForgotPassword ,.flexCont {
+    display: inline-flex !important;
+  }
+  .goBackForgotPassword{
+    margin-left: 5vw;
+  }
 @media screen and (max-width:1050px){
     *{   
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0.05);
