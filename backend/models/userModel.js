@@ -61,6 +61,10 @@ const userSchema = mongoose.Schema(
       type: String,
       default: "pending",
     },
+    validResetPassword: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 )

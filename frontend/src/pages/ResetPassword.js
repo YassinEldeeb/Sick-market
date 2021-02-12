@@ -63,7 +63,10 @@ const ResetPassword = () => {
         return "Network Error"
       } else if (error.includes("mongo")) {
         return "Server Error"
-      } else if (error.includes("jwt expired")) {
+      } else if (
+        error.includes("jwt expired") ||
+        error.includes("Link Expired")
+      ) {
         return (
           <p>
             Send a Reset Password Email at{" "}

@@ -349,6 +349,8 @@ const getResetLink = asyncHandler(async (req, res) => {
       throw new Error("Google Accounts can't forgot their Password")
     }
     await sendResetPasswordEmail(email)
+    user.validResetPassword = true
+    await user.save()
     res.send({ message: `Reset Password Link sent to ${user.email}` })
   } else {
     res.status(400)
@@ -374,8 +376,13 @@ const resetPassword = asyncHandler(async (req, res) => {
           res.status(404)
           throw new Error("Password is required to reset it")
         }
+        if (!user.validResetPassword) {
+          res.status(400)
+          throw new Error("Link Expired")
+        }
         user.tokens = []
         user.password = password
+        user.validResetPassword = false
         await user.save()
         res.send(user)
       } else {
