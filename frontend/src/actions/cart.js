@@ -11,7 +11,16 @@ export const cartAction = (id, qty) => async (dispatch, getState) => {
   if (!exist) {
     dispatch({
       type: "ADD_ITEM_TO_CART",
-      payload: { ...product, qty },
+      payload: {
+        name: product.name,
+        qty,
+        image: product.image,
+        price: product.price,
+        _id: product._id,
+        rating: product.rating,
+        numReviews: product.numReviews,
+        countInStock: product.countInStock,
+      },
     })
   }
   const { cartItems } = getState().cart

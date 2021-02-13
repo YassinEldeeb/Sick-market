@@ -5,12 +5,14 @@ import productListReducer from "./reducers/productList"
 import productDetailReducer from "./reducers/productDetail"
 import cartReducer from "./reducers/cart"
 import userReducer from "./reducers/user"
+import createOrderReducer from "./reducers/order"
 
 const reducers = combineReducers({
   productList: productListReducer,
   product: productDetailReducer,
   cart: cartReducer,
   userInfo: userReducer,
+  order: createOrderReducer,
 })
 let initialState
 
@@ -21,8 +23,9 @@ const savedPaymentMethod = JSON.parse(localStorage.getItem("sickPaymentMethod"))
 
 const pricesArr = savedCart
   ? savedCart.map((each) => each.price * each.qty)
-  : null
-const totalPrice = pricesArr
+  : []
+
+const totalPrice = pricesArr.length
   ? pricesArr.reduce((acc, item) => acc + item).toFixed(2)
   : null
 

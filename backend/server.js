@@ -5,6 +5,7 @@ import colors from "colors"
 import productRouter from "./routes/productRoute.js"
 import { errRouter, notFoundRouter } from "./middleware/errMiddleware.js"
 import userRouter from "./routes/userRoute.js"
+import orderRouter from "./routes/orderRoute.js"
 import bodyparser from "body-parser"
 import rateLimit from "express-rate-limit"
 import path from "path"
@@ -27,6 +28,8 @@ const apiLimiter = rateLimit({
 app.use("/api/users/getNewSecurityCode", apiLimiter)
 
 app.use("/api/users", userRouter)
+
+app.use("/api/orders", orderRouter)
 
 const __dirname = path.resolve()
 if (process.env.NODE_ENV === "production") {

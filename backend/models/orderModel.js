@@ -22,9 +22,11 @@ const orderSchema = mongoose.Schema(
     ],
     shippingAddress: {
       address: { type: String, required: true, trim: true },
-      postalCode: { type: String, required: true, trim: true },
-      address: { type: String, required: true, trim: true },
-      country: { type: String, required: true, trim: true },
+      phoneNumber: { type: String, required: true, trim: true },
+      city: { type: String, required: true, trim: true },
+      governorate: { type: String, required: true, trim: true },
+      lat: { type: String, required: true, trim: true },
+      lon: { type: String, required: true, trim: true },
     },
     paymentMethod: {
       type: String,
@@ -47,6 +49,11 @@ const orderSchema = mongoose.Schema(
       default: 0.0,
     },
     totalPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    itemsPrice: {
       type: Number,
       required: true,
       default: 0.0,

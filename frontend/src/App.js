@@ -105,7 +105,7 @@ const App = () => {
               <Payment />
             </Route>
             <Route path='/placeOrder'>
-              <PlaceOrder />
+              <PlaceOrder setCartCount={setCartCount} />
             </Route>
 
             <Route path='/account'></Route>

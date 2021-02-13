@@ -49,7 +49,7 @@ const StyledList = styled.div`
   margin: 0 auto;
 
   .title {
-    font-size: calc(1.9rem + 0.5vw);
+    font-size: calc(1.5rem + 1vw);
     font-weight: 500;
     padding-bottom: calc(0.7rem + 0.5vw);
     color: #1a1a1a;

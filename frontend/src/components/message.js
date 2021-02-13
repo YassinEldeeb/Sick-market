@@ -1,7 +1,13 @@
 import React from "react"
 import styled from "styled-components"
 
-const Message = ({ msg, type = "ok", visiblity = true, vibrating }) => {
+const Message = ({
+  msg,
+  type = "ok",
+  visiblity = true,
+  vibrating,
+  hidden = false,
+}) => {
   return (
     <StyledMessage
       className={`message ${visiblity && vibrating ? "active" : ""}`}
@@ -14,6 +20,7 @@ const Message = ({ msg, type = "ok", visiblity = true, vibrating }) => {
         opacity: `${visiblity ? 1 : 0}`,
         pointerEvents: `${visiblity ? "all" : "none"}`,
         height: `${visiblity ? "100%" : "20px"}`,
+        display: `${hidden ? "none" : "inline-block"}`,
       }}
     >
       <span
@@ -21,6 +28,7 @@ const Message = ({ msg, type = "ok", visiblity = true, vibrating }) => {
           fontWeight: 500,
           color: `${type === "ok" ? "#306F83" : "#712B29"}`,
           fontSize: "calc(0.8rem + 0.5vw)",
+          display: `${hidden ? "none" : "block"}`,
         }}
       >
         {msg}

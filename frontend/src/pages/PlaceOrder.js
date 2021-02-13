@@ -1,11 +1,16 @@
 import React, { useEffect } from "react"
 import styled from "styled-components"
 import { useLocation, useHistory } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import CheckoutSteps from "../components/CheckoutSteps"
 import PlaceOrderItem from "../components/PlaceOrderItem"
+import createOrderAction from "../actions/createOrder"
+import Message from "../components/message"
+import Loader from "../components/loader"
 
-const PlaceOrder = () => {
+const PlaceOrder = ({ setCartCount }) => {
+  const dispatch = useDispatch()
+
   function truncate(str) {
     return str.length > 30 ? str.substr(0, 30 - 1) + ".." : str
   }
@@ -13,6 +18,7 @@ const PlaceOrder = () => {
     (state) => state.cart
   )
   const { user } = useSelector((state) => state.userInfo)
+  const cart = useSelector((state) => state.cart)
 
   const history = useHistory()
   const location = useLocation()
@@ -27,28 +33,59 @@ const PlaceOrder = () => {
   }, [history, location, user])
 
   useEffect(() => {
-    if (!cartItems.length || !address.display_address) {
+    if (!cart.paymentMethod || !address.display_address) {
       history.push("/cart")
     }
   }, [cartItems, address.display_address])
 
-  useEffect(() => {
-    if (!cartItems.length) {
-      history.push("/cart")
-    }
-  }, [cartItems])
-
   const pricesArr = cartItems.map((each) => each.price * each.qty)
-  const totalPrice = pricesArr.reduce((acc, item) => acc + item).toFixed(2)
+  const totalPrice = pricesArr.length
+    ? pricesArr.reduce((acc, item) => acc + item).toFixed(2)
+    : null
 
   const toFixedFN = (num) => {
     return Number(num).toFixed(2)
   }
+
+  cart.taxes = toFixedFN((Number(totalPrice) * 14) / 100)
+  cart.totalPrice = Number(totalPrice)
+  cart.shipping = toFixedFN(50)
+  cart.totalPrice = toFixedFN(
+    Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100
+  )
+
+  const placeOrderHandler = () => {
+    dispatch(createOrderAction(setCartCount))
+  }
+  const { order, orderLoading, orderPlaced, error } = useSelector(
+    (state) => state.order
+  )
+  useEffect(() => {
+    console.log(orderPlaced)
+    if (orderPlaced) {
+      history.push(`/orders/${order._id}`)
+    }
+  }, [orderPlaced, history])
   return (
     <StyledPlaceOrder>
       <CheckoutSteps step1 step2 step3 step4 current='step4' />
       <div className='content'>
         <div className='summary'>
+          <Message
+            vibrating='true'
+            visiblity={error ? true : false}
+            msg={
+              error
+                ? error.includes("timed out")
+                  ? "Network Error"
+                  : error.includes("mongo")
+                  ? "Server Error"
+                  : error
+                : "Ok"
+            }
+            hidden={error ? false : true}
+            type='error'
+          />
           <div className='shipping-section section'>
             <h1>Shipping :</h1>
             <p>Address: {address.display_address}</p>
@@ -102,7 +139,9 @@ const PlaceOrder = () => {
               <span className='currency'>EGP</span>
             </p>
           </div>
-          <button>Place Order</button>
+          <button onClick={placeOrderHandler}>
+            Place Order {orderLoading && <Loader />}
+          </button>
         </div>
         <div className='lineSeperate'></div>
       </div>
@@ -336,7 +375,7 @@ const StyledPlaceOrder = styled.div`
       p {
         padding-bottom: 0.8rem;
         color: #1a1a1a;
-        font-size: calc(0.45rem + 1vw) !important;
+        font-size: calc(0.52rem + 1vw) !important;
       }
       border-bottom: 1px solid rgba(0, 0, 0, 12.5%);
       &:last-child {

@@ -165,7 +165,6 @@ const Login = () => {
 const StyledLogin = styled.div`
   .forgotPassword {
     text-align: end;
-    margin-bottom: 0.25rem;
     margin-top: 0.5rem;
     display: block;
     color: #0084a0;
