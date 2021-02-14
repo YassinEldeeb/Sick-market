@@ -30,14 +30,16 @@ const Login = () => {
 
   const { loading, user, error } = useSelector((state) => state.userInfo)
 
-  const search = location.search.split("=")[1]
+  const search = location.search.replace("?redirect=", "")
   const redirect = search ? search : "/"
 
   useEffect(() => {
     if (user.name) {
+      console.log(location.search.split("=")[1])
       history.push(redirect)
     }
   }, [user, history, redirect])
+
   const responseGoogle = (response) => {
     let userObj
     if (
@@ -148,14 +150,14 @@ const Login = () => {
         <p className='desktop'>
           New Customer?{" "}
           <span className='register'>
-            <Link to={`/register?${redirect}`}>Register</Link>
+            <Link to={`/register?redirect=${redirect}`}>Register</Link>
           </span>
         </p>
       </form>
       <p className='mobile'>
         New Customer?{" "}
         <span className='register'>
-          <Link to={`/register?${redirect}`}>Register</Link>
+          <Link to={`/register?redirect=${redirect}`}>Register</Link>
         </span>
       </p>
     </StyledLogin>

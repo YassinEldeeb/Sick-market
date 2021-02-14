@@ -20,6 +20,7 @@ export const cartAction = (id, qty) => async (dispatch, getState) => {
         rating: product.rating,
         numReviews: product.numReviews,
         countInStock: product.countInStock,
+        brand: product.brand,
       },
     })
   }

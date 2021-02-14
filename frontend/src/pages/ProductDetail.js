@@ -9,9 +9,11 @@ import Message from "../components/message"
 import Loader from "../components/loader"
 import { cartAction, removeAction } from "../actions/cart"
 import QtySelector from "../components/QtySelector"
+import { buyNowAction } from "../actions/buyNow"
 
 const ProductDetail = ({ cartCount, setCartCount }) => {
   const location = useLocation()
+  const isBuyNow = location.search.split("=")[1] === "buyNow"
   const id = location.pathname.split("/")[2]
 
   const savedCart = localStorage.getItem("sickCartProducts")
@@ -42,7 +44,10 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   }, [location.pathname, dispatch, id, location.search, product, fetching])
 
   const buyNowHandler = () => {
-    history.push("/shipping")
+    if (!isBuyNow) {
+      dispatch(buyNowAction(qty))
+      history.push("/shipping?order=buyNow")
+    }
   }
   const addToCart = () => {
     const match = cartItems ? cartItems.find((each) => each._id === id) : false
@@ -55,6 +60,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
       setCartCount(Number(cartCount) - Number(qty))
     }
   }
+
   return (
     <StyledDetail>
       <Goback />
@@ -109,7 +115,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                   <h1>{matched ? "Remove" : "Add to Cart"}</h1>
                 </div>
                 <div className='buy mobile-btn' onClick={buyNowHandler}>
-                  <h1>Buy Now</h1>
+                  <h1>{isBuyNow ? "Buying Process" : "Buy Now"}</h1>
                 </div>
               </>
             )}
@@ -175,7 +181,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                   <h1>{matched ? "Remove" : "Add to Cart"}</h1>
                 </div>
                 <div className='buy' onClick={buyNowHandler}>
-                  <h1>Buy Now</h1>
+                  <h1>{isBuyNow ? "Buying Process" : "Buy Now"}</h1>
                 </div>
               </>
             )}

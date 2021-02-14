@@ -14,8 +14,9 @@ const Shipping = () => {
   const { address, geocodingLoading, cartItems } = useSelector(
     (state) => state.cart
   )
+  const { product } = useSelector((state) => state.buyNowProduct)
   useEffect(() => {
-    if (!cartItems.length) {
+    if (!cartItems.length && !product.name) {
       history.push("/cart")
     }
   }, [cartItems])
@@ -43,7 +44,14 @@ const Shipping = () => {
 
   useEffect(() => {
     if (location.pathname.split("/")[1] === "shipping" && !user.name) {
-      history.push("/login?redirect=shipping")
+      const pushedLink = () => {
+        if (location.search.split("=")[1] === "buyNow") {
+          return "/login?redirect=shipping?order=buyNow"
+        } else {
+          return "/login?redirect=shipping"
+        }
+      }
+      history.push(pushedLink())
     }
   }, [history, location, user])
 
@@ -97,7 +105,14 @@ const Shipping = () => {
         })
       )
       if (!forwardGeocoding) {
-        history.push("/payment")
+        const pushedLink = () => {
+          if (location.search.split("=")[1] === "buyNow") {
+            return "/payment?order=buyNow"
+          } else {
+            return "/payment"
+          }
+        }
+        history.push(pushedLink())
       }
     }
   }
@@ -262,7 +277,6 @@ const Shipping = () => {
               },
             })
           } catch (error) {
-            console.log(error)
             dispatch({
               type: "GEOCODING_FAIL",
               payload:

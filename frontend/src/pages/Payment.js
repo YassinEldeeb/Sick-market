@@ -7,11 +7,23 @@ import { useDispatch, useSelector } from "react-redux"
 import { useHistory, useLocation } from "react-router-dom"
 
 const Payment = () => {
+  const location = useLocation()
+  const isBuyNow = location.search.split("=")[1] === "buyNow"
+
   const { paymentMethod, address, cartItems } = useSelector(
     (state) => state.cart
   )
-  const pricesArr = cartItems.map((each) => each.price * each.qty)
-  const totalPrice = pricesArr.reduce((acc, item) => acc + item)
+  const { product } = useSelector((state) => state.buyNowProduct)
+
+  const pricesArr = !isBuyNow
+    ? cartItems.map((each) => each.price * each.qty)
+    : product.price * product.qty
+
+  const totalPrice = !isBuyNow
+    ? pricesArr.length
+      ? pricesArr.reduce((acc, item) => acc + item)
+      : null
+    : pricesArr
 
   const { user } = useSelector((state) => state.userInfo)
 
@@ -24,7 +36,6 @@ const Payment = () => {
   )
   const dispatch = useDispatch()
   const history = useHistory()
-  const location = useLocation()
 
   const continueHandler = () => {
     dispatch(
@@ -34,23 +45,44 @@ const Payment = () => {
           : method
       )
     )
-    history.push("/placeOrder")
+    const pushedLink = () => {
+      if (location.search.split("=")[1] === "buyNow") {
+        return "/placeOrder?order=buyNow"
+      } else {
+        return "/placeOrder"
+      }
+    }
+    history.push(pushedLink())
   }
   useEffect(() => {
-    if (!cartItems.length) {
+    if (!cartItems.length && !product.name) {
       history.push("/cart")
     }
   }, [cartItems])
 
   useEffect(() => {
+    const pushedLink = () => {
+      if (location.search.split("=")[1] === "buyNow") {
+        return "/login?redirect=payment"
+      } else {
+        return "/login?redirect=payment?order=buyNow"
+      }
+    }
     if (location.pathname.split("/")[1] === "payment" && !user.name) {
-      history.push("/login?redirect=payment")
+      history.push(pushedLink())
     }
   }, [history, location, user])
 
   useEffect(() => {
+    const pushedLink = () => {
+      if (location.search.split("=")[1] === "buyNow") {
+        return "/shipping?order=buyNow"
+      } else {
+        return "/shipping"
+      }
+    }
     if (!address.city) {
-      history.push("/shipping")
+      history.push(pushedLink())
     }
   }, [history, location, user])
   return (

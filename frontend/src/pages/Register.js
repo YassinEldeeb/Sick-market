@@ -44,7 +44,7 @@ const Register = () => {
 
   const { loading, user, error } = useSelector((state) => state.userInfo)
 
-  const search = location.search.split("=")[1]
+  const search = location.search.replace("?redirect=", "")
   const redirect = search ? search : "/verify"
 
   useEffect(() => {
@@ -214,14 +214,14 @@ const Register = () => {
         <p className='desktop'>
           Have an Account?{" "}
           <span className='register'>
-            <Link to='/login'>Login</Link>
+            <Link to={`/login?redirect=${redirect}`}>Login</Link>
           </span>
         </p>
       </form>
       <p className='mobile'>
         Have an Account?{" "}
         <span className='register'>
-          <Link to='/login'>Login</Link>
+          <Link to={`/login?redirect=${redirect}`}>Login</Link>
         </span>
       </p>
     </StyledRegister>

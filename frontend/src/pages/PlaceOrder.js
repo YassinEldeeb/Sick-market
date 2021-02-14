@@ -10,6 +10,7 @@ import Loader from "../components/loader"
 
 const PlaceOrder = ({ setCartCount }) => {
   const dispatch = useDispatch()
+  const { product } = useSelector((state) => state.buyNowProduct)
 
   function truncate(str) {
     return str.length > 30 ? str.substr(0, 30 - 1) + ".." : str
@@ -23,25 +24,30 @@ const PlaceOrder = ({ setCartCount }) => {
   const history = useHistory()
   const location = useLocation()
 
+  const isBuyNow = location.search.split("=")[1] === "buyNow"
+
   useEffect(() => {
+    const pushedLink = () => {
+      if (location.search.split("=")[1] === "buyNow") {
+        return "/login?redirect=placeOrder?order=buyNow"
+      } else {
+        return "/login?redirect=placeOrder"
+      }
+    }
     if (
       location.pathname.split("/")[1].toLocaleLowerCase() === "placeorder" &&
       !user.name
     ) {
-      history.push("/login?redirect=placeOrder")
+      history.push(pushedLink())
     }
   }, [history, location, user])
 
-  useEffect(() => {
-    if (!cart.paymentMethod || !address.display_address) {
-      history.push("/cart")
-    }
-  }, [cartItems, address.display_address])
-
   const pricesArr = cartItems.map((each) => each.price * each.qty)
-  const totalPrice = pricesArr.length
-    ? pricesArr.reduce((acc, item) => acc + item).toFixed(2)
-    : null
+  const totalPrice = !isBuyNow
+    ? pricesArr.length
+      ? pricesArr.reduce((acc, item) => acc + item).toFixed(2)
+      : null
+    : product.price.toFixed(2)
 
   const toFixedFN = (num) => {
     return Number(num).toFixed(2)
@@ -55,17 +61,28 @@ const PlaceOrder = ({ setCartCount }) => {
   )
 
   const placeOrderHandler = () => {
-    dispatch(createOrderAction(setCartCount))
+    dispatch(createOrderAction(setCartCount, isBuyNow))
   }
   const { order, orderLoading, orderPlaced, error } = useSelector(
     (state) => state.order
   )
   useEffect(() => {
-    console.log(orderPlaced)
     if (orderPlaced) {
       history.push(`/orders/${order._id}`)
     }
   }, [orderPlaced, history])
+
+  useEffect(() => {
+    if (
+      !cart.paymentMethod ||
+      !address.display_address ||
+      (!cart.cartItems.length && orderPlaced === false)
+    ) {
+      console.log("orderPlaced:", orderPlaced)
+      history.push("/cart")
+    }
+  }, [cartItems, address.display_address])
+
   return (
     <StyledPlaceOrder>
       <CheckoutSteps step1 step2 step3 step4 current='step4' />
@@ -95,16 +112,31 @@ const PlaceOrder = ({ setCartCount }) => {
             <p>Method: {paymentMethod}</p>
           </div>
           <div className='order-section section'>
-            <h1>Order Items :</h1>
-            {cartItems.map((each) => (
+            <h1>
+              {isBuyNow || cartItems.length === 1
+                ? "Order Item :"
+                : "Order Items :"}
+            </h1>
+            {!isBuyNow ? (
+              cartItems.map((each) => (
+                <PlaceOrderItem
+                  price={each.price}
+                  qty={each.qty}
+                  productName={truncate(each.name)}
+                  img={each.image}
+                  id={each._id}
+                />
+              ))
+            ) : (
               <PlaceOrderItem
-                price={each.price}
-                qty={each.qty}
-                productName={truncate(each.name)}
-                img={each.image}
-                id={each._id}
+                price={product.price}
+                qty={product.qty}
+                productName={truncate(product.name)}
+                img={product.image}
+                id={product._id}
+                isBuyNow={isBuyNow}
               />
-            ))}
+            )}
           </div>
         </div>
         <div className='table'>

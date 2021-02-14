@@ -1,10 +1,13 @@
 import React from "react"
 import arrow from "../img/gobackArrow.svg"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { useLastLocation } from "react-router-last-location"
 
 const Goback = ({ toPath, providedClassName, text = "Go back" }) => {
+  const location = useLocation()
+  const isBuyNow = location.search.split("=")[1] === "buyNow"
+
   const lastLocation = useLastLocation()
   console.log("LAST", lastLocation)
   let linkValue
@@ -15,7 +18,7 @@ const Goback = ({ toPath, providedClassName, text = "Go back" }) => {
     !lastLocation.pathname.includes("product-description") &&
     !lastLocation.pathname.includes("products")
   ) {
-    linkValue = lastLocation.pathname
+    linkValue = `${lastLocation.pathname}${isBuyNow ? "?order=buyNow" : ""}`
   } else {
     linkValue = "/"
   }

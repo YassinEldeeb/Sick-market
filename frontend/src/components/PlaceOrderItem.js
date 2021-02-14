@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 import { useDispatch } from "react-redux"
 
-const PlaceOrderItem = ({ img, productName, qty, price, id }) => {
+const PlaceOrderItem = ({ img, productName, qty, price, id, isBuyNow }) => {
   const dispatch = useDispatch()
 
   return (
@@ -11,14 +11,14 @@ const PlaceOrderItem = ({ img, productName, qty, price, id }) => {
       <div className='firstDiv'>
         <Link
           onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
-          to={`/products/${id}`}
+          to={`/products/${id}${isBuyNow ? "?order=buyNow" : ""}`}
         >
           <img src={img} alt='product' />
         </Link>
         <h1>
           <Link
             onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
-            to={`/products/${id}`}
+            to={`/products/${id}${isBuyNow ? "?order=buyNow" : ""}`}
           >
             {productName}
           </Link>

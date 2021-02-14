@@ -1,8 +1,12 @@
 import axios from "axios"
 
-const createOrderAction = (setCartCount) => async (dispatch, getState) => {
+const createOrderAction = (setCartCount, isBuyNow) => async (
+  dispatch,
+  getState
+) => {
   const userInfo = getState().userInfo
   const cart = getState().cart
+  const { product } = getState().buyNowProduct
 
   try {
     dispatch({ type: "CREATE_ORDER_REQUEST" })
@@ -12,20 +16,34 @@ const createOrderAction = (setCartCount) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     }
-    const modifiedCart = cart.cartItems.map((product) => {
-      delete product.rating
-      delete product.numReviews
-      delete product.countInStock
-      product.product = product._id
-      delete product._id
-      return product
-    })
+    const modifiedCart = () => {
+      if (isBuyNow === false) {
+        return cart.cartItems.map((eachProduct) => {
+          delete eachProduct.rating
+          delete eachProduct.numReviews
+          delete eachProduct.countInStock
+          delete eachProduct.brand
+          eachProduct.product = eachProduct._id
+          delete eachProduct._id
+          return eachProduct
+        })
+      } else {
+        delete product.rating
+        delete product.numReviews
+        delete product.countInStock
+        delete product.brand
+        product.product = product._id
+        delete product._id
+
+        return [product]
+      }
+    }
 
     const { data } = await axios.post(
       "/api/orders",
       {
         user: userInfo.user._id,
-        orderItems: modifiedCart,
+        orderItems: modifiedCart(),
         shippingAddress: {
           address: cart.address.address,
           city: cart.address.city,
@@ -42,12 +60,16 @@ const createOrderAction = (setCartCount) => async (dispatch, getState) => {
       },
       config
     )
-    cart.cartItems = []
-    cart.taxes = []
-    cart.totalPrice = []
-    cart.shipping = []
-    localStorage.removeItem("sickCartProducts")
-    setCartCount(0)
+    if (!isBuyNow) {
+      cart.cartItems = []
+    }
+    cart.taxes = null
+    cart.totalPrice = null
+    cart.shipping = null
+    if (!isBuyNow) {
+      localStorage.removeItem("sickCartProducts")
+      setCartCount(0)
+    }
 
     dispatch({ type: "CREATE_ORDER_SUCCESS", payload: data })
   } catch (error) {
