@@ -6,6 +6,7 @@ import productRouter from "./routes/productRoute.js"
 import { errRouter, notFoundRouter } from "./middleware/errMiddleware.js"
 import userRouter from "./routes/userRoute.js"
 import orderRouter from "./routes/orderRoute.js"
+import couponRouter from "./routes/couponRoute.js"
 import bodyparser from "body-parser"
 import rateLimit from "express-rate-limit"
 import path from "path"
@@ -30,6 +31,8 @@ app.use("/api/users/getNewSecurityCode", apiLimiter)
 app.use("/api/users", userRouter)
 
 app.use("/api/orders", orderRouter)
+
+app.use("/api/coupons", couponRouter)
 
 const __dirname = path.resolve()
 if (process.env.NODE_ENV === "production") {

@@ -51,7 +51,6 @@ const StyledProduct = styled.div`
   border-radius: 7px;
   overflow: hidden;
   background: #f8f8f8;
-  /* border: 1px solid rgba(0, 0, 0, 0.05); */
   box-shadow: -3px 3px 5px rgba(0, 0, 0, 0.08);
 
   .product_description {

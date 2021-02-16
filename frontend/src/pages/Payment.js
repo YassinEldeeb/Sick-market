@@ -2,17 +2,26 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import CheckoutSteps from "../components/CheckoutSteps"
 import trueSVG from "../img/true.svg"
+import falseSVG from "../img/false.svg"
 import userSavePayment from "../actions/savePaymentMethod"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory, useLocation } from "react-router-dom"
+import addCouponAction from "../actions/addCouponCode"
+import Loader from "../components/loader"
+import { underline } from "colors"
 
 const Payment = () => {
   const location = useLocation()
   const isBuyNow = location.search.split("=")[1] === "buyNow"
 
-  const { paymentMethod, address, cartItems } = useSelector(
-    (state) => state.cart
-  )
+  const {
+    paymentMethod,
+    address,
+    cartItems,
+    discount,
+    loadingCoupon,
+    errorCoupon,
+  } = useSelector((state) => state.cart)
   const { product } = useSelector((state) => state.buyNowProduct)
 
   const pricesArr = !isBuyNow
@@ -54,6 +63,7 @@ const Payment = () => {
     }
     history.push(pushedLink())
   }
+
   useEffect(() => {
     if (!cartItems.length && !product.name) {
       history.push("/cart")
@@ -85,10 +95,34 @@ const Payment = () => {
       history.push(pushedLink())
     }
   }, [history, location, user])
+
+  const [couponInput, setCouponInput] = useState(false)
+  const [discount2, setDiscount2] = useState(false)
+  const [code, setCode] = useState("")
+
+  const applyCodeHandler = (e) => {
+    e.preventDefault()
+    dispatch(addCouponAction(code))
+  }
+  useEffect(() => {
+    if (discount) {
+      setDiscount2(
+        discount.code.isPercent
+          ? discount.code.amount + "% OFF"
+          : discount.code.amount + "EGP OFF"
+      )
+    }
+  }, [discount])
+
+  useEffect(() => {
+    if (errorCoupon) {
+      setDiscount2(errorCoupon)
+    }
+  }, [errorCoupon])
   return (
     <>
       <CheckoutSteps step1 step2 step3 current='step3' />
-      <StyledPayment img={trueSVG}>
+      <StyledPayment img={trueSVG} img2={falseSVG}>
         <div className='align'>
           <h1>Payment Method</h1>
           <div className='methods'>
@@ -125,14 +159,119 @@ const Payment = () => {
                 </li>
               )}
             </div>
-            <button onClick={continueHandler}>Continue</button>
+            {!couponInput && (
+              <p className='haveaCoupon' onClick={() => setCouponInput(true)}>
+                Have a coupon or a voucher?
+              </p>
+            )}
+            {couponInput && (
+              <form className='couponCont' onSubmit={applyCodeHandler}>
+                <input
+                  placeholder='Enter Code'
+                  className='CouponInput'
+                  type='text'
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                />
+                <button
+                  type='submit'
+                  className={`Indication ${
+                    errorCoupon && !loadingCoupon ? "error" : ""
+                  } ${
+                    (!errorCoupon && !discount) || loadingCoupon ? "idle" : ""
+                  }`}
+                >
+                  {loadingCoupon && <Loader />}
+                </button>
+                <div className={`inputError ${!errorCoupon ? "ok" : ""}`}>
+                  <span>{discount2}</span>
+                </div>
+              </form>
+            )}
+
+            <button className='continue' onClick={continueHandler}>
+              Continue
+            </button>
           </div>
         </div>
       </StyledPayment>
     </>
   )
 }
+
 const StyledPayment = styled.div`
+  .haveaCoupon {
+    margin-bottom: 0.5rem;
+    color: #0084a0;
+    cursor: pointer;
+    display: inline-block;
+    transition: 0.1s ease;
+    &:hover {
+      color: #0093b4;
+    }
+  }
+  .couponCont {
+    position: relative;
+    display: inline-block;
+    width: 55%;
+    margin-bottom: 0.5rem;
+
+    .inputError {
+      position: absolute;
+      right: 0%;
+      top: 50%;
+      transform: translate(110%, -50%);
+      color: #ff6969;
+      font-size: calc(0.8rem + 0.3vw);
+      font-weight: 500;
+      &.ok {
+        color: #22cb84;
+      }
+    }
+    .CouponInput {
+      background: #f3f3f3;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      width: 100%;
+      font-size: calc(1rem + 0.3vw);
+      display: inline-block;
+      padding-right: calc(3% + 0.5rem + 25px);
+    }
+    .Indication {
+      outline: none;
+      border: none;
+      position: absolute;
+      right: 4%;
+      top: 50%;
+      transform: translate(0, -50%);
+      width: 25px;
+      height: 25px;
+      background: url(${(props) => props.img});
+      background-size: cover;
+      cursor: pointer;
+      border-radius: 50%;
+      &.idle {
+        background: rgba(71, 79, 87, 0.95);
+      }
+      &.error {
+        background: url(${(props) => props.img2});
+        background-size: cover;
+      }
+      #loader:first-child {
+        position: absolute;
+        right: 4%;
+
+        transform: translate(0, -50%);
+        width: 25px;
+        height: 25px;
+        #greybackground path {
+          stroke: #25da8e;
+        }
+      }
+    }
+  }
+
   .explaningWhy {
     color: #e65959;
     font-size: calc(0.7rem + 0.3vw);
@@ -197,11 +336,10 @@ const StyledPayment = styled.div`
         box-shadow: unset;
         background: url(${(props) => props.img});
         background-size: cover;
-        filter: brightness(93%);
       }
     }
   }
-  button {
+  .continue {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -227,7 +365,7 @@ const StyledPayment = styled.div`
     h1 {
       font-size: calc(1.74rem + 1vw);
     }
-    button {
+    .continue {
       font-size: calc(1.15rem + 0.3vw);
       border-radius: 6px;
       padding: 0.5rem 0.9rem;
@@ -252,7 +390,6 @@ const StyledPayment = styled.div`
           box-shadow: unset;
           background: url(${(props) => props.img});
           background-size: cover;
-          filter: brightness(93%);
         }
       }
     }

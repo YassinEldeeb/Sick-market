@@ -56,7 +56,7 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
         taxPrice: cart.taxes,
         shippingPrice: cart.shipping,
         totalPrice: cart.totalPrice,
-        itemsPrice: cart.totalPrice - cart.taxes - cart.shipping,
+        itemsPrice: (cart.totalPrice - cart.taxes - cart.shipping).toFixed(2),
       },
       config
     )
