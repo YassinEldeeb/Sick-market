@@ -12,7 +12,6 @@ const couponSchema = mongoose.Schema(
     numOfUsedTimes: { type: Number, required: true, default: 0 },
     isPercent: { type: Boolean, required: true, default: true },
     amount: { type: Number, required: true },
-    isActive: { type: Boolean, required: true, default: true },
   },
 
   { timestamps: true }

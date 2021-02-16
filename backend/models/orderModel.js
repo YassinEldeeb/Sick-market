@@ -76,9 +76,11 @@ const orderSchema = mongoose.Schema(
     },
     couponDiscount: {
       type: Number,
-      isPercent: Boolean,
-      amount: Number,
       default: 0,
+    },
+    voucherRemaining: {
+      type: Number,
+      amount: Number,
     },
   },
   { timestamps: true }

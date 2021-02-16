@@ -3,12 +3,11 @@ import styled from "styled-components"
 import CheckoutSteps from "../components/CheckoutSteps"
 import trueSVG from "../img/true.svg"
 import falseSVG from "../img/false.svg"
-import userSavePayment from "../actions/savePaymentMethod"
+import { userSavePayment, savePromoCode } from "../actions/savePaymentMethod"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory, useLocation } from "react-router-dom"
 import addCouponAction from "../actions/addCouponCode"
 import Loader from "../components/loader"
-import { underline } from "colors"
 
 const Payment = () => {
   const location = useLocation()
@@ -96,9 +95,9 @@ const Payment = () => {
     }
   }, [history, location, user])
 
-  const [couponInput, setCouponInput] = useState(false)
+  const [couponInput, setCouponInput] = useState(discount ? true : false)
   const [discount2, setDiscount2] = useState(false)
-  const [code, setCode] = useState("")
+  const [code, setCode] = useState(discount ? discount.code.code : "")
 
   const applyCodeHandler = (e) => {
     e.preventDefault()
@@ -106,6 +105,7 @@ const Payment = () => {
   }
   useEffect(() => {
     if (discount) {
+      dispatch(savePromoCode(discount))
       setDiscount2(
         discount.code.isPercent
           ? discount.code.amount + "% OFF"
@@ -234,7 +234,7 @@ const StyledPayment = styled.div`
       padding: 0.5rem 1rem;
       border-radius: 6px;
       width: 100%;
-      font-size: calc(1rem + 0.3vw);
+      font-size: calc(0.9rem + 0.3vw);
       display: inline-block;
       padding-right: calc(3% + 0.5rem + 25px);
     }
@@ -260,8 +260,8 @@ const StyledPayment = styled.div`
       }
       #loader:first-child {
         position: absolute;
-        right: 4%;
-
+        right: 0%;
+        top: 0%;
         transform: translate(0, -50%);
         width: 25px;
         height: 25px;

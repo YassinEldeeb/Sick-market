@@ -13,7 +13,12 @@ const generateCouponCode = asyncHandler(async (req, res) => {
     }
     return coupon
   }
-
+  if (
+    (isPercent === undefined && amount > 100) ||
+    (isPercent === true && amount > 100)
+  ) {
+    throw new Error("Coupon Codes can't be above 100%")
+  }
   if (req.user.rank !== "admin") {
     throw new Error("Admins are the only ones who can generate Coupon Codes")
   } else {
@@ -75,7 +80,7 @@ const validateCouponCode = asyncHandler(async (req, res) => {
   if (
     validCode.limited ? validCode.numOfUsedTimes <= validCode.limited : true
   ) {
-    res.send({ code: validCode, msg: validCode.numOfUsedTimes })
+    res.send({ code: validCode })
   }
 })
 

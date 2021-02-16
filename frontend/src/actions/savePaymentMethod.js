@@ -5,4 +5,8 @@ const userSavePayment = (data) => async (dispatch) => {
   })
   localStorage.setItem("sickPaymentMethod", JSON.stringify(data))
 }
-export default userSavePayment
+const savePromoCode = (discount) => async () => {
+  console.log(discount)
+  if (discount) localStorage.setItem("sickDiscount", JSON.stringify(discount))
+}
+export { userSavePayment, savePromoCode }

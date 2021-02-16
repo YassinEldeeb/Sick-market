@@ -22,6 +22,7 @@ const savedUserInfo = JSON.parse(localStorage.getItem("sickUserInfo"))
 const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
 const savedAddress = JSON.parse(localStorage.getItem("sickAddress"))
 const savedPaymentMethod = JSON.parse(localStorage.getItem("sickPaymentMethod"))
+const sickDiscount = JSON.parse(localStorage.getItem("sickDiscount"))
 
 const pricesArr = savedCart
   ? savedCart.map((each) => each.price * each.qty)
@@ -44,6 +45,7 @@ initialState = {
       : savedPaymentMethod
       ? savedPaymentMethod
       : null,
+    discount: sickDiscount ? sickDiscount : null,
   },
   userInfo: savedUserInfo ? savedUserInfo : { user: {} },
 }

@@ -15,7 +15,7 @@ const PlaceOrder = ({ setCartCount }) => {
   function truncate(str) {
     return str.length > 30 ? str.substr(0, 30 - 1) + ".." : str
   }
-  const { address, cartItems, paymentMethod } = useSelector(
+  const { address, cartItems, paymentMethod, discount } = useSelector(
     (state) => state.cart
   )
   const { user } = useSelector((state) => state.userInfo)
@@ -53,12 +53,27 @@ const PlaceOrder = ({ setCartCount }) => {
     return Number(num).toFixed(2)
   }
 
+  const discountValue = () => {
+    if (discount) {
+      if (discount.code.isPercent) {
+        return toFixedFN(
+          (discount.code.amount / 100) *
+            (Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100)
+        )
+      } else {
+        return toFixedFN(discount.code.amount)
+      }
+    } else {
+      return 0
+    }
+  }
   cart.taxes = toFixedFN((Number(totalPrice) * 14) / 100)
   cart.totalPrice = Number(totalPrice)
   cart.shipping = toFixedFN(50)
   cart.totalPrice = toFixedFN(
-    Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100
+    Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100 - discountValue()
   )
+  cart.couponDiscount = discount ? discountValue() : 0
 
   const placeOrderHandler = () => {
     dispatch(createOrderAction(setCartCount, isBuyNow))
@@ -68,6 +83,7 @@ const PlaceOrder = ({ setCartCount }) => {
   )
   useEffect(() => {
     if (orderPlaced) {
+      localStorage.removeItem("sickDiscount")
       history.push(`/orders/${order._id}`)
     }
   }, [orderPlaced, history])
@@ -162,15 +178,43 @@ const PlaceOrder = ({ setCartCount }) => {
               <span className='currency'>EGP</span>
             </p>
           </div>
+          {discount && (
+            <div className='row5 row'>
+              <h1>Discount :</h1>
+              <p>
+                -{toFixedFN(discountValue())}
+                <span className='currency'>EGP</span>
+              </p>
+            </div>
+          )}
           <div className='row4 row'>
             <h1>Total :</h1>
             <p>
               {toFixedFN(
-                Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100
-              )}
+                Number(totalPrice) +
+                  50 +
+                  (Number(totalPrice) * 14) / 100 +
+                  -discountValue()
+              ) > 0
+                ? toFixedFN(
+                    Number(totalPrice) +
+                      50 +
+                      (Number(totalPrice) * 14) / 100 +
+                      -discountValue()
+                  )
+                : "+" +
+                  Math.abs(
+                    toFixedFN(
+                      Number(totalPrice) +
+                        50 +
+                        (Number(totalPrice) * 14) / 100 +
+                        -discountValue()
+                    )
+                  )}
               <span className='currency'>EGP</span>
             </p>
           </div>
+
           <button onClick={placeOrderHandler}>
             Place Order {orderLoading && <Loader />}
           </button>
