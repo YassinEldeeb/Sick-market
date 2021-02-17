@@ -13,6 +13,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     itemsPrice,
     couponDiscount,
     code,
+    voucherRemaining,
   } = req.body
   if (!orderItems || !orderItems.length) {
     res.status(400)
@@ -47,4 +48,24 @@ const addOrderItems = asyncHandler(async (req, res) => {
   await res.status(201).send(order)
 })
 
-export { addOrderItems }
+const getOrderById = asyncHandler(async (req, res) => {
+  if (!req.params.id) {
+    throw new Error("Id is required to fetch Order")
+  }
+  const order = await Order.findById(req.params.id).populate(
+    "user",
+    "email name"
+  )
+  if (
+    order.user._id.toString() !== req.user._id.toString() &&
+    req.user.rank === "user"
+  ) {
+    throw new Error("Order not Found!")
+  }
+  if (!order) {
+    throw new Error("Order not Found!")
+  }
+  res.send({ order })
+})
+
+export { addOrderItems, getOrderById }

@@ -106,11 +106,7 @@ const Payment = () => {
   useEffect(() => {
     if (discount) {
       dispatch(savePromoCode(discount))
-      setDiscount2(
-        discount.code.isPercent
-          ? discount.code.amount + "% OFF"
-          : discount.code.amount + "EGP OFF"
-      )
+      setDiscount2(discount.code.amount + "% OFF")
     }
   }, [discount])
 
@@ -206,6 +202,7 @@ const StyledPayment = styled.div`
     cursor: pointer;
     display: inline-block;
     transition: 0.1s ease;
+    font-size: calc(0.82rem + 0.3vw);
     &:hover {
       color: #0093b4;
     }

@@ -21,6 +21,7 @@ import Payment from "./pages/Payment"
 import PlaceOrder from "./pages/PlaceOrder"
 import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword"
+import OrderDetails from "./pages/orderDetails"
 
 const App = () => {
   const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
@@ -106,6 +107,9 @@ const App = () => {
             </Route>
             <Route path='/placeOrder'>
               <PlaceOrder setCartCount={setCartCount} />
+            </Route>
+            <Route path='/orders/:id'>
+              <OrderDetails />
             </Route>
 
             <Route path='/account'></Route>

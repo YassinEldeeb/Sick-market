@@ -7,6 +7,7 @@ import cartReducer from "./reducers/cart"
 import userReducer from "./reducers/user"
 import createOrderReducer from "./reducers/order"
 import buyNowProduct from "./reducers/buyNowProduct"
+import getOrderReducer from "./reducers/orderDetail"
 
 const reducers = combineReducers({
   productList: productListReducer,
@@ -15,6 +16,7 @@ const reducers = combineReducers({
   userInfo: userReducer,
   order: createOrderReducer,
   buyNowProduct: buyNowProduct,
+  orderDetails: getOrderReducer,
 })
 let initialState
 

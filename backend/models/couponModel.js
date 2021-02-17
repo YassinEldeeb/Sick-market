@@ -10,7 +10,6 @@ const couponSchema = mongoose.Schema(
     },
     limited: { type: Number },
     numOfUsedTimes: { type: Number, required: true, default: 0 },
-    isPercent: { type: Boolean, required: true, default: true },
     amount: { type: Number, required: true },
   },
 

@@ -78,10 +78,6 @@ const orderSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
-    voucherRemaining: {
-      type: Number,
-      amount: Number,
-    },
   },
   { timestamps: true }
 )

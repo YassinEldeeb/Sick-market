@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler"
 import Coupon from "../models/couponModel.js"
 
 const generateCouponCode = asyncHandler(async (req, res) => {
-  const { code, limited, isPercent, amount, expireDate } = req.body
+  const { code, limited, amount, expireDate } = req.body
 
   function coupongenerator() {
     var coupon = ""
@@ -13,10 +13,7 @@ const generateCouponCode = asyncHandler(async (req, res) => {
     }
     return coupon
   }
-  if (
-    (isPercent === undefined && amount > 100) ||
-    (isPercent === true && amount > 100)
-  ) {
+  if (amount > 100) {
     throw new Error("Coupon Codes can't be above 100%")
   }
   if (req.user.rank !== "admin") {
@@ -47,9 +44,6 @@ const generateCouponCode = asyncHandler(async (req, res) => {
       }
       if (expireDate) {
         obj.expireDate = expireDate
-      }
-      if (isPercent) {
-        obj.isPercent = isPercent
       }
       if (amount) {
         obj.amount = amount

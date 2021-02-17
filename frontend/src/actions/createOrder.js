@@ -7,9 +7,7 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
   const userInfo = getState().userInfo
   const cart = getState().cart
   const { product } = getState().buyNowProduct
-  console.log(
-    Math.abs((Number(cart.totalPrice) - cart.couponDiscount).toFixed(2))
-  )
+
   try {
     dispatch({ type: "CREATE_ORDER_REQUEST" })
     const config = {
@@ -40,6 +38,7 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
         return [product]
       }
     }
+
     const { data } = await axios.post(
       "/api/orders",
       {
@@ -58,12 +57,14 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
         taxPrice: cart.taxes,
         shippingPrice: cart.shipping,
         totalPrice: cart.totalPrice,
-        itemsPrice: (cart.totalPrice - cart.taxes - cart.shipping).toFixed(2),
-        code: cart.discount.code.code,
+        itemsPrice: cart.itemsPrice,
+        code: cart.discount ? cart.discount.code.code : null,
         voucherRemaining: cart.couponDiscount
-          ? Number(cart.totalPrice) < 0
+          ? Number(cart.couponDiscount) - cart.totalPrice > 0
             ? Math.abs(
-                (Number(cart.totalPrice) - cart.couponDiscount).toFixed(2)
+                (Number(cart.totalPrice) - Number(cart.couponDiscount)).toFixed(
+                  2
+                )
               )
             : null
           : null,

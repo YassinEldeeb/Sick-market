@@ -46,7 +46,7 @@ const PlaceOrder = ({ setCartCount }) => {
   const totalPrice = !isBuyNow
     ? pricesArr.length
       ? pricesArr.reduce((acc, item) => acc + item).toFixed(2)
-      : null
+      : 0
     : product.price.toFixed(2)
 
   const toFixedFN = (num) => {
@@ -55,14 +55,10 @@ const PlaceOrder = ({ setCartCount }) => {
 
   const discountValue = () => {
     if (discount) {
-      if (discount.code.isPercent) {
-        return toFixedFN(
-          (discount.code.amount / 100) *
-            (Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100)
-        )
-      } else {
-        return toFixedFN(discount.code.amount)
-      }
+      return toFixedFN(
+        (discount.code.amount / 100) *
+          (Number(totalPrice) + (Number(totalPrice) * 14) / 100)
+      )
     } else {
       return 0
     }
@@ -70,8 +66,14 @@ const PlaceOrder = ({ setCartCount }) => {
   cart.taxes = toFixedFN((Number(totalPrice) * 14) / 100)
   cart.totalPrice = Number(totalPrice)
   cart.shipping = toFixedFN(50)
-  cart.totalPrice = toFixedFN(
-    Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100 - discountValue()
+  cart.itemsPrice = totalPrice
+  cart.totalPrice = Math.abs(
+    toFixedFN(
+      Number(totalPrice) +
+        50 +
+        (Number(totalPrice) * 14) / 100 -
+        discountValue()
+    )
   )
   cart.couponDiscount = discount ? discountValue() : 0
 
@@ -189,13 +191,24 @@ const PlaceOrder = ({ setCartCount }) => {
           )}
           <div className='row4 row'>
             <h1>Total :</h1>
-            <p>
+            <p className={`${discount ? "discount" : ""}`}>
+              {discount && (
+                <h1 className='lastPrice'>
+                  {toFixedFN(
+                    Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100
+                  )}
+                </h1>
+              )}
               {toFixedFN(
-                Number(totalPrice) +
-                  50 +
-                  (Number(totalPrice) * 14) / 100 +
-                  -discountValue()
-              ) > 0
+                Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100
+              ) === discountValue()
+                ? "Free"
+                : toFixedFN(
+                    Number(totalPrice) +
+                      50 +
+                      (Number(totalPrice) * 14) / 100 +
+                      -discountValue()
+                  ) > 0
                 ? toFixedFN(
                     Number(totalPrice) +
                       50 +
@@ -211,7 +224,17 @@ const PlaceOrder = ({ setCartCount }) => {
                         -discountValue()
                     )
                   )}
-              <span className='currency'>EGP</span>
+              <span
+                className={`currency ${
+                  toFixedFN(
+                    Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100
+                  ) === discountValue()
+                    ? "free"
+                    : ""
+                }`}
+              >
+                EGP
+              </span>
             </p>
           </div>
 
@@ -262,6 +285,9 @@ const StyledPlaceOrder = styled.div`
   .currency {
     margin-left: 0.15rem;
     font-size: calc(0.6rem + 0.3vw) !important;
+    &.free {
+      display: none;
+    }
   }
   .table {
     box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.1);
@@ -322,9 +348,21 @@ const StyledPlaceOrder = styled.div`
       }
       p {
         color: #1a1a1a;
+        margin-left: calc(1.5rem + 1vw);
+        display: flex;
+        align-items: center;
+      }
+      p.discount {
+        font-weight: 500;
       }
       span {
         color: #1a1a1a;
+      }
+      .lastPrice {
+        margin-right: 0.4rem;
+        text-decoration: line-through;
+        font-size: calc(0.71rem + 0.3vw);
+        font-weight: 400 !important;
       }
     }
   }
