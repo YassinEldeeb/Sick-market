@@ -9,8 +9,28 @@ import Loader from "../components/loader"
 import QrReader from "react-qr-reader"
 import qrCodeImg from "../img/qrCode.png"
 import closeImg from "../img/close.svg"
+import Lottie from "react-lottie"
+import animationData from "../lotties/41791-loading-wrong.json"
+import animationData2 from "../lotties/41793-correct.json"
 
 const OrderDetails = () => {
+  const defaultOptions = {
+    loop: false,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      // preserveAspectRatio: "xMidYMid slice"
+    },
+  }
+  const defaultOptions2 = {
+    loop: false,
+    autoplay: true,
+    animationData: animationData2,
+    rendererSettings: {
+      // preserveAspectRatio: "xMidYMid slice"
+    },
+  }
+
   function truncate(str) {
     return str.length > 30 ? str.substr(0, 30 - 1) + ".." : str
   }
@@ -36,11 +56,12 @@ const OrderDetails = () => {
       setQrResult(result)
     }
   }
+  const [showSVGAnimation, setShowSVGAnimation] = useState(null)
   useEffect(() => {
     if (order._id && qrResult === order._id.toString()) {
-      alert("The Right Order was Recieved")
+      setShowSVGAnimation(true)
     } else if (qrResult.length === 24) {
-      alert("Wrong Order was Recieved")
+      setShowSVGAnimation(false)
     }
   }, [qrResult])
 
@@ -61,7 +82,10 @@ const OrderDetails = () => {
             className='qrCodeScanner'
           />
           <img
-            onClick={() => setShowScanner(false)}
+            onClick={() => {
+              setShowScanner(false)
+              setShowSVGAnimation(null)
+            }}
             className='close'
             src={closeImg}
           />
@@ -101,6 +125,40 @@ const OrderDetails = () => {
               <span>{" " + order._id}</span>
             </h1>
             <div className='actualContent'>
+              {showSVGAnimation === false && (
+                <div className='failureOrderScreen'>
+                  <Lottie
+                    options={defaultOptions}
+                    width={"50%"}
+                    height={"50%"}
+                  />
+                  <img
+                    onClick={() => {
+                      setShowSVGAnimation(null)
+                      setShowScanner(false)
+                    }}
+                    className='close'
+                    src={closeImg}
+                  />
+                </div>
+              )}
+              {showSVGAnimation && (
+                <div className='successOrderScreen'>
+                  <Lottie
+                    options={defaultOptions2}
+                    width={"50%"}
+                    height={"50%"}
+                  />
+                  <img
+                    onClick={() => {
+                      setShowSVGAnimation(null)
+                      setShowScanner(false)
+                    }}
+                    className='close'
+                    src={closeImg}
+                  />
+                </div>
+              )}
               <div className='summary'>
                 <div className='shipping-section section'>
                   <h1>Shipping :</h1>
@@ -237,13 +295,40 @@ const OrderDetails = () => {
   )
 }
 const StyledPlaceOrder = styled.div`
+  .failureOrderScreen,
+  .successOrderScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    z-index: 10001;
+    .close {
+      width: 3rem;
+      height: 3rem;
+      object-fit: contain;
+      border-radius: 50%;
+      position: absolute;
+      right: 5%;
+      top: 3%;
+      opacity: 0.7;
+      transition: 0.2s ease;
+      &:hover {
+        filter: brightness(1);
+      }
+    }
+  }
   .qrCodeWrapper {
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
-    background: #1a1a1a;
-    z-index: 100000;
+    background: rgba(26, 26, 26, 0.93);
+    z-index: 10000;
     width: 100%;
     .close {
       width: 3rem;
@@ -253,6 +338,12 @@ const StyledPlaceOrder = styled.div`
       position: absolute;
       right: 5%;
       top: 3%;
+      cursor: pointer;
+      filter: brightness(1.2);
+      transition: 0.2s ease;
+      &:hover {
+        filter: brightness(1);
+      }
     }
   }
   .qrCodeScanner {
@@ -262,7 +353,7 @@ const StyledPlaceOrder = styled.div`
     width: calc(300px + 10vw) !important;
     transform: translate(-50%, -50%);
     section {
-      border-radius: 7px;
+      border-radius: 5px;
     }
   }
   .flex {
@@ -307,7 +398,7 @@ const StyledPlaceOrder = styled.div`
       .line {
         position: absolute;
         left: 0;
-        bottom: 5%;
+        bottom: 2%;
         height: 1.8px;
         background: white;
         width: 100%;

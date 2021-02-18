@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler"
 import Order from "../models/orderModel.js"
 import Coupon from "../models/couponModel.js"
+import { orderPlaced } from "../emails/account.js"
 
 const addOrderItems = asyncHandler(async (req, res) => {
   const {
@@ -13,7 +14,6 @@ const addOrderItems = asyncHandler(async (req, res) => {
     itemsPrice,
     couponDiscount,
     code,
-    voucherRemaining,
   } = req.body
   if (!orderItems || !orderItems.length) {
     res.status(400)
@@ -56,15 +56,18 @@ const getOrderById = asyncHandler(async (req, res) => {
     "user",
     "email name"
   )
+
+  if (!order) {
+    throw new Error("Order not Found!")
+  }
   if (
     order.user._id.toString() !== req.user._id.toString() &&
     req.user.rank === "user"
   ) {
     throw new Error("Order not Found!")
   }
-  if (!order) {
-    throw new Error("Order not Found!")
-  }
+
+  await orderPlaced(order, order.user.email)
   res.send({ order })
 })
 

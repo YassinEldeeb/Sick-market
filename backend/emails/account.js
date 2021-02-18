@@ -71,4 +71,38 @@ const sendResetPasswordEmail = async (email) => {
   })
 }
 
-export { sendVerificationEmail, sendResetPasswordEmail }
+const orderPlaced = async (order, email) => {
+  // Generate test SMTP service account from ethereal.email
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: process.env.MAIL_USERNAME,
+      pass: process.env.MAIL_PASSWORD,
+      clientId: process.env.OAUTH_CLIENTID,
+      clientSecret: process.env.OAUTH_CLIENT_SECRET,
+      refreshToken: process.env.OAUTH_REFRESH_TOKEN,
+    },
+  })
+
+  let mailOptions = {
+    from: "yassineldeeb94@gmail.com",
+    to: email,
+    subject: `Sick Market Order Placed`,
+    html: `Sick Market, You've Placed an Order with an ID of ${
+      order._id
+    }, which contains ${order.orderItems.map((each) => {
+      return `<img src=${"https://sick-market.herokuapp.com/" + each.image} />`
+    })}`,
+  }
+
+  transporter.sendMail(mailOptions, function (err, data) {
+    if (err) {
+      console.log("Error " + err)
+    } else {
+      console.log("Email sent successfully")
+    }
+  })
+}
+
+export { sendVerificationEmail, sendResetPasswordEmail, orderPlaced }
