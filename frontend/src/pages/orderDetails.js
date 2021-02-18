@@ -12,6 +12,9 @@ import closeImg from "../img/close.svg"
 import Lottie from "react-lottie"
 import animationData from "../lotties/41791-loading-wrong.json"
 import animationData2 from "../lotties/41793-correct.json"
+import axios from "axios"
+import { PayPalButton } from "react-paypal-button-v2"
+import orderPayAction from "../actions/orderPay"
 
 const OrderDetails = () => {
   const defaultOptions = {
@@ -44,11 +47,46 @@ const OrderDetails = () => {
   const { order, error, orderLoading } = useSelector(
     (state) => state.orderDetails
   )
+
+  const { orderPayLoading, success } = useSelector((state) => state.orderPay)
+
+  const [sdkReady, setSdkReady] = useState(false)
+
+  const [currency, setCurrency] = useState(null)
+
   useEffect(() => {
-    if (!order || location.pathname.split("/")[2] !== order._id) {
-      dispatch(getOrderAction(location.pathname.split("/")[2]))
+    const currencyFetch = async () => {
+      const { data: currency } = await axios.get(
+        "https://api.currencyfreaks.com/latest?apikey=a85d31d75fc34b3e999bc0e87c08a8a9&symbols=EGP"
+      )
+      setCurrency(Number(currency.rates.EGP))
     }
-  }, [location, dispatch])
+    if (!currency) {
+      currencyFetch()
+    }
+    const addPaypalScript = async () => {
+      const { data: clientId } = await axios.get("/api/config/paypal")
+      const script = document.createElement("script")
+      script.type = "text/javascript"
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+      script.async = true
+      script.onload = () => {
+        setSdkReady(true)
+      }
+      document.body.appendChild(script)
+    }
+    if ((!order.totalPrice && !orderLoading) || success) {
+      dispatch({ type: "ORDER_PAY_RESET" })
+      dispatch(getOrderAction(location.pathname.split("/")[2]))
+    } else if (!order.isPaid) {
+      if (!window.paypal) {
+        addPaypalScript()
+      } else {
+        setSdkReady(true)
+      }
+    }
+  }, [location, dispatch, success, order])
+
   const [qrResult, setQrResult] = useState("No result")
   const [showScanner, setShowScanner] = useState(false)
   const qrScanHandler = (result) => {
@@ -59,9 +97,17 @@ const OrderDetails = () => {
   const [showSVGAnimation, setShowSVGAnimation] = useState(null)
   useEffect(() => {
     if (order._id && qrResult === order._id.toString()) {
+      setShowScanner(false)
       setShowSVGAnimation(true)
+      setTimeout(() => {
+        setShowSVGAnimation(null)
+      }, 2300)
     } else if (qrResult.length === 24) {
+      setShowScanner(false)
       setShowSVGAnimation(false)
+      setTimeout(() => {
+        setShowSVGAnimation(null)
+      }, 2300)
     }
   }, [qrResult])
 
@@ -70,10 +116,23 @@ const OrderDetails = () => {
       console.log(result)
     }
   }
+
+  const successPaymentHandler = (paymentResult) => {
+    console.log(paymentResult)
+    dispatch(orderPayAction(order._id, paymentResult))
+  }
+
   return (
     <StyledPlaceOrder>
       {showScanner && (
-        <div className='qrCodeWrapper'>
+        <div
+          className='qrCodeWrapper'
+          onClick={(e) => {
+            console.log(e.currentTarget)
+            if (e.currentTarget.classList[0] === "qrCodeWrapper")
+              setShowScanner(false)
+          }}
+        >
           <QrReader
             style={{ width: "100%" }}
             delay={300}
@@ -164,7 +223,7 @@ const OrderDetails = () => {
                   <h1>Shipping :</h1>
                   <p>Name: {order.user.name}</p>
                   <p>Email: {order.user.email}</p>
-                  <p>
+                  <p className='lastChild'>
                     Address: {order.shippingAddress.address},{" "}
                     {order.shippingAddress.city},{" "}
                     {order.shippingAddress.governorate}, Egypt,{" "}
@@ -285,6 +344,19 @@ const OrderDetails = () => {
                     </span>
                   </p>
                 </div>
+                {!order.isPaid && (
+                  <div className='row row6'>
+                    {orderPayLoading && <Loader />}
+                    {!sdkReady && currency && order.totalPrice ? (
+                      <Loader />
+                    ) : (
+                      <PayPalButton
+                        amount={(order.totalPrice / currency).toFixed(2)}
+                        onSuccess={successPaymentHandler}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
               <div className='lineSeperate'></div>
             </div>
@@ -295,6 +367,19 @@ const OrderDetails = () => {
   )
 }
 const StyledPlaceOrder = styled.div`
+  .row6 {
+    z-index: 1;
+    border-top: unset !important;
+    padding: unset !important;
+    div {
+      width: 100%;
+      svg {
+        margin-bottom: 1.05rem !important;
+        width: calc(1.5rem + 1vw) !important;
+        height: calc(1.5rem + 1vw) !important;
+      }
+    }
+  }
   .failureOrderScreen,
   .successOrderScreen {
     position: fixed;
@@ -305,7 +390,7 @@ const StyledPlaceOrder = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background: white;
+    background: rgba(255, 255, 255, 1);
     z-index: 10001;
     .close {
       width: 3rem;
@@ -315,7 +400,7 @@ const StyledPlaceOrder = styled.div`
       position: absolute;
       right: 5%;
       top: 3%;
-      opacity: 0.7;
+      opacity: 0.5;
       transition: 0.2s ease;
       &:hover {
         filter: brightness(1);
@@ -456,13 +541,13 @@ const StyledPlaceOrder = styled.div`
     }
   }
   .table {
-    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.08);
     border-radius: 10px;
-    margin-top: 1rem;
+    margin-top: 0.1rem;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    border: 1px solid rgba(0, 0, 0, 7.5%);
+    border: 1px solid rgba(0, 0, 0, 5.5%);
     flex: 1 1 auto;
     h1 {
       font-size: calc(1rem + 0.3vw);
@@ -508,7 +593,7 @@ const StyledPlaceOrder = styled.div`
       padding-top: 0;
     }
     .row4 {
-      margin-bottom: calc(0.5rem + 0.3vw);
+      margin-bottom: 4px;
       h1 {
         color: #1a1a1a;
       }
@@ -545,8 +630,11 @@ const StyledPlaceOrder = styled.div`
     }
     p {
       color: #1a1a1a;
-      padding-bottom: 0.8rem;
+      padding-bottom: 0.6rem;
       font-size: calc(0.8rem + 0.3vw);
+    }
+    .lastChild {
+      padding-bottom: 0.8rem !important;
     }
     border-bottom: 1px solid rgba(0, 0, 0, 12.5%);
     &:last-child {
@@ -683,9 +771,12 @@ const StyledPlaceOrder = styled.div`
         padding-top: unset;
       }
       p {
-        padding-bottom: 0.8rem;
+        padding-bottom: 0.55rem;
         color: #1a1a1a;
         font-size: calc(0.52rem + 1vw) !important;
+      }
+      .lastChild {
+        padding-bottom: 0.8rem !important;
       }
       border-bottom: 1px solid rgba(0, 0, 0, 12.5%);
       &:last-child {

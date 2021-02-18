@@ -41,6 +41,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
         await usedCoupon.save()
       }
     } else {
+      res.status(400)
       throw new Error("Invalid Coupon Code")
     }
   }
@@ -50,6 +51,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
 const getOrderById = asyncHandler(async (req, res) => {
   if (!req.params.id) {
+    res.status(400)
     throw new Error("Id is required to fetch Order")
   }
   const order = await Order.findById(req.params.id).populate(
@@ -58,12 +60,16 @@ const getOrderById = asyncHandler(async (req, res) => {
   )
 
   if (!order) {
+    res.status(404)
+
     throw new Error("Order not Found!")
   }
   if (
     order.user._id.toString() !== req.user._id.toString() &&
     req.user.rank === "user"
   ) {
+    res.status(404)
+
     throw new Error("Order not Found!")
   }
 
@@ -71,4 +77,35 @@ const getOrderById = asyncHandler(async (req, res) => {
   res.send({ order })
 })
 
-export { addOrderItems, getOrderById }
+const updateOrderToPaid = asyncHandler(async (req, res) => {
+  if (!req.params.id) {
+    res.status(400)
+
+    throw new Error("Id is required to fetch Order")
+  }
+  const order = await Order.findById(req.params.id)
+
+  if (!order) {
+    res.status(404)
+    throw new Error("Order not Found!")
+  }
+  if (
+    order.user._id.toString() !== req.user._id.toString() &&
+    req.user.rank === "user"
+  ) {
+    res.status(404)
+    throw new Error("Order not Found!")
+  }
+  order.paymentResult = {
+    id: req.body.id,
+    status: req.body.status,
+    update_time: req.body.update_time,
+    email_address: req.body.payer.email_address,
+  }
+  order.isPaid = true
+  order.paidAt = Date.now()
+  await order.save()
+  res.send({ order })
+})
+
+export { addOrderItems, getOrderById, updateOrderToPaid }

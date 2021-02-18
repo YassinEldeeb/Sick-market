@@ -10,7 +10,7 @@ const getOrderReducer = (state = initialState, action) => {
         orderLoading: false,
       }
     case "GET_ORDER_FAIL":
-      return { error: action.payload, orderLoading: false, order: {} }
+      return { ...state, error: action.payload, orderLoading: false }
     default:
       return state
   }

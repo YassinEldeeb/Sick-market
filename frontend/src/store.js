@@ -8,6 +8,7 @@ import userReducer from "./reducers/user"
 import createOrderReducer from "./reducers/order"
 import buyNowProduct from "./reducers/buyNowProduct"
 import getOrderReducer from "./reducers/orderDetail"
+import orderPayReducer from "./reducers/orderPay"
 
 const reducers = combineReducers({
   productList: productListReducer,
@@ -17,6 +18,7 @@ const reducers = combineReducers({
   order: createOrderReducer,
   buyNowProduct: buyNowProduct,
   orderDetails: getOrderReducer,
+  orderPay: orderPayReducer,
 })
 let initialState
 

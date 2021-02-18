@@ -27,7 +27,7 @@ const PlaceOrderItem = ({ img, productName, qty, price, id, isBuyNow }) => {
       <div className='secondDiv'>
         <p>
           {qty} x {price}
-          <span className='currency1'>EGP</span> = {qty * price}
+          <span className='currency1'>EGP</span> = {(qty * price).toFixed(2)}
           <span className='currency2'>EGP</span>
         </p>
       </div>
