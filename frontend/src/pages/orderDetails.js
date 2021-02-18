@@ -484,6 +484,9 @@ const StyledPlaceOrder = styled.div`
   }
 
   @media screen and (max-width: 1050px) {
+    .content {
+      width: 90% !important;
+    }
     .qrCodeScanner {
       width: 90% !important;
       position: absolute;
