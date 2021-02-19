@@ -85,13 +85,16 @@ const OrderDetails = () => {
     } else if (!order.isPaid) {
       if (!window.paypal && !loadingScript) {
         setLoadingScript(true)
-        addPaypalScript()
+        const asyncFN = async () => {
+          await addPaypalScript()
+        }
+        asyncFN()
         setLoadingScript(false)
       } else {
         setSdkReady(true)
       }
     }
-  }, [location, dispatch, success, order])
+  }, [location, dispatch, success, order, loadingScript, orderLoading])
 
   const [qrResult, setQrResult] = useState("No result")
   const [showScanner, setShowScanner] = useState(false)
@@ -115,7 +118,7 @@ const OrderDetails = () => {
         setShowSVGAnimation(null)
       }, 2300)
     }
-  }, [qrResult])
+  }, [qrResult, order._id])
 
   const qrErrorHandler = (result) => {
     if (result) {
@@ -268,6 +271,7 @@ const OrderDetails = () => {
                       productName={truncate(each.name)}
                       img={each.image}
                       id={each._id}
+                      key={each._id}
                     />
                   ))}
                 </div>
