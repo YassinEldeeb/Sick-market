@@ -86,8 +86,8 @@ const OrderDetails = () => {
       }
       document.body.appendChild(script)
     }
-    if (!order.isPaid) {
-      if (!window.paypal && !loadingScript && order.itemsPrice) {
+    if (order.isPaid === false) {
+      if (!window.paypal && !loadingScript) {
         setLoadingScript(true)
         const asyncFN = async () => {
           await addPaypalScript()
