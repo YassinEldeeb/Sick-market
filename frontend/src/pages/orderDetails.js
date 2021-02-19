@@ -86,6 +86,7 @@ const OrderDetails = () => {
       if (!window.paypal && !loadingScript) {
         setLoadingScript(true)
         addPaypalScript()
+        console.log("RAN THE ADD PAYPAL SCRIPT")
       } else {
         setSdkReady(true)
       }
@@ -252,6 +253,7 @@ const OrderDetails = () => {
                   <h1>Payment Method :</h1>
                   <p>Method: {order.paymentMethod}</p>
                   {!order.isPaid && <Message type='error' msg='Not Paid' />}
+                  {order.isPaid && <Message msg={order.paidAt} />}
                 </div>
                 <div className='order-section section'>
                   <h1>

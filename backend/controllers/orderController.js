@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler"
 import Order from "../models/orderModel.js"
 import Coupon from "../models/couponModel.js"
 import { orderPlaced } from "../emails/account.js"
+import { format } from "date-fns"
 
 const addOrderItems = asyncHandler(async (req, res) => {
   const {
@@ -103,7 +104,11 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     email_address: req.body.payer.email_address,
   }
   order.isPaid = true
-  order.paidAt = Date.now()
+  const date = format(Date.now(), "yyyy-MM-dd hh:mm a")
+
+  order.paidAt = date
+
+  console.log(date)
   await order.save()
   res.send({ order })
 })
