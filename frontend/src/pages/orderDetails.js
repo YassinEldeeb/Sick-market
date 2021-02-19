@@ -120,11 +120,13 @@ const OrderDetails = () => {
   }
 
   const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult)
+    console.log("Payment Result:", paymentResult)
     dispatch(orderPayAction(order._id, paymentResult))
   }
+  const errorPaymentHandler = (error) => {
+    console.log("Error:", error)
+  }
 
-  console.log(sdkReady, currency)
   return (
     <StyledPlaceOrder>
       {showScanner && (
@@ -350,13 +352,14 @@ const OrderDetails = () => {
                 {!order.isPaid && (
                   <div className='row row6'>
                     {orderPayLoading && <Loader />}
-                    {!sdkReady || !currency ? (
-                      <Loader />
-                    ) : (
+                    {sdkReady ? (
                       <PayPalButton
-                        amount={(order.totalPrice / currency).toFixed(2)}
+                        amount={(10).toFixed(2)}
                         onSuccess={successPaymentHandler}
+                        onError={errorPaymentHandler}
                       />
+                    ) : (
+                      <Loader />
                     )}
                   </div>
                 )}
