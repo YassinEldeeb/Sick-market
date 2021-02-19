@@ -68,33 +68,37 @@ const OrderDetails = () => {
   }, [])
 
   useEffect(() => {
-    // const addPaypalScript = async () => {
-    //   const { data: clientId } = await axios.get("/api/config/paypal")
-    //   const script = document.createElement("script")
-    //   script.type = "text/javascript"
-    //   script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
-    //   script.async = true
-    //   script.onload = () => {
-    //     setSdkReady(true)
-    //   }
-    //   document.body.appendChild(script)
-    // }
     if ((!order.totalPrice && !orderLoading) || success) {
       dispatch({ type: "ORDER_PAY_RESET" })
       dispatch(getOrderAction(location.pathname.split("/")[2]))
-    } else if (!order.isPaid) {
-      if (!window.paypal && !loadingScript) {
-        // setLoadingScript(true)
-        // const asyncFN = async () => {
-        //   await addPaypalScript()
-        // }
-        // asyncFN()
-        // setLoadingScript(false)
+    }
+  }, [location, dispatch, success, order])
+
+  useEffect(() => {
+    const addPaypalScript = async () => {
+      const { data: clientId } = await axios.get("/api/config/paypal")
+      const script = document.createElement("script")
+      script.type = "text/javascript"
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+      script.async = true
+      script.onload = () => {
+        setSdkReady(true)
+      }
+      document.body.appendChild(script)
+    }
+    if (!order.isPaid) {
+      if (!window.paypal && !loadingScript && order.itemsPrice) {
+        setLoadingScript(true)
+        const asyncFN = async () => {
+          await addPaypalScript()
+        }
+        asyncFN()
+        setLoadingScript(false)
       } else {
         setSdkReady(true)
       }
     }
-  }, [location, dispatch, success, order, loadingScript, orderLoading])
+  }, [order.isPaid])
 
   const [qrResult, setQrResult] = useState("No result")
   const [showScanner, setShowScanner] = useState(false)
