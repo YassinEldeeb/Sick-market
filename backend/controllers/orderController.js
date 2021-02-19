@@ -47,6 +47,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     }
   }
 
+  await orderPlaced(order, order.user.email)
   await res.status(201).send(order)
 })
 
@@ -74,7 +75,6 @@ const getOrderById = asyncHandler(async (req, res) => {
     throw new Error("Order not Found!")
   }
 
-  await orderPlaced(order, order.user.email)
   res.send({ order })
 })
 

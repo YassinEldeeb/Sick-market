@@ -22,7 +22,7 @@ const OrderDetails = () => {
   const cart = useSelector((state) => state.cart)
   const orderedOrder = useSelector((state) => state.order)
   useEffect(() => {
-    if (orderedOrder.order.itemsPrice) cart.cartItems = []
+    if (orderedOrder.order && orderedOrder.order.itemsPrice) cart.cartItems = []
     cart.taxes = undefined
     cart.totalPrice = undefined
     cart.shipping = undefined
@@ -142,11 +142,8 @@ const OrderDetails = () => {
   }
 
   const successPaymentHandler = (paymentResult) => {
-    console.log("Payment Result:", paymentResult)
+    console.log(paymentResult)
     dispatch(orderPayAction(order._id, paymentResult))
-  }
-  const errorPaymentHandler = (error) => {
-    console.log("Error:", error)
   }
 
   return (
@@ -380,7 +377,6 @@ const OrderDetails = () => {
                         <PayPalButton
                           amount={(order.totalPrice / currency).toFixed(2)}
                           onSuccess={successPaymentHandler}
-                          onError={errorPaymentHandler}
                         />
                       ) : (
                         <Loader />
