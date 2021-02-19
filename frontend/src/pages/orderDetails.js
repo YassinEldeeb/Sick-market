@@ -354,8 +354,7 @@ const OrderDetails = () => {
                 </div>
                 {!order.isPaid && (
                   <div className='row row6'>
-                    {orderPayLoading && <Loader />}
-                    {sdkReady && currency ? (
+                    {sdkReady && currency && !orderPayLoading ? (
                       <PayPalButton
                         amount={(order.totalPrice / currency).toFixed(2)}
                         onSuccess={successPaymentHandler}
