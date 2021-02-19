@@ -53,6 +53,7 @@ const OrderDetails = () => {
   const [sdkReady, setSdkReady] = useState(false)
 
   const [currency, setCurrency] = useState(null)
+  const [loadingScript, setLoadingScript] = useState(false)
 
   useEffect(() => {
     const currencyFetch = async () => {
@@ -65,6 +66,7 @@ const OrderDetails = () => {
       currencyFetch()
     }
   }, [])
+
   useEffect(() => {
     const addPaypalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal")
@@ -81,7 +83,8 @@ const OrderDetails = () => {
       dispatch({ type: "ORDER_PAY_RESET" })
       dispatch(getOrderAction(location.pathname.split("/")[2]))
     } else if (!order.isPaid) {
-      if (!window.paypal) {
+      if (!window.paypal && !loadingScript) {
+        setLoadingScript(true)
         addPaypalScript()
       } else {
         setSdkReady(true)
@@ -352,9 +355,9 @@ const OrderDetails = () => {
                 {!order.isPaid && (
                   <div className='row row6'>
                     {orderPayLoading && <Loader />}
-                    {sdkReady ? (
+                    {sdkReady && currency ? (
                       <PayPalButton
-                        amount={(10).toFixed(2)}
+                        amount={(order.totalPrice / currency).toFixed(2)}
                         onSuccess={successPaymentHandler}
                         onError={errorPaymentHandler}
                       />
