@@ -64,6 +64,8 @@ const OrderDetails = () => {
     if (!currency) {
       currencyFetch()
     }
+  }, [])
+  useEffect(() => {
     const addPaypalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal")
       const script = document.createElement("script")
@@ -122,6 +124,7 @@ const OrderDetails = () => {
     dispatch(orderPayAction(order._id, paymentResult))
   }
 
+  console.log(sdkReady, currency)
   return (
     <StyledPlaceOrder>
       {showScanner && (
@@ -347,7 +350,7 @@ const OrderDetails = () => {
                 {!order.isPaid && (
                   <div className='row row6'>
                     {orderPayLoading && <Loader />}
-                    {!sdkReady || !currency || !order.totalPrice ? (
+                    {!sdkReady || !currency ? (
                       <Loader />
                     ) : (
                       <PayPalButton
