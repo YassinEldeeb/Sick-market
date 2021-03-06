@@ -7,8 +7,6 @@ const createOrderReducer = (state = initialState, action) => {
       return { order: action.payload, orderLoading: false, orderPlaced: true }
     case "CREATE_ORDER_FAIL":
       return { error: action.payload, orderLoading: false, orderPlaced: false }
-    case "CREATE_ORDER_RESET":
-      return {}
     default:
       return state
   }

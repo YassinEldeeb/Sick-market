@@ -71,9 +71,12 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
       },
       config
     )
-    // if (!isBuyNow) {
-    //   cart.cartItems = []
-    // }
+    if (!isBuyNow) {
+      cart.cartItems = []
+    }
+    cart.taxes = null
+    cart.totalPrice = null
+    cart.shipping = null
     if (!isBuyNow) {
       localStorage.removeItem("sickCartProducts")
       setCartCount(0)

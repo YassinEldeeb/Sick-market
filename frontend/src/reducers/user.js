@@ -1,4 +1,4 @@
-const initialState = { user: {} }
+const initialState = { user: { profileLoading: true } }
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {

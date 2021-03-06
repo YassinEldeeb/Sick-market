@@ -45,7 +45,7 @@ const Register = () => {
   const { loading, user, error } = useSelector((state) => state.userInfo)
 
   const search = location.search.replace("?redirect=", "")
-  const redirect = search !== "/" ? search : "/verify"
+  const redirect = search ? search : "/verify"
 
   useEffect(() => {
     if (user.name) {

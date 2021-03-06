@@ -291,15 +291,6 @@ const StyledEdit = styled.div`
   height: 0px;
   position: relative;
 
-  .slider-shadow {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    transition: 0.3s ease 0.15s;
-  }
   .first-slider-burger.active {
     transform: translate(0%, 142%) rotate(-135deg);
   }
@@ -502,7 +493,20 @@ const StyledEdit = styled.div`
     display: none;
     cursor: pointer;
   }
+  .slider-shadow {
+    display: none;
+  }
   @media screen and (max-width: 1050px) {
+    .slider-shadow {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      transition: 0.3s ease 0.15s;
+    }
     .slider-Burger {
       display: flex;
     }

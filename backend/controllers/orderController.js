@@ -46,8 +46,8 @@ const addOrderItems = asyncHandler(async (req, res) => {
       throw new Error("Invalid Coupon Code")
     }
   }
-
   await orderPlaced(order, order.user.email)
+
   await res.status(201).send(order)
 })
 
@@ -98,10 +98,9 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     throw new Error("Order not Found!")
   }
   order.paymentResult = {
-    id: req.body.id,
-    status: req.body.status,
-    update_time: req.body.update_time,
-    email_address: req.body.payer.email_address,
+    orderID: req.body.orderID,
+    payerID: req.body.payerID,
+    facilitatorAccessToken: req.body.facilitatorAccessToken,
   }
   order.isPaid = true
   const date = format(Date.now(), "yyyy-MM-dd hh:mm a")
@@ -113,4 +112,19 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   res.send({ order })
 })
 
-export { addOrderItems, getOrderById, updateOrderToPaid }
+const getMyOrders = asyncHandler(async (req, res) => {
+  const user = req.user
+  await user
+    .populate({
+      path: "orders",
+      options: {
+        limit: parseInt(req.query.limit),
+        skip: parseInt(req.query.skip),
+      },
+    })
+    .execPopulate()
+
+  res.send(user.orders)
+})
+
+export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders }

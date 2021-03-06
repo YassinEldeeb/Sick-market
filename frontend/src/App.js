@@ -22,6 +22,7 @@ import PlaceOrder from "./pages/PlaceOrder"
 import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword"
 import OrderDetails from "./pages/orderDetails"
+import MyOrders from "./pages/MyOrders"
 
 const App = () => {
   const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
@@ -94,10 +95,13 @@ const App = () => {
               <ChangeEmail />
             </Route>
             <Route path='/account/edit-profile'>
-              <EditProfile slider2={slider} setSlider2={setSlider} />
+              <EditProfile />
+            </Route>
+            <Route path='/account/orders'>
+              <MyOrders />
             </Route>
             <Route path='/account/change-password'>
-              <ChangePassword slider={slider} setSlider={setSlider} />
+              <ChangePassword />
             </Route>
             <Route path='/shipping'>
               <Shipping />

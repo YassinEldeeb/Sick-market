@@ -203,15 +203,11 @@ const ChangePassword = () => {
   )
 }
 const StyledLogin = styled.div`
-  position: relative;
   .slider-shadow {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    transition: 0.3s ease 0.15s;
+    display: none;
   }
+  position: relative;
+
   .alert .title h1 {
     margin-left: 0.35rem;
   }
@@ -355,6 +351,15 @@ const StyledLogin = styled.div`
     padding: 0.55rem 0.8rem !important;
   }
   @media screen and (max-width: 1050px) {
+    .slider-shadow {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      transition: 0.3s ease 0.15s;
+    }
     flex-direction: column;
 
     .message {

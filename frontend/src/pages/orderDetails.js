@@ -17,18 +17,6 @@ import { PayPalButton } from "react-paypal-button-v2"
 import orderPayAction from "../actions/orderPay"
 
 const OrderDetails = () => {
-  const dispatch = useDispatch()
-
-  const cart = useSelector((state) => state.cart)
-  const orderedOrder = useSelector((state) => state.order)
-  useEffect(() => {
-    if (orderedOrder.order && orderedOrder.order.itemsPrice) cart.cartItems = []
-    cart.taxes = undefined
-    cart.totalPrice = undefined
-    cart.shipping = undefined
-    cart.itemsPrice = undefined
-    dispatch({ type: "CREATE_ORDER_RESET" })
-  }, [])
   const defaultOptions = {
     loop: false,
     autoplay: true,
@@ -53,6 +41,7 @@ const OrderDetails = () => {
     return Number(num).toFixed(2)
   }
 
+  const dispatch = useDispatch()
   const location = useLocation()
 
   const { order, error, orderLoading } = useSelector(
@@ -79,7 +68,11 @@ const OrderDetails = () => {
   }, [])
 
   useEffect(() => {
-    if ((!order.totalPrice && !orderLoading) || success) {
+    if (
+      (!order.totalPrice && !orderLoading) ||
+      success ||
+      (order._id !== location.pathname.split("/")[2] && !orderLoading)
+    ) {
       dispatch({ type: "ORDER_PAY_RESET" })
       dispatch(getOrderAction(location.pathname.split("/")[2]))
     }
@@ -97,13 +90,13 @@ const OrderDetails = () => {
       }
       document.body.appendChild(script)
     }
-    if (
-      order.isPaid === false &&
-      order.paymentMethod === "PayPal or Credit & Debit Cards"
-    ) {
+    if (order.isPaid === false) {
       if (!window.paypal && !loadingScript) {
         setLoadingScript(true)
-        addPaypalScript()
+        const asyncFN = async () => {
+          await addPaypalScript()
+        }
+        asyncFN()
         setLoadingScript(false)
       } else {
         setSdkReady(true)
@@ -202,7 +195,7 @@ const OrderDetails = () => {
         {order.itemsPrice && (
           <>
             <h1 className='orderId'>
-              <Link to='/orders'>
+              <Link to='/account/orders'>
                 #Order:<div className='line'></div>
               </Link>
               <span>{" " + order._id}</span>
@@ -370,19 +363,18 @@ const OrderDetails = () => {
                     </span>
                   </p>
                 </div>
-                {!order.isPaid &&
-                  order.paymentMethod === "PayPal or Credit & Debit Cards" && (
-                    <div className='row row6'>
-                      {sdkReady && currency && !orderPayLoading ? (
-                        <PayPalButton
-                          amount={(order.totalPrice / currency).toFixed(2)}
-                          onSuccess={successPaymentHandler}
-                        />
-                      ) : (
-                        <Loader />
-                      )}
-                    </div>
-                  )}
+                {!order.isPaid && (
+                  <div className='row row6'>
+                    {sdkReady && currency && !orderPayLoading ? (
+                      <PayPalButton
+                        amount={(order.totalPrice / currency).toFixed(2)}
+                        onApprove={successPaymentHandler}
+                      />
+                    ) : (
+                      <Loader />
+                    )}
+                  </div>
+                )}
               </div>
               <div className='lineSeperate'></div>
             </div>
