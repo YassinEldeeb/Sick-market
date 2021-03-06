@@ -155,7 +155,6 @@ const StyledOrders = styled.div`
     }
   }
   .table {
-    display: block;
     overflow-x: auto;
   }
   .content {
