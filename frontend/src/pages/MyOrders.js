@@ -155,7 +155,7 @@ const StyledOrders = styled.div`
     }
   }
   .table {
-    overflow-x: auto;
+    display: block;
   }
   .content {
     width: 100%;
