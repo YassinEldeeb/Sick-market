@@ -7,11 +7,15 @@ const userUpdateAction = (name, email, password, newPassword) => async (
   const userInfo = getState().userInfo
   try {
     dispatch({ type: "UPDATE_USER_REQUEST" })
+    const cancelToken = axios.CancelToken
+    const source = cancelToken.source()
+
     const config = {
       headers: {
         Content_Type: "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
+      cancelToken: source.token,
     }
     const passedObj = {}
     const passedObjFN = () => {
@@ -30,6 +34,7 @@ const userUpdateAction = (name, email, password, newPassword) => async (
       return passedObj
     }
     console.log(passedObjFN())
+
     const { data } = await axios.patch(
       "/api/users/profile",
       passedObjFN(),

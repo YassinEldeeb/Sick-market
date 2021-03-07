@@ -5,11 +5,14 @@ const orderPayAction = (id, paymentResult) => async (dispatch, getState) => {
 
   try {
     dispatch({ type: "ORDER_PAY_REQUEST" })
+    const cancelToken = axios.CancelToken
+    const source = cancelToken.source()
     const config = {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
+      cancelToken: source.token,
     }
     const { data } = await axios.patch(
       `/api/orders/${id}/pay`,

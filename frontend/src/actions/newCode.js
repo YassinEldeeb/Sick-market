@@ -5,11 +5,14 @@ export const newCodeAction = () => async (dispatch, getState) => {
   const userInfo = getState().userInfo
   if (userInfo.token && userInfo.user.status === "pending") {
     try {
+      const cancelToken = axios.CancelToken
+      const source = cancelToken.source()
       const config = {
         headers: {
           Content_Type: "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
+        cancelToken: source.token,
       }
       await axios.get("/api/users/getNewSecurityCode", config)
       dispatch({ type: "NEW_VERIFY_CODE_SUCCESS" })

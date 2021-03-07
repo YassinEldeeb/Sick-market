@@ -13,6 +13,7 @@ import userUpdateAction from "../actions/update"
 import deleteProfilePicAction from "../actions/deleteProfilePic"
 import { useLocation, useHistory } from "react-router-dom"
 import PopupMessage from "../components/PopupMessage"
+import { Link } from "react-router-dom"
 
 const EditProfile = () => {
   const inputRef = useRef(null)
@@ -206,24 +207,37 @@ const EditProfile = () => {
                 </>
               )}
               {!user.profilePicLink && (
-                <div className='email'>
-                  <label htmlFor='email'>Email Address</label>
-                  <input
-                    value={emailValue}
-                    id='email'
-                    type='text'
-                    onChange={(e) => setEmailValue(e.target.value)}
-                  />
-                  <img
-                    onClick={() => setEmailValue("")}
-                    style={{
-                      display: `${emailValue.length ? "block" : "none"}`,
-                    }}
-                    className='xSign2'
-                    src={xSign}
-                    alt='X icon'
-                  />
-                </div>
+                <>
+                  <div className='email'>
+                    <label htmlFor='email'>Email Address</label>
+                    <input
+                      value={emailValue}
+                      id='email'
+                      type='text'
+                      onChange={(e) => setEmailValue(e.target.value)}
+                    />
+                    <img
+                      onClick={() => setEmailValue("")}
+                      style={{
+                        display: `${emailValue.length ? "block" : "none"}`,
+                      }}
+                      className='xSign2'
+                      src={xSign}
+                      alt='X icon'
+                    />
+                  </div>
+                  {user.status !== "Verified" && (
+                    <div className='notVerified'>
+                      <p>
+                        Your Email isn't verified!, You can't order anything
+                        unless you go to{" "}
+                        <Link to={`/verify?redirect=/account/edit-profile`}>
+                          Verify your Email.
+                        </Link>
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
               {!user.profilePicLink && (
                 <div className='password'>
@@ -281,6 +295,26 @@ const EditProfile = () => {
   )
 }
 const StyledEdit = styled.div`
+  .notVerified {
+    background: #f7dddc;
+    padding: 0.8rem;
+    border-radius: 6px;
+    width: 100%;
+    margin-bottom: 1rem;
+    color: rgb(113, 43, 41);
+    border: 1px solid rgba(56, 0, 0, 0.08);
+    font-weight: 500;
+    font-size: calc(0.78rem + 0.3vw);
+    a {
+      white-space: nowrap;
+      color: #0084a0;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
   .google-input {
     color: #1a1a1a;
     cursor: not-allowed !important;
@@ -497,6 +531,10 @@ const StyledEdit = styled.div`
     display: none;
   }
   @media screen and (max-width: 1050px) {
+    .notVerified {
+      padding: 0.7rem;
+      font-size: calc(0.7rem + 0.3vw);
+    }
     .slider-shadow {
       display: block;
       position: absolute;

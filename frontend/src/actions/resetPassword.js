@@ -4,11 +4,14 @@ const resetPassword = (password, token) => async (dispatch) => {
   try {
     dispatch({ type: "RESET_PASSWORD_STEP2_REQUEST" })
 
+    const cancelToken = axios.CancelToken
+    const source = cancelToken.source()
     const config = {
       headers: {
         Content_Type: "application/json",
         Authorization: `Bearer ${token}`,
       },
+      cancelToken: source.token,
     }
     await axios.post(
       "/api/users/resetPassword",

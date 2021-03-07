@@ -4,12 +4,16 @@ const addCouponAction = (code) => async (dispatch, getState) => {
   const { token } = getState().userInfo
   dispatch({ type: "COUPON_REQUEST" })
   try {
+    const cancelToken = axios.CancelToken
+    const source = cancelToken.source()
     const config = {
       headers: {
         Content_Type: "application/json",
         Authorization: `Bearer ${token}`,
       },
+      cancelToken: source.token,
     }
+
     const codeResponse = await axios.post("/api/coupons/use", { code }, config)
     dispatch({
       type: "COUPON_SUCCESS",

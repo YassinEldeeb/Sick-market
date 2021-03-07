@@ -3,10 +3,14 @@ import axios from "axios"
 const userRegisterAction = (name, email, password) => async (dispatch) => {
   try {
     dispatch({ type: "REGISTER_REQUEST" })
+
+    const cancelToken = axios.CancelToken
+    const source = cancelToken.source()
     const config = {
       headers: {
         Content_Type: "application/json",
       },
+      cancelToken: source.token,
     }
 
     const { data } = await axios.post(

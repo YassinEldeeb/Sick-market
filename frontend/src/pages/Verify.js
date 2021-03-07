@@ -69,9 +69,11 @@ const Verify = () => {
     ? location.search.split("=")[1]
     : "/"
 
+  const order = useSelector((state) => state.order)
   useEffect(() => {
     if (user.name) {
       if (status === "Verified") {
+        order.error = null
         history.push(redirect)
       }
     } else {
@@ -113,6 +115,7 @@ const Verify = () => {
           <div className='theRest'>
             <h1>Enter Code to Verify</h1>
             <Message
+              hidden='true'
               vibrating='true'
               visiblity={
                 codeError.length
@@ -184,7 +187,7 @@ const StyledVerify = styled.div`
   }
   .message {
     align-self: flex-start;
-    margin-bottom: calc(0.1rem + 0.2vh);
+    margin-bottom: 0rem;
   }
   display: flex;
   justify-content: center;
@@ -237,6 +240,7 @@ const StyledVerify = styled.div`
       font-weight: 500;
       font-size: calc(2.2rem + 0.3vw);
       align-self: flex-start;
+      margin-bottom: calc(1rem + 0.3vh);
     }
     input {
       background: #f3f3f3;
@@ -244,7 +248,7 @@ const StyledVerify = styled.div`
       border-radius: 5px;
       font-size: calc(1.1rem + 0.3vw);
       padding: 0.5rem 1rem;
-      margin-bottom: calc(2rem + 1vh);
+      margin-bottom: calc(1.4rem + 0.3vh);
     }
     .verifyBtns {
       display: flex;
@@ -292,11 +296,6 @@ const StyledVerify = styled.div`
       font-size: calc(0.8rem + 0.2vw);
     }
     .message {
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      padding: 0.5rem 0.55rem !important;
-      margin-bottom: 0 !important;
       span {
         font-size: calc(0.7rem + 0.1vw) !important;
       }
@@ -321,6 +320,7 @@ const StyledVerify = styled.div`
         calc(1rem + 1vw);
       h1 {
         font-size: calc(1.6rem + 0.3vw);
+        margin-bottom: calc(0.7rem + 0.3vh);
       }
       input {
         margin-bottom: calc(1rem + 0.3vh);

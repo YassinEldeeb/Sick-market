@@ -185,6 +185,7 @@ const StyledOrders = styled.div`
     border-radius: 6px;
     border-style: hidden;
     box-shadow: 0 0 0 1px rgba(242, 242, 242, 0.3);
+    margin-bottom: 1.2rem;
   }
   .content {
     width: 100%;

@@ -10,32 +10,36 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
 
   try {
     dispatch({ type: "CREATE_ORDER_REQUEST" })
+    const cancelToken = axios.CancelToken
+    const source = cancelToken.source()
     const config = {
       headers: {
         Content_Type: "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
+      cancelToken: source.token,
     }
     const modifiedCart = () => {
       if (isBuyNow === false) {
         return cart.cartItems.map((eachProduct) => {
-          delete eachProduct.rating
-          delete eachProduct.numReviews
-          delete eachProduct.countInStock
-          delete eachProduct.brand
-          eachProduct.product = eachProduct._id
-          delete eachProduct._id
-          return eachProduct
+          return {
+            name: eachProduct.name,
+            qty: eachProduct.qty,
+            image: eachProduct.image,
+            price: eachProduct.price,
+            product: eachProduct._id,
+          }
         })
       } else {
-        delete product.rating
-        delete product.numReviews
-        delete product.countInStock
-        delete product.brand
-        product.product = product._id
-        delete product._id
-
-        return [product]
+        return [
+          {
+            name: product.name,
+            qty: product.qty,
+            image: product.image,
+            price: product.price,
+            product: product._id,
+          },
+        ]
       }
     }
 
@@ -72,18 +76,19 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
       config
     )
     if (!isBuyNow) {
-      cart.cartItems = []
-    }
-    cart.taxes = null
-    cart.totalPrice = null
-    cart.shipping = null
-    if (!isBuyNow) {
       localStorage.removeItem("sickCartProducts")
       setCartCount(0)
     }
 
     dispatch({ type: "CREATE_ORDER_SUCCESS", payload: data })
+    if (!isBuyNow) {
+      cart.cartItems = []
+    }
+    cart.taxes = null
+    cart.totalPrice = null
+    cart.shipping = null
   } catch (error) {
+    console.log(cart)
     dispatch({
       type: "CREATE_ORDER_FAIL",
       payload:

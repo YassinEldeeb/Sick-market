@@ -64,10 +64,20 @@ const OrderDetails = () => {
 
   useEffect(() => {
     const currencyFetch = async () => {
-      const { data: currency } = await axios.get(
-        "https://api.currencyfreaks.com/latest?apikey=a85d31d75fc34b3e999bc0e87c08a8a9&symbols=EGP"
-      )
-      setCurrency(Number(currency.rates.EGP))
+      const cancelToken = axios.CancelToken
+      const source = cancelToken.source()
+      let currency
+      try {
+        const response = await axios.get(
+          "https://api.currencyfreaks.com/latest?apikey=a85d31d75fc34b3e999bc0e87c08a8a9&symbols=EGP",
+          {
+            cancelToken: source.token,
+          }
+        )
+        console.log("Response", response)
+      } catch (err) {}
+
+      setCurrency(currency ? Number(currency.rates.EGP) : 10)
     }
     if (!currency) {
       currencyFetch()
@@ -374,7 +384,7 @@ const OrderDetails = () => {
                   <div className='row row6'>
                     {sdkReady && currency && !orderPayLoading ? (
                       <PayPalButton
-                        amount={(order.totalPrice / currency).toFixed(2)}
+                        amount={(10).toFixed(2)}
                         onSuccess={successPaymentHandler}
                       />
                     ) : (
@@ -577,7 +587,7 @@ const StyledPlaceOrder = styled.div`
     h1 {
       font-size: calc(1rem + 0.3vw);
       font-weight: 400;
-      padding: 0 calc(1.1rem + 0.3vw);
+      padding: 0 calc(1.3rem + 0.3vw);
     }
     p {
       font-size: calc(1rem + 0.3vw);
@@ -599,7 +609,7 @@ const StyledPlaceOrder = styled.div`
       justify-content: space-between;
       align-items: center;
       border-top: 1px solid rgba(0, 0, 0, 7.5%);
-      margin: 0 calc(1.1rem + 0.3vw);
+      margin: 0 calc(1.3rem + 0.3vw);
       h1 {
         padding: unset !important;
         color: #1a1a1a;

@@ -61,8 +61,8 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
             setWarning={setWarning}
             desc={
               <p>
-                Your Email isn't verified!, You can't order or update your
-                profile unless you go to{" "}
+                Your Email isn't verified!, You can't order anything unless you
+                go to{" "}
                 <Link to={`/verify?redirect=${redirect.replace("/", "")}`}>
                   Verify your Email.
                 </Link>

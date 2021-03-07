@@ -5,11 +5,14 @@ const userProfileAction = () => async (dispatch, getState) => {
 
   try {
     dispatch({ type: "USER_PROFILE_REQUEST" })
+    const cancelToken = axios.CancelToken
+    const source = cancelToken.source()
     const config = {
       headers: {
         Content_Type: "application/json",
         Authorization: `Bearer ${token}`,
       },
+      cancelToken: source.token,
     }
     const { data } = await axios.get("/api/users/profile", config)
     dispatch({ type: "USER_PROFILE_SUCCESS", payload: data })

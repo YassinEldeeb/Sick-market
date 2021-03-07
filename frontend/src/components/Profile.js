@@ -71,7 +71,7 @@ const Profile = () => {
           />
           <div className={`dropMenu ${dropDown ? "active" : ""}`}>
             <div className='account'>
-              <Link to='/account'>Account</Link>
+              <Link to='/account/edit-profile'>Account</Link>
             </div>
             <div
               className='logout'

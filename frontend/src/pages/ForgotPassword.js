@@ -26,7 +26,7 @@ const ForgotPassword = () => {
       history.push("/")
     }
   }, [user])
-  const [warning, setWarning] = useState(false)
+  const [setWarning] = useState(false)
   return (
     <>
       <Goback providedClassName={"goBackForgotPassword"} />

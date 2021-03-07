@@ -1,5 +1,6 @@
 import React from "react"
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 
 const Message = ({
   msg,
@@ -8,11 +9,22 @@ const Message = ({
   vibrating,
   hidden = false,
 }) => {
+  const msgText = () => {
+    if (msg === "returnTheThing") {
+      return (
+        <p>
+          Email isn't Verified{" "}
+          <Link to='/verify?redirect=/placeOrder'>Verify Email</Link>
+        </p>
+      )
+    } else {
+      return msg
+    }
+  }
   return (
     <StyledMessage
       className={`message ${visiblity && vibrating ? "active" : ""}`}
       style={{
-        display: "inline-block",
         background: `${type === "ok" ? "#DCF1F7" : "#F7DDDC"}`,
         padding: "0.65rem 1.1rem",
         borderRadius: "5px",
@@ -31,12 +43,20 @@ const Message = ({
           display: `${hidden ? "none" : "block"}`,
         }}
       >
-        {msg}
+        {msgText()}
       </span>
     </StyledMessage>
   )
 }
 const StyledMessage = styled.div`
+  span {
+    a {
+      color: #0084a0;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
   &.active {
     animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   }

@@ -3,11 +3,14 @@ import axios from "axios"
 export const userLogoutAction = () => async (dispatch, getState) => {
   const userInfo = getState().userInfo
   if (userInfo.token) {
+    const cancelToken = axios.CancelToken
+    const source = cancelToken.source()
     const config = {
       headers: {
         Content_Type: "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
+      cancelToken: source.token,
     }
     await axios.post("/api/users/logout", null, config)
     dispatch({

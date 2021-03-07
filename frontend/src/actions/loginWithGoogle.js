@@ -5,10 +5,13 @@ const loginWithGoogle = (name, email, profilePic) => async (dispatch) => {
   dotenv.config()
   try {
     dispatch({ type: "USER_LOGIN_REQUEST" })
+    const cancelToken = axios.CancelToken
+    const source = cancelToken.source()
     const config = {
       headers: {
         Content_Type: "application/json",
       },
+      cancelToken: source.token,
     }
     const googleSignture = "214GOOGLEyassinSIGNTURE123SICK.21S16123P9jhnG6h"
     const { data } = await axios.post(

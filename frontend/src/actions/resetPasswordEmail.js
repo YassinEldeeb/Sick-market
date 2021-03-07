@@ -4,10 +4,16 @@ const resetPasswordEmail = (email) => async (dispatch) => {
   console.log(email)
   try {
     dispatch({ type: "RESET_PASSWORD_REQUEST" })
+    const cancelToken = axios.CancelToken
+    const source = cancelToken.source()
 
-    await axios.post("/api/users/resetPasswordEmail", {
-      email,
-    })
+    await axios.post(
+      "/api/users/resetPasswordEmail",
+      {
+        email,
+      },
+      { cancelToken: source.token }
+    )
 
     dispatch({ type: "RESET_PASSWORD_SUCCESS" })
   } catch (error) {

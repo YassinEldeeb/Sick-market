@@ -16,6 +16,9 @@ const addOrderItems = asyncHandler(async (req, res) => {
     couponDiscount,
     code,
   } = req.body
+  if (req.user.status !== "Verified") {
+    throw new Error("Email isn't verified")
+  }
   if (!orderItems || !orderItems.length) {
     res.status(400)
     throw new Error("Cart is empty")
