@@ -17,6 +17,13 @@ import { PayPalButton } from "react-paypal-button-v2"
 import orderPayAction from "../actions/orderPay"
 
 const OrderDetails = () => {
+  const orderThatIsPlaced = useSelector((state) => state.order)
+  useEffect(() => {
+    if (orderThatIsPlaced.orderPlaced) {
+      orderThatIsPlaced.order = {}
+      orderThatIsPlaced.orderPlaced = false
+    }
+  }, [])
   const defaultOptions = {
     loop: false,
     autoplay: true,
@@ -368,7 +375,7 @@ const OrderDetails = () => {
                     {sdkReady && currency && !orderPayLoading ? (
                       <PayPalButton
                         amount={(order.totalPrice / currency).toFixed(2)}
-                        onApprove={successPaymentHandler}
+                        onSuccess={successPaymentHandler}
                       />
                     ) : (
                       <Loader />

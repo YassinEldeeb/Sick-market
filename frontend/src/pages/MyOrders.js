@@ -93,7 +93,19 @@ const MyOrders = () => {
                         {each.couponDiscount === 0 ? (
                           <img src={falseSVG} />
                         ) : (
-                          each.couponDiscount
+                          <p className='discountAmount'>
+                            {each.couponDiscount}
+                            <span>
+                              {Math.round(
+                                100 /
+                                  ((Math.round(each.totalPrice) +
+                                    Math.round(each.couponDiscount) -
+                                    Math.round(each.shippingPrice)) /
+                                    Math.round(each.couponDiscount))
+                              )}
+                              %
+                            </span>
+                          </p>
                         )}
                       </td>
                       <td>
@@ -121,6 +133,18 @@ const MyOrders = () => {
 }
 
 const StyledOrders = styled.div`
+  .discountAmount {
+    position: relative;
+    display: inline-block;
+    span {
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: #1eb174;
+      font-size: 0.8rem;
+      transform: translate(100%, 0);
+    }
+  }
   .slider-Burger {
     z-index: 7;
     display: flex;
@@ -135,6 +159,7 @@ const StyledOrders = styled.div`
     width: 49px;
     height: 49px;
     border-radius: 50%;
+    margin-bottom: calc(5vw);
     span {
       width: 1.8rem !important;
       height: 0.18rem !important;
@@ -156,6 +181,10 @@ const StyledOrders = styled.div`
   }
   .table {
     display: block;
+    overflow-x: auto;
+    border-radius: 6px;
+    border-style: hidden;
+    box-shadow: 0 0 0 1px rgba(242, 242, 242, 0.3);
   }
   .content {
     width: 100%;
@@ -217,10 +246,7 @@ const StyledOrders = styled.div`
   }
   table {
     border-collapse: collapse;
-    border-radius: 6px;
-    border-style: hidden;
-    box-shadow: 0 0 0 1px #f2f2f2;
-    width: 100%;
+    min-width: 100%;
   }
   tr:nth-child(even) {
     background-color: #fafafa;
@@ -231,6 +257,9 @@ const StyledOrders = styled.div`
     display: none;
   }
   @media screen and (max-width: 1050px) {
+    .content {
+      padding-top: 0;
+    }
     .slider-shadow {
       display: block;
       position: absolute;
@@ -244,7 +273,7 @@ const StyledOrders = styled.div`
     position: relative;
     flex-direction: column;
     .title {
-      font-size: calc(2.3rem + 0.3vw);
+      font-size: calc(1.8rem + 1vw);
     }
     .slider-Burger {
       display: flex;

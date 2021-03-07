@@ -11,7 +11,7 @@ const getMyOrdersAction = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     }
-    const { data } = await axios.get(`/api/orders/myOrders?limit=7`, config)
+    const { data } = await axios.get(`/api/orders/myOrders?limit=8`, config)
     dispatch({ type: "GET_MY_ORDERS_SUCCESS", payload: data })
   } catch (error) {
     dispatch({
