@@ -26,9 +26,11 @@ const searchUsers = asyncHandler(async (req, res) => {
     }
   )
 
-  const count = users.length
+  const filteredUsers = users.filter((user) => user.rank === "user")
 
-  const usersCopy = users.map((e) => {
+  const count = filteredUsers.length
+
+  const usersCopy = filteredUsers.map((e) => {
     return {
       joinedIn: e.createdAt,
       availablePic: e.availablePic,
@@ -40,6 +42,7 @@ const searchUsers = asyncHandler(async (req, res) => {
       email: e.email,
     }
   })
+
   res.send({ users: usersCopy, count })
 })
 
