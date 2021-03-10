@@ -115,7 +115,7 @@ const PlaceOrder = ({ setCartCount }) => {
                   ? "Network Error"
                   : error.includes("mongo")
                   ? "Server Error"
-                  : error.includes("")
+                  : error.includes("Email isn't verified")
                   ? "returnTheThing"
                   : error
                 : "Ok"

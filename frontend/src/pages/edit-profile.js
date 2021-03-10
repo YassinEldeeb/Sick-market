@@ -382,7 +382,7 @@ const StyledEdit = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-top: 2.5rem;
   }
   .filepond--wrapper {

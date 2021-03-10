@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs"
 import validator from "validator"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
-
+import plugin from "mongoose-partial-search"
 dotenv.config()
 
 const userSchema = mongoose.Schema(
@@ -12,6 +12,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      searchable: true,
     },
     profilePic: {
       type: Buffer,
@@ -29,6 +30,7 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
+      searchable: true,
     },
     tokens: [
       {
@@ -84,7 +86,6 @@ userSchema.methods.toJSON = function () {
   delete user.updatedAt
   delete user.__v
   delete user.tokens
-
   return user
 }
 
@@ -131,6 +132,7 @@ userSchema.pre("save", async function (next) {
   }
   next()
 })
+userSchema.plugin(plugin)
 
 const User = mongoose.model("User", userSchema)
 

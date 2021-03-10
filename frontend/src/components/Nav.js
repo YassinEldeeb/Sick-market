@@ -143,7 +143,7 @@ const Header = styled.div`
   z-index: 8;
 
   .actualNav {
-    padding: calc(0.5rem + 1vw) 0;
+    padding: calc(0.3rem + 1vw) 0;
     width: 100%;
     background: #343a40;
     nav {

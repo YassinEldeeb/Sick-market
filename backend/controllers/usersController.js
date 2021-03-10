@@ -11,6 +11,51 @@ import SecretCode from "../models/secretCode.js"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
+//Search USERS - /api/users/search @Admin
+const searchUsers = asyncHandler(async (req, res) => {
+  if (!req.body.search) {
+    res.status(400)
+    throw new Error("Search Field is Requierd")
+  }
+  const query = await User.searchBuilder(req.body.search)
+  const users = await User.find(query)
+  const count = await User.countDocuments(query)
+
+  const usersCopy = users.map((e) => {
+    return {
+      joinedIn: e.createdAt,
+      availablePic: e.availablePic,
+      rank: e.rank,
+      status: e.status,
+      validResetPassword: e.validResetPassword,
+      _id: e._id,
+      name: e.name,
+      email: e.email,
+    }
+  })
+  res.send({ users: usersCopy, count })
+})
+
+//GET all USERS - /api/users @Admin
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({ rank: "user" })
+  const count = await User.countDocuments({ rank: "user" })
+  const usersCopy = users.map((e) => {
+    return {
+      joinedIn: e.createdAt,
+      availablePic: e.availablePic,
+      rank: e.rank,
+      status: e.status,
+      validResetPassword: e.validResetPassword,
+      _id: e._id,
+      name: e.name,
+      email: e.email,
+    }
+  })
+
+  res.send({ users: usersCopy, count })
+})
+
 //Get User - /api/users/login @Public
 const getUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body
@@ -415,4 +460,6 @@ export {
   continueWithGoogle,
   getResetLink,
   resetPassword,
+  getAllUsers,
+  searchUsers,
 }

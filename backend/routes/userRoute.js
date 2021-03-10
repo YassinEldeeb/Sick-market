@@ -16,8 +16,10 @@ import {
   continueWithGoogle,
   getResetLink,
   resetPassword,
+  getAllUsers,
+  searchUsers,
 } from "../controllers/usersController.js"
-import protect from "../middleware/authMiddleware.js"
+import { protect, admin } from "../middleware/authMiddleware.js"
 
 const userRouter = express.Router()
 const upload = multer({
@@ -33,6 +35,8 @@ const upload = multer({
 })
 
 userRouter.post("/", registerUser)
+userRouter.get("/", protect, admin, getAllUsers)
+userRouter.post("/search", protect, admin, searchUsers)
 userRouter.post("/login", getUser)
 userRouter.post("/googleOauth", continueWithGoogle)
 userRouter.get("/profile", protect, getProfile)

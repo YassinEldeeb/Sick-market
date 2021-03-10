@@ -4,14 +4,14 @@ import {
   validateCouponCode,
   deleteCouponCode,
 } from "../controllers/couponsController.js"
-import protect from "../middleware/authMiddleware.js"
+import { protect, admin } from "../middleware/authMiddleware.js"
 
 const couponRouter = express.Router()
 
-couponRouter.post("/", protect, generateCouponCode)
+couponRouter.post("/", protect, admin, generateCouponCode)
 
 couponRouter.post("/use", protect, validateCouponCode)
 
-couponRouter.delete("/", protect, deleteCouponCode)
+couponRouter.delete("/", protect, admin, deleteCouponCode)
 
 export default couponRouter

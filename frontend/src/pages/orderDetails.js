@@ -380,18 +380,19 @@ const OrderDetails = () => {
                     </span>
                   </p>
                 </div>
-                {!order.isPaid && (
-                  <div className='row row6'>
-                    {sdkReady && currency && !orderPayLoading ? (
-                      <PayPalButton
-                        amount={(10).toFixed(2)}
-                        onSuccess={successPaymentHandler}
-                      />
-                    ) : (
-                      <Loader />
-                    )}
-                  </div>
-                )}
+                {!order.isPaid &&
+                  order.paymentMethod !== "Cash on Delivery" && (
+                    <div className='row row6'>
+                      {sdkReady && currency && !orderPayLoading ? (
+                        <PayPalButton
+                          amount={(10).toFixed(2)}
+                          onApprove={successPaymentHandler}
+                        />
+                      ) : (
+                        <Loader />
+                      )}
+                    </div>
+                  )}
               </div>
               <div className='lineSeperate'></div>
             </div>

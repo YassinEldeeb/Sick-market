@@ -202,6 +202,7 @@ const ChangePassword = () => {
     </StyledLogin>
   )
 }
+
 const StyledLogin = styled.div`
   .slider-shadow {
     display: none;
@@ -252,7 +253,7 @@ const StyledLogin = styled.div`
     align-items: flex-start;
     flex: 1 1 auto;
     padding: calc(2rem + 10vh);
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   .eye3 {
     transform: translate(-50%, 0%) !important;

@@ -33,4 +33,13 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 })
 
-export default protect
+const admin = asyncHandler(async (req, res, next) => {
+  if (req.user.rank == "admin") {
+    next()
+  } else {
+    res.status(401)
+    throw new Error("Not an Admin!")
+  }
+})
+
+export { protect, admin }

@@ -1,24 +1,27 @@
 import axios from "axios"
 
-const getMyOrdersAction = () => async (dispatch, getState) => {
-  const { userInfo } = getState((state) => state.userInfo)
-
+const getDashboardUsersAction = () => async (dispatch, getState) => {
   try {
-    dispatch({ type: "GET_MY_ORDERS_REQUEST" })
+    dispatch({
+      type: "GET_DASHBOARD_USERS_REQUEST",
+    })
+    const { userInfo } = getState((state) => state.userInfo)
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
     const config = {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
       cancelToken: source.token,
     }
-    const { data } = await axios.get(`/api/orders/myOrders?limit=15`, config)
-    dispatch({ type: "GET_MY_ORDERS_SUCCESS", payload: data })
+    const { data } = await axios.get("/api/users", config)
+    dispatch({
+      type: "GET_DASHBOARD_USERS_SUCCESS",
+      payload: data,
+    })
   } catch (error) {
     dispatch({
-      type: "GET_MY_ORDERS_FAIL",
+      type: "GET_DASHBOARD_USERS_FAIL",
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -26,5 +29,4 @@ const getMyOrdersAction = () => async (dispatch, getState) => {
     })
   }
 }
-
-export default getMyOrdersAction
+export default getDashboardUsersAction

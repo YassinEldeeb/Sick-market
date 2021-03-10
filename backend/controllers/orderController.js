@@ -110,7 +110,6 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 
   order.paidAt = date
 
-  console.log(date)
   await order.save()
   res.send({ order })
 })

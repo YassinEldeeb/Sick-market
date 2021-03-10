@@ -195,7 +195,7 @@ const StyledOrders = styled.div`
     padding-right: 4vw;
     padding-left: 4vw;
     padding-top: 2.5rem;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   .title {
     font-weight: 500;
