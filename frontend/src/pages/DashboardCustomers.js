@@ -89,27 +89,29 @@ const DashboardCustomers = () => {
               <img src={search} />
             </button>
           </form>
-          {!isSearch
-            ? users.length !== 0
-            : searchedUsers.length !== 0 && (
-                <div className='headers'>
-                  <div className='id'>
-                    <p>Id</p>
-                  </div>
-                  <div className='name'>
-                    <p>Name</p>
-                  </div>
-                  <div className='Email'>
-                    <p>Email</p>
-                  </div>
-                  <div className='JoinedIn'>
-                    <p>Joined In</p>
-                  </div>
-                  <div className='Action'>
-                    <p>Action</p>
-                  </div>
-                </div>
-              )}
+          {!isSearch ? (
+            users.length !== 0
+          ) : searchedUsers.length !== 0 ? (
+            <div className='headers'>
+              <div className='id'>
+                <p>Id</p>
+              </div>
+              <div className='name'>
+                <p>Name</p>
+              </div>
+              <div className='Email'>
+                <p>Email</p>
+              </div>
+              <div className='JoinedIn'>
+                <p>Joined In</p>
+              </div>
+              <div className='Action'>
+                <p>Action</p>
+              </div>
+            </div>
+          ) : (
+            <p className='sorry'>Sorry nothing found!</p>
+          )}
           <motion.div variants={hide} initial='hidden' animate='show'>
             {!isSearch
               ? users.map((each) => <UserDashboard user={each} />)
@@ -124,6 +126,10 @@ const DashboardCustomers = () => {
 }
 
 const StyledOrders = styled.div`
+  .sorry {
+    text-align: center;
+    font-weight: 300;
+  }
   .inputCont {
     position: relative;
   }
