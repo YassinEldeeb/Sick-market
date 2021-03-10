@@ -17,9 +17,16 @@ const searchUsers = asyncHandler(async (req, res) => {
     res.status(400)
     throw new Error("Search Field is Requierd")
   }
-  const query = await User.searchBuilder(req.body.search)
-  const users = await User.find(query)
-  const count = await User.countDocuments(query)
+
+  const users = await User.search(
+    req.body.search,
+    async function (err, output) {
+      const inspect = require("util").inspect
+      await inspect(output, { depth: null })
+    }
+  )
+
+  const count = users.length
 
   const usersCopy = users.map((e) => {
     return {

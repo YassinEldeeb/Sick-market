@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs"
 import validator from "validator"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
-import plugin from "mongoose-partial-search"
+import textSearch from "mongoose-partial-full-search"
 dotenv.config()
 
 const userSchema = mongoose.Schema(
@@ -132,7 +132,10 @@ userSchema.pre("save", async function (next) {
   }
   next()
 })
-userSchema.plugin(plugin)
+
+userSchema.plugin(textSearch)
+userSchema.index({ name: "text" })
+userSchema.index({ email: "text" })
 
 const User = mongoose.model("User", userSchema)
 
