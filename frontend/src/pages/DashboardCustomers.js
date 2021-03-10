@@ -89,23 +89,27 @@ const DashboardCustomers = () => {
               <img src={search} />
             </button>
           </form>
-          <div className='headers'>
-            <div className='id'>
-              <p>Id</p>
-            </div>
-            <div className='name'>
-              <p>Name</p>
-            </div>
-            <div className='Email'>
-              <p>Email</p>
-            </div>
-            <div className='JoinedIn'>
-              <p>Joined In</p>
-            </div>
-            <div className='Action'>
-              <p>Action</p>
-            </div>
-          </div>
+          {!isSearch
+            ? users.length !== 0
+            : searchedUsers.length !== 0 && (
+                <div className='headers'>
+                  <div className='id'>
+                    <p>Id</p>
+                  </div>
+                  <div className='name'>
+                    <p>Name</p>
+                  </div>
+                  <div className='Email'>
+                    <p>Email</p>
+                  </div>
+                  <div className='JoinedIn'>
+                    <p>Joined In</p>
+                  </div>
+                  <div className='Action'>
+                    <p>Action</p>
+                  </div>
+                </div>
+              )}
           <motion.div variants={hide} initial='hidden' animate='show'>
             {!isSearch
               ? users.map((each) => <UserDashboard user={each} />)
