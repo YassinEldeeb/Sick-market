@@ -11,12 +11,18 @@ import bodyparser from "body-parser"
 import rateLimit from "express-rate-limit"
 import path from "path"
 import cache from "./middleware/cacheMiddleware.js"
+import sslRedirect from "heroku-ssl-redirect"
 
 const app = express()
 app.use(express.json())
 dotenv.config()
 
 connectDB()
+
+if (process.env.NODE_ENV === "production") {
+  app.use(sslRedirect(["production"], 301))
+}
+
 app.use(bodyparser.urlencoded({ extended: true }))
 
 app.use("/api/products", productRouter)
