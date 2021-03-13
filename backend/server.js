@@ -19,7 +19,9 @@ dotenv.config()
 
 connectDB()
 
-app.use(sslRedirect(["production"]))
+if (process.env.NODE_ENV === "production") {
+  app.use(sslRedirect())
+}
 
 app.use(bodyparser.urlencoded({ extended: true }))
 
