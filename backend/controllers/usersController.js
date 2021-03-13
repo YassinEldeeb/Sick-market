@@ -11,6 +11,32 @@ import SecretCode from "../models/secretCode.js"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
+//GET USER - /api/users/:id @Admin
+const getUserById = asyncHandler(async (req, res) => {
+  if (!req.params.id) {
+    res.status(400)
+    throw new Error("Id is Requierd")
+  }
+
+  const user = await User.findOne({ _id: req.params.id, rank: "user" })
+
+  const usersCopy = {
+    joinedIn: user.createdAt,
+    availablePic: user.availablePic,
+    rank: user.rank,
+    status: user.status,
+    validResetPassword: user.validResetPassword,
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    totalPaidOrders: user.totalPaidOrders ? user.totalPaidOrders : 0,
+    canReview: user.canReview,
+    canOrder: user.canOrder,
+  }
+
+  res.send(usersCopy)
+})
+
 //Search USERS - /api/users/search @Admin
 const searchUsers = asyncHandler(async (req, res) => {
   if (!req.body.search) {
@@ -40,6 +66,9 @@ const searchUsers = asyncHandler(async (req, res) => {
       _id: e._id,
       name: e.name,
       email: e.email,
+      totalPaidOrders: e.totalPaidOrders ? e.totalPaidOrders : 0,
+      canReview: e.canReview,
+      canOrder: e.canOrder,
     }
   })
 
@@ -60,6 +89,9 @@ const getAllUsers = asyncHandler(async (req, res) => {
       _id: e._id,
       name: e.name,
       email: e.email,
+      totalPaidOrders: e.totalPaidOrders ? e.totalPaidOrders : 0,
+      canReview: e.canReview,
+      canOrder: e.canOrder,
     }
   })
 
@@ -472,4 +504,5 @@ export {
   resetPassword,
   getAllUsers,
   searchUsers,
+  getUserById,
 }

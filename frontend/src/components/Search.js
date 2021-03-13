@@ -39,11 +39,15 @@ const Search = () => {
       </div>
 
       <div className='inputDiv'>
+        <label id='searchLabel' htmlFor='search'>
+          Search
+        </label>
         <input
           onFocus={() => setToggle(false)}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           type='text'
+          id='search'
         />
         <img
           onClick={() => setInputValue("")}
@@ -140,6 +144,11 @@ const Search = () => {
   )
 }
 const StyledSearch = styled.form`
+  #searchLabel {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
   display: flex;
   position: relative;
   flex: 1 1 0px;

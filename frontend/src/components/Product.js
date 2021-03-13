@@ -15,7 +15,6 @@ const Product = ({ data, setScrolled }) => {
       <Link
         to={`/products/${data._id}`}
         onClick={() => {
-          setScrolled(document.documentElement.scrollTop)
           dispatch({ type: "PRODUCT_DETAIL_REQUEST" })
         }}
       >
@@ -26,7 +25,6 @@ const Product = ({ data, setScrolled }) => {
         <Link
           to={`/products/${data._id}`}
           onClick={() => {
-            setScrolled(document.documentElement.scrollTop)
             dispatch({ type: "PRODUCT_DETAIL_REQUEST" })
           }}
         >

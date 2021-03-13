@@ -12,7 +12,10 @@ import orderPayReducer from "./reducers/orderPay"
 import getAllOrdersReducer from "./reducers/myOrders"
 import getDashboardUsers from "./reducers/dashboardUsers"
 import searchDashboardUsers from "./reducers/searchUsers"
+import userActions from "./reducers/userActions"
+import dotenv from "dotenv"
 
+dotenv.config()
 const reducers = combineReducers({
   productList: productListReducer,
   product: productDetailReducer,
@@ -25,6 +28,7 @@ const reducers = combineReducers({
   myOrders: getAllOrdersReducer,
   dashboardUsers: getDashboardUsers,
   dashboardSearchUsers: searchDashboardUsers,
+  userActions,
 })
 let initialState
 
@@ -62,9 +66,15 @@ initialState = {
 
 const middleware = [thunk]
 
-const store = createStore(
-  reducers,
-  initialState,
-  composeWithDevTools(applyMiddleware(...middleware))
-)
+let store
+if (process.env.NODE_ENV !== "production") {
+  store = createStore(
+    reducers,
+    initialState,
+    composeWithDevTools(applyMiddleware(...middleware))
+  )
+} else {
+  store = createStore(reducers, initialState, applyMiddleware(...middleware))
+}
+
 export default store

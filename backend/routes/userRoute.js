@@ -18,6 +18,7 @@ import {
   resetPassword,
   getAllUsers,
   searchUsers,
+  getUserById,
 } from "../controllers/usersController.js"
 import { protect, admin } from "../middleware/authMiddleware.js"
 
@@ -41,6 +42,7 @@ userRouter.post("/login", getUser)
 userRouter.post("/googleOauth", continueWithGoogle)
 userRouter.get("/profile", protect, getProfile)
 userRouter.patch("/profile", protect, updateProfile)
+userRouter.get("/:id", protect, admin, getUserById)
 
 userRouter.post(
   "/me/profilePic",

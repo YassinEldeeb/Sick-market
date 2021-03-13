@@ -50,13 +50,17 @@ const Login = () => {
         return
       }
     } else {
-      dispatch(
-        loginWithGoogle(
-          response.profileObj.givenName + " " + response.profileObj.familyName,
-          response.profileObj.email,
-          response.profileObj.imageUrl.replace("s96", "s250")
+      if (response.profileObj) {
+        dispatch(
+          loginWithGoogle(
+            response.profileObj.givenName +
+              " " +
+              response.profileObj.familyName,
+            response.profileObj.email,
+            response.profileObj.imageUrl.replace("s96", "s250")
+          )
         )
-      )
+      }
       localStorage.setItem("sickUserInfo", JSON.stringify(userObj))
     }
   }

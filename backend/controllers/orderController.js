@@ -49,6 +49,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       throw new Error("Invalid Coupon Code")
     }
   }
+
   await orderPlaced(order, order.user.email)
 
   await res.status(201).send(order)
@@ -109,6 +110,11 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   const date = format(Date.now(), "yyyy-MM-dd hh:mm a")
 
   order.paidAt = date
+
+  req.user.totalPaidOrders = (
+    req.user.totalPaidOrders + order.totalPrice
+  ).toFixed(2)
+  await req.user.save()
 
   await order.save()
   res.send({ order })

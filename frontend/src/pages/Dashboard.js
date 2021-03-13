@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { Scrollbars } from "react-custom-scrollbars"
 import { useLocation, useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
+import { useLastLocation } from "react-router-last-location"
 
 import statistics from "../img/statistics.svg"
 import orders from "../img/cartD.svg"
@@ -19,6 +20,8 @@ import DashboardTab from "../components/DashboardTab"
 import DashboardCustomers from "./DashboardCustomers"
 
 const Dashboard = ({ pageContent }) => {
+  const lastLocation = useLastLocation()
+
   const main = [
     { text: "Statistics", i: statistics },
     { text: "Orders", i: orders },
@@ -46,6 +49,7 @@ const Dashboard = ({ pageContent }) => {
   pageSort()
 
   const dashboardUsers = useSelector((state) => state.dashboardUsers)
+  const userActions = useSelector((state) => state.userActions)
   const { user } = useSelector((state) => state.userInfo)
 
   const location = useLocation()
@@ -61,12 +65,22 @@ const Dashboard = ({ pageContent }) => {
     ) {
       history.push("/dashboard/statistics")
     }
-    dashboardUsers.loading = true
-    document.querySelector(".content div:first-child").scroll({
-      top: 0,
-      left: 0,
-    })
-  }, [location.pathname])
+    if (
+      !location.pathname.split("/")[3] && lastLocation
+        ? !lastLocation.pathname.split("/")[3]
+        : false
+    ) {
+      dashboardUsers.loading = true
+
+      document.querySelector(".content div:first-child").scroll({
+        top: 0,
+        left: 0,
+      })
+    } else if (lastLocation ? lastLocation.pathname.split("/")[3] : false) {
+      userActions.loading = true
+    }
+  }, [location.pathname, lastLocation])
+
   return (
     <StyledDashboard>
       <div className='sidebar'>
@@ -89,7 +103,9 @@ const Dashboard = ({ pageContent }) => {
           ))}
         </Scrollbars>
       </div>
-      <Scrollbars className='content'>{Content}</Scrollbars>
+      <Scrollbars className='content large-scrollable-content'>
+        {Content}
+      </Scrollbars>
     </StyledDashboard>
   )
 }

@@ -21,3 +21,21 @@ export const hide = {
     transition: { staggerChildren: 0.08 },
   },
 }
+
+export const popup2 = {
+  hidden: {
+    scale: 0.9,
+    opacity: 0,
+    transition: { duration: 0 },
+  },
+  show: {
+    scale: 1,
+    opacity: 1,
+    transition: { duration: 0.3 },
+  },
+  exit: {
+    scale: 1.1,
+    opacity: 0,
+    transition: { duration: 0.3 },
+  },
+}

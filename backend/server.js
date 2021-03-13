@@ -10,6 +10,7 @@ import couponRouter from "./routes/couponRoute.js"
 import bodyparser from "body-parser"
 import rateLimit from "express-rate-limit"
 import path from "path"
+import cache from "./middleware/cacheMiddleware.js"
 
 const app = express()
 app.use(express.json())
@@ -25,6 +26,7 @@ const apiLimiter = rateLimit({
   max: 1,
   message: { message: "Try again in 60 seconds" },
 })
+app.use(cache)
 
 app.use("/api/users/getNewSecurityCode", apiLimiter)
 

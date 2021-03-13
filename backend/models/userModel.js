@@ -67,6 +67,19 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    canReview: {
+      type: Boolean,
+      default: true,
+    },
+    canOrder: {
+      type: Boolean,
+      default: true,
+    },
+    totalPaidOrders: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
   },
   { timestamps: true }
 )

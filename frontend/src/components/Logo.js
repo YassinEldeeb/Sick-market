@@ -15,7 +15,7 @@ const Logo = ({ activeMenu, setActiveMenu }) => {
         <span className={`secondBar ${activeMenu ? "active" : ""}`}></span>
         <span className={`thirdBar ${activeMenu ? "active" : ""}`}></span>
       </div>
-      <Link to='/'>
+      <Link to='/' aria-label='Home'>
         <svg
           viewBox='0 0 211 43'
           fill='none'

@@ -1,3 +1,8 @@
+////Solve showing searched users in users and vise versa
+//Solve card position to be centered to the screen position
+////When Sorry nothing found! we return to empty users table
+////When user card info is already loaded, Don't fetch data again
+
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux"
@@ -11,8 +16,12 @@ import { hide } from "../animations"
 import search from "../img/searchIcon.svg"
 import { useHistory, useLocation } from "react-router-dom"
 import smallX from "../img/smallX.svg"
+import DashboardUserAction from "./DashboardUserAction"
+import { useLastLocation } from "react-router-last-location"
+import { throttle } from "underscore"
 
 const DashboardCustomers = () => {
+  const lastLocation = useLastLocation()
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation()
@@ -28,6 +37,9 @@ const DashboardCustomers = () => {
     count: searchedCount,
     error: searchedError,
   } = useSelector((state) => state.dashboardSearchUsers)
+  const dashboardSearchUsers = useSelector(
+    (state) => state.dashboardSearchUsers
+  )
   const [searchValue, setSearchValue] = useState("")
   const [isSearch, setIsSearch] = useState(false)
 
@@ -42,15 +54,31 @@ const DashboardCustomers = () => {
     else setIsSearch(false)
   }, [searchUser])
 
-  useEffect(() => {
-    if (!searchUser) {
-      dispatch(getDashboardUsersAction())
-    } else {
-      console.log("SearchUser", searchUser)
+  const lastLocationValue = lastLocation
+    ? !lastLocation.pathname.split("/")[3]
+    : true
 
-      dispatch(SearchDashboardCustomers(searchUser))
+  const [lastSearch, setLastSearch] = useState(null)
+
+  useEffect(() => {
+    if (lastLocation && lastLocation.search.split("=")[1]) {
+      setLastSearch(lastLocation.search.split("=")[1])
+    } else {
+      setLastSearch(null)
     }
-  }, [dispatch, searchUser])
+  }, [lastLocation])
+
+  useEffect(() => {
+    if (!searchUser && !location.pathname.split("/")[3]) {
+      if (!users || lastLocationValue) {
+        dispatch(getDashboardUsersAction())
+      }
+    } else if (lastLocationValue && !location.pathname.split("/")[3]) {
+      if (searchUser || !searchedUsers) {
+        dispatch(SearchDashboardCustomers(searchUser))
+      }
+    }
+  }, [dispatch, searchUser, lastLocation])
 
   const searchHandler = (e) => {
     e.preventDefault()
@@ -61,62 +89,162 @@ const DashboardCustomers = () => {
     history.push(`/dashboard/customers`)
     setSearchValue("")
   }
+  const headerCondition = () => {
+    if (!isSearch) {
+      if (location.pathname.split("/")[3]) return true
+      if (users && users.length > 0) return true
+      else return false
+    } else {
+      if (searchedUsers.length > 0) return true
+      else return false
+    }
+  }
+  const condition = () => {
+    if (loading && !error && !searchUser && !location.pathname.split("/")[3]) {
+      return true
+    } else if (
+      searchLoading &&
+      !searchedError &&
+      searchUser &&
+      !location.pathname.split("/")[3]
+    ) {
+      return true
+    } else {
+      return false
+    }
+  }
+  const condition2 = () => {
+    if (users) {
+      return true
+    } else if (searchedUsers) {
+      return true
+    } else {
+      return false
+    }
+  }
+  const { user } = useSelector((state) => state.userActions)
+  const userActions = useSelector((state) => state.userActions)
+
+  useEffect(() => {
+    if (userActions.user) {
+      userActions.user = null
+    }
+  }, [location.pathname])
+  useEffect(() => {
+    if (
+      location &&
+      location.pathname.split("/")[2] === "customers" &&
+      !location.pathname.split("/")[3] &&
+      !searchValue
+    ) {
+      dashboardSearchUsers.users = null
+      dashboardSearchUsers.count = null
+    }
+  }, [lastLocation, location])
+
+  const [scrolled, setScrolled] = useState(0)
+
+  useEffect(() => {
+    const container = document.querySelector(
+      ".large-scrollable-content div:first-child"
+    )
+    container.addEventListener("scroll", () => {
+      setTimeout(
+        throttle(() => {
+          setScrolled(container.scrollTop)
+        }),
+        100
+      )
+    })
+  }, [])
+
+  useEffect(() => {
+    const container = document.querySelector(
+      ".large-scrollable-content div:first-child"
+    )
+    if (location.pathname.split("/")[3]) container.style.overflowY = "hidden"
+    else container.style.overflowY = "scroll"
+  }, [location.pathname])
+
+  useEffect(() => {
+    const cardCont = document.querySelector(".cardCont")
+    cardCont.style.top = `${scrolled}px`
+  }, [scrolled])
 
   return (
     <StyledOrders>
-      {(loading && !error && !searchUser) ||
-      (searchLoading && !searchedError && searchUser) ? (
+      <DashboardUserAction />
+
+      {condition() ? (
         <Loader />
       ) : !error && !searchedError ? (
         <>
-          <div className='title'>
-            <h1>Users</h1>
-            <p>{isSearch ? searchedCount : count} Users Found</p>
-          </div>
-          <form className='search' onSubmit={searchHandler}>
-            <div className='inputCont'>
-              <input
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder='Search'
-                type='text'
-              />
-              {searchUser && (
-                <img onClick={returnHandler} src={smallX} alt='' />
+          {condition2() && (
+            <div
+              className='cont'
+              id={`${location.pathname.split("/")[3] && user ? "blur" : ""}`}
+            >
+              <div className='title'>
+                <h1>Users</h1>
+                <p>
+                  {(searchUser && searchedUsers) ||
+                  (location.pathname.split("/")[3] && searchedUsers) ||
+                  (location.pathname.split("/")[3] &&
+                    lastSearch &&
+                    searchedUsers)
+                    ? searchedCount
+                    : count}{" "}
+                  Users Found
+                </p>
+              </div>
+              <form className='search' onSubmit={searchHandler}>
+                <div className='inputCont'>
+                  <input
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    placeholder='Search'
+                    type='text'
+                  />
+                  {searchUser && (
+                    <img onClick={returnHandler} src={smallX} alt='' />
+                  )}
+                </div>
+                <button type='submit'>
+                  <img src={search} />
+                </button>
+              </form>
+              {headerCondition() ? (
+                <div className='headers'>
+                  <div className='id'>
+                    <p>Id</p>
+                  </div>
+                  <div className='name'>
+                    <p>Name</p>
+                  </div>
+                  <div className='Email'>
+                    <p>Email</p>
+                  </div>
+                  <div className='JoinedIn'>
+                    <p>Joined In</p>
+                  </div>
+                  <div className='Action'>
+                    <p>Action</p>
+                  </div>
+                </div>
+              ) : (
+                <p className='sorry'>Sorry nothing found!</p>
               )}
+              <motion.div variants={hide} initial='hidden' animate='show'>
+                {(lastSearch &&
+                  location.pathname.split("/")[3] &&
+                  searchedUsers) ||
+                (searchUser && searchedUsers) ||
+                (location.pathname.split("/")[3] && searchedUsers)
+                  ? searchedUsers.map((each) => <UserDashboard user={each} />)
+                  : users.map((each) => <UserDashboard user={each} />)}
+              </motion.div>
             </div>
-            <button type='submit'>
-              <img src={search} />
-            </button>
-          </form>
-          {!isSearch ? (
-            users.length !== 0
-          ) : searchedUsers.length !== 0 ? (
-            <div className='headers'>
-              <div className='id'>
-                <p>Id</p>
-              </div>
-              <div className='name'>
-                <p>Name</p>
-              </div>
-              <div className='Email'>
-                <p>Email</p>
-              </div>
-              <div className='JoinedIn'>
-                <p>Joined In</p>
-              </div>
-              <div className='Action'>
-                <p>Action</p>
-              </div>
-            </div>
-          ) : (
-            <p className='sorry'>Sorry nothing found!</p>
           )}
-          <motion.div variants={hide} initial='hidden' animate='show'>
-            {!isSearch
-              ? users.map((each) => <UserDashboard user={each} />)
-              : searchedUsers.map((each) => <UserDashboard user={each} />)}
-          </motion.div>
         </>
       ) : (
         <DashboardError error={error} />
@@ -125,7 +253,12 @@ const DashboardCustomers = () => {
   )
 }
 
-const StyledOrders = styled.div`
+const StyledOrders = styled(motion.div)`
+  height: max-content;
+  position: relative;
+  #blur {
+    filter: blur(2px);
+  }
   .sorry {
     text-align: center;
     font-weight: 300;

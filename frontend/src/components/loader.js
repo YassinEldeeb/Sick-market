@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components"
 const Loader = () => {
   return (
-    <StyledLoader>
+    <StyledLoader className='providedLoader'>
       <svg
         id='loader'
         viewBox='0 0 699 699'

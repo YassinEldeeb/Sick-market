@@ -1,12 +1,21 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { parseISO, format } from "date-fns"
 import gear from "../img/gear.svg"
 import ReactTooltip from "react-tooltip"
 import { motion } from "framer-motion"
 import { popup } from "../animations"
+import { Link, useLocation } from "react-router-dom"
+import reactStringReplace from "react-string-replace"
+import Loader from "../components/loader"
+import { useSelector } from "react-redux"
 
 const UserDashboard = ({ user }) => {
+  const location = useLocation()
+  const [equal] = useState(
+    location.search.split("=")[1] ? location.search.split("=")[1] : false
+  )
+
   const imgSrcCondition = () => {
     if (user.profilePicLink && user.profilePicLink !== "cleared") {
       return user.profilePicLink
@@ -15,18 +24,37 @@ const UserDashboard = ({ user }) => {
     }
   }
 
+  const nameValue = equal
+    ? reactStringReplace(user.name, equal, (match) => (
+        <span className='highlightSearch'>{match}</span>
+      ))
+    : user.name
+  const emailValue = equal
+    ? reactStringReplace(user.email, equal, (match) => (
+        <span className='highlightSearch'>{match}</span>
+      ))
+    : user.email
+  const { loading: actionLoading } = useSelector((state) => state.userActions)
+  const [clicked, setClicked] = useState(false)
+
+  useEffect(() => {
+    if (!actionLoading) {
+      setClicked(false)
+    }
+  }, [actionLoading])
+
   return (
     <StyledUser variants={popup}>
-      <ReactTooltip effect='solid' delayHide='100' delayShow='200' />
+      <ReactTooltip effect='solid' delayHide={100} delayShow={200} />
       <div className='id'>
         <p data-tip={"#" + user._id}>#{user._id.substr(user._id.length - 4)}</p>
       </div>
       <div className='name'>
         <img className='pic' src={imgSrcCondition()} alt='' />
-        <p data-tip={user.name}>{user.name}</p>
+        <p data-tip={user.name}>{nameValue}</p>
       </div>
       <div className='email'>
-        <p data-tip={user.email}>{user.email}</p>
+        <p data-tip={user.email}>{emailValue}</p>
       </div>
       <div className='joinedIn'>
         <p data-tip={format(parseISO(user.joinedIn), "yyyy-MM-dd")}>
@@ -34,14 +62,34 @@ const UserDashboard = ({ user }) => {
         </p>
       </div>
       <div className='gearCont'>
-        <div className='gear'>
-          <img className='gearImg' src={gear} alt='' />
-        </div>
+        <Link
+          to={`/dashboard/customers/${user._id}`}
+          onClick={() => setClicked(true)}
+          className='gear'
+        >
+          {actionLoading && clicked ? (
+            <Loader />
+          ) : (
+            <img className='gearImg' src={gear} alt='' />
+          )}
+        </Link>
       </div>
     </StyledUser>
   )
 }
 const StyledUser = styled(motion.div)`
+  .providedLoader {
+    #greybackground path {
+      stroke: white !important;
+    }
+  }
+  #loader {
+    width: 24px;
+    height: 24px;
+  }
+  .highlightSearch {
+    background: #232647a1;
+  }
   .__react_component_tooltip {
     background: #1e203e;
     border-radius: 5px;
@@ -55,6 +103,9 @@ const StyledUser = styled(motion.div)`
   background: #373864;
   padding: 0.65rem 2.1rem;
   margin-bottom: 1rem;
+  &:last-child {
+    margin-bottom: 1.5rem;
+  }
   border-radius: 10px;
   overflow-x: auto;
   width: 100%;
@@ -79,6 +130,8 @@ const StyledUser = styled(motion.div)`
     background: rgba(254, 254, 254, 0.1);
     cursor: pointer;
     transition: 0.2s ease;
+    position: relative;
+
     &:hover {
       background: rgba(254, 254, 254, 0.07);
     }
