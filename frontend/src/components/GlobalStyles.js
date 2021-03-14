@@ -22,7 +22,9 @@ a{
     color:white;
     text-decoration:none;
 }
-
+.loaderDiv #loader{
+  margin-top: 1.5rem !important;
+}
 .App{
     min-height:100vh;
     display:flex;

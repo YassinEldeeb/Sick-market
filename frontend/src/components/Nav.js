@@ -71,17 +71,19 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
             title='Alert'
           />
         )}
-      <Header>
-        <div className='actualNav'>
-          <BurgerMenu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
-          <nav>
-            <Logo activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
-            <Search />
-            <Cart cartCount={cartCount} />
-            <Profile />
-          </nav>
-        </div>
-      </Header>
+      {location.pathname.split("/")[1].toLowerCase() !== "dashboard" && (
+        <Header>
+          <div className='actualNav'>
+            <BurgerMenu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+            <nav>
+              <Logo activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+              <Search />
+              <Cart cartCount={cartCount} />
+              <Profile />
+            </nav>
+          </div>
+        </Header>
+      )}
     </>
   )
 }

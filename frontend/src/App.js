@@ -5,8 +5,8 @@ import Global from "./components/GlobalStyles"
 import { useDispatch, useSelector } from "react-redux"
 import checkToken from "./actions/checkToken"
 import Loader from "./components/loader"
+import Nav from "./components/Nav"
 const Home = lazy(() => import("./pages/Home"))
-const Nav = lazy(() => import("./components/Nav"))
 const ProductDetail = lazy(() => import("./pages/ProductDetail"))
 const Description = lazy(() => import("./pages/Description"))
 const Cart = lazy(() => import("./pages/Cart"))
@@ -54,155 +54,75 @@ const App = () => {
       <BrowserRouter>
         <LastLocationProvider>
           <Global />
-          <Suspense fallback={<Loader />}>
+          <Nav
+            cartCount={cartCount}
+            activeMenu={activeMenu}
+            setActiveMenu={setActiveMenu}
+          />
+          <Suspense
+            fallback={
+              <div classList='loaderDiv'>
+                <Loader />
+              </div>
+            }
+          >
             <Switch>
               <Route path='/' exact>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <Home />
               </Route>
               <Route path='/products/:id'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <ProductDetail
                   cartCount={cartCount}
                   setCartCount={setCartCount}
                 />
               </Route>
               <Route path='/product-description/:id'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <Description />
               </Route>
               <Route path='/cart'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <Cart cartCount={cartCount} setCartCount={setCartCount} />
               </Route>
               <Route path='/login'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <Login />
               </Route>
               <Route path='/forgotPassword'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <ForgotPassword />
               </Route>
               <Route path='/resetPassword'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <ResetPassword />
               </Route>
               <Route path='/register'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <Register />
               </Route>
               <Route path='/verify'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <Verify />
               </Route>
               <Route path='/changeEmail'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <ChangeEmail />
               </Route>
               <Route path='/account/edit-profile'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <EditProfile />
               </Route>
               <Route path='/account/orders'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <MyOrders />
               </Route>
               <Route path='/account/change-password'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <ChangePassword />
               </Route>
               <Route path='/shipping'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <Shipping />
               </Route>
               <Route path='/payment'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <Payment />
               </Route>
               <Route path='/placeOrder'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <PlaceOrder setCartCount={setCartCount} />
               </Route>
               <Route path='/orders/:id'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
                 <OrderDetails />
               </Route>
 
-              <Route path='/account'>
-                <Nav
-                  cartCount={cartCount}
-                  activeMenu={activeMenu}
-                  setActiveMenu={setActiveMenu}
-                />
-              </Route>
+              <Route path='/account'></Route>
 
               <Route path='/dashboard/orders'>
                 <Dashboard pageContent={"orders"} />
@@ -237,7 +157,6 @@ const App = () => {
               <Route path='/dashboard'>
                 <Dashboard pageContent={""} />
               </Route>
-
               <Route>
                 <NotFound />
               </Route>

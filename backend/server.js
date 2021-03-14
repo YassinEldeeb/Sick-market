@@ -12,6 +12,8 @@ import rateLimit from "express-rate-limit"
 import path from "path"
 import cache from "./middleware/cacheMiddleware.js"
 import sslRedirect from "heroku-ssl-redirect"
+import spdy from "spdy"
+import fs from "fs"
 
 const app = express()
 app.use(express.json())
@@ -64,6 +66,23 @@ app.use(errRouter)
 
 const port = process.env.PORT || 5000
 
+// spdy
+//   .createServer(
+//     {
+//       key: fs.readFileSync("./ssl/server.key"),
+//       cert: fs.readFileSync("./server.crt"),
+//     },
+//     app
+//   )
+//   .listen(port, (err) => {
+//     if (err) {
+//       throw new Error(err)
+//     }
+//     console.log(
+//       `Server running in ${process.env.NODE_ENV} mode on port ${port}`.yellow
+//         .bold
+//     )
+//   })
 app.listen(port, () => {
   console.log(
     `Server running in ${process.env.NODE_ENV} mode on port ${port}`.yellow.bold
