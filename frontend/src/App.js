@@ -59,13 +59,7 @@ const App = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
           />
-          <Suspense
-            fallback={
-              <div classList='loaderDiv'>
-                <Loader />
-              </div>
-            }
-          >
+          <Suspense fallback={<p className='loadingText'>Loading...</p>}>
             <Switch>
               <Route path='/' exact>
                 <Home />

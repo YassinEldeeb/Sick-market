@@ -22,8 +22,9 @@ a{
     color:white;
     text-decoration:none;
 }
-.loaderDiv #loader{
-  margin-top: 1.5rem !important;
+.loadingText{
+  text-align:center;
+  margin:0.5rem 0;
 }
 .App{
     min-height:100vh;
