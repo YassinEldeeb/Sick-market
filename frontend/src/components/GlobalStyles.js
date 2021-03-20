@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components"
+
 const Global = createGlobalStyle`
 *{
     margin:0;
@@ -8,6 +9,7 @@ const Global = createGlobalStyle`
     outline:none;
     scrollbar-width:thin; 
 }
+
 *::-webkit-scrollbar {
   width: 7.4px;
 }

@@ -1,8 +1,3 @@
-////Solve showing searched users in users and vise versa
-//Solve card position to be centered to the screen position
-////When Sorry nothing found! we return to empty users table
-////When user card info is already loaded, Don't fetch data again
-
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux"

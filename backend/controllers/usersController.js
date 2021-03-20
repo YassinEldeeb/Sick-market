@@ -11,14 +11,16 @@ import SecretCode from "../models/secretCode.js"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
-//GET USER - /api/users/:id @Admin
-const getUserById = asyncHandler(async (req, res) => {
+//Update canOrder USER - /api/users/:id @Admin
+const canOrderUser = asyncHandler(async (req, res) => {
   if (!req.params.id) {
     res.status(400)
     throw new Error("Id is Requierd")
   }
 
-  const user = await User.findOne({ _id: req.params.id, rank: "user" })
+  const user = await User.findById(req.params.id)
+  user.canOrder = req.body.canOrder
+  await user.save()
 
   const usersCopy = {
     joinedIn: user.createdAt,
@@ -35,6 +37,83 @@ const getUserById = asyncHandler(async (req, res) => {
   }
 
   res.send(usersCopy)
+})
+//Update canReview USER - /api/users/:id @Admin
+const canReviewUser = asyncHandler(async (req, res) => {
+  if (!req.params.id) {
+    res.status(400)
+    throw new Error("Id is Requierd")
+  }
+
+  const user = await User.findById(req.params.id)
+  user.canReview = req.body.canReview
+  await user.save()
+
+  const usersCopy = {
+    joinedIn: user.createdAt,
+    availablePic: user.availablePic,
+    rank: user.rank,
+    status: user.status,
+    validResetPassword: user.validResetPassword,
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    totalPaidOrders: user.totalPaidOrders ? user.totalPaidOrders : 0,
+    canReview: user.canReview,
+    canOrder: user.canOrder,
+  }
+
+  res.send(usersCopy)
+})
+
+//DELETE USER - /api/users/:id @Admin
+const deleteUser = asyncHandler(async (req, res) => {
+  if (!req.params.id) {
+    res.status(400)
+    throw new Error("Id is Requierd")
+  }
+
+  const user = await User.findById(req.params.id)
+
+  if (user) {
+    await user.delete()
+  } else {
+    res.status(404)
+    throw new Erorr("User not found!")
+  }
+
+  res.send({ message: "User deleted" })
+})
+
+//GET USER - /api/users/:id @Admin
+const getUserById = asyncHandler(async (req, res) => {
+  if (!req.params.id) {
+    res.status(400)
+    throw new Error("Id is Requierd")
+  }
+
+  const user = await User.findOne({ _id: req.params.id, rank: "user" })
+
+  if (user) {
+    const usersCopy = {
+      joinedIn: user.createdAt,
+      availablePic: user.availablePic,
+      rank: user.rank,
+      status: user.status,
+      validResetPassword: user.validResetPassword,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      totalPaidOrders: user.totalPaidOrders ? user.totalPaidOrders : 0,
+      canReview: user.canReview,
+      canOrder: user.canOrder,
+    }
+
+    res.send(usersCopy)
+  } else {
+    res.status(404)
+    throw new Error("User not Found")
+  }
 })
 
 //Search USERS - /api/users/search @Admin
@@ -77,7 +156,12 @@ const searchUsers = asyncHandler(async (req, res) => {
 
 //GET all USERS - /api/users @Admin
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({ rank: "user" })
+  const users = await User.find({
+    rank: "user",
+  })
+    .sort({ createdAt: -1 })
+    .limit(parseInt(req.query.limit ? req.query.limit : 0))
+    .skip(parseInt(req.query.skip ? req.query.skip : 0))
   const count = await User.countDocuments({ rank: "user" })
   const usersCopy = users.map((e) => {
     return {
@@ -198,6 +282,7 @@ const getProfile = asyncHandler(async (req, res) => {
   delete userObj.updatedAt
   delete userObj.__v
   delete userObj.password
+
   res.send(userObj)
 })
 
@@ -375,7 +460,11 @@ const checkToken = asyncHandler(async (req, res) => {
 
 //Get Security Code
 const getSecurityCode = asyncHandler(async (req, res) => {
-  const passedCode = Number(req.body.code)
+  const { code } = req.body
+  if (code) {
+    throw new Error("Code is required")
+  }
+  const passedCode = Number(code)
   const securityCode = await SecretCode.findOne({ email: req.user.email })
 
   if (securityCode.code) {
@@ -505,4 +594,7 @@ export {
   getAllUsers,
   searchUsers,
   getUserById,
+  deleteUser,
+  canReviewUser,
+  canOrderUser,
 }

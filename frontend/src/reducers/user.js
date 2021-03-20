@@ -82,9 +82,9 @@ const userReducer = (state = initialState, action) => {
         updated: null,
       }
     case "USER_PROFILE_SUCCESS":
-      state.user = action.payload
       return {
         ...state,
+        user: action.payload,
         profileLoading: false,
       }
     case "USER_PROFILE_FAIL":

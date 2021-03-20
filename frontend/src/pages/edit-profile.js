@@ -18,12 +18,14 @@ import { Link } from "react-router-dom"
 const EditProfile = () => {
   const inputRef = useRef(null)
   const {
+    token,
     user,
     profileLoading,
     updateError,
     updateLoading,
     updated,
     deleteProfilePicLoading,
+    success,
   } = useSelector((state) => state.userInfo)
   const userInfo = useSelector((state) => state.userInfo)
   const [emailValue, setEmailValue] = useState("")
@@ -42,12 +44,12 @@ const EditProfile = () => {
   const [error, setError] = useState("")
 
   useEffect(() => {
-    if (userInfo) {
+    if (token) {
       dispatch(userProfileAction())
     } else {
       history.push("/login")
     }
-  }, [dispatch])
+  }, [dispatch, history])
 
   useEffect(() => {
     if (user) {

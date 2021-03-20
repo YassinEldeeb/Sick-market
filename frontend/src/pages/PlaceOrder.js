@@ -96,7 +96,6 @@ const PlaceOrder = ({ setCartCount }) => {
       !address.display_address ||
       (!cart.cartItems.length && orderPlaced === false)
     ) {
-      console.log("orderPlaced:", orderPlaced)
       history.push("/cart")
     }
   }, [cartItems, address.display_address])

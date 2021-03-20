@@ -35,7 +35,6 @@ const Login = () => {
 
   useEffect(() => {
     if (user.name) {
-      console.log(location.search.split("=")[1])
       history.push(redirect)
     }
   }, [user, history, redirect])

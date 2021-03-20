@@ -13,6 +13,9 @@ import getAllOrdersReducer from "./reducers/myOrders"
 import getDashboardUsers from "./reducers/dashboardUsers"
 import searchDashboardUsers from "./reducers/searchUsers"
 import userActions from "./reducers/userActions"
+import deleteUser from "./reducers/deleteUser"
+import canOrder from "./reducers/canOrder"
+import canReview from "./reducers/canReview"
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -29,6 +32,9 @@ const reducers = combineReducers({
   dashboardUsers: getDashboardUsers,
   dashboardSearchUsers: searchDashboardUsers,
   userActions,
+  deleteUser,
+  canOrder,
+  canReview,
 })
 let initialState
 

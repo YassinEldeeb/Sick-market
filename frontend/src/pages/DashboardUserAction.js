@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux"
-// import DashboardError from "../components/DashboardError"
+import DashboardError from "../components/DashboardError"
 import { useHistory, useLocation } from "react-router-dom"
 import userActions from "../actions/userActions"
 import { parseISO, format } from "date-fns"
@@ -9,12 +9,16 @@ import Switch from "react-switch"
 import { useLastLocation } from "react-router-last-location"
 import { motion, AnimatePresence } from "framer-motion"
 import { popup2 } from "../animations"
+import canOrderAction from "../actions/canOrder"
+import canReviewAction from "../actions/canReview"
+import deleteUserAction from "../actions/deleteUser"
+import Loader from "../components/loader"
 
 const DashboardUserAction = () => {
   const lastLocation = useLastLocation()
   const dispatch = useDispatch()
   const location = useLocation()
-  const { user, loading } = useSelector((state) => state.userActions)
+  const { user, loading, error } = useSelector((state) => state.userActions)
   const userActionsInfo = useSelector((state) => state.userActions)
 
   const [review, setReview] = useState(true)
@@ -30,8 +34,13 @@ const DashboardUserAction = () => {
       )
     }
     setClicked(true)
-    userActionsInfo.user = null
-    userActionsInfo.loading = true
+    if (userActionsInfo.user) {
+      userActionsInfo.user = null
+      userActionsInfo.loading = true
+    }
+    if (error) {
+      userActionsInfo.error = null
+    }
     setTimeout(() => {
       setClicked(false)
     }, 300)
@@ -55,6 +64,68 @@ const DashboardUserAction = () => {
 
   const [clicked, setClicked] = useState(false)
 
+  const reviewChange = (e) => {
+    dispatch(
+      canReviewAction(
+        location.pathname.split("/")[3],
+        e,
+        location.search.split("=")[1]
+      )
+    )
+  }
+  const orderChange = (e) => {
+    dispatch(
+      canOrderAction(
+        location.pathname.split("/")[3],
+        e,
+        location.search.split("=")[1]
+      )
+    )
+  }
+
+  const deleteHandler = () => {
+    dispatch(
+      deleteUserAction(
+        location.pathname.split("/")[3],
+        lastLocation.search.split("=")[1]
+      )
+    )
+  }
+
+  const { loading: orderingLoading, success: orderingSuccess } = useSelector(
+    (state) => state.canOrder
+  )
+  const { loading: reviewLoading, success: reviewSuccess } = useSelector(
+    (state) => state.canReview
+  )
+  const { loading: deleteLoading, success: deleteSuccess } = useSelector(
+    (state) => state.deleteUser
+  )
+  const [e, setE] = useState(true)
+  const [e2, setE2] = useState(true)
+
+  useEffect(() => {
+    if (!orderingLoading && orderingSuccess) {
+      setOrdering(e2)
+    }
+  }, [orderingLoading, orderingSuccess])
+  useEffect(() => {
+    if (!reviewLoading && reviewSuccess) {
+      setReview(e)
+    }
+  }, [reviewLoading, reviewSuccess])
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      if (lastLocation.pathname) {
+        const add = lastLocation.search ? lastLocation.search : ""
+        history.push(lastLocation.pathname + add)
+      } else {
+        history.push("/dashboard/customers")
+      }
+    }
+  }, [deleteSuccess])
+
   return (
     <StyledUserAction
       className='cardCont'
@@ -66,6 +137,7 @@ const DashboardUserAction = () => {
       }}
     >
       <AnimatePresence>
+        {error && <DashboardError error={error} />}
         {!loading && user && location.pathname.split("/")[3] && (
           <motion.div
             variants={popup2}
@@ -99,23 +171,33 @@ const DashboardUserAction = () => {
               <div className='allow'>
                 <h2>Allow Reviewing Products</h2>
                 <Switch
+                  className={`${reviewLoading ? "loading" : ""}`}
                   offColor='#FF6969'
                   onColor='#24CA84'
                   checked={review}
-                  onChange={(e) => setReview(e)}
+                  onChange={(e) => {
+                    reviewChange(e)
+                    setE(e)
+                  }}
                 />
               </div>
               <div className='allow allow2'>
                 <h2>Allow Ordering Products</h2>
                 <Switch
+                  className={`${orderingLoading ? "loading" : ""}`}
                   offColor='#FF6969'
                   onColor='#24CA84'
                   checked={ordering}
-                  onChange={(e) => setOrdering(e)}
+                  onChange={(e) => {
+                    orderChange(e)
+                    setE2(e)
+                  }}
                 />
               </div>
               <div className='btnCont'>
-                <button>Delete Account</button>
+                <button onClick={deleteHandler}>
+                  Delete Account{deleteLoading && <Loader />}
+                </button>
               </div>
             </>
           </motion.div>
@@ -126,6 +208,16 @@ const DashboardUserAction = () => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  .react-switch-bg {
+    transition: filter 0.2s ease !important;
+  }
+  .loading .react-switch-bg {
+    filter: grayscale(0.5);
+    pointer-events: none;
+  }
+  .loading .react-switch-handle {
+    pointer-events: none;
+  }
   position: absolute;
   left: 50%;
   top: 0;
@@ -152,6 +244,17 @@ const StyledUserAction = styled(motion.div)`
     font-size: calc(0.8rem + 0.3vw);
     cursor: pointer;
     transition: 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    #loader:first-child {
+      width: calc(0.9rem + 0.5vw) !important;
+      height: calc(0.9rem + 0.5vw) !important;
+      margin-left: 0.45rem !important;
+      #greybackground path {
+        stroke: white !important;
+      }
+    }
     &:hover {
       background: #df5c5c;
     }

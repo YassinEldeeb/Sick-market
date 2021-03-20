@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const userProfileAction = () => async (dispatch, getState) => {
-  const { token } = getState().userInfo
+  const { token, user } = getState().userInfo
 
   try {
     dispatch({ type: "USER_PROFILE_REQUEST" })
@@ -14,7 +14,9 @@ const userProfileAction = () => async (dispatch, getState) => {
       },
       cancelToken: source.token,
     }
+    console.log("TOKEN:", token)
     const { data } = await axios.get("/api/users/profile", config)
+
     dispatch({ type: "USER_PROFILE_SUCCESS", payload: data })
     localStorage.setItem("sickUserInfo", JSON.stringify({ user: data, token }))
   } catch (error) {
@@ -27,4 +29,5 @@ const userProfileAction = () => async (dispatch, getState) => {
     })
   }
 }
+
 export default userProfileAction

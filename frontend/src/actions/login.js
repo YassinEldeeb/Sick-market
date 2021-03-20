@@ -29,4 +29,5 @@ const userLoginAction = (email, password) => async (dispatch) => {
     localStorage.removeItem("sickUserInfo")
   }
 }
+
 export default userLoginAction

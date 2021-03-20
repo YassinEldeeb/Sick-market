@@ -19,6 +19,9 @@ import {
   getAllUsers,
   searchUsers,
   getUserById,
+  deleteUser,
+  canReviewUser,
+  canOrderUser,
 } from "../controllers/usersController.js"
 import { protect, admin } from "../middleware/authMiddleware.js"
 
@@ -42,7 +45,6 @@ userRouter.post("/login", getUser)
 userRouter.post("/googleOauth", continueWithGoogle)
 userRouter.get("/profile", protect, getProfile)
 userRouter.patch("/profile", protect, updateProfile)
-userRouter.get("/:id", protect, admin, getUserById)
 
 userRouter.post(
   "/me/profilePic",
@@ -67,4 +69,8 @@ userRouter.post("/resetPasswordEmail", getResetLink)
 
 userRouter.post("/resetPassword", resetPassword)
 
+userRouter.get("/:id", protect, admin, getUserById)
+userRouter.delete("/:id", protect, admin, deleteUser)
+userRouter.post("/canReview/:id", protect, admin, canReviewUser)
+userRouter.post("/canOrder/:id", protect, admin, canOrderUser)
 export default userRouter
