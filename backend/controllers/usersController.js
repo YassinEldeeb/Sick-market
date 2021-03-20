@@ -460,11 +460,7 @@ const checkToken = asyncHandler(async (req, res) => {
 
 //Get Security Code
 const getSecurityCode = asyncHandler(async (req, res) => {
-  const { code } = req.body
-  if (code) {
-    throw new Error("Code is required")
-  }
-  const passedCode = Number(code)
+  const passedCode = Number(req.body.code)
   const securityCode = await SecretCode.findOne({ email: req.user.email })
 
   if (securityCode.code) {
