@@ -21,11 +21,11 @@ const userReducer = (state = initialState, action) => {
     case "CHECK_TOKEN_FAIL":
       return { ...state, loading: false, error: action.payload }
     case "REGISTER_REQUEST":
-      return { loading: true, error: null, user: {} }
+      return { ...state, loading: true, error: null, user: {} }
     case "REGISTER_SUCCESS":
       return { ...state, ...action.payload }
     case "REGISTER_FAIL":
-      return { loading: false, error: action.payload }
+      return { ...state, loading: false, error: action.payload }
     case "VERIFY_REQUEST":
       return { ...state, verifyLoading: true, verificationError: null }
     case "VERIFY_SUCCESS":

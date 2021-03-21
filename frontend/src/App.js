@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import checkToken from "./actions/checkToken"
 import Loader from "./components/loader"
 import Nav from "./components/Nav"
+
 const Home = lazy(() => import("./pages/Home"))
 const ProductDetail = lazy(() => import("./pages/ProductDetail"))
 const Description = lazy(() => import("./pages/Description"))

@@ -13,6 +13,7 @@ import canOrderAction from "../actions/canOrder"
 import canReviewAction from "../actions/canReview"
 import deleteUserAction from "../actions/deleteUser"
 import Loader from "../components/loader"
+import verified from "../img/verified.svg"
 
 const DashboardUserAction = () => {
   const lastLocation = useLastLocation()
@@ -152,7 +153,12 @@ const DashboardUserAction = () => {
                 <div className='desc'>
                   <div className='descCont'>
                     <h1>
-                      <p className='email'>{user.email}</p>
+                      <p className='email'>
+                        {user.email}{" "}
+                        {user.status === "Verified" && (
+                          <img id='verified' src={verified} alt='' />
+                        )}
+                      </p>
                       {user.name}
                     </h1>
                     <p className='date'>
@@ -208,6 +214,10 @@ const DashboardUserAction = () => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  #verified {
+    width: 15px !important;
+    height: 15px !important;
+  }
   .react-switch-bg {
     transition: filter 0.2s ease !important;
   }

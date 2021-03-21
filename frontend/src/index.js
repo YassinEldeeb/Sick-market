@@ -5,6 +5,9 @@ import reportWebVitals from "./reportWebVitals"
 import store from "./store"
 import { Provider } from "react-redux"
 import swDev from "./swDev"
+import dotenv from "dotenv"
+import socket from "./clientSocket/socket"
+dotenv.config()
 
 ReactDOM.render(
   <Provider store={store}>

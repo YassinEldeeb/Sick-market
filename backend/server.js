@@ -1,4 +1,3 @@
-import express from "express"
 import dotenv from "dotenv"
 import connectDB from "./db/mongoose.js"
 import colors from "colors"
@@ -10,8 +9,9 @@ import couponRouter from "./routes/couponRoute.js"
 import bodyparser from "body-parser"
 import rateLimit from "express-rate-limit"
 import path from "path"
+import express from "express"
+import { io, app, server } from "./webSockets/serverConfig.js"
 
-const app = express()
 app.use(express.json())
 dotenv.config()
 
@@ -27,7 +27,7 @@ const apiLimiter = rateLimit({
   message: { message: "Try again in 60 seconds" },
 })
 
-// app.use("/api/users/getNewSecurityCode", apiLimiter)
+app.use("/api/users/getNewSecurityCode", apiLimiter)
 
 app.use("/api/users", userRouter)
 
@@ -57,7 +57,7 @@ app.use(errRouter)
 
 const port = process.env.PORT || 5000
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(
     `Server running in ${process.env.NODE_ENV} mode on port ${port}`.yellow.bold
   )

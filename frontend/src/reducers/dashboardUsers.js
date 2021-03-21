@@ -15,6 +15,12 @@ const getDashboardUsers = (state = initialState, action) => {
         error: action.payload,
         loading: false,
       }
+    case "APPEND_DASHBOARD_CUSTOMERS":
+      return {
+        ...state,
+        users: [action.payload, ...state.users],
+        count: state.count + 1,
+      }
     default:
       return state
   }

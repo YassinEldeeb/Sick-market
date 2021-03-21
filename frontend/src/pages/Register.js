@@ -8,6 +8,7 @@ import userRegisterAction from "../actions/register"
 import Message from "../components/message"
 import Loader from "../components/loader"
 import { useHistory, useLocation, Link } from "react-router-dom"
+import socket from "../clientSocket/socket"
 
 const Register = () => {
   const inputRef = useRef(null)
@@ -49,6 +50,7 @@ const Register = () => {
 
   useEffect(() => {
     if (user.name) {
+      socket.emit("NewUser", user)
       history.push(redirect)
     }
   }, [user, history, redirect])

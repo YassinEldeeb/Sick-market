@@ -14,6 +14,7 @@ import smallX from "../img/smallX.svg"
 import DashboardUserAction from "./DashboardUserAction"
 import { useLastLocation } from "react-router-last-location"
 import { throttle } from "underscore"
+import socket from "../clientSocket/socket"
 
 const DashboardCustomers = () => {
   const lastLocation = useLastLocation()
@@ -166,6 +167,18 @@ const DashboardCustomers = () => {
     cardCont.style.top = `${scrolled}px`
   }, [scrolled])
 
+  const { user: userInfo } = useSelector((state) => state.userInfo)
+  useEffect(() => {
+    if (userInfo.rank === "admin") {
+      socket.on("UserJoined", (data) => {
+        dispatch({
+          type: "APPEND_DASHBOARD_CUSTOMERS",
+          payload: { ...data, joinedIn: "2021-03-30T14:54:41.091Z" },
+        })
+      })
+    }
+  }, [])
+
   return (
     <StyledOrders>
       <DashboardUserAction />
@@ -249,6 +262,21 @@ const DashboardCustomers = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  input::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: rgba(255, 255, 255, 0.7) !important;
+    opacity: 1; /* Firefox */
+  }
+
+  input:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  input::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
   height: max-content;
   position: relative;
   #blur {

@@ -188,7 +188,10 @@ const getUser = asyncHandler(async (req, res) => {
   if (!email || !password) {
     throw new Error("Email & Password are Required")
   } else {
-    const user = await User.findByCredentials(email, password)
+    const user = await User.findByCredentials(
+      email.toLowerCase().trim(),
+      password
+    )
 
     if (user) {
       res.send(user)
