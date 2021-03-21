@@ -10,7 +10,11 @@ import bodyparser from "body-parser"
 import rateLimit from "express-rate-limit"
 import path from "path"
 import express from "express"
-import { io, app, server } from "./webSockets/serverConfig.js"
+import http from "http"
+import SocketService from "./webSockets/socketService.js"
+
+const app = express()
+const server = http.Server(app)
 
 app.use(express.json())
 dotenv.config()
@@ -62,3 +66,5 @@ server.listen(port, () => {
     `Server running in ${process.env.NODE_ENV} mode on port ${port}`.yellow.bold
   )
 })
+
+app.set("socketService", new SocketService(server))

@@ -4,6 +4,7 @@ import Product from "../models/productModel.js"
 //Get Products - /api/products @Public
 const getProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({})
+
   res.send(products)
 })
 //Get Product - /api/products/:id @Public
