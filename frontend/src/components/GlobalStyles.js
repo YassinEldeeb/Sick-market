@@ -45,7 +45,7 @@ a{
       transform: translate(100%, -50%);
       span {
         font-size: calc(0.7rem + 0.3vw);
-        color: #1a1a1a;
+        color: #00b2d8;
       }
     }
     .starsRating .fas,

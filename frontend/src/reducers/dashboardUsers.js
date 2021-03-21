@@ -1,10 +1,14 @@
-const initialState = { loading: true, newUsers: 0 }
+const savedNewUsers = localStorage.getItem("NewUsers")
+  ? localStorage.getItem("NewUsers")
+  : 0
+const initialState = { loading: true, newUsers: savedNewUsers }
 
 const getDashboardUsers = (state = initialState, action) => {
   switch (action.type) {
     case "GET_DASHBOARD_USERS_REQUEST":
       return { newUsers: state.newUsers, loading: true }
     case "GET_DASHBOARD_USERS_SUCCESS":
+      localStorage.removeItem("NewUsers")
       return {
         users: action.payload.users,
         count: action.payload.count,
@@ -18,6 +22,7 @@ const getDashboardUsers = (state = initialState, action) => {
         newUsers: state.newUsers,
       }
     case "NEW_DASHBOARD_USERS":
+      localStorage.setItem("NewUsers", state.newUsers + 1)
       return {
         ...state,
         newUsers: (state.newUsers += 1),
