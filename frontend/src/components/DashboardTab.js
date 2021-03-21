@@ -1,8 +1,11 @@
 import React from "react"
 import styled from "styled-components"
 import { Link } from "react-router-dom"
+import { useSelector } from "react-redux"
 
 const DashboardTab = ({ text, icon, active }) => {
+  const { newUsers } = useSelector((state) => state.dashboardUsers)
+
   return (
     <Tab
       to={`/dashboard/${text.toLowerCase()}`}
@@ -10,11 +13,30 @@ const DashboardTab = ({ text, icon, active }) => {
     >
       <img src={icon} alt='icon' />
       <h4>{text}</h4>
+      {text === "Customers" && newUsers > 0 && (
+        <h6 className='counter'>{newUsers}</h6>
+      )}
     </Tab>
   )
 }
 
 const Tab = styled(Link)`
+  .counter {
+    position: absolute;
+    right: -5%;
+    top: -5%;
+    background: #2fa3e3;
+    padding: 0.3rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  position: relative;
   display: flex;
   justify-content: flex-start;
   align-items: center;

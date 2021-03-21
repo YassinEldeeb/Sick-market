@@ -1,25 +1,26 @@
-const initialState = { loading: true }
+const initialState = { loading: true, newUsers: 0 }
 
 const getDashboardUsers = (state = initialState, action) => {
   switch (action.type) {
     case "GET_DASHBOARD_USERS_REQUEST":
-      return { loading: true }
+      return { newUsers: state.newUsers, loading: true }
     case "GET_DASHBOARD_USERS_SUCCESS":
       return {
         users: action.payload.users,
         count: action.payload.count,
         loading: false,
+        newUsers: 0,
       }
     case "GET_DASHBOARD_USERS_FAIL":
       return {
         error: action.payload,
         loading: false,
+        newUsers: state.newUsers,
       }
-    case "APPEND_DASHBOARD_CUSTOMERS":
+    case "NEW_DASHBOARD_USERS":
       return {
         ...state,
-        users: [action.payload, ...state.users],
-        count: state.count + 1,
+        newUsers: (state.newUsers += 1),
       }
     default:
       return state

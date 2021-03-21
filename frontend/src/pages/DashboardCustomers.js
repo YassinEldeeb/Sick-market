@@ -170,10 +170,9 @@ const DashboardCustomers = () => {
   const { user: userInfo } = useSelector((state) => state.userInfo)
   useEffect(() => {
     if (userInfo.rank === "admin") {
-      socket.on("UserJoined", (data) => {
+      socket.on("UserJoined", () => {
         dispatch({
-          type: "APPEND_DASHBOARD_CUSTOMERS",
-          payload: data,
+          type: "NEW_DASHBOARD_USERS",
         })
       })
     }

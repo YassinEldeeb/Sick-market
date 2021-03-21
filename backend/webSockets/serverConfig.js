@@ -9,13 +9,13 @@ const server = http.createServer(app)
 const io = new Server(server, {
   pingInterval: 10000,
   pingTimeout: 99999999,
-  cors: {
-    origin:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://sick-market.herokuapp.com",
-    methods: ["GET", "POST", "DELETE", "PATCH"],
-  },
+  // cors: {
+  //   origin:
+  //     process.env.NODE_ENV === "development"
+  //       ? "http://localhost:3000"
+  //       : "https://sick-market.herokuapp.com",
+  //   methods: ["GET", "POST", "DELETE", "PATCH"],
+  // },
 })
 
 socket()
