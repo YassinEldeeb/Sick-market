@@ -50,7 +50,7 @@ const Register = () => {
 
   useEffect(() => {
     if (user.name) {
-      socket.emit("NewUser", user)
+      socket.emit("NewUser", { ...user, joinedIn: new Date() })
       history.push(redirect)
     }
   }, [user, history, redirect])

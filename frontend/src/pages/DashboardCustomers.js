@@ -173,7 +173,7 @@ const DashboardCustomers = () => {
       socket.on("UserJoined", (data) => {
         dispatch({
           type: "APPEND_DASHBOARD_CUSTOMERS",
-          payload: { ...data, joinedIn: Date.now() },
+          payload: data,
         })
       })
     }
