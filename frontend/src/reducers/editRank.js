@@ -1,32 +1,32 @@
 const initialState = { loading: false }
 
-const deleteUser = (state = initialState, action) => {
+const editRank = (state = initialState, action) => {
   switch (action.type) {
-    case "DELETE_USER_REQUEST":
+    case "EDIT_RANK_REQUEST":
       return { success: false, loading: true }
-    case "DELETE_USER_SUCCESS":
+    case "EDIT_RANK_SUCCESS":
       return {
         success: true,
         loading: false,
       }
-    case "DELETE_USER_FAIL":
+    case "EDIT_RANK_FAIL":
       return {
         error: action.payload,
         loading: false,
       }
-    case "CONFIRM_DELETE_REQUEST":
+    case "CONFIRM_RANK_REQUEST":
       return {
         ...state,
         asking: true,
         confirm: null,
       }
-    case "CONFIRM_DELETE_SUCCESS":
+    case "CONFIRM_RANK_SUCCESS":
       return {
         ...state,
         asking: false,
         confirm: true,
       }
-    case "CONFIRM_DELETE_CANCEL":
+    case "CONFIRM_RANK_CANCEL":
       return {
         ...state,
         asking: false,
@@ -37,4 +37,4 @@ const deleteUser = (state = initialState, action) => {
   }
 }
 
-export default deleteUser
+export default editRank

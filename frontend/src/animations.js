@@ -39,3 +39,20 @@ export const popup2 = {
     transition: { duration: 0.3 },
   },
 }
+export const slidePopup = {
+  hidden: {
+    opacity: 0,
+    y: -30,
+    transition: { duration: 0 },
+  },
+  show: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.3 },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: { duration: 0.1 },
+  },
+}

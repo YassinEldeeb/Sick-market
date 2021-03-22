@@ -17,9 +17,10 @@ import { throttle } from "underscore"
 import socket from "../clientSocket/socket"
 import { useInView } from "react-intersection-observer"
 import infiniteScrollUsersAction from "../actions/infiniteScrollUsers"
+import ConfirmPopup from "../components/confirmPopup"
 
 const DashboardCustomers = () => {
-  const [skip, setSkip] = useState(0)
+  const [skip, setSkip] = useState(1)
 
   const lastLocation = useLastLocation()
   const dispatch = useDispatch()
@@ -78,7 +79,6 @@ const DashboardCustomers = () => {
     if (!searchUser && !location.pathname.split("/")[3]) {
       if (!users || lastLocationValue) {
         dispatch(getDashboardUsersAction(skip))
-        setSkip(skip + 1)
       }
     } else if (lastLocationValue && !location.pathname.split("/")[3]) {
       if (searchUser || !searchedUsers) {
@@ -175,7 +175,9 @@ const DashboardCustomers = () => {
 
   useEffect(() => {
     const cardCont = document.querySelector(".cardCont")
+    const popup = document.querySelector(".confirmationPopup")
     cardCont.style.top = `${scrolled}px`
+    popup.style.top = `${scrolled}px`
   }, [scrolled])
 
   const { user: userInfo } = useSelector((state) => state.userInfo)
@@ -192,25 +194,44 @@ const DashboardCustomers = () => {
   const [element, inView] = useInView()
 
   useEffect(() => {
-    if (success) {
-      setTimeout(() => {
+    if (!searchedUsers) {
+      if (success) {
+        setTimeout(() => {
+          if (!infiniteLoading && !end && !loading && inView) {
+            dispatch(infiniteScrollUsersAction(skip))
+            setSkip(skip + 1)
+          }
+        }, 500)
+      } else {
         if (!infiniteLoading && !end && !loading && inView) {
           dispatch(infiniteScrollUsersAction(skip))
           setSkip(skip + 1)
         }
-      }, 500)
-    } else {
-      if (!infiniteLoading && !end && !loading && inView) {
-        dispatch(infiniteScrollUsersAction(skip))
-        setSkip(skip + 1)
       }
     }
   }, [inView])
+  const [rankValue, setRankValue] = useState("")
+  const { asking } = useSelector((state) => state.editRank)
+  const { asking: deleteAsking } = useSelector((state) => state.deleteUser)
 
   return (
     <StyledOrders>
-      <DashboardUserAction />
-
+      <DashboardUserAction rankValue={rankValue} setRankValue={setRankValue} />
+      <ConfirmPopup
+        resetValue={setRankValue}
+        condition={asking}
+        type='rank'
+        action={`move ${
+          userActions.user ? userActions.user.name : ""
+        } to employed ${rankValue + "(s)"}`}
+      />
+      <ConfirmPopup
+        type='delete'
+        condition={deleteAsking}
+        action={`Delete ${
+          userActions.user ? userActions.user.name : ""
+        }'s account`}
+      />
       {condition() ? (
         <Loader />
       ) : !error && !searchedError ? (
@@ -280,13 +301,16 @@ const DashboardCustomers = () => {
                   ? searchedUsers.map((each) => <UserDashboard user={each} />)
                   : users.map((each) => <UserDashboard user={each} />)}
               </motion.div>
-              {!end ? (
+
+              {!end && !searchedUsers ? (
                 <Loader
                   providedClassName='infiniteLoader'
                   refElement={element}
                 />
-              ) : (
+              ) : !searchedUsers ? (
                 <p className='end'>Yay! You have seen it all</p>
+              ) : (
+                ""
               )}
             </div>
           )}

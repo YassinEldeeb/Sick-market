@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 
 const Cart = ({ cartCount }) => {
   return (
-    <StyledCart className='cart' href='/cart'>
+    <StyledCart className='cart'>
       <Link to='/cart'>
         <div className='cartImg'>
           <img src={cart} alt='cart' />
