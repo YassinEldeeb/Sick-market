@@ -15,17 +15,27 @@ import DashboardUserAction from "./DashboardUserAction"
 import { useLastLocation } from "react-router-last-location"
 import { throttle } from "underscore"
 import socket from "../clientSocket/socket"
+import { useInView } from "react-intersection-observer"
+import infiniteScrollUsersAction from "../actions/infiniteScrollUsers"
 
 const DashboardCustomers = () => {
+  const [skip, setSkip] = useState(0)
+
   const lastLocation = useLastLocation()
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation()
   const searchUser = location.search.split("=")[1]
 
-  const { users, loading, count, error } = useSelector(
-    (state) => state.dashboardUsers
-  )
+  const {
+    success,
+    users,
+    loading,
+    count,
+    error,
+    infiniteLoading,
+    end,
+  } = useSelector((state) => state.dashboardUsers)
 
   const {
     users: searchedUsers,
@@ -67,7 +77,8 @@ const DashboardCustomers = () => {
   useEffect(() => {
     if (!searchUser && !location.pathname.split("/")[3]) {
       if (!users || lastLocationValue) {
-        dispatch(getDashboardUsersAction())
+        dispatch(getDashboardUsersAction(skip))
+        setSkip(skip + 1)
       }
     } else if (lastLocationValue && !location.pathname.split("/")[3]) {
       if (searchUser || !searchedUsers) {
@@ -178,6 +189,24 @@ const DashboardCustomers = () => {
     }
   }, [])
 
+  const [element, inView] = useInView()
+
+  useEffect(() => {
+    if (success) {
+      setTimeout(() => {
+        if (!infiniteLoading && !end && !loading && inView) {
+          dispatch(infiniteScrollUsersAction(skip))
+          setSkip(skip + 1)
+        }
+      }, 500)
+    } else {
+      if (!infiniteLoading && !end && !loading && inView) {
+        dispatch(infiniteScrollUsersAction(skip))
+        setSkip(skip + 1)
+      }
+    }
+  }, [inView])
+
   return (
     <StyledOrders>
       <DashboardUserAction />
@@ -241,6 +270,7 @@ const DashboardCustomers = () => {
               ) : (
                 <p className='sorry'>Sorry nothing found!</p>
               )}
+
               <motion.div variants={hide} initial='hidden' animate='show'>
                 {(lastSearch &&
                   location.pathname.split("/")[3] &&
@@ -250,6 +280,14 @@ const DashboardCustomers = () => {
                   ? searchedUsers.map((each) => <UserDashboard user={each} />)
                   : users.map((each) => <UserDashboard user={each} />)}
               </motion.div>
+              {!end ? (
+                <Loader
+                  providedClassName='infiniteLoader'
+                  refElement={element}
+                />
+              ) : (
+                <p className='end'>Yay! You have seen it all</p>
+              )}
             </div>
           )}
         </>
@@ -261,6 +299,24 @@ const DashboardCustomers = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  .infiniteLoader {
+    margin-bottom: 0.6rem;
+  }
+  .infiniteLoader #loader:first-child {
+    width: calc(2rem + 0.5vw) !important;
+    height: calc(2rem + 0.5vw) !important;
+  }
+
+  .end {
+    color: white;
+    text-align: center;
+    font-weight: 400 !important;
+    font-size: 1rem !important;
+    margin-bottom: 0.6rem;
+  }
+  .infinite-scroll-component {
+    overflow-y: hidden !important;
+  }
   input::placeholder {
     /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: rgba(255, 255, 255, 0.7) !important;

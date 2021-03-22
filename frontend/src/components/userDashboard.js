@@ -104,7 +104,7 @@ const StyledUser = styled(motion.div)`
   padding: 0.65rem 2.1rem;
   margin-bottom: 1rem;
   &:last-child {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
   border-radius: 10px;
   overflow-x: auto;

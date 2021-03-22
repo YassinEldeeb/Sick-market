@@ -15,6 +15,28 @@ const getDashboardUsers = (state = initialState, action) => {
         loading: false,
         newUsers: 0,
       }
+    case "INFINITE_USERS_REQUEST":
+      return {
+        ...state,
+        infiniteLoading: true,
+      }
+    case "INFINITE_USERS_SUCCESS":
+      return {
+        ...state,
+        users: [...state.users, ...action.payload.users],
+        infiniteLoading: false,
+        success: true,
+      }
+    case "INFINITE_USERS_FAIL":
+      return {
+        infiniteLoading: false,
+        error: action.payload,
+      }
+    case "INFINITE_USERS_END":
+      return {
+        ...state,
+        end: true,
+      }
     case "GET_DASHBOARD_USERS_FAIL":
       return {
         error: action.payload,

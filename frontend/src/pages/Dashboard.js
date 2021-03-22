@@ -1,9 +1,10 @@
 import React, { useEffect } from "react"
 import styled from "styled-components"
 import { Scrollbars } from "react-custom-scrollbars"
-import { useLocation, useHistory } from "react-router-dom"
+import { useLocation, useHistory, Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { useLastLocation } from "react-router-last-location"
+import arrow from "../img/gobackArrow.svg"
 
 import statistics from "../img/statistics.svg"
 import orders from "../img/cartD.svg"
@@ -56,6 +57,19 @@ const Dashboard = ({ pageContent }) => {
   const history = useHistory()
 
   useEffect(() => {
+    const firstChild = document.querySelector(
+      ".large-scrollable-content div:first-child"
+    )
+    if (!firstChild.classList.contains("addMoreMargin")) {
+      firstChild.classList.add("addMoreMargin")
+    }
+    if (!location.pathname.split("/")[3]) {
+      if (!lastLocation || !lastLocation.pathname.split("/")[3])
+        firstChild.scroll({
+          top: 0,
+        })
+    }
+
     if (user.rank !== "admin") {
       history.push("/")
     }
@@ -85,6 +99,10 @@ const Dashboard = ({ pageContent }) => {
     <StyledDashboard>
       <div className='sidebar'>
         <Scrollbars className='scrollable'>
+          <Link to='/' className='backHome'>
+            <img src={arrow} alt='' />
+            <h6>Home</h6>
+          </Link>
           <p>Main</p>
           {main.map((e) => (
             <DashboardTab
@@ -111,6 +129,34 @@ const Dashboard = ({ pageContent }) => {
 }
 
 const StyledDashboard = styled.div`
+  .addMoreMargin {
+    margin-bottom: -20px !important;
+  }
+  .backHome {
+    display: flex !important;
+    align-items: center !important;
+    flex-direction: row !important;
+    padding: calc(0.45rem + 0.3vw) calc(1.05rem + 0.3vw);
+    margin-top: calc(1.5rem + 1vh);
+    margin-bottom: calc(0.55rem + 0.2vh);
+    cursor: pointer;
+    background: rgba(62, 63, 111, 0.3);
+    margin-left: calc(2.25rem + 0.3vw);
+    border-radius: 10px;
+    transition: 0.2s ease;
+    &:hover {
+      background: rgba(62, 63, 111, 0.157);
+    }
+    h6 {
+      font-weight: 500;
+      padding-left: 0.5rem;
+      font-size: calc(0.85rem + 0.3vw);
+    }
+    img {
+      width: 9px;
+      filter: brightness(100000);
+    }
+  }
   display: flex;
   justify-content: center;
   align-items: stretch;
@@ -122,8 +168,6 @@ const StyledDashboard = styled.div`
     padding: calc(0.1rem + 0.1vw) calc(2.25rem + 0.3vw);
     font-size: calc(0.85rem + 0.3vw);
     color: rgba(255, 255, 255, 19%);
-    padding-top: 0;
-    padding-top: calc(3rem + 1vh);
     &.last {
       padding-top: calc(0.1rem + 0.1vw);
     }

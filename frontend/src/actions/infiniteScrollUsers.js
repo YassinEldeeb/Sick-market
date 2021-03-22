@@ -1,9 +1,9 @@
 import axios from "axios"
 
-const getDashboardUsersAction = () => async (dispatch, getState) => {
+const infiniteScrollUsersAction = (skip) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: "GET_DASHBOARD_USERS_REQUEST",
+      type: "INFINITE_USERS_REQUEST",
     })
     const { userInfo } = getState((state) => state.userInfo)
     const cancelToken = axios.CancelToken
@@ -14,14 +14,23 @@ const getDashboardUsersAction = () => async (dispatch, getState) => {
       },
       cancelToken: source.token,
     }
-    const { data } = await axios.get(`/api/users?limit=10`, config)
+    const { data } = await axios.get(
+      `/api/users?limit=10&skip=${10 * skip}`,
+      config
+    )
+
+    if (!data.users.length || data.users.length < 10) {
+      dispatch({
+        type: "INFINITE_USERS_END",
+      })
+    }
     dispatch({
-      type: "GET_DASHBOARD_USERS_SUCCESS",
+      type: "INFINITE_USERS_SUCCESS",
       payload: data,
     })
   } catch (error) {
     dispatch({
-      type: "GET_DASHBOARD_USERS_FAIL",
+      type: "INFINITE_USERS_FAIL",
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -29,4 +38,4 @@ const getDashboardUsersAction = () => async (dispatch, getState) => {
     })
   }
 }
-export default getDashboardUsersAction
+export default infiniteScrollUsersAction

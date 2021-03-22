@@ -23,8 +23,8 @@ const DashboardTab = ({ text, icon, active }) => {
 const Tab = styled(Link)`
   .counter {
     position: absolute;
-    right: -5%;
-    top: -5%;
+    right: 0%;
+    top: 50%;
     background: #2fa3e3;
     padding: 0.3rem;
     width: 1.4rem;
@@ -35,6 +35,7 @@ const Tab = styled(Link)`
     display: flex;
     justify-content: center;
     align-items: center;
+    transform: translate(-50%, -50%);
   }
   position: relative;
   display: flex;

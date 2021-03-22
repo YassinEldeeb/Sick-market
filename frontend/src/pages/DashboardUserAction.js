@@ -14,6 +14,7 @@ import canReviewAction from "../actions/canReview"
 import deleteUserAction from "../actions/deleteUser"
 import Loader from "../components/loader"
 import verified from "../img/verified.svg"
+import arrow from "../img/arrow2.svg"
 
 const DashboardUserAction = () => {
   const lastLocation = useLastLocation()
@@ -59,6 +60,7 @@ const DashboardUserAction = () => {
     if (user) {
       setReview(user.canReview)
       setOrdering(user.canOrder)
+      setRankValue(user.rank)
     }
   }, [user])
   const history = useHistory()
@@ -127,6 +129,14 @@ const DashboardUserAction = () => {
     }
   }, [deleteSuccess])
 
+  const options = [
+    { value: "admin", label: "admin" },
+    { value: "delivery", label: "delivery" },
+    { value: "user", label: "user" },
+  ]
+
+  const [rankValue, setRankValue] = useState("")
+  const [selectOpen, setSelectOpen] = useState(false)
   return (
     <StyledUserAction
       className='cardCont'
@@ -174,7 +184,42 @@ const DashboardUserAction = () => {
                 <p>Actions</p>
                 <div className='line'></div>
               </div>
-              <div className='allow'>
+              <div className='allow allow1'>
+                <h2>Edit Rank</h2>
+                <div
+                  className='select'
+                  onClick={() => setSelectOpen(!selectOpen)}
+                >
+                  <p className='value'>{rankValue}</p>
+                  <svg
+                    className={`${selectOpen ? "active" : ""}`}
+                    width='20'
+                    height='20'
+                    viewBox='0 0 20 20'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <path
+                      d='M4.51605 7.548C4.95205 7.102 5.55905 7.067 6.09205 7.548L10.0001 11.295L13.9081 7.548C14.4411 7.067 15.0491 7.102 15.4821 7.548C15.9181 7.993 15.8901 8.745 15.4821 9.163C15.0761 9.581 10.787 13.665 10.787 13.665C10.57 13.888 10.2851 14 10.0001 14C9.71505 14 9.43005 13.888 9.21105 13.665C9.21105 13.665 4.92405 9.581 4.51605 9.163C4.10805 8.745 4.08005 7.993 4.51605 7.548V7.548Z'
+                      fill='white'
+                    />
+                  </svg>
+
+                  {selectOpen && (
+                    <div className='dropDown'>
+                      {options.map((e) => (
+                        <p
+                          className={`${e.value === rankValue ? "active" : ""}`}
+                          onClick={() => setRankValue(e.value)}
+                        >
+                          {e.value}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className='allow allow2'>
                 <h2>Allow Reviewing Products</h2>
                 <Switch
                   className={`${reviewLoading ? "loading" : ""}`}
@@ -187,7 +232,7 @@ const DashboardUserAction = () => {
                   }}
                 />
               </div>
-              <div className='allow allow2'>
+              <div className='allow allow3'>
                 <h2>Allow Ordering Products</h2>
                 <Switch
                   className={`${orderingLoading ? "loading" : ""}`}
@@ -200,6 +245,7 @@ const DashboardUserAction = () => {
                   }}
                 />
               </div>
+
               <div className='btnCont'>
                 <button onClick={deleteHandler}>
                   Delete Account{deleteLoading && <Loader />}
@@ -214,6 +260,63 @@ const DashboardUserAction = () => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  svg.active {
+    transform: rotate(180deg) !important;
+  }
+  p.active {
+    color: #2fa3e3 !important;
+    background: #33335e;
+  }
+  .select {
+    position: relative;
+    padding: 0.45rem 0.7rem;
+    background: #2e2e53;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    svg {
+      margin-left: 0.3rem;
+    }
+    .value {
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-size: calc(0.8rem + 0.3vw);
+    }
+  }
+  .select .dropDown {
+    box-shadow: 0 0 10px rgba(46, 46, 83, 0.5);
+    background: #2e2e53;
+    z-index: 2;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    min-width: max-content;
+    height: max-content;
+    transform: translate(0, 105%);
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 0.3rem;
+    cursor: auto;
+
+    p {
+      padding: 0.38rem 0.5rem !important;
+      transition: 0.2s ease;
+      font-size: calc(0.7rem + 0.3vw);
+      border-radius: 5px;
+      margin: 0.25rem 0;
+      cursor: pointer;
+      &:last-child {
+        margin-bottom: 0 !important;
+      }
+      &:first-child {
+        margin-top: 0 !important;
+      }
+      &:hover {
+        background: #33335e;
+      }
+    }
+  }
   #verified {
     width: 15px !important;
     height: 15px !important;
@@ -279,7 +382,7 @@ const StyledUserAction = styled(motion.div)`
     align-items: center;
     margin-bottom: 1rem;
   }
-  .allow2 {
+  .allow3 {
     margin-bottom: 0rem;
   }
   .allow h2 {

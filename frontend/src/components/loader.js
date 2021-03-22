@@ -1,8 +1,11 @@
 import React from "react"
 import styled from "styled-components"
-const Loader = () => {
+const Loader = ({ refElement, providedClassName }) => {
   return (
-    <StyledLoader className='providedLoader'>
+    <StyledLoader
+      className={`providedLoader ${providedClassName ? providedClassName : ""}`}
+      ref={refElement ? refElement : null}
+    >
       <svg
         id='loader'
         viewBox='0 0 699 699'

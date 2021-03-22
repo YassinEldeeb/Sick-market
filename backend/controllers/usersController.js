@@ -234,9 +234,8 @@ const registerUser = asyncHandler(async (req, res) => {
     user.tokens.unshift({ token })
     await user.save()
 
-    req.app.get("socketService").emiter("NewUser")
-
     res.status(201).send({ user, token })
+    req.app.get("socketService").emiter("NewUser")
   }
 })
 
