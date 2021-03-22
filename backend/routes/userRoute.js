@@ -22,6 +22,7 @@ import {
   deleteUser,
   canReviewUser,
   canOrderUser,
+  updateUserRank,
 } from "../controllers/usersController.js"
 import { protect, admin } from "../middleware/authMiddleware.js"
 
@@ -73,4 +74,6 @@ userRouter.get("/:id", protect, admin, getUserById)
 userRouter.delete("/:id", protect, admin, deleteUser)
 userRouter.post("/canReview/:id", protect, admin, canReviewUser)
 userRouter.post("/canOrder/:id", protect, admin, canOrderUser)
+userRouter.post("/:id/rank", protect, admin, updateUserRank)
+
 export default userRouter

@@ -11,6 +11,43 @@ import SecretCode from "../models/secretCode.js"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
+//Update USER Rank - /api/users/rank @Admin
+const updateUserRank = asyncHandler(async (req, res) => {
+  if (!req.params.id) {
+    res.status(400)
+    throw new Error("Id is Requierd")
+  }
+
+  if (!req.body.rank) {
+    res.status(400)
+    throw new Error("Rank is Requierd")
+  }
+
+  const user = await User.findById(req.params.id)
+
+  if (!user) {
+    throw new Error("User not Found!")
+  }
+  user.rank = req.body.rank.toLowerCase()
+  await user.save()
+
+  const usersCopy = {
+    joinedIn: user.createdAt,
+    availablePic: user.availablePic,
+    rank: user.rank,
+    status: user.status,
+    validResetPassword: user.validResetPassword,
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    totalPaidOrders: user.totalPaidOrders ? user.totalPaidOrders : 0,
+    canReview: user.canReview,
+    canOrder: user.canOrder,
+  }
+
+  res.send(usersCopy)
+})
+
 //Update canOrder USER - /api/users/:id @Admin
 const canOrderUser = asyncHandler(async (req, res) => {
   if (!req.params.id) {
@@ -19,6 +56,9 @@ const canOrderUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findById(req.params.id)
+  if (!user) {
+    throw new Error("User not Found!")
+  }
   user.canOrder = req.body.canOrder
   await user.save()
 
@@ -46,6 +86,9 @@ const canReviewUser = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findById(req.params.id)
+  if (!user) {
+    throw new Error("User not Found!")
+  }
   user.canReview = req.body.canReview
   await user.save()
 
@@ -162,6 +205,13 @@ const getAllUsers = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 })
     .limit(parseInt(req.query.limit ? req.query.limit : 0))
     .skip(parseInt(req.query.skip ? req.query.skip : 0))
+
+  if (req.query.sort === "topPaid") {
+    users.sort(function (a, b) {
+      return b.totalPaidOrders - a.totalPaidOrders
+    })
+  }
+
   const count = await User.countDocuments({ rank: "user" })
   const usersCopy = users.map((e) => {
     return {
@@ -597,4 +647,5 @@ export {
   deleteUser,
   canReviewUser,
   canOrderUser,
+  updateUserRank,
 }

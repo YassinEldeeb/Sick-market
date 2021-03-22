@@ -132,7 +132,6 @@ const DashboardUserAction = () => {
   const options = [
     { value: "admin", label: "admin" },
     { value: "delivery", label: "delivery" },
-    { value: "user", label: "user" },
   ]
 
   const [rankValue, setRankValue] = useState("")
@@ -270,13 +269,13 @@ const StyledUserAction = styled(motion.div)`
   .select {
     position: relative;
     padding: 0.45rem 0.7rem;
-    background: #2e2e53;
+    background: #42426e;
     border-radius: 5px;
     cursor: pointer;
     display: flex;
     align-items: center;
     svg {
-      margin-left: 0.3rem;
+      margin-left: 0.4rem;
     }
     .value {
       color: rgba(255, 255, 255, 0.9) !important;
@@ -306,6 +305,7 @@ const StyledUserAction = styled(motion.div)`
       border-radius: 5px;
       margin: 0.25rem 0;
       cursor: pointer;
+      padding-right: 0.7rem !important;
       &:last-child {
         margin-bottom: 0 !important;
       }

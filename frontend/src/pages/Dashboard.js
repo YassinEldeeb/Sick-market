@@ -4,7 +4,6 @@ import { Scrollbars } from "react-custom-scrollbars"
 import { useLocation, useHistory, Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { useLastLocation } from "react-router-last-location"
-import arrow from "../img/gobackArrow.svg"
 
 import statistics from "../img/statistics.svg"
 import orders from "../img/cartD.svg"
@@ -16,6 +15,7 @@ import employees from "../img/employees.svg"
 import customers from "../img/customers.svg"
 import chat from "../img/chat.svg"
 import emails from "../img/emails.svg"
+import home from "../img/home.svg"
 
 import DashboardTab from "../components/DashboardTab"
 import DashboardCustomers from "./DashboardCustomers"
@@ -99,10 +99,11 @@ const Dashboard = ({ pageContent }) => {
     <StyledDashboard>
       <div className='sidebar'>
         <Scrollbars className='scrollable'>
-          <Link to='/' className='backHome'>
-            <img src={arrow} alt='' />
-            <h6>Home</h6>
-          </Link>
+          <DashboardTab
+            providedClassName='backHome'
+            text={"Home"}
+            icon={home}
+          />
           <p>Main</p>
           {main.map((e) => (
             <DashboardTab
@@ -133,29 +134,9 @@ const StyledDashboard = styled.div`
     margin-bottom: -20px !important;
   }
   .backHome {
-    display: flex !important;
-    align-items: center !important;
-    flex-direction: row !important;
-    padding: calc(0.45rem + 0.3vw) calc(1.05rem + 0.3vw);
+    padding: calc(0.45rem + 0.3vw) calc(1rem + 0.3vw);
     margin-top: calc(1.5rem + 1vh);
-    margin-bottom: calc(0.55rem + 0.2vh);
-    cursor: pointer;
-    background: rgba(62, 63, 111, 0.3);
-    margin-left: calc(2.25rem + 0.3vw);
-    border-radius: 10px;
-    transition: 0.2s ease;
-    &:hover {
-      background: rgba(62, 63, 111, 0.157);
-    }
-    h6 {
-      font-weight: 500;
-      padding-left: 0.5rem;
-      font-size: calc(0.85rem + 0.3vw);
-    }
-    img {
-      width: 9px;
-      filter: brightness(100000);
-    }
+    padding-left: calc(2.25rem + 0.3vw);
   }
   display: flex;
   justify-content: center;

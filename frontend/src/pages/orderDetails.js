@@ -68,15 +68,15 @@ const OrderDetails = () => {
       const source = cancelToken.source()
       let currency
       try {
-        const response = await axios.get(
+        const { data } = await axios.get(
           "https://api.currencyfreaks.com/latest?apikey=a85d31d75fc34b3e999bc0e87c08a8a9&symbols=EGP",
           {
             cancelToken: source.token,
           }
         )
-        console.log("Response", response)
-      } catch (err) {}
 
+        currency = data
+      } catch (err) {}
       setCurrency(currency ? Number(currency.rates.EGP) : 10)
     }
     if (!currency) {
@@ -385,7 +385,7 @@ const OrderDetails = () => {
                     <div className='row row6'>
                       {sdkReady && currency && !orderPayLoading ? (
                         <PayPalButton
-                          amount={(10).toFixed(2)}
+                          amount={(order.totalPrice / currency).toFixed(2)}
                           onApprove={successPaymentHandler}
                         />
                       ) : (

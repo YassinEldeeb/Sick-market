@@ -23,6 +23,10 @@ const addOrderItems = asyncHandler(async (req, res) => {
     res.status(400)
     throw new Error("Cart is empty")
   }
+  if (!req.user.canOrder) {
+    res.status(405)
+    throw new Error("You are prohibited from ordering by Admins")
+  }
   const order = new Order({
     user: req.user._id,
     orderItems,

@@ -3,13 +3,15 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 
-const DashboardTab = ({ text, icon, active }) => {
+const DashboardTab = ({ text, icon, active, providedClassName }) => {
   const { newUsers } = useSelector((state) => state.dashboardUsers)
 
   return (
     <Tab
-      to={`/dashboard/${text.toLowerCase()}`}
-      className={`${active ? "active" : ""}`}
+      to={providedClassName ? "/" : `/dashboard/${text.toLowerCase()}`}
+      className={`${active ? "active" : ""} ${
+        providedClassName ? providedClassName : ""
+      }`}
     >
       <img src={icon} alt='icon' />
       <h4>{text}</h4>
