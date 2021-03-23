@@ -101,7 +101,6 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
   const {
     loading: deleteLoading,
     success: deleteSuccess,
-    asking: deleteAsking,
     confirm: deleteConfirm,
   } = useSelector((state) => state.deleteUser)
   const { loading: rankLoading, success: rankSuccess, confirm } = useSelector(
@@ -122,15 +121,27 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
   }, [reviewLoading, reviewSuccess])
 
   useEffect(() => {
-    if (deleteSuccess || rankSuccess) {
-      if (lastLocation.pathname) {
-        const add = lastLocation.search ? lastLocation.search : ""
-        history.push(lastLocation.pathname + add)
+    if (deleteSuccess) {
+      if (lastLocation.search) {
+        const add = lastLocation.search.split("=")[1]
+        console.log(lastLocation.pathname)
+        history.push(lastLocation.pathname + "?search=" + add)
       } else {
         history.push("/dashboard/customers")
       }
     }
-  }, [deleteSuccess, rankSuccess])
+  }, [deleteSuccess])
+  useEffect(() => {
+    if (rankSuccess) {
+      if (lastLocation.search) {
+        const add = lastLocation.search.split("=")[1]
+        console.log(lastLocation.pathname)
+        history.push(lastLocation.pathname + "?search=" + add)
+      } else {
+        history.push("/dashboard/customers")
+      }
+    }
+  }, [rankSuccess])
 
   const options = [
     { value: "admin", label: "admin" },

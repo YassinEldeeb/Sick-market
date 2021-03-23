@@ -175,9 +175,10 @@ const DashboardCustomers = () => {
 
   useEffect(() => {
     const cardCont = document.querySelector(".cardCont")
-    const popup = document.querySelector(".confirmationPopup")
+    const popups = document.querySelectorAll(".confirmationPopup")
+
+    popups.forEach((e) => (e.style.top = `${scrolled}px`))
     cardCont.style.top = `${scrolled}px`
-    popup.style.top = `${scrolled}px`
   }, [scrolled])
 
   const { user: userInfo } = useSelector((state) => state.userInfo)
