@@ -1,12 +1,12 @@
 import axios from "axios"
 
-const infiniteScrollUsersAction = (skip, filterValue) => async (
+const infiniteScrollSearchUsersAction = (search, skip = 0) => async (
   dispatch,
   getState
 ) => {
   try {
     dispatch({
-      type: "INFINITE_USERS_REQUEST",
+      type: "INFINITE_SEARCH_USERS_REQUEST",
     })
     const { userInfo } = getState((state) => state.userInfo)
     const cancelToken = axios.CancelToken
@@ -17,25 +17,26 @@ const infiniteScrollUsersAction = (skip, filterValue) => async (
       },
       cancelToken: source.token,
     }
-    const { data } = await axios.get(
-      `/api/users?limit=10&skip=${10 * skip}&sort=${
-        filterValue === "top paid" ? "topPaid" : filterValue
-      }`,
+    console.log(skip)
+
+    const { data } = await axios.post(
+      `/api/users/search?limit=10&skip=${10 * skip}`,
+      { search },
       config
     )
 
     if (!data.users.length || data.users.length < 10) {
       dispatch({
-        type: "INFINITE_USERS_END",
+        type: "INFINITE_SEARCH_USERS_END",
       })
     }
     dispatch({
-      type: "INFINITE_USERS_SUCCESS",
+      type: "INFINITE_SEARCH_USERS_SUCCESS",
       payload: data,
     })
   } catch (error) {
     dispatch({
-      type: "INFINITE_USERS_FAIL",
+      type: "INFINITE_SEARCH_USERS_FAIL",
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -43,4 +44,5 @@ const infiniteScrollUsersAction = (skip, filterValue) => async (
     })
   }
 }
-export default infiniteScrollUsersAction
+
+export default infiniteScrollSearchUsersAction

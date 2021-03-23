@@ -165,7 +165,6 @@ const searchUsers = asyncHandler(async (req, res) => {
     res.status(400)
     throw new Error("Search Field is Requierd")
   }
-
   const users = await User.search(
     req.body.search,
     async function (err, output) {
@@ -174,9 +173,13 @@ const searchUsers = asyncHandler(async (req, res) => {
     }
   )
 
-  const filteredUsers = users.filter((user) => user.rank === "user")
+  let filteredUsers = users.filter((user) => user.rank === "user")
 
   const count = filteredUsers.length
+
+  filteredUsers = filteredUsers.slice(req.query.skip ? req.query.skip : 0)
+
+  filteredUsers.slice(0, req.query.limit ? req.query.limit : 0)
 
   const usersCopy = filteredUsers.map((e) => {
     return {
@@ -199,18 +202,17 @@ const searchUsers = asyncHandler(async (req, res) => {
 
 //GET all USERS - /api/users @Admin
 const getAllUsers = asyncHandler(async (req, res) => {
+  let sortValue = "createdAt"
+  if (req.query.sort === "topPaid") {
+    sortValue = "totalPaidOrders"
+  }
+
   const users = await User.find({
     rank: "user",
   })
-    .sort({ createdAt: -1 })
+    .sort({ [sortValue]: -1 })
     .limit(parseInt(req.query.limit ? req.query.limit : 0))
     .skip(parseInt(req.query.skip ? req.query.skip : 0))
-
-  if (req.query.sort === "topPaid") {
-    users.sort(function (a, b) {
-      return b.totalPaidOrders - a.totalPaidOrders
-    })
-  }
 
   const count = await User.countDocuments({ rank: "user" })
   const usersCopy = users.map((e) => {

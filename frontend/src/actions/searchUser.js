@@ -14,7 +14,11 @@ const searchDashboardUsersAction = (search) => async (dispatch, getState) => {
       },
       cancelToken: source.token,
     }
-    const { data } = await axios.post("/api/users/search", { search }, config)
+    const { data } = await axios.post(
+      "/api/users/search?limit=10",
+      { search },
+      config
+    )
     console.log("Data", data)
     dispatch({
       type: "SEARCH_DASHBOARD_USERS_SUCCESS",

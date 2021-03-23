@@ -15,6 +15,28 @@ const searchDashboardUsers = (state = initialState, action) => {
         error: action.payload,
         loading: false,
       }
+    case "INFINITE_SEARCH_USERS_REQUEST":
+      return {
+        ...state,
+        infiniteLoading: true,
+      }
+    case "INFINITE_SEARCH_USERS_SUCCESS":
+      return {
+        ...state,
+        users: [...state.users, ...action.payload.users],
+        infiniteLoading: false,
+        success: true,
+      }
+    case "INFINITE_SEARCH_USERS_FAIL":
+      return {
+        infiniteLoading: false,
+        error: action.payload,
+      }
+    case "INFINITE_SEARCH_USERS_END":
+      return {
+        ...state,
+        end: true,
+      }
     default:
       return state
   }

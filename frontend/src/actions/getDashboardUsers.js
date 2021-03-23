@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const getDashboardUsersAction = () => async (dispatch, getState) => {
+const getDashboardUsersAction = (filterValue) => async (dispatch, getState) => {
   try {
     dispatch({
       type: "GET_DASHBOARD_USERS_REQUEST",
@@ -14,7 +14,12 @@ const getDashboardUsersAction = () => async (dispatch, getState) => {
       },
       cancelToken: source.token,
     }
-    const { data } = await axios.get(`/api/users?limit=10`, config)
+    const { data } = await axios.get(
+      `/api/users?limit=10&sort=${
+        filterValue === "top paid" ? "topPaid" : filterValue
+      }`,
+      config
+    )
     dispatch({
       type: "GET_DASHBOARD_USERS_SUCCESS",
       payload: data,

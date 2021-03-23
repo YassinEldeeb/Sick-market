@@ -17,10 +17,18 @@ import { throttle } from "underscore"
 import socket from "../clientSocket/socket"
 import { useInView } from "react-intersection-observer"
 import infiniteScrollUsersAction from "../actions/infiniteScrollUsers"
+import infiniteScrollSearchUsersAction from "../actions/infiniteScrollSearchedUsers"
 import ConfirmPopup from "../components/confirmPopup"
+import arrow from "../img/arrow2.svg"
 
 const DashboardCustomers = () => {
+  const filterStoredValue = localStorage.getItem("filterUsers")
+    ? localStorage.getItem("filterUsers")
+    : "newest"
+  const [filterValue, setFilterValue] = useState(filterStoredValue)
+
   const [skip, setSkip] = useState(1)
+  const [skip2, setSkip2] = useState(1)
 
   const lastLocation = useLastLocation()
   const dispatch = useDispatch()
@@ -43,6 +51,9 @@ const DashboardCustomers = () => {
     loading: searchLoading,
     count: searchedCount,
     error: searchedError,
+    infiniteLoading: infiniteLoading2,
+    end: end2,
+    success: success2,
   } = useSelector((state) => state.dashboardSearchUsers)
   const dashboardSearchUsers = useSelector(
     (state) => state.dashboardSearchUsers
@@ -78,7 +89,7 @@ const DashboardCustomers = () => {
   useEffect(() => {
     if (!searchUser && !location.pathname.split("/")[3]) {
       if (!users || lastLocationValue) {
-        dispatch(getDashboardUsersAction(skip))
+        dispatch(getDashboardUsersAction(filterValue))
       }
     } else if (lastLocationValue && !location.pathname.split("/")[3]) {
       if (searchUser || !searchedUsers) {
@@ -86,6 +97,10 @@ const DashboardCustomers = () => {
       }
     }
   }, [dispatch, searchUser, lastLocation])
+
+  useEffect(() => {
+    dispatch(getDashboardUsersAction(filterValue))
+  }, [filterValue])
 
   const searchHandler = (e) => {
     e.preventDefault()
@@ -193,27 +208,65 @@ const DashboardCustomers = () => {
   }, [])
 
   const [element, inView] = useInView()
+  const [element2, inView2] = useInView()
 
   useEffect(() => {
     if (!searchedUsers) {
       if (success) {
         setTimeout(() => {
           if (!infiniteLoading && !end && !loading && inView) {
-            dispatch(infiniteScrollUsersAction(skip))
+            dispatch(infiniteScrollUsersAction(skip, filterValue))
             setSkip(skip + 1)
           }
         }, 500)
       } else {
         if (!infiniteLoading && !end && !loading && inView) {
-          dispatch(infiniteScrollUsersAction(skip))
+          dispatch(infiniteScrollUsersAction(skip, filterValue))
           setSkip(skip + 1)
         }
       }
     }
   }, [inView])
+
+  useEffect(() => {
+    if (searchedUsers) {
+      if (success2) {
+        setTimeout(() => {
+          if (!infiniteLoading2 && !end2 && !searchLoading && inView2) {
+            dispatch(infiniteScrollSearchUsersAction(searchUser, skip2))
+            setSkip2(skip2 + 1)
+          }
+        }, 500)
+      } else {
+        if (!infiniteLoading2 && !end2 && !searchLoading && inView2) {
+          dispatch(infiniteScrollSearchUsersAction(searchUser, skip2))
+          setSkip2(skip2 + 1)
+        }
+      }
+    }
+  }, [inView2])
   const [rankValue, setRankValue] = useState("")
   const { asking } = useSelector((state) => state.editRank)
   const { asking: deleteAsking } = useSelector((state) => state.deleteUser)
+
+  const changeFilterHandler = (e) => {
+    const value = e.target.innerText
+    console.log(value)
+
+    localStorage.setItem("filterUsers", value)
+    setFilterValue(value)
+  }
+  const filter = ["newest", "top paid"]
+
+  const [openFilter, setOpenFilter] = useState(false)
+
+  const lastSearchValue = lastLocation
+    ? lastLocation.search.split("=")[1]
+    : false
+
+  const condition5 = () =>
+    (!location.search.split("=")[1] && !location.pathname.split("/")[3]) ||
+    (location.pathname.split("/")[3] && !lastSearchValue)
 
   return (
     <StyledOrders>
@@ -256,20 +309,46 @@ const DashboardCustomers = () => {
                 </p>
               </div>
               <form className='search' onSubmit={searchHandler}>
-                <div className='inputCont'>
-                  <input
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    placeholder='Search'
-                    type='text'
-                  />
-                  {searchUser && (
-                    <img onClick={returnHandler} src={smallX} alt='' />
-                  )}
+                {(location.search.split("=")[1] && <div></div>) ||
+                  (lastSearchValue && location.pathname.split("/")[3] && (
+                    <div></div>
+                  ))}
+                {condition5() && (
+                  <div
+                    className={`filter ${openFilter ? "activeFilter" : ""}`}
+                    onClick={() => setOpenFilter(!openFilter)}
+                  >
+                    <p className='value'>{filterValue}</p>
+                    <img
+                      className={`${openFilter ? "activeFilterImg" : ""}`}
+                      src={arrow}
+                      alt=''
+                    />
+                    {openFilter && (
+                      <div className='filterDropDown'>
+                        {filter.map((e) => (
+                          <p onClick={changeFilterHandler}>{e}</p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div className='searchContainer'>
+                  <div className='inputCont'>
+                    <input
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                      placeholder='Search'
+                      type='text'
+                    />
+                    {searchUser && (
+                      <img onClick={returnHandler} src={smallX} alt='' />
+                    )}
+                  </div>
+                  <button type='submit'>
+                    <img src={search} />
+                  </button>
                 </div>
-                <button type='submit'>
-                  <img src={search} />
-                </button>
               </form>
               {headerCondition() ? (
                 <div className='headers'>
@@ -303,6 +382,16 @@ const DashboardCustomers = () => {
                   : users.map((each) => <UserDashboard user={each} />)}
               </motion.div>
 
+              {!end2 && searchedUsers ? (
+                <Loader
+                  providedClassName='infiniteLoader'
+                  refElement={element2}
+                />
+              ) : searchedUsers ? (
+                <p className='end'>Yay! You have seen it all</p>
+              ) : (
+                ""
+              )}
               {!end && !searchedUsers ? (
                 <Loader
                   providedClassName='infiniteLoader'
@@ -380,11 +469,76 @@ const StyledOrders = styled(motion.div)`
       opacity: 0.8;
     }
   }
+  .searchContainer {
+    display: flex;
+  }
+  .activeFilter {
+    background: #42447a !important;
+  }
+  .filter {
+    padding: 0.6rem 1rem;
+    background: #373864;
+    color: white;
+    font-size: calc(0.85rem + 0.3vw);
+    border-radius: 10px;
+    transition: 0.2s ease;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    img {
+      filter: brightness(1000);
+      margin-left: 0.4rem;
+      transition: 0.08s ease;
+    }
+    .activeFilterImg {
+      transform: rotate(180deg);
+    }
+    .value {
+      color: rgba(255, 255, 255, 1) !important;
+    }
+    .filterDropDown {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      transform: translate(0, 107%);
+      background: #42447a;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      width: 90%;
+      min-width: max-content;
+      font-size: calc(0.85rem + 0.3vw);
+      z-index: 4;
+      overflow: hidden;
+      p {
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.9) !important;
+        margin-top: 0.3rem;
+        transition: 0.2s ease;
+        padding: 0.5rem 0.7rem !important;
+        &:first-child {
+          margin-top: 0rem;
+          padding-bottom: 0.35rem !important;
+        }
+        &:last-child {
+          padding-top: 0.35rem !important;
+          margin-top: 0rem;
+        }
+        &:hover {
+          background: #3f4175;
+          color: rgba(255, 255, 255, 1) !important;
+        }
+      }
+    }
+  }
   .search {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    margin-top: 0.8rem;
     input {
       padding: 0.6rem 1rem;
       background: #373864;
