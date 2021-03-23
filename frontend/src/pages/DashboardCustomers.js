@@ -26,6 +26,7 @@ const DashboardCustomers = () => {
     ? localStorage.getItem("filterUsers")
     : "newest"
   const [filterValue, setFilterValue] = useState(filterStoredValue)
+  const [changed, setChanged] = useState(false)
 
   const [skip, setSkip] = useState(1)
   const [skip2, setSkip2] = useState(1)
@@ -99,8 +100,10 @@ const DashboardCustomers = () => {
   }, [dispatch, searchUser, lastLocation])
 
   useEffect(() => {
-    dispatch(getDashboardUsersAction(filterValue))
-  }, [filterValue])
+    if (changed) {
+      dispatch(getDashboardUsersAction(filterValue))
+    }
+  }, [filterValue, changed])
 
   const searchHandler = (e) => {
     e.preventDefault()
@@ -250,6 +253,7 @@ const DashboardCustomers = () => {
   const { asking: deleteAsking } = useSelector((state) => state.deleteUser)
 
   const changeFilterHandler = (e) => {
+    setChanged(true)
     const value = e.target.innerText
     console.log(value)
 
