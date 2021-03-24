@@ -12,6 +12,7 @@ import path from "path"
 import express from "express"
 import http from "http"
 import SocketService from "./webSockets/socketService.js"
+import wakeUpDyno from "./utils/wakeUpDyno.js"
 
 const app = express()
 const server = http.Server(app)
@@ -60,8 +61,12 @@ app.use(notFoundRouter)
 app.use(errRouter)
 
 const port = process.env.PORT || 5000
-
+const DYNO_URL = "https://howimadeathing.herokuapp.com"
 server.listen(port, () => {
+  if (process.env.NODE_ENV === "production") {
+    wakeUpDyno(DYNO_URL)
+  }
+
   console.log(
     `Server running in ${process.env.NODE_ENV} mode on port ${port}`.yellow.bold
   )

@@ -10,7 +10,7 @@ const Profile = () => {
   const dispatch = useDispatch()
   const userInfo = useSelector((state) => state.userInfo)
   function truncate(str = "") {
-    return str.length > 11 ? str.substr(0, 11 - 1) + ".." : str
+    return str.length > 15 ? str.substr(0, 15 - 1) + ".." : str
   }
   const history = useHistory()
   const location = useLocation()
@@ -46,7 +46,6 @@ const Profile = () => {
       return `/api/users/profilePic/${userInfo.user._id}`
     }
   }
-
   return (
     <StyledProfile className='profile'>
       {userInfo.user.name && (

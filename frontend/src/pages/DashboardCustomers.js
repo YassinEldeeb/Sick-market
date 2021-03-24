@@ -253,12 +253,13 @@ const DashboardCustomers = () => {
   const { asking: deleteAsking } = useSelector((state) => state.deleteUser)
 
   const changeFilterHandler = (e) => {
-    setChanged(true)
     const value = e.target.innerText
-    console.log(value)
 
-    localStorage.setItem("filterUsers", value)
-    setFilterValue(value)
+    if (value !== filterValue) {
+      setChanged(true)
+      localStorage.setItem("filterUsers", value)
+      setFilterValue(value)
+    }
   }
   const filter = ["newest", "top paid"]
 
@@ -477,11 +478,12 @@ const StyledOrders = styled(motion.div)`
     display: flex;
   }
   .activeFilter {
+    cursor: auto !important;
     background: #42447a !important;
   }
   .filter {
     padding: 0.6rem 1rem;
-    background: #373864;
+    background: rgb(48, 49, 89);
     color: white;
     font-size: calc(0.85rem + 0.3vw);
     border-radius: 10px;
@@ -502,6 +504,7 @@ const StyledOrders = styled(motion.div)`
     }
     .value {
       color: rgba(255, 255, 255, 1) !important;
+      pointer-events: none;
     }
     .filterDropDown {
       position: absolute;
