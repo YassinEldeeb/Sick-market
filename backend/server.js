@@ -61,7 +61,7 @@ app.use(notFoundRouter)
 app.use(errRouter)
 
 const port = process.env.PORT || 5000
-const DYNO_URL = "https://howimadeathing.herokuapp.com"
+const DYNO_URL = "https://sick-market.herokuapp.com"
 server.listen(port, () => {
   if (process.env.NODE_ENV === "production") {
     wakeUpDyno(DYNO_URL)
