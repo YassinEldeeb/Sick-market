@@ -1,12 +1,13 @@
 import request from "request"
 
-const wakeUpDyno = (url, interval = 25, callback) => {
+const wakeUpDyno = async(url, interval = 25, callback) => {
   const milliseconds = interval * 60000
   setTimeout(() => {
     try {
       console.log(`setTimeout called.`)
       // HTTP GET request to the dyno's url
-      fetch(url).then(() => console.log(`Fetching ${url}.`))
+      console.log(`Fetching ${url}.`)
+      await request.get(url)
     } catch (err) {
       // catch fetch errors
       console.log(`Error fetching ${url}: ${err.message} 
