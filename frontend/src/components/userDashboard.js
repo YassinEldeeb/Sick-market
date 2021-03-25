@@ -77,6 +77,7 @@ const UserDashboard = ({ user }) => {
     </StyledUser>
   )
 }
+
 const StyledUser = styled(motion.div)`
   .providedLoader {
     #greybackground path {

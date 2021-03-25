@@ -1,10 +1,10 @@
 import React, { useEffect } from "react"
 import styled from "styled-components"
 import { Scrollbars } from "react-custom-scrollbars"
-import { useLocation, useHistory, Link } from "react-router-dom"
+import { useLocation, useHistory } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { useLastLocation } from "react-router-last-location"
-
+import { v4 as uuid } from "uuid"
 import statistics from "../img/statistics.svg"
 import orders from "../img/cartD.svg"
 import categories from "../img/categories.svg"
@@ -19,6 +19,7 @@ import home from "../img/home.svg"
 
 import DashboardTab from "../components/DashboardTab"
 import DashboardCustomers from "./DashboardCustomers"
+import DashboardProducts from "./DashboardProducts"
 
 const Dashboard = ({ pageContent }) => {
   const lastLocation = useLastLocation()
@@ -45,6 +46,9 @@ const Dashboard = ({ pageContent }) => {
       case "customers":
         Content = <DashboardCustomers />
         break
+      case "products":
+        Content = <DashboardProducts />
+        break
     }
   }
   pageSort()
@@ -60,8 +64,14 @@ const Dashboard = ({ pageContent }) => {
     const firstChild = document.querySelector(
       ".large-scrollable-content div:first-child"
     )
-    if (!firstChild.classList.contains("addMoreMargin")) {
+    const firstChild2 = document.querySelector(
+      ".scrollable.dashboardTabs div:first-child"
+    )
+    if (firstChild && !firstChild.classList.contains("addMoreMargin")) {
       firstChild.classList.add("addMoreMargin")
+    }
+    if (firstChild2 && !firstChild2.classList.contains("addMoreMargin")) {
+      firstChild2.classList.add("addMoreMargin")
     }
     if (!location.pathname.split("/")[3]) {
       if (!lastLocation || !lastLocation.pathname.split("/")[3])
@@ -95,10 +105,19 @@ const Dashboard = ({ pageContent }) => {
     }
   }, [location.pathname, lastLocation])
 
+  useEffect(() => {
+    const dashboardTabs = document.querySelector(
+      ".dashboardTabs div:first-child"
+    )
+    dashboardTabs.scroll({
+      top: 0,
+      left: 0,
+    })
+  }, [])
   return (
     <StyledDashboard>
       <div className='sidebar'>
-        <Scrollbars className='scrollable'>
+        <Scrollbars className='scrollable dashboardTabs'>
           <DashboardTab
             providedClassName='backHome'
             text={"Home"}
@@ -107,6 +126,7 @@ const Dashboard = ({ pageContent }) => {
           <p>Main</p>
           {main.map((e) => (
             <DashboardTab
+              key={uuid()}
               text={e.text}
               icon={e.i}
               active={e.active ? e.active : false}
@@ -115,6 +135,7 @@ const Dashboard = ({ pageContent }) => {
           <p className='last'>Communicate</p>
           {communicate.map((e) => (
             <DashboardTab
+              key={uuid()}
               text={e.text}
               icon={e.i}
               active={e.active ? e.active : false}

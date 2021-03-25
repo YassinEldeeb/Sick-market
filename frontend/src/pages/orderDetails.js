@@ -292,7 +292,7 @@ const OrderDetails = () => {
                       qty={each.qty}
                       productName={truncate(each.name)}
                       img={each.image}
-                      id={each._id}
+                      id={each.product}
                       key={each._id}
                     />
                   ))}

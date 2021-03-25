@@ -8,7 +8,10 @@ export const productListAction = () => async (dispatch) => {
     const { data } = await axios.get("/api/products", {
       cancelToken: source.token,
     })
-    dispatch({ type: "PRODUCT_LIST_SUCCESS", payload: data })
+    dispatch({
+      type: "PRODUCT_LIST_SUCCESS",
+      payload: data,
+    })
   } catch (error) {
     dispatch({
       type: "PRODUCT_LIST_FAIL",

@@ -21,6 +21,14 @@ export const hide = {
     transition: { staggerChildren: 0.08 },
   },
 }
+export const hide2 = {
+  hidden: {
+    opacity: 1,
+  },
+  show: {
+    opacity: 1,
+  },
+}
 
 export const popup2 = {
   hidden: {

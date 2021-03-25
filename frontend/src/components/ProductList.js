@@ -12,16 +12,20 @@ const ProductList = ({ setScrolled }) => {
   const { products, error, loading } = useSelector((state) => state.productList)
 
   useEffect(() => {
-    if (products ? !products.length && !loading : !error && !loading) {
-      dispatch(productListAction())
-    }
-  }, [dispatch, error, products, loading])
+    if (!products) dispatch(productListAction())
+  }, [dispatch])
 
   return (
     <StyledList>
       <h1 className='title'>Latest Products</h1>
       {loading ? (
         <Loader />
+      ) : !error && products ? (
+        <div className='productList'>
+          {products.map((each) => (
+            <Product data={each} key={each._id} setScrolled={setScrolled} />
+          ))}
+        </div>
       ) : error ? (
         <Message
           msg={
@@ -34,11 +38,7 @@ const ProductList = ({ setScrolled }) => {
           type='error'
         />
       ) : (
-        <div className='productList'>
-          {products.map((each) => (
-            <Product data={each} key={each._id} setScrolled={setScrolled} />
-          ))}
-        </div>
+        ""
       )}
     </StyledList>
   )
@@ -56,7 +56,7 @@ const StyledList = styled.div`
   }
   .productList {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(calc(200px + 5vw), 1fr));
     grid-gap: calc(0.5rem + 0.8vw);
     @media screen and (max-width: 400px) {
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;

@@ -12,6 +12,8 @@ const ConfirmPopup = ({ action, resetValue, condition, type }) => {
       dispatch({ type: "CONFIRM_RANK_CANCEL" })
     } else if (passedType === "delete") {
       dispatch({ type: "CONFIRM_DELETE_CANCEL" })
+    } else if (passedType === "deleteProduct") {
+      dispatch({ type: "CONFIRM_DELETE_PRODUCT_CANCEL" })
     }
 
     if (resetValue) {
@@ -23,6 +25,8 @@ const ConfirmPopup = ({ action, resetValue, condition, type }) => {
       dispatch({ type: "CONFIRM_RANK_SUCCESS" })
     } else if (passedType === "delete") {
       dispatch({ type: "CONFIRM_DELETE_SUCCESS" })
+    } else if (passedType === "deleteProduct") {
+      dispatch({ type: "CONFIRM_DELETE_PRODUCT_SUCCESS" })
     }
   }
 

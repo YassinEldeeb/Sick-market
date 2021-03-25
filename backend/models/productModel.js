@@ -63,6 +63,14 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    qtyPerUser: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
+    paidAmmount: {
+      type: Number,
+    },
   },
   { timestamps: true }
 )

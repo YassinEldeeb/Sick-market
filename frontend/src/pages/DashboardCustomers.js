@@ -20,6 +20,7 @@ import infiniteScrollUsersAction from "../actions/infiniteScrollUsers"
 import infiniteScrollSearchUsersAction from "../actions/infiniteScrollSearchedUsers"
 import ConfirmPopup from "../components/confirmPopup"
 import arrow from "../img/arrow2.svg"
+import { v4 as uuid } from "uuid"
 
 const DashboardCustomers = () => {
   const filterStoredValue = localStorage.getItem("filterUsers")
@@ -332,7 +333,9 @@ const DashboardCustomers = () => {
                     {openFilter && (
                       <div className='filterDropDown'>
                         {filter.map((e) => (
-                          <p onClick={changeFilterHandler}>{e}</p>
+                          <p key={uuid()} onClick={changeFilterHandler}>
+                            {e}
+                          </p>
                         ))}
                       </div>
                     )}
@@ -383,17 +386,25 @@ const DashboardCustomers = () => {
                   searchedUsers) ||
                 (searchUser && searchedUsers) ||
                 (location.pathname.split("/")[3] && searchedUsers)
-                  ? searchedUsers.map((each) => <UserDashboard user={each} />)
-                  : users.map((each) => <UserDashboard user={each} />)}
+                  ? searchedUsers.map((each) => (
+                      <UserDashboard key={each._id} user={each} />
+                    ))
+                  : users.map((each) => (
+                      <UserDashboard keyId={each._id} user={each} />
+                    ))}
               </motion.div>
 
-              {!end2 && searchedUsers ? (
+              {!end2 && searchedUsers && searchedUsers.length > 0 ? (
                 <Loader
                   providedClassName='infiniteLoader'
                   refElement={element2}
                 />
-              ) : searchedUsers ? (
-                <p className='end'>Yay! You have seen it all</p>
+              ) : searchedUsers && searchedUsers.length > 0 ? (
+                searchedUsers ? (
+                  <p className='end'>Yay! You have seen it all</p>
+                ) : (
+                  ""
+                )
               ) : (
                 ""
               )}
@@ -511,8 +522,8 @@ const StyledOrders = styled(motion.div)`
       left: 0;
       bottom: 0;
       transform: translate(0, 107%);
-      background: #42447a;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      background: rgb(61, 62, 112);
+      box-shadow: rgba(29, 32, 62, 0.42) 0px 2px 10px;
       border-radius: 6px;
       width: 90%;
       min-width: max-content;

@@ -9,9 +9,16 @@ const Goback = ({ toPath, providedClassName, text = "Go back" }) => {
   const isBuyNow = location.search.split("=")[1] === "buyNow"
 
   const lastLocation = useLastLocation()
-  console.log("LAST", lastLocation)
   let linkValue
-  if (toPath) {
+  if (lastLocation && lastLocation.pathname.includes("dashboard")) {
+    const search = lastLocation
+      ? lastLocation.search
+        ? lastLocation.search
+        : ""
+      : ""
+    linkValue = lastLocation.pathname + search
+    console.log("Link Value", search)
+  } else if (toPath) {
     linkValue = toPath
   } else if (
     lastLocation &&

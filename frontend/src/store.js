@@ -17,6 +17,7 @@ import deleteUser from "./reducers/deleteUser"
 import canOrder from "./reducers/canOrder"
 import canReview from "./reducers/canReview"
 import editRank from "./reducers/editRank"
+import deleteProduct from "./reducers/deleteProduct"
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -37,6 +38,7 @@ const reducers = combineReducers({
   canOrder,
   canReview,
   editRank,
+  deleteProduct,
 })
 let initialState
 
