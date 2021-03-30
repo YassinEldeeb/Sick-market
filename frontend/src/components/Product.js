@@ -12,7 +12,6 @@ const Product = ({
   type,
   completedCrop,
   previewCanvasRef,
-  crop,
 }) => {
   const location = useLocation()
   const dispatch = useDispatch()

@@ -37,7 +37,6 @@ const DashboardNewProduct = () => {
   const [description, setDescription] = useState("")
   const [qtyPerUser, setQtyPerUser] = useState("")
 
-  //
   const [formData, setFormData] = useState(new FormData())
 
   const addProductHandler = (e) => {
@@ -51,18 +50,10 @@ const DashboardNewProduct = () => {
       description,
       qtyPerUser,
     }
-    console.log("Before..")
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1])
-    }
     for (const e in dataObj) {
       formData.append(e, dataObj[e])
     }
-    console.log("After..")
 
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1])
-    }
     dispatch(addNewProductAction(formData))
   }
   const { newLoading, newError, success } = useSelector(
@@ -83,7 +74,21 @@ const DashboardNewProduct = () => {
   }, [newError])
 
   useEffect(() => {
-    if (success) history.push("/dashboard/products")
+    if (success) {
+      setName("")
+      setPrice("")
+      setBrand("")
+      setStock("")
+      setCategory("")
+      setDescription("")
+      setQtyPerUser("")
+      setFormData(new FormData())
+      setCompletedCrop(null)
+      setImageType(null)
+      setImage(null)
+
+      history.push("/dashboard/products")
+    }
   }, [success])
 
   //Crop
@@ -104,7 +109,7 @@ const DashboardNewProduct = () => {
       onClick={(e) => {
         if (
           e.target.classList.contains("cardCont") &&
-          location.pathname.split("/")[4] !== "image"
+          (location.pathname.split("/")[4] !== "image" || !image)
         ) {
           setCrop({
             aspect: 64 / 51,

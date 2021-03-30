@@ -16,17 +16,9 @@ const productListReducer = (state = initialState, action) => {
     case "ADD_PRODUCT_REQUEST":
       return { ...state, newLoading: true, success: false, newError: false }
     case "ADD_PRODUCT_SUCCESS":
-      const addTheRest = () => {
-        let productsArr
-        if (state.products) {
-          productsArr = [action.payload, ...state.products]
-        } else {
-          productsArr = [action.payload]
-        }
-      }
       return {
         ...state,
-        products: addTheRest(),
+        products: state.products ? [action.payload, ...state.products] : null,
         newLoading: false,
         success: true,
         count: state.count + 1,

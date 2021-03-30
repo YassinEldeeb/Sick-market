@@ -42,17 +42,20 @@ app.get("/api/config/paypal", (req, res) =>
 
 const __dirname = path.resolve()
 if (process.env.NODE_ENV === "production") {
+  process.env.PWD = process.cwd()
+  app.use(express.static(path.join(process.env.PWD, "/uploads")))
+
   app.use(express.static(path.join(__dirname, "/frontend/build")))
 
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
   })
 } else {
+  app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
   app.get("/", (req, res) => {
     res.send("The API is running!")
   })
 }
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
 
 app.use(notFoundRouter)
 app.use(errRouter)

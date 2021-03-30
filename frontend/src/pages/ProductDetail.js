@@ -270,7 +270,7 @@ const StyledDetail = styled.div`
       }
       h3 {
         font-weight: 400;
-        color: #1a1a1a;
+        color: #373737;
         font-size: calc(0.35rem + 1vw);
       }
       .starsRating {
