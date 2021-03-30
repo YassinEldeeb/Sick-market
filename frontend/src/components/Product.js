@@ -82,8 +82,9 @@ const StyledProduct = styled.div`
   flex-direction: column;
   border-radius: 7px;
   overflow: hidden;
-  background: #f8f8f8;
-  box-shadow: -3px 3px 5px rgba(0, 0, 0, 0.08);
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.06) -3px 3px 5px;
+  border: 1px solid rgba(227, 227, 227, 0.73);
 
   .product_description {
     flex: 1 1 auto;
