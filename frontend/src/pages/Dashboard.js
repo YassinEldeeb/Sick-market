@@ -36,7 +36,7 @@ const Dashboard = ({ pageContent }) => {
   ]
   main.forEach((e) => (e.active = e.text.toLowerCase() === pageContent))
   const communicate = [
-    { text: "Chat", i: chat },
+    { text: "Notify", i: chat },
     { text: "Emails", i: emails },
   ]
 
@@ -56,6 +56,7 @@ const Dashboard = ({ pageContent }) => {
   const dashboardUsers = useSelector((state) => state.dashboardUsers)
   const userActions = useSelector((state) => state.userActions)
   const { user } = useSelector((state) => state.userInfo)
+  const productList = useSelector((state) => state.productList)
 
   const location = useLocation()
   const history = useHistory()
@@ -114,6 +115,19 @@ const Dashboard = ({ pageContent }) => {
       left: 0,
     })
   }, [])
+
+  useEffect(() => {
+    productList.loading = true
+    productList.success = false
+    productList.newError = null
+    if (location.pathname.split("/")[3] === "add") {
+      const firstChild = document.querySelector(
+        ".large-scrollable-content div:first-child"
+      )
+      firstChild.style.overflowY = "hidden !important"
+    }
+  }, [location.pathname])
+
   return (
     <StyledDashboard>
       <div className='sidebar'>
@@ -153,6 +167,7 @@ const Dashboard = ({ pageContent }) => {
 const StyledDashboard = styled.div`
   .addMoreMargin {
     margin-bottom: -20px !important;
+    overflow: auto;
   }
   .backHome {
     padding: calc(0.45rem + 0.3vw) calc(1rem + 0.3vw);

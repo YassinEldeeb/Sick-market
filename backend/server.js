@@ -24,20 +24,16 @@ connectDB()
 
 app.use(bodyparser.urlencoded({ extended: true }))
 
-app.use("/api/products", productRouter)
-
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minutes
   max: 1,
   message: { message: "Try again in 60 seconds" },
 })
 
+app.use("/api/products", productRouter)
 app.use("/api/users/getNewSecurityCode", apiLimiter)
-
 app.use("/api/users", userRouter)
-
 app.use("/api/orders", orderRouter)
-
 app.use("/api/coupons", couponRouter)
 
 app.get("/api/config/paypal", (req, res) =>
@@ -56,6 +52,7 @@ if (process.env.NODE_ENV === "production") {
     res.send("The API is running!")
   })
 }
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")))
 
 app.use(notFoundRouter)
 app.use(errRouter)

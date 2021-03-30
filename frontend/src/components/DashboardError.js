@@ -27,6 +27,8 @@ const StyledDashboard = styled.div`
   border-radius: 12px;
   border-bottom-left-radius: 0;
   width: max-content;
+  max-width: 60%;
+  margin-bottom: 0.5rem;
   p.error {
     font-weight: 500;
     color: rgba(255, 255, 255, 0.9) !important;

@@ -1,29 +1,58 @@
 import React from "react"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import Rating from "./Rating"
 import { useDispatch } from "react-redux"
+import add from "../img/add.svg"
+import { motion, AnimatePresence } from "framer-motion"
 
-const Product = ({ data, setScrolled }) => {
+const Product = ({
+  data,
+  providedClassName,
+  type,
+  completedCrop,
+  previewCanvasRef,
+  crop,
+}) => {
+  const location = useLocation()
   const dispatch = useDispatch()
   function truncate(str) {
     return str.length > 35 ? str.substr(0, 35 - 1) + "..." : str
   }
 
   return (
-    <StyledProduct>
+    <StyledProduct className={`${providedClassName ? providedClassName : ""}`}>
       <Link
-        to={`/products/${data._id}`}
+        className='previewImg'
+        to={`${
+          type !== "preview"
+            ? `/products/${data._id}`
+            : "/dashboard/products/add/image"
+        }`}
         onClick={() => {
-          dispatch({ type: "PRODUCT_DETAIL_REQUEST" })
+          if (type !== "preview") dispatch({ type: "PRODUCT_DETAIL_REQUEST" })
         }}
       >
-        <img src={data.image} alt='product' />
+        {completedCrop && type === "preview" ? (
+          <canvas className='canvasPreview' ref={previewCanvasRef} />
+        ) : type === "preview" ? (
+          <>
+            <img src={data.image} alt='product' />
+
+            <div className='addLayer'>
+              <img className='add' src={add} alt='' />
+            </div>
+          </>
+        ) : (
+          ""
+        )}
+
+        {type !== "preview" && <img src={data.image} alt='product' />}
       </Link>
       <div className='product_description'>
         <p>Brand: {data.brand}</p>
         <Link
-          to={`/products/${data._id}`}
+          to={`${type !== "preview" ? `/products/${data._id}` : "#"}`}
           onClick={() => {
             dispatch({ type: "PRODUCT_DETAIL_REQUEST" })
           }}
@@ -40,6 +69,12 @@ const Product = ({ data, setScrolled }) => {
   )
 }
 const StyledProduct = styled.div`
+  .canvasPreview {
+    width: 100% !important;
+    height: unset !important;
+    border-radius: 7px;
+  }
+  height: max-content;
   a {
     display: flex;
     flex-direction: column;
@@ -62,14 +97,14 @@ const StyledProduct = styled.div`
     padding-bottom: calc(0.45rem + 0.3vw);
     p {
       width: 100%;
-      color: #1a1a1a;
+      color: #1a1a1a !important;
       font-size: calc(0.6rem + 0.5vw);
     }
     p:first-child {
-      color: #00667b;
+      color: #00667b !important;
     }
     h1 {
-      color: #1a1a1a;
+      color: #1a1a1a !important;
       font-weight: 400;
       font-size: calc(0.85rem + 0.4vw);
       padding: calc(0.1rem + 0.1vw) 0;
@@ -81,7 +116,7 @@ const StyledProduct = styled.div`
       }
     }
     h4 {
-      color: #005568;
+      color: #005568 !important;
       font-weight: 400;
       font-size: calc(1rem + 0.4vw);
       position: relative;
@@ -104,7 +139,34 @@ const StyledProduct = styled.div`
       border-radius: 7px;
     }
   }
+  .previewImg {
+    position: relative;
+  }
+  .addLayer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border-radius: 7px;
+    transition: 0.2s ease;
+    opacity: 0;
+    .add {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      margin: 0.8rem;
+      width: 25px;
+      height: 25px;
+      border-radius: 0;
+    }
 
+    &:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
   @media screen and (max-width: 570px) {
     a:first-child {
       margin: calc(0.8rem + 0.4vw);

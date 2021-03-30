@@ -19,12 +19,12 @@ import arrow from "../img/arrow2.svg"
 import ProductDashboard from "../components/ProductDashboard"
 import { useDispatch, useSelector } from "react-redux"
 import deleteProduct from "../actions/deleteProduct"
+import DashboardNewProduct from "./DashboardNewProduct"
 
 const DashboardProducts = () => {
   const { products, error, loading, count } = useSelector(
     (state) => state.productList
   )
-  const [changed, setChanged] = useState(false)
 
   const [skip, setSkip] = useState(1)
   const [skip2, setSkip2] = useState(1)
@@ -37,15 +37,23 @@ const DashboardProducts = () => {
   useEffect(() => {
     if (lastLocation) {
       if (
-        lastLocation.pathname.split("/")[2] &&
-        lastLocation.pathname.split("/")[1].toLowerCase() === "products" &&
-        !lastLocation.pathname.split("/")[3]
+        location.pathname.split("/")[3] === "add" ||
+        (lastLocation.pathname.split("/")[2] &&
+          lastLocation.pathname.split("/")[1] === "products" &&
+          !lastLocation.pathname.split("/")[3]) ||
+        (lastLocation.pathname.split("/")[3] === "add" && products) ||
+        (lastLocation.pathname === "/dashboard/products" &&
+          location.pathname === "/dashboard/products/add") ||
+        (location.pathname === "/dashboard/products/add" &&
+          lastLocation.pathname === "/dashboard/products/add")
       ) {
         return
       }
+
       dispatch(productListAction())
     } else {
-      dispatch(productListAction())
+      if (location.pathname.split("/")[3] !== "add")
+        dispatch(productListAction())
     }
   }, [dispatch, lastLocation])
 
@@ -58,19 +66,19 @@ const DashboardProducts = () => {
 
   const [scrolled, setScrolled] = useState(0)
 
-  //   useEffect(() => {
-  //     const container = document.querySelector(
-  //       ".large-scrollable-content div:first-child"
-  //     )
-  //     container.addEventListener("scroll", () => {
-  //       setTimeout(
-  //         throttle(() => {
-  //           setScrolled(container.scrollTop)
-  //         }),
-  //         100
-  //       )
-  //     })
-  //   }, [])
+  useEffect(() => {
+    const container = document.querySelector(
+      ".large-scrollable-content div:first-child"
+    )
+    container.addEventListener("scroll", () => {
+      setTimeout(
+        throttle(() => {
+          setScrolled(container.scrollTop)
+        }),
+        100
+      )
+    })
+  }, [])
 
   useEffect(() => {
     const container = document.querySelector(
@@ -81,11 +89,11 @@ const DashboardProducts = () => {
   }, [location.pathname])
 
   useEffect(() => {
-    // const cardCont = document.querySelector(".cardCont")
+    const cardCont = document.querySelector(".cardCont")
     const popups = document.querySelectorAll(".confirmationPopup")
 
     popups.forEach((e) => (e.style.top = `${scrolled}px`))
-    // cardCont.style.top = `${scrolled}px`
+    cardCont.style.top = `${scrolled}px`
   }, [scrolled])
 
   const { user: userInfo } = useSelector((state) => state.userInfo)
@@ -117,6 +125,7 @@ const DashboardProducts = () => {
       return hide
     }
   }
+
   const {
     loading: deleteLoading,
     success,
@@ -130,18 +139,42 @@ const DashboardProducts = () => {
       dispatch(deleteProduct(clickedForDelete._id))
     }
   }, [confirm])
+
+  const lastCondition = () =>
+    lastLocation ? lastLocation.pathname.split("/")[3] !== "add" : true
+  const lastCondition2 = () =>
+    lastLocation ? lastLocation.pathname.split("/")[3] === "add" : true
+
   return (
     <StyledOrders>
+      <DashboardNewProduct />
       <ConfirmPopup
         condition={deleteAsking}
         type='deleteProduct'
         action={`Delete "${clickedForDelete.name}"`}
       />
-      {products ? (
-        <div className='cont'>
-          <div className='title'>
-            <h1>Products</h1>
-            <p>{count} Products Found</p>
+      {(products && lastLocation
+        ? lastLocation.pathname.split("/")[1] === "products" &&
+          !lastLocation.pathname.split("/")[3]
+        : false) ||
+      (products && !loading && lastCondition()) ||
+      (products && lastCondition2()) ||
+      (location.pathname.split("/")[3] === "add" && products) ? (
+        <div
+          id={`${location.pathname.split("/")[3] === "add" ? "blur" : ""}`}
+          className='cont'
+        >
+          <div className='head'>
+            <div className='title'>
+              <h1>Products</h1>
+              <p>{count} Products Found</p>
+            </div>
+            <button
+              onClick={() => history.push("/dashboard/products/add")}
+              className='addProduct'
+            >
+              Add new Product
+            </button>
           </div>
           <form className='search' onSubmit={searchHandler}>
             <div className='searchContainer'>
@@ -194,10 +227,12 @@ const DashboardProducts = () => {
               variants={animCondition()}
               initial='hidden'
               animate='show'
+              exit='exit'
             >
               {products.map((each) => (
                 <ProductDashboard
                   setClickedForDelete={setClickedForDelete}
+                  clickedForDelete={clickedForDelete}
                   key={each._id}
                   product={each}
                 />
@@ -207,7 +242,7 @@ const DashboardProducts = () => {
         </div>
       ) : error ? (
         <DashboardError error={error} />
-      ) : loading ? (
+      ) : loading && location.pathname.split("/")[3] !== "add" ? (
         <Loader />
       ) : (
         ""
@@ -217,6 +252,28 @@ const DashboardProducts = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  &#blur {
+    filter: blur(2px);
+  }
+  .addProduct {
+    background: #373864;
+    color: white;
+    padding: 0.7rem 1.2rem;
+    font-size: calc(0.78rem + 0.3vw);
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s ease;
+    &:hover {
+      background: #31335a;
+    }
+  }
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .center {
     text-align: center;
   }

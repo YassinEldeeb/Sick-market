@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import checkToken from "./actions/checkToken"
 import Loader from "./components/loader"
 import Nav from "./components/Nav"
+import JustComponentForApp from "./components/justComponentForApp"
 
 const Home = lazy(() => import("./pages/Home"))
 const ProductDetail = lazy(() => import("./pages/ProductDetail"))
@@ -60,6 +61,7 @@ const App = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
           />
+          <JustComponentForApp />
           <Suspense fallback={<p className='loadingText'>Loading...</p>}>
             <Switch>
               <Route path='/' exact>

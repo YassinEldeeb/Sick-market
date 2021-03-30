@@ -68,7 +68,7 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 1,
     },
-    paidAmmount: {
+    paidAmount: {
       type: Number,
     },
   },
@@ -76,4 +76,5 @@ const productSchema = mongoose.Schema(
 )
 
 const Product = mongoose.model("Product", productSchema)
+
 export default Product

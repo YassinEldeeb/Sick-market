@@ -91,6 +91,7 @@ const StyledCart = styled.div`
       font-weight: 400;
       font-size: calc(0.75rem + 0.3vw) !important;
       color: rgba(255, 255, 255, 0.85);
+      width: 98%;
     }
     .actions {
       margin-top: 0.3rem;

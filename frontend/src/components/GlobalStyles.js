@@ -24,6 +24,9 @@ a{
     color:white;
     text-decoration:none;
 }
+img{
+  image-rendering: -webkit-optimize-contrast;
+}
 .loadingText{
   text-align:center;
   margin:0.5rem 0;

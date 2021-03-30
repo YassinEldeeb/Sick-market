@@ -6,14 +6,12 @@ import trash from "../img/trash.svg"
 import eye from "../img/eyeSee.svg"
 import ReactTooltip from "react-tooltip"
 import { motion } from "framer-motion"
-import { popup, hide2 } from "../animations"
+import { popup } from "../animations"
 import { Link, useLocation } from "react-router-dom"
-import reactStringReplace from "react-string-replace"
 import Loader from "../components/loader"
 import { useSelector, useDispatch } from "react-redux"
 import { useLastLocation } from "react-router-last-location"
 import deleteProduct from "../actions/deleteProduct"
-import ConfirmPopup from "../components/confirmPopup"
 
 const ProductDashboard = ({ product, setClickedForDelete }) => {
   const { products, error, loading, count } = useSelector(
@@ -23,7 +21,6 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
     (state) => state.deleteProduct
   )
   const dispatch = useDispatch()
-  const location = useLocation()
   const lastLocation = useLastLocation()
 
   const animCondition = () => {
@@ -41,9 +38,7 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
       return popup
     }
   }
-  const deleteHandler = (id) => {
-    dispatch(deleteProduct(id))
-  }
+  const [clicked, setClicked] = useState(false)
 
   return (
     <StyledUser variants={animCondition()}>
@@ -86,6 +81,7 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
         <div className='ActionCont'>
           <div
             onClick={() => {
+              setClicked(true)
               setClickedForDelete(product)
               dispatch({ type: "CONFIRM_DELETE_PRODUCT_REQUEST" })
             }}
@@ -93,8 +89,10 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
           >
             {!deleteLoading ? (
               <img className='gearImg' src={trash} alt='' />
-            ) : (
+            ) : clicked ? (
               <Loader />
+            ) : (
+              <img className='gearImg' src={trash} alt='' />
             )}
           </div>
         </div>

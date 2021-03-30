@@ -380,7 +380,12 @@ const DashboardCustomers = () => {
                 <p className='sorry'>Sorry nothing found!</p>
               )}
 
-              <motion.div variants={hide} initial='hidden' animate='show'>
+              <motion.div
+                variants={hide}
+                initial='hidden'
+                animate='show'
+                exit='exit'
+              >
                 {(lastSearch &&
                   location.pathname.split("/")[3] &&
                   searchedUsers) ||
@@ -442,7 +447,7 @@ const StyledOrders = styled(motion.div)`
     text-align: center;
     font-weight: 400 !important;
     font-size: 1rem !important;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.9rem;
   }
   .infinite-scroll-component {
     overflow-y: hidden !important;

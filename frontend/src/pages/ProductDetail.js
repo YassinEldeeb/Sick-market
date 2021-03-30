@@ -290,7 +290,7 @@ const StyledDetail = styled.div`
     box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     align-items: stretch !important;
-
+    min-width: 23%;
     h1,
     h3 {
       font-weight: 400;

@@ -10,6 +10,22 @@ export const popup = {
     transition: { duration: 0.5 },
     y: 0,
   },
+  exit: {
+    opacity: 0,
+    scale: 0.9,
+    y: 5,
+  },
+}
+export const popup3 = {
+  hidden: {
+    opacity: 0,
+    scale: 0.8,
+  },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.4 },
+  },
 }
 
 export const hide = {
@@ -62,5 +78,22 @@ export const slidePopup = {
     opacity: 0,
     y: -10,
     transition: { duration: 0.1 },
+  },
+}
+export const show = {
+  hidden: {
+    opacity: 0,
+    x: "-5%",
+    transition: { duration: 0 },
+  },
+  show: {
+    x: "0%",
+    opacity: 1,
+    transition: { duration: 0.25 },
+  },
+  exit: {
+    x: "-5%",
+    opacity: 0,
+    transition: { duration: 0.2 },
   },
 }

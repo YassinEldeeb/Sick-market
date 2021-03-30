@@ -1,4 +1,5 @@
 const initialState = { loading: true }
+
 const productListReducer = (state = initialState, action) => {
   switch (action.type) {
     case "PRODUCT_LIST_REQUEST":
@@ -12,6 +13,32 @@ const productListReducer = (state = initialState, action) => {
       }
     case "PRODUCT_LIST_FAIL":
       return { ...state, error: action.payload, loading: false }
+    case "ADD_PRODUCT_REQUEST":
+      return { ...state, newLoading: true, success: false, newError: false }
+    case "ADD_PRODUCT_SUCCESS":
+      const addTheRest = () => {
+        let productsArr
+        if (state.products) {
+          productsArr = [action.payload, ...state.products]
+        } else {
+          productsArr = [action.payload]
+        }
+      }
+      return {
+        ...state,
+        products: addTheRest(),
+        newLoading: false,
+        success: true,
+        count: state.count + 1,
+        newError: false,
+      }
+    case "ADD_PRODUCT_FAIL":
+      return {
+        ...state,
+        newLoading: false,
+        newError: action.payload,
+        success: false,
+      }
     default:
       return state
   }
