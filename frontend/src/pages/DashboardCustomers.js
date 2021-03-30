@@ -302,7 +302,7 @@ const DashboardCustomers = () => {
               id={`${location.pathname.split("/")[3] && user ? "blur" : ""}`}
             >
               <div className='title'>
-                <h1>Users</h1>
+                <h1>Customers</h1>
                 <p>
                   {(searchUser && searchedUsers) ||
                   (location.pathname.split("/")[3] && searchedUsers) ||
@@ -311,7 +311,7 @@ const DashboardCustomers = () => {
                     searchedUsers)
                     ? searchedCount
                     : count}{" "}
-                  Users Found
+                  Customers Found
                 </p>
               </div>
               <form className='search' onSubmit={searchHandler}>
