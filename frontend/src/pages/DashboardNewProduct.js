@@ -37,6 +37,7 @@ const DashboardNewProduct = () => {
   const [description, setDescription] = useState("")
   const [qtyPerUser, setQtyPerUser] = useState("")
 
+  //
   const [formData, setFormData] = useState(new FormData())
 
   const addProductHandler = (e) => {
