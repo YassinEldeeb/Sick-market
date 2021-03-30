@@ -10,8 +10,11 @@ import Loader from "../components/loader"
 import { cartAction, removeAction } from "../actions/cart"
 import QtySelector from "../components/QtySelector"
 import { buyNowAction } from "../actions/buyNow"
+import { useLastLocation } from "react-router-last-location"
 
 const ProductDetail = ({ cartCount, setCartCount }) => {
+  const lastLocation = useLastLocation()
+
   const location = useLocation()
   const isBuyNow = location.search.split("=")[1] === "buyNow"
   const id = location.pathname.split("/")[2]
@@ -31,7 +34,13 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   const { cartItems } = useSelector((state) => state.cart)
 
   useEffect(() => {
-    dispatch(productDetailAction(id))
+    if (
+      lastLocation
+        ? lastLocation.pathname.split("/")[1] !== "product-description"
+        : true
+    ) {
+      dispatch(productDetailAction(id))
+    }
   }, [dispatch, id])
 
   const buyNowHandler = () => {
