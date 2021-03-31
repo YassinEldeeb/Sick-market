@@ -42,7 +42,7 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
 
   return (
     <StyledUser variants={animCondition()}>
-      <ReactTooltip effect='solid' delayHide={100} delayShow={200} />
+      <ReactTooltip effect='solid' delayHide={100} delayShow={100} />
       <div className='id'>
         <p data-tip={"#" + product._id}>
           #{product._id.substr(product._id.length - 4)}

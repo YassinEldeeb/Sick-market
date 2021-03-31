@@ -51,6 +51,9 @@ const StyledItem = styled.div`
   &:last-child {
     border-bottom: unset;
   }
+  .firstDiv a {
+    display: flex;
+  }
   .firstDiv {
     flex: 1 1 auto;
     display: flex;

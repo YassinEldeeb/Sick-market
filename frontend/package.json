@@ -45,6 +45,7 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
+    "render-smooth-image-react": "^1.0.3",
     "socket.io-client": "^4.0.0",
     "styled-components": "^5.2.1",
     "underscore": "^1.12.0",

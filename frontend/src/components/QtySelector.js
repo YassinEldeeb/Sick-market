@@ -82,12 +82,13 @@ const QtySelector = ({
     </StyledSelect>
   )
 }
+
 const StyledSelect = styled.div`
   .select {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.25rem 1.5rem;
+    padding: 0.25rem 1.3rem;
     background: #f4f4f4;
     position: relative;
     border-radius: 5px;

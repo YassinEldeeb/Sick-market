@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom"
 import Rating from "./Rating"
 import { useDispatch } from "react-redux"
 import add from "../img/add.svg"
-import { motion, AnimatePresence } from "framer-motion"
+import SmoothImg from "./smoothImgLoading"
 
 const Product = ({
   data,
@@ -46,7 +46,7 @@ const Product = ({
           ""
         )}
 
-        {type !== "preview" && <img src={data.image} alt='product' />}
+        {type !== "preview" && <SmoothImg src={data.image} alt='product' />}
       </Link>
       <div className='product_description'>
         <p>Brand: {data.brand}</p>
@@ -84,8 +84,7 @@ const StyledProduct = styled.div`
   overflow: hidden;
   background: white;
   box-shadow: rgba(0, 0, 0, 0.06) -3px 3px 5px;
-  border: 1px solid rgba(227, 227, 227, 0.73);
-
+  border: 1px solid rgba(227, 227, 227, 0.58);
   .product_description {
     flex: 1 1 auto;
     display: flex;

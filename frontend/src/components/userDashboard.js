@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import { parseISO, format } from "date-fns"
 import gear from "../img/gear.svg"
@@ -45,7 +45,7 @@ const UserDashboard = ({ user }) => {
 
   return (
     <StyledUser variants={popup}>
-      <ReactTooltip effect='solid' delayHide={100} delayShow={200} />
+      <ReactTooltip effect='solid' delayHide={100} delayShow={100} />
       <div className='id'>
         <p data-tip={"#" + user._id}>#{user._id.substr(user._id.length - 4)}</p>
       </div>
