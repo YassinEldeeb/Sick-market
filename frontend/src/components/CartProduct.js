@@ -23,12 +23,13 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
         onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
       >
         <SmoothImg
-          width={"10vw"}
+          width={"100%"}
           height={"100%"}
           className='productImg'
           src={product.image}
           alt='product'
           imgId='productImg'
+          loaderId='productImgLoader'
         />
       </Link>
       <div className='desc'>
@@ -83,13 +84,15 @@ const StyledProduct = styled.div`
   &:last-child {
     border-bottom: unset;
   }
-  #productImg {
+  #productImg,
+  #productImgLoader {
     border-radius: 5px;
     max-width: 10vw;
     object-fit: cover;
   }
   display: flex;
   #productImg,
+  #productImgLoader,
   .desc {
     flex-grow: 1;
   }
@@ -134,7 +137,8 @@ const StyledProduct = styled.div`
     }
   }
   @media screen and (max-width: 1050px) {
-    #productImg {
+    #productImg,
+    #productImgLoader {
       max-width: 13vw;
     }
     .priceQtyAndRemove {
@@ -190,7 +194,8 @@ const StyledProduct = styled.div`
     }
   }
   @media screen and (max-width: 550px) {
-    #productImg {
+    #productImg,
+    #productImgLoader {
       max-width: 20vw;
     }
   }
