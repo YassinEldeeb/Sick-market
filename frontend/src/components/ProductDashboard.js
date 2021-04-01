@@ -11,7 +11,7 @@ import { Link, useLocation } from "react-router-dom"
 import Loader from "../components/loader"
 import { useSelector, useDispatch } from "react-redux"
 import { useLastLocation } from "react-router-last-location"
-import deleteProduct from "../actions/deleteProduct"
+import SmoothImg from "../components/smoothImgLoading"
 
 const ProductDashboard = ({ product, setClickedForDelete }) => {
   const { products, error, loading, count } = useSelector(
@@ -49,7 +49,13 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
         </p>
       </div>
       <div className='name'>
-        <img src={product.image} alt='' />
+        <SmoothImg
+          width={"52px"}
+          height={"41.5px"}
+          loaderId='loaderImg'
+          src={product.image}
+          alt=''
+        />
         <p data-tip={product.name}>{product.name}</p>
       </div>
       <div className='Price'>
@@ -102,6 +108,9 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
 }
 
 const StyledUser = styled(motion.div)`
+  #loaderImg {
+    border-radius: 10px;
+  }
   .ActionCont {
     min-width: 6%;
     display: flex;

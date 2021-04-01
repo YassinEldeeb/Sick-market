@@ -9,6 +9,7 @@ import { Link, useLocation } from "react-router-dom"
 import reactStringReplace from "react-string-replace"
 import Loader from "../components/loader"
 import { useSelector } from "react-redux"
+import SmoothImg from "../components/smoothImgLoading"
 
 const UserDashboard = ({ user }) => {
   const location = useLocation()
@@ -50,7 +51,14 @@ const UserDashboard = ({ user }) => {
         <p data-tip={"#" + user._id}>#{user._id.substr(user._id.length - 4)}</p>
       </div>
       <div className='name'>
-        <img className='pic' src={imgSrcCondition()} alt='' />
+        <SmoothImg
+          width={"100%"}
+          height={"100%"}
+          loaderId='loaderImg'
+          providedClassName='pic'
+          src={imgSrcCondition()}
+          alt=''
+        />
         <p data-tip={user.name}>{nameValue}</p>
       </div>
       <div className='email'>
@@ -79,6 +87,9 @@ const UserDashboard = ({ user }) => {
 }
 
 const StyledUser = styled(motion.div)`
+  #loaderImg {
+    border-radius: 50%;
+  }
   .providedLoader {
     #greybackground path {
       stroke: white !important;

@@ -5,6 +5,7 @@ import QtySelector from "../components/QtySelector"
 import { removeAction } from "../actions/cart"
 import { useSelector, useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
+import SmoothImg from "./smoothImgLoading"
 
 const CartProduct = ({ product, cartCount, setCartCount }) => {
   const dispatch = useDispatch()
@@ -21,7 +22,13 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
         to={`/products/${product._id}?redirect=cart`}
         onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
       >
-        <img className='productImg' src={product.image} alt='product' />
+        <SmoothImg
+          width={"10vw"}
+          height={"100%"}
+          className='productImg'
+          src={product.image}
+          alt='product'
+        />
       </Link>
       <div className='desc'>
         <p>Brand: {product.brand}</p>
@@ -75,7 +82,7 @@ const StyledProduct = styled.div`
   &:last-child {
     border-bottom: unset;
   }
-  .productImg {
+  img {
     border-radius: 5px;
     max-width: 10vw;
     object-fit: cover;

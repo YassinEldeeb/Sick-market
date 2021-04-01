@@ -13,14 +13,12 @@ const Input = ({ value, setValue, label, type = "text", input = true }) => {
           onChange={(e) => setValue(e.target.value)}
           type={type}
           id={`dashboardInput${randomId}`}
-          // required
         />
       ) : (
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
           type={type}
-          // required
           maxLength={222}
           id={`dashboardInput${randomId}`}
         />

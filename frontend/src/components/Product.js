@@ -46,7 +46,14 @@ const Product = ({
           ""
         )}
 
-        {type !== "preview" && <SmoothImg src={data.image} alt='product' />}
+        {type !== "preview" && (
+          <SmoothImg
+            width={"640px"}
+            height={"510px"}
+            src={data.image}
+            alt='product'
+          />
+        )}
       </Link>
       <div className='product_description'>
         <p>Brand: {data.brand}</p>

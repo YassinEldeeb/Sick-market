@@ -11,6 +11,7 @@ import { cartAction, removeAction } from "../actions/cart"
 import QtySelector from "../components/QtySelector"
 import { buyNowAction } from "../actions/buyNow"
 import { useLastLocation } from "react-router-last-location"
+import SmoothImg from "../components/smoothImgLoading"
 
 const ProductDetail = ({ cartCount, setCartCount }) => {
   const lastLocation = useLastLocation()
@@ -80,7 +81,12 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
       ) : (
         <div className='details'>
           <div className='productImg'>
-            <img src={product.image} alt='product' />
+            <SmoothImg
+              width={"640px"}
+              height={"510px"}
+              src={product.image}
+              alt='product'
+            />
             <div className='bottomInfo'>
               <h3>
                 {product.price}
@@ -234,12 +240,11 @@ const StyledDetail = styled.div`
       font-size: calc(0.3rem + 1vw) !important;
     }
     .productImg {
-      min-width: 42%;
-      width: 100%;
+      width: 42%;
       height: 100%;
       object-fit: cover;
       border-radius: 10px;
-      max-width: 37rem;
+      max-width: 640px;
       img {
         border-radius: 10px;
         display: block;

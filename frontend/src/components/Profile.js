@@ -4,6 +4,7 @@ import arrow from "../img/arrow2.svg"
 import { Link, useHistory, useLocation } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { userLogoutAction, userLogoutAllAction } from "../actions/logout"
+import SmoothImg from "../components/smoothImgLoading"
 
 const Profile = () => {
   const [dropDown, setDropDown] = useState(false)
@@ -24,6 +25,9 @@ const Profile = () => {
   document.body.addEventListener("click", (e) => {
     e.stopPropagation()
     if (
+      !e.target.classList.contains("lazyImgLoader") &&
+      !e.target.classList.contains("show") &&
+      !e.target.classList.contains("loading") &&
       !e.target.classList.contains("profilePicImg") &&
       !e.target.classList.contains("profilePic") &&
       !e.target.classList.contains("rank") &&
@@ -49,9 +53,17 @@ const Profile = () => {
   return (
     <StyledProfile className='profile'>
       {userInfo.user.name && (
-        <div className='profile' onClick={(e) => setDropDown(!dropDown)}>
+        <div className='profile' onClick={() => setDropDown(!dropDown)}>
           <div className='profilePic'>
-            <img className='profilePicImg' src={imgSrcCondition()} alt='' />
+            <div className='profilePicImg'>
+              <SmoothImg
+                loaderId={"profileLoading"}
+                width={"100%"}
+                height={"100%"}
+                src={imgSrcCondition()}
+                alt=''
+              />
+            </div>
             {userInfo.user.rank && userInfo.user.rank !== "user" && (
               <div className='rank'>
                 <span className='rank'>{userInfo.user.rank}</span>
@@ -96,6 +108,12 @@ const Profile = () => {
   )
 }
 const StyledProfile = styled.div`
+  .profilePicImg {
+    height: 100%;
+  }
+  #profileLoading {
+    border-radius: 50%;
+  }
   display: flex;
   justify-content: center;
   align-items: center;
@@ -145,12 +163,12 @@ const StyledProfile = styled.div`
         font-size: 0.65rem;
         padding: 0.1rem 0.2rem;
         transform: translate(60%, -40%);
-        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 8%));
         display: flex;
         justify-content: center;
         align-items: center;
         font-weight: 500;
         text-transform: capitalize;
+        z-index: 2;
       }
     }
     .dropMenu {
