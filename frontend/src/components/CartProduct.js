@@ -28,6 +28,7 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
           className='productImg'
           src={product.image}
           alt='product'
+          imgId='productImg'
         />
       </Link>
       <div className='desc'>
@@ -82,13 +83,13 @@ const StyledProduct = styled.div`
   &:last-child {
     border-bottom: unset;
   }
-  img {
+  #productImg {
     border-radius: 5px;
     max-width: 10vw;
     object-fit: cover;
   }
   display: flex;
-  .productImg,
+  #productImg,
   .desc {
     flex-grow: 1;
   }
@@ -133,7 +134,7 @@ const StyledProduct = styled.div`
     }
   }
   @media screen and (max-width: 1050px) {
-    .productImg {
+    #productImg {
       max-width: 13vw;
     }
     .priceQtyAndRemove {
@@ -189,7 +190,7 @@ const StyledProduct = styled.div`
     }
   }
   @media screen and (max-width: 550px) {
-    .productImg {
+    #productImg {
       max-width: 20vw;
     }
   }
