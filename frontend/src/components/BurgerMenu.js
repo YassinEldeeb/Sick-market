@@ -175,7 +175,7 @@ const StyledMenu = styled.div`
     background: #343a40;
     color: white;
     padding-left: 7vw;
-    overflow-y: scroll;
+    overflow-y: auto;
     .settingsSection {
       padding-top: calc(1rem + 0.5vh);
     }

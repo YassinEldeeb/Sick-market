@@ -47,7 +47,7 @@ img{
       top: 0;
       transform: translate(100%, -50%);
       span {
-        font-size: calc(0.7rem + 0.3vw);
+        font-size: calc(0.75rem + 0.3vw);
         color: #00b2d8;
       }
     }
@@ -92,7 +92,29 @@ img{
   .goBackForgotPassword{
     margin-left: 5vw;
   }
+   .__react_component_tooltip {
+    background: #1e203e;
+    border-radius: 5px;
+    padding: 8px 18px;
+    &::after {
+      border-top-color: #1e203e !important;
+    }
+  }
+   .starsRating{
+      display: flex;
+      align-items: center !important;
+      margin-right:0!important;
+    }
+   .ratingCount {
+      position: unset;
+      transform:unset;
+      display:flex;
+      
+    }
 @media screen and (max-width:1050px){
+      .starsRating{
+      display: flex !important;
+    }
     *{   
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0.05);
     -webkit-touch-callout: none; 

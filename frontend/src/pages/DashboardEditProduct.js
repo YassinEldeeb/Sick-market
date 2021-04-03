@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory, useLocation } from "react-router-dom"
+import { parseISO, format } from "date-fns"
 import { useLastLocation } from "react-router-last-location"
 import { motion, AnimatePresence } from "framer-motion"
 import { popup2 } from "../animations"
@@ -9,73 +10,29 @@ import Loader from "../components/loader"
 import { Scrollbars } from "react-custom-scrollbars"
 import Input from "../components/DashboardInput"
 import Product from "../components/Product"
-import { addNewProductAction } from "../actions/addProduct"
+import editProduct from "../actions/editProduct"
 import DashboardError from "../components/DashboardError"
-import CropImg from "../components/CropImg"
-import { throttle } from "underscore"
+import EditCropImg from "../components/EditCropImg"
+import { DashboardProductDetailAction } from "../actions/products"
 
-const DashboardNewProduct = () => {
+const DashboardEditProduct = () => {
   const lastLocation = useLastLocation()
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
-
-  const [scrollableContent, setScrollableContent] = useState(null)
-  const [scrolled, setScrolled] = useState(0)
+  const { dashboardProduct } = useSelector((state) => state.product)
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     const firstChild = document.querySelector(
-      ".card-large-scrollable-content div:first-child"
-    )
-    if (firstChild) {
-      firstChild.scroll({
-        top: 0,
-        left: 0,
-      })
-    }
-  }, [])
-  useEffect(() => {
-    const firstChild = document.querySelector(
-      ".card-large-scrollable-content div:first-child"
-    )
-    const thirdChild = document.querySelectorAll(
-      ".card-large-scrollable-content div:last-child"
+      ".card-big-large-scrollable-content div:first-child"
     )
 
     if (firstChild) {
-      if (
-        location.pathname.split("/")[3] === "add" &&
-        location.pathname.split("/")[4] === "image"
-      ) {
-        firstChild.classList.add("disableScrolling")
-      } else {
-        firstChild.classList.remove("disableScrolling")
-      }
-      if (firstChild) setScrollableContent(firstChild)
       firstChild.classList.add("addMoreMargin2")
+      setLoaded(false)
     }
-    if (
-      thirdChild[thirdChild.length - 2] &&
-      location.pathname.split("/")[3] === "add" &&
-      location.pathname.split("/")[4] === "image"
-    ) {
-      thirdChild[thirdChild.length - 2].style.display = "none"
-    } else if (thirdChild[thirdChild.length - 2]) {
-      thirdChild[thirdChild.length - 2].style.display = "block"
-    }
-  }, [location.pathname, lastLocation])
-
-  useEffect(() => {
-    if (scrollableContent) {
-      scrollableContent.addEventListener(
-        "scroll",
-        throttle(() => {
-          setScrolled(scrollableContent.scrollTop)
-        }, 100)
-      )
-    }
-    console.log("SCROLLABLE CONTENT", scrollableContent)
-  }, [scrollableContent])
+  }, [location.pathname, loaded])
 
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
@@ -102,27 +59,29 @@ const DashboardNewProduct = () => {
       formData.append(e, dataObj[e])
     }
 
-    dispatch(addNewProductAction(formData))
+    dispatch(editProduct(formData))
   }
-  const { newLoading, newError, success } = useSelector(
-    (state) => state.productList
+  const { editLoading, error, editSuccess } = useSelector(
+    (state) => state.product
   )
 
   useEffect(() => {
-    if (newError) {
+    if (error) {
       const firstChild = document.querySelector(
         ".card-large-scrollable-content div:first-child"
       )
-      firstChild.scroll({
-        top: 0,
-        left: 0,
-        behavior: "smooth",
-      })
+      if (firstChild) {
+        firstChild.scroll({
+          top: 0,
+          left: 0,
+          behavior: "smooth",
+        })
+      }
     }
-  }, [newError])
+  }, [error])
 
   useEffect(() => {
-    if (success) {
+    if (editSuccess) {
       setName("")
       setPrice("")
       setBrand("")
@@ -130,14 +89,33 @@ const DashboardNewProduct = () => {
       setCategory("")
       setDescription("")
       setQtyPerUser("")
-      setFormData(new FormData())
-      setCompletedCrop(null)
       setImageType(null)
-      setImage(null)
+      setNoImage(false)
+      setFormData(new FormData())
+      setCrop({
+        aspect: 64 / 51,
+        unit: "%",
+        width: "80",
+      })
+      setCompletedCrop(null)
+      setAddedImage(null)
 
       history.push("/dashboard/products")
     }
-  }, [success])
+  }, [editSuccess])
+
+  useEffect(() => {
+    if (dashboardProduct) {
+      setName(dashboardProduct.name)
+      setPrice(dashboardProduct.price)
+      setBrand(dashboardProduct.brand)
+      setStock(dashboardProduct.countInStock)
+      setCategory(dashboardProduct.category)
+      setDescription(dashboardProduct.description)
+      setQtyPerUser(dashboardProduct.qtyPerUser)
+      setImage(dashboardProduct.image)
+    }
+  }, [dashboardProduct])
 
   //Crop
   const [completedCrop, setCompletedCrop] = useState(null)
@@ -147,17 +125,45 @@ const DashboardNewProduct = () => {
     unit: "%",
     width: "80",
   })
-  const [image, setImage] = useState(null)
+  const [image, setImage] = useState("/uploads/no.jpg")
+  const [noImage, setNoImage] = useState(false)
+  const [addedImage, setAddedImage] = useState(null)
   const [imageType, setImageType] = useState(null)
 
+  useEffect(() => {
+    if (
+      location.pathname.split("/")[4] &&
+      location.pathname.split("/")[3] === "edit" &&
+      location.pathname.split("/")[5] !== "image"
+    )
+      dispatch(DashboardProductDetailAction(location.pathname.split("/")[4]))
+  }, [location.pathname])
+
+  const editProductHandler = (e) => {
+    e.preventDefault()
+    const dataObj = {
+      name,
+      price,
+      brand,
+      countInStock: stock,
+      category,
+      description,
+      qtyPerUser,
+    }
+    for (const e in dataObj) {
+      formData.append(e, dataObj[e])
+    }
+    const id = location.pathname.split("/")[4]
+    dispatch(editProduct(id, formData, dataObj))
+  }
   return (
     <StyledUserAction
-      id={`${location.pathname.split("/")[3] === "add" ? "active" : ""}`}
+      id={`${location.pathname.split("/")[3] === "edit" ? "active" : ""}`}
       className='cardCont'
       onClick={(e) => {
         if (
           e.target.classList.contains("cardCont") &&
-          (location.pathname.split("/")[4] !== "image" || !image)
+          (location.pathname.split("/")[5] !== "image" || !addedImage)
         ) {
           setCrop({
             aspect: 64 / 51,
@@ -165,13 +171,12 @@ const DashboardNewProduct = () => {
             width: "80",
           })
           setCompletedCrop(null)
-          setImage(null)
           history.push("/dashboard/products")
         }
       }}
     >
       <AnimatePresence>
-        {location.pathname.split("/")[3] === "add" && (
+        {location.pathname.split("/")[3] === "edit" && dashboardProduct && (
           <motion.div
             variants={popup2}
             initial='hidden'
@@ -179,29 +184,33 @@ const DashboardNewProduct = () => {
             exit='exit'
             className='card'
           >
-            <Scrollbars className='card-large-scrollable-content'>
+            <Scrollbars
+              onLoad={() => setLoaded(true)}
+              className='card-big-large-scrollable-content'
+            >
               <AnimatePresence>
-                {location.pathname.split("/")[4] === "image" && (
-                  <CropImg
+                {location.pathname.split("/")[5] === "image" && (
+                  <EditCropImg
+                    noImage={noImage}
+                    setNoImage={setNoImage}
                     previewCanvasRef={previewCanvasRef}
                     completedCrop={completedCrop}
                     setCompletedCrop={setCompletedCrop}
                     crop={crop}
                     setCrop={setCrop}
-                    image={image}
-                    setImage={setImage}
+                    image={addedImage}
+                    setImage={setAddedImage}
                     imageType={imageType}
                     setImageType={setImageType}
                     formData={formData}
                     setFormData={setFormData}
-                    scrolled={scrolled}
-                    setScrolled={setScrolled}
+                    productImg={image}
                   />
                 )}
               </AnimatePresence>
               <motion.div className='createSection'>
-                {newError && <DashboardError error={newError} />}
-                <h1 className='title'>New Product</h1>
+                {error && <DashboardError error={error} />}
+                <h1 className='title'>Edit Product</h1>
                 <form onSubmit={addProductHandler}>
                   <Input label='Name' value={name} setValue={setName} />
                   <Input
@@ -235,8 +244,12 @@ const DashboardNewProduct = () => {
                     type='number'
                   />
                   <motion.div className='buttonCont'>
-                    <motion.button className='create' type='submit'>
-                      Create Product{newLoading && <Loader />}
+                    <motion.button
+                      onClick={(e) => editProductHandler(e)}
+                      className='create'
+                      type='submit'
+                    >
+                      Edit Product{editLoading && <Loader />}
                     </motion.button>
                   </motion.div>
                 </form>
@@ -244,6 +257,7 @@ const DashboardNewProduct = () => {
               <div className='preview'>
                 <h5>Preview</h5>
                 <Product
+                  noImage={noImage}
                   crop={crop}
                   previewCanvasRef={previewCanvasRef}
                   completedCrop={completedCrop}
@@ -252,13 +266,14 @@ const DashboardNewProduct = () => {
                   providedClassName='productPreview'
                   data={{
                     name: name.length ? name : "Test",
-                    price: price.length ? price : 0,
+                    price: price !== "" ? price : 0,
                     brand: brand.length ? brand : "Test",
                     countInStock: stock,
                     category,
-                    image: "/uploads/no.jpg",
+                    image,
                     numReviews: 0,
                   }}
+                  edit={true}
                 />
               </div>
             </Scrollbars>
@@ -338,7 +353,6 @@ const StyledUserAction = styled(motion.div)`
     align-items: flex-start;
     flex-direction: row;
   }
-
   .createSection {
     display: flex;
     justify-content: flex-start;
@@ -363,7 +377,7 @@ const StyledUserAction = styled(motion.div)`
   justify-content: center;
   align-items: center;
   z-index: 2;
-  .card-large-scrollable-content {
+  .card-big-large-scrollable-content {
     border-radius: 20px;
     .title {
       font-size: calc(2rem + 0.3vw);
@@ -377,9 +391,6 @@ const StyledUserAction = styled(motion.div)`
     width: calc(100% - (calc(2.5rem + 0.5vh) * 2));
     height: 82vh;
   }
-  .disableScrolling {
-    overflow-y: hidden !important;
-  }
 `
 
-export default DashboardNewProduct
+export default DashboardEditProduct

@@ -230,7 +230,7 @@ const StyledSearch = styled.form`
     height: 40vh;
     max-height: 300px;
     min-height: 130px;
-    overflow-y: scroll;
+    overflow-y: auto;
     scrollbar-width: thin;
     border-radius: 5px;
     border-top-left-radius: 3px;

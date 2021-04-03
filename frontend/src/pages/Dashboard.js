@@ -117,9 +117,25 @@ const Dashboard = ({ pageContent }) => {
   }, [])
 
   useEffect(() => {
-    productList.loading = true
-    productList.success = false
-    productList.newError = null
+    if (
+      lastLocation
+        ? lastLocation.pathname.split("/")[1] !== "products"
+        : true || location.pathname.split("/")[1] !== "products"
+    ) {
+      if (
+        location.pathname.split("/")[2] !== "products" ||
+        (lastLocation
+          ? lastLocation.pathname.split("/")[2] !== "products"
+          : false &&
+            location.pathname.split("/")[2] !== "products" &&
+            !location.pathname.split("/")[3])
+      ) {
+        productList.loading = true
+        productList.success = false
+        productList.newError = null
+      }
+    }
+
     if (location.pathname.split("/")[3] === "add") {
       const firstChild = document.querySelector(
         ".large-scrollable-content div:first-child"

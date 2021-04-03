@@ -3,12 +3,14 @@ import styled from "styled-components"
 import add from "../img/choose.svg"
 import { motion, AnimatePresence } from "framer-motion"
 import { show, popup3 } from "../animations"
-import { useHistory } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 import ReactCrop from "react-image-crop"
 import "react-image-crop/dist/ReactCrop.css"
 import DropZone from "react-drop-zone"
+import smallX from "../img/noImage.svg"
+import ReactTooltip from "react-tooltip"
 
-const CropImg = ({
+const EditCropImg = ({
   completedCrop,
   setCompletedCrop,
   previewCanvasRef,
@@ -20,12 +22,11 @@ const CropImg = ({
   setImageType,
   formData,
   setFormData,
-  scrolled,
-  setScrolled,
+  noImage,
+  setNoImage,
+  productImg,
 }) => {
-  useEffect(() => {
-    setScrolled(0)
-  }, [])
+  const location = useLocation()
   const history = useHistory()
   const cancelHandler = () => {
     setFormData(new FormData())
@@ -34,13 +35,14 @@ const CropImg = ({
       unit: "%",
       width: "80",
     })
-    setCompletedCrop(null)
     setImage(null)
-    history.push("/dashboard/products/add")
+    setCompletedCrop(null)
+    history.push(`/dashboard/products/edit/${location.pathname.split("/")[4]}`)
   }
 
   const uploadFileHandler = (e) => {
     setImageType(e.type)
+    setNoImage(false)
 
     const reader = new FileReader()
     reader.addEventListener("load", () => setImage(reader.result))
@@ -114,103 +116,131 @@ const CropImg = ({
               return "jpeg"
           }
         }
-        console.log("TYPE:", type(), blob)
+
         formData.append("upload", blob, `image.${type()}`)
       })
+    } else if (noImage && !imageType) {
+      setImage(null)
+      setNoImage(false)
     }
-    history.push("/dashboard/products/add")
+    history.push(`/dashboard/products/edit/${location.pathname.split("/")[4]}`)
   }
-
+  console.log("No", noImage)
   return (
-    <StyledCart
-      variants={show}
-      animate='show'
-      initial='hidden'
-      exit='exit'
-      className='cropImg'
-      scrolled={scrolled}
-    >
-      <AnimatePresence>
-        {image && (
-          <motion.div
-            variants={popup3}
-            animate='show'
-            initial='hidden'
-            className='motionCont'
-          >
-            <ReactCrop
-              onImageLoaded={(img) => {
-                imgRef.current = img
-                const image = document.querySelector(".ReactCrop div img")
-                const cont = document.querySelector(".ReactCrop")
-                const contDiv = document.querySelector(".ReactCrop div")
-                const motionCont = document.querySelector(".motionCont")
-                motionCont.style.width = "max-content"
+    <>
+      <StyledCart variants={show} animate='show' initial='hidden' exit='exit'>
+        <AnimatePresence>
+          {image && (
+            <motion.div
+              variants={popup3}
+              animate='show'
+              initial='hidden'
+              className='motionCont'
+            >
+              <ReactCrop
+                onImageLoaded={(img) => {
+                  imgRef.current = img
+                  const image = document.querySelector(".ReactCrop div img")
+                  const cont = document.querySelector(".ReactCrop")
+                  const contDiv = document.querySelector(".ReactCrop div")
+                  const motionCont = document.querySelector(".motionCont")
+                  motionCont.style.width = "max-content"
 
-                cont.style.width = `${image.width}px`
-                cont.style.height = `max-content`
-                contDiv.style.height = `max-content`
+                  cont.style.width = `${image.width}px`
+                  cont.style.height = `max-content`
+                  contDiv.style.height = `max-content`
 
-                setCrop({ width: image.width, height: image.height })
-              }}
-              src={image}
-              crop={crop}
-              onChange={(newCrop) => setCrop(newCrop)}
-              onComplete={(c) => setCompletedCrop(c)}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {!image && (
-        <DropZone
-          accept={".jpg, .jpeg, .png"}
-          className='dropOrSelect'
-          onDrop={(file) => uploadFileHandler(file)}
-        >
-          {({ over, overDocument }) => (
-            <div className={`dropOrSelect ${over ? "active" : ""}`}>
-              <img src={add} />
-              {!over && !overDocument && (
-                <p>
-                  Select or Drag your
-                  <br /> image here
-                </p>
-              )}
-              {overDocument && !over && (
-                <p>
-                  Drop your image
-                  <br /> here
-                </p>
-              )}
-              {over && (
-                <p>
-                  Yep over here,
-                  <br /> Drop now
-                </p>
-              )}
-            </div>
+                  setCrop({ width: image.width, height: image.height })
+                }}
+                src={image}
+                crop={crop}
+                onChange={(newCrop) => setCrop(newCrop)}
+                onComplete={(c) => setCompletedCrop(c)}
+              />
+            </motion.div>
           )}
-        </DropZone>
-      )}
+        </AnimatePresence>
 
-      <motion.div className={`buttons ${image ? "activeCrop" : ""}`}>
-        <motion.button onClick={cancelHandler} className='cancel'>
-          Cancel
-        </motion.button>
-        <motion.button
-          onClick={confirmHandler}
-          className='confirm'
-          id={`${completedCrop ? "" : "notActive"}`}
-        >
-          Confirm
-        </motion.button>
-      </motion.div>
-    </StyledCart>
+        {!image && (
+          <DropZone
+            accept={".jpg, .jpeg, .png"}
+            className='dropOrSelect'
+            onDrop={(file) => uploadFileHandler(file)}
+          >
+            {({ over, overDocument }) => (
+              <div className={`dropOrSelect ${over ? "active" : ""}`}>
+                <img src={add} />
+                {!over && !overDocument && (
+                  <p>
+                    Select or Drag your
+                    <br /> image here
+                  </p>
+                )}
+                {overDocument && !over && (
+                  <p>
+                    Drop your image
+                    <br /> here
+                  </p>
+                )}
+                {over && (
+                  <p>
+                    Yep over here,
+                    <br /> Drop now
+                  </p>
+                )}
+              </div>
+            )}
+          </DropZone>
+        )}
+
+        <motion.div layout className={`buttons ${image ? "activeCrop" : ""}`}>
+          {productImg !== "/uploads/no.jpg" && !noImage && (
+            <motion.img
+              onClick={() => {
+                setNoImage(true)
+                formData.append("image", "no")
+                setCrop({
+                  aspect: 64 / 51,
+                  unit: "%",
+                  width: "80",
+                })
+                setImage(null)
+                setImageType(null)
+                setCompletedCrop(null)
+                history.push(
+                  `/dashboard/products/edit/${location.pathname.split("/")[4]}`
+                )
+              }}
+              src={smallX}
+              className='deleteIcon'
+            ></motion.img>
+          )}
+          <motion.button
+            layoutId='Btn123'
+            onClick={cancelHandler}
+            className='cancel'
+          >
+            {image ? "Previous Img" : "Cancel"}
+          </motion.button>
+          <motion.button
+            onClick={confirmHandler}
+            layoutId='Btn123'
+            className={`confirm ${noImage ? "previousImage" : ""}`}
+            id={`${completedCrop ? "" : "notActive"}`}
+          >
+            {noImage ? "Previous Img" : "Confirm"}
+          </motion.button>
+        </motion.div>
+      </StyledCart>
+    </>
   )
 }
 
 const StyledCart = styled(motion.div)`
+  .previousImage {
+    pointer-events: all !important;
+    opacity: 1 !important;
+  }
   #notActive {
     pointer-events: none;
     opacity: 0;
@@ -231,7 +261,7 @@ const StyledCart = styled(motion.div)`
   }
   position: absolute;
   left: 0;
-  top: ${(props) => props.scrolled}px;
+  top: 0;
   height: 100%;
   width: 50%;
   background: #2c2d50;
@@ -252,6 +282,22 @@ const StyledCart = styled(motion.div)`
     justify-content: space-between;
     align-items: center;
     margin-top: 1.5rem;
+    position: relative;
+    img {
+      position: absolute;
+      left: 0%;
+      top: 50%;
+      transform: translate(-150%, -50%);
+      width: 35px;
+      height: 35px;
+      padding-right: 0.65rem;
+      cursor: pointer;
+      opacity: 1;
+      transition: 0.2s ease;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
     button {
       color: white;
       padding: 0.65rem 1.1rem;
@@ -267,7 +313,7 @@ const StyledCart = styled(motion.div)`
       }
     }
     .confirm {
-      margin-left: calc(1.5rem + 2vw);
+      margin-left: calc(0.7rem + 2vw);
       font-weight: 500;
       background: #1faf73;
       &:hover {
@@ -304,4 +350,4 @@ const StyledCart = styled(motion.div)`
   }
 `
 
-export default CropImg
+export default EditCropImg

@@ -174,14 +174,12 @@ const DashboardCustomers = () => {
     const container = document.querySelector(
       ".large-scrollable-content div:first-child"
     )
-    container.addEventListener("scroll", () => {
-      setTimeout(
-        throttle(() => {
-          setScrolled(container.scrollTop)
-        }),
-        100
-      )
-    })
+    container.addEventListener(
+      "scroll",
+      throttle(() => {
+        setScrolled(container.scrollTop)
+      }, 100)
+    )
   }, [])
 
   useEffect(() => {

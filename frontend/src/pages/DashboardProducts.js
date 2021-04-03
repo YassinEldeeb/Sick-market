@@ -15,11 +15,11 @@ import { useInView } from "react-intersection-observer"
 import infiniteScrollUsersAction from "../actions/infiniteScrollUsers"
 import infiniteScrollSearchUsersAction from "../actions/infiniteScrollSearchedUsers"
 import ConfirmPopup from "../components/confirmPopup"
-import arrow from "../img/arrow2.svg"
 import ProductDashboard from "../components/ProductDashboard"
 import { useDispatch, useSelector } from "react-redux"
 import deleteProduct from "../actions/deleteProduct"
 import DashboardNewProduct from "./DashboardNewProduct"
+import DashboardEditProduct from "./DashboardEditProduct"
 
 const DashboardProducts = () => {
   const { products, error, loading, count } = useSelector(
@@ -45,14 +45,18 @@ const DashboardProducts = () => {
         (lastLocation.pathname === "/dashboard/products" &&
           location.pathname === "/dashboard/products/add") ||
         (location.pathname === "/dashboard/products/add" &&
-          lastLocation.pathname === "/dashboard/products/add")
+          lastLocation.pathname === "/dashboard/products/add") ||
+        (lastLocation.pathname.split("/")[3] === "edit" && products) ||
+        (location.pathname.split("/")[3] === "edit" && products)
       ) {
         return
       }
-
       dispatch(productListAction())
     } else {
-      if (location.pathname.split("/")[3] !== "add")
+      if (
+        location.pathname.split("/")[3] !== "add" &&
+        location.pathname.split("/")[3] !== "edit"
+      )
         dispatch(productListAction())
     }
   }, [dispatch, lastLocation])
@@ -126,12 +130,9 @@ const DashboardProducts = () => {
     }
   }
 
-  const {
-    loading: deleteLoading,
-    success,
-    asking: deleteAsking,
-    confirm,
-  } = useSelector((state) => state.deleteProduct)
+  const { asking: deleteAsking, confirm } = useSelector(
+    (state) => state.deleteProduct
+  )
   const [clickedForDelete, setClickedForDelete] = useState("")
 
   useEffect(() => {
@@ -141,111 +142,134 @@ const DashboardProducts = () => {
   }, [confirm])
 
   const lastCondition = () =>
-    lastLocation ? lastLocation.pathname.split("/")[3] !== "add" : true
+    lastLocation
+      ? lastLocation.pathname.split("/")[3] !== "add" ||
+        lastLocation.pathname.split("/")[3] !== "edit"
+      : true
   const lastCondition2 = () =>
-    lastLocation ? lastLocation.pathname.split("/")[3] === "add" : true
+    lastLocation
+      ? lastLocation.pathname.split("/")[3] === "add" ||
+        lastLocation.pathname.split("/")[3] === "edit"
+      : true
+
+  const condition4 = () => {
+    if (lastLocation) {
+      if (lastLocation.pathname.split("/")[3] !== "edit") {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+  }
 
   return (
     <StyledOrders>
       <DashboardNewProduct />
+      <DashboardEditProduct />
       <ConfirmPopup
         condition={deleteAsking}
         type='deleteProduct'
         action={`Delete "${clickedForDelete.name}"`}
       />
-      {(products && lastLocation
-        ? lastLocation.pathname.split("/")[1] === "products" &&
-          !lastLocation.pathname.split("/")[3]
-        : false) ||
-      (products && !loading && lastCondition()) ||
-      (products && lastCondition2()) ||
-      (location.pathname.split("/")[3] === "add" && products) ? (
-        <div
-          id={`${location.pathname.split("/")[3] === "add" ? "blur" : ""}`}
-          className='cont'
-        >
-          <div className='head'>
-            <div className='title'>
-              <h1>Products</h1>
-              <p>{count} Products Found</p>
-            </div>
-            <button
-              onClick={() => history.push("/dashboard/products/add")}
-              className='addProduct'
+      {loading && <Loader />}
+      {error && <DashboardError error={error} />}
+      {!loading && (
+        <>
+          {(products && lastLocation
+            ? lastLocation.pathname.split("/")[1] === "products"
+            : false && lastLocation
+            ? !lastLocation.pathname.split("/")[3]
+            : false) ||
+          (products && !loading && lastCondition()) ||
+          (products && lastCondition2()) ||
+          ((location.pathname.split("/")[3] === "add" || condition4()) &&
+            products) ? (
+            <div
+              id={`${location.pathname.split("/")[3] === "add" ? "blur" : ""}`}
+              className='cont'
             >
-              Add new Product
-            </button>
-          </div>
-          <form className='search' onSubmit={searchHandler}>
-            <div className='searchContainer'>
-              <div className='inputCont'>
-                <input
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  placeholder='Search'
-                  type='text'
-                />
-                {/* {searchUser && (
+              <div className='head'>
+                <div className='title'>
+                  <h1>Products</h1>
+                  <p>{count} Products Found</p>
+                </div>
+                <button
+                  onClick={() => history.push("/dashboard/products/add")}
+                  className='addProduct'
+                >
+                  Add new Product
+                </button>
+              </div>
+              <form className='search' onSubmit={searchHandler}>
+                <div className='searchContainer'>
+                  <div className='inputCont'>
+                    <input
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                      placeholder='Search'
+                      type='text'
+                    />
+                    {/* {searchUser && (
                   <img onClick={returnHandler} src={smallX} alt='' />
                 )} */}
-              </div>
-              <button type='submit'>
-                <img src={search} />
-              </button>
-            </div>
-          </form>
+                  </div>
+                  <button type='submit'>
+                    <img src={search} />
+                  </button>
+                </div>
+              </form>
 
-          {products.length > 0 ? (
-            <div className='headers'>
-              <div className='id'>
-                <p>Id</p>
-              </div>
-              <div className='name'>
-                <p>Name</p>
-              </div>
-              <div className='Price'>
-                <p>Price</p>
-              </div>
-              <div className='Category'>
-                <p>Category</p>
-              </div>
-              <div className='Brand'>
-                <p>Brand</p>
-              </div>
-              <div className='Stock'>
-                <p>Stock</p>
-              </div>
-              <div className='Actions'>
-                <p>Actions</p>
-              </div>
+              {products.length > 0 ? (
+                <div className='headers'>
+                  <div className='id'>
+                    <p>Id</p>
+                  </div>
+                  <div className='name'>
+                    <p>Name</p>
+                  </div>
+                  <div className='Price'>
+                    <p>Price</p>
+                  </div>
+                  <div className='Category'>
+                    <p>Category</p>
+                  </div>
+                  <div className='Brand'>
+                    <p>Brand</p>
+                  </div>
+                  <div className='Stock'>
+                    <p>Stock</p>
+                  </div>
+                  <div className='Actions'>
+                    <p>Actions</p>
+                  </div>
+                </div>
+              ) : (
+                <p className='center'>No products was found!</p>
+              )}
+              {products && (
+                <motion.div
+                  variants={animCondition()}
+                  initial='hidden'
+                  animate='show'
+                  exit='exit'
+                >
+                  {products.map((each) => (
+                    <ProductDashboard
+                      setClickedForDelete={setClickedForDelete}
+                      clickedForDelete={clickedForDelete}
+                      key={each._id}
+                      product={each}
+                    />
+                  ))}
+                </motion.div>
+              )}
             </div>
           ) : (
-            <p className='center'>No products was found!</p>
+            ""
           )}
-          {products && (
-            <motion.div
-              variants={animCondition()}
-              initial='hidden'
-              animate='show'
-              exit='exit'
-            >
-              {products.map((each) => (
-                <ProductDashboard
-                  setClickedForDelete={setClickedForDelete}
-                  clickedForDelete={clickedForDelete}
-                  key={each._id}
-                  product={each}
-                />
-              ))}
-            </motion.div>
-          )}
-        </div>
-      ) : error ? (
-        <DashboardError error={error} />
-      ) : loading && location.pathname.split("/")[3] !== "add" ? (
-        <Loader />
-      ) : (
-        ""
+        </>
       )}
     </StyledOrders>
   )

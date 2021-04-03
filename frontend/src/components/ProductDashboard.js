@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { parseISO, format } from "date-fns"
 import pen from "../img/pen.svg"
@@ -14,6 +14,7 @@ import { useLastLocation } from "react-router-last-location"
 import SmoothImg from "../components/smoothImgLoading"
 
 const ProductDashboard = ({ product, setClickedForDelete }) => {
+  const location = useLocation()
   const { products, error, loading, count } = useSelector(
     (state) => state.productList
   )
@@ -72,12 +73,12 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
       </div>
       <div className='Actions'>
         <div className='ActionCont'>
-          <div
-            to={`/dashboard/customers/${product._id}`}
+          <Link
+            to={`/dashboard/products/edit/${product._id}`}
             className='actionOption'
           >
             <img className='gearImg' src={pen} alt='' />
-          </div>
+          </Link>
         </div>
         <div className='ActionCont'>
           <Link to={`/products/${product._id}`} className='actionOption'>

@@ -42,7 +42,6 @@ const StyledImg = styled.div`
   height: 100%;
 
   img {
-    max-width: 100%;
     max-height: 100%;
     opacity: 0;
     pointer-events: none;

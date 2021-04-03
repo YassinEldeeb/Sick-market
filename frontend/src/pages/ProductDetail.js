@@ -78,7 +78,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
               : error
           }
         />
-      ) : (
+      ) : product ? (
         <div className='details'>
           <div className='productImg'>
             <SmoothImg
@@ -193,6 +193,8 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
             )}
           </div>
         </div>
+      ) : (
+        ""
       )}
     </StyledDetail>
   )
@@ -326,8 +328,8 @@ const StyledDetail = styled.div`
       }
     }
 
-    .price h1 {
-      padding-right: calc(5.5rem + 1vw);
+    .status h1 {
+      padding-right: calc(1.5rem + 1vw);
     }
 
     .add,
@@ -444,9 +446,6 @@ const StyledDetail = styled.div`
       }
     }
 
-    .price h1 {
-      padding-right: calc(5.5rem + 1vw);
-    }
     .add,
     .buy {
       display: grid;
@@ -479,7 +478,7 @@ const StyledDetail = styled.div`
       }
     }
     .starsRating {
-      display: none;
+      display: none !important;
     }
     .mobile2 {
       width: 100%;
@@ -503,9 +502,8 @@ const StyledDetail = styled.div`
         font-size: calc(0.85rem + 0.3vw) !important;
       }
       .starsRating {
-        display: block;
+        display: flex !important;
         margin: 0 !important;
-        margin-right: 0.9rem !important;
         i {
           font-size: calc(1rem + 0.3vw) !important;
         }

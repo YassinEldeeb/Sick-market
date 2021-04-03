@@ -110,7 +110,7 @@ const StyledSelect = styled.div`
       background: #ffff;
       width: 120%;
       max-height: 180px;
-      overflow-y: scroll;
+      overflow-y: auto;
       border-radius: 5px;
       border-top-left-radius: 3px;
       border-top-right-radius: 3px;
@@ -170,7 +170,7 @@ const StyledSelect = styled.div`
         background: #ffff;
         width: 120%;
         height: 140px;
-        overflow-y: scroll;
+        overflow-y: auto;
         border-radius: 5px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;

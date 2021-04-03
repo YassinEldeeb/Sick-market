@@ -77,7 +77,7 @@ const StyledSlider = styled.div`
   box-shadow: 0px 0px 20px rgba(52, 58, 64, 0.12);
   width: max-content;
   padding: calc(0.5rem + 0.4vw) 0;
-  overflow-y: scroll;
+  overflow-y: auto;
   flex: 0 1 auto;
 
   &.active {

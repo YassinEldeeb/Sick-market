@@ -12,6 +12,8 @@ const Product = ({
   type,
   completedCrop,
   previewCanvasRef,
+  edit,
+  noImage,
 }) => {
   const location = useLocation()
   const dispatch = useDispatch()
@@ -19,15 +21,25 @@ const Product = ({
     return str.length > 35 ? str.substr(0, 35 - 1) + "..." : str
   }
 
+  const linkCondition = () => {
+    if (type !== "preview") {
+      return `/products/${data._id}`
+    } else {
+      if (edit) {
+        return `/dashboard/products/edit/${
+          location.pathname.split("/")[4]
+        }/image`
+      } else {
+        return "/dashboard/products/add/image"
+      }
+    }
+  }
+  console.log(data.image, noImage)
   return (
     <StyledProduct className={`${providedClassName ? providedClassName : ""}`}>
       <Link
         className='previewImg'
-        to={`${
-          type !== "preview"
-            ? `/products/${data._id}`
-            : "/dashboard/products/add/image"
-        }`}
+        to={linkCondition()}
         onClick={() => {
           if (type !== "preview") dispatch({ type: "PRODUCT_DETAIL_REQUEST" })
         }}
@@ -36,7 +48,7 @@ const Product = ({
           <canvas className='canvasPreview' ref={previewCanvasRef} />
         ) : type === "preview" ? (
           <>
-            <img src={data.image} alt='product' />
+            <img src={noImage ? "/uploads/no.jpg" : data.image} alt='product' />
 
             <div className='addLayer'>
               <img className='add' src={add} alt='' />
@@ -185,11 +197,13 @@ const StyledProduct = styled.div`
         font-size: calc(0.85rem + 0.5vw);
       }
       h1 {
-        font-size: calc(1rem + 0.4vw);
-        width: 95%;
+        font-size: calc(1.1rem + 0.4vw);
       }
       h4 {
-        font-size: calc(1.1rem + 0.4vw);
+        font-size: calc(1.15rem + 0.4vw);
+        .currency {
+          font-size: calc(0.6rem + 0.4vw);
+        }
       }
     }
   }
