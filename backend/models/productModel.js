@@ -68,8 +68,15 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 1,
     },
+    paidStock: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     paidAmount: {
       type: Number,
+      required: true,
+      default: 0,
     },
   },
   { timestamps: true }

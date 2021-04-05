@@ -105,7 +105,7 @@ const EditCropImg = ({
 
   const confirmHandler = () => {
     if (imageType && previewCanvasRef.current) {
-      previewCanvasRef.current.toBlob((blob) => {
+      previewCanvasRef.current.toBlob(async (blob) => {
         const type = () => {
           switch (imageType) {
             case "image/png":
@@ -116,7 +116,7 @@ const EditCropImg = ({
               return "jpeg"
           }
         }
-
+        formData.delete("upload")
         formData.append("upload", blob, `image.${type()}`)
       })
     } else if (noImage && !imageType) {

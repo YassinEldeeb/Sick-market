@@ -361,6 +361,12 @@ const StyledDetail = styled.div`
       margin-bottom: 0 !important;
     }
   }
+
+  @media screen and (min-width: 2000px) {
+    .table {
+      min-width: 18.6%;
+    }
+  }
   @media screen and (max-width: 1050px) {
     .currency {
       font-size: calc(0.7rem + 1vw);

@@ -111,7 +111,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     facilitatorAccessToken: req.body.facilitatorAccessToken,
   }
   order.isPaid = true
-  const date = format(Date.now(), "yyyy-MM-dd hh:mm a")
+  const date = format(Date.now(), "yyyy-MM-dd / hh:mm a")
 
   order.paidAt = date
 

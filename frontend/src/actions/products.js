@@ -5,7 +5,8 @@ export const productListAction = () => async (dispatch) => {
     dispatch({ type: "PRODUCT_LIST_REQUEST" })
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
-    const { data } = await axios.get("/api/products", {
+
+    const { data } = await axios.get("/api/products?order=newest", {
       cancelToken: source.token,
     })
     dispatch({

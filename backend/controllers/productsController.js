@@ -3,7 +3,6 @@ import Product from "../models/productModel.js"
 import fs from "fs"
 import { fileURLToPath } from "url"
 import path, { dirname, join } from "path"
-import express from "express"
 import multer from "multer"
 import sharp from "sharp"
 
@@ -11,7 +10,36 @@ const __dirname = path.resolve()
 
 //Get Products - /api/products @Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({}).sort({ createdAt: -1 })
+  let sort = {}
+  if (req.query.createdAt) {
+    sort = { createdAt: req.query.createdAt === "newest" ? -1 : 1 }
+  } else if (req.query.price) {
+    sort = {
+      price: req.query.price === "highest" ? -1 : 1,
+    }
+  } else if (req.query.topRated) {
+    sort = {
+      rating: req.query.topRated === "highest" ? -1 : 1,
+    }
+  } else if (req.query.topSelling) {
+    sort = {
+      paidAmount: req.query.topSelling === "highest" ? -1 : 1,
+    }
+  } else if (req.query.topSoldStocks) {
+    sort = {
+      paidStock: req.query.topSoldStocks === "highest" ? -1 : 1,
+    }
+  }
+
+  let findObj = {}
+  if (req.body.brand) {
+    const regex = new RegExp(req.body.brand, "i")
+    findObj = { brand: regex }
+  }
+  if (req.body.category) findObj.category = req.body.category
+  const products = await Product.find(findObj)
+    .sort(sort)
+    .populate("user", "name")
   const productsCount = await Product.countDocuments({})
 
   res.send({ products, count: productsCount })
@@ -19,7 +47,7 @@ const getProducts = asyncHandler(async (req, res) => {
 
 //Get Product - /api/products/:id @Public
 const getProduct = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id)
+  const product = await Product.findById(req.params.id).populate("user", "name")
   if (product) {
     res.send(product)
   } else {
@@ -195,6 +223,27 @@ const updateProduct = asyncHandler(async (req, res) => {
   res.send(product)
 })
 
+const searchProductsSuggesstions = asyncHandler(async (req, res) => {
+  const regex = new RegExp(`^(${req.query.search}).+$`, "i")
+  const products = await Product.find({ name: regex }, { name: 1 })
+    .sort({
+      updated_at: -1,
+    })
+    .sort({ created_at: -1 })
+    .limit(10)
+  res.send(products)
+})
+const searchProducts = asyncHandler(async (req, res) => {
+  const regex = new RegExp(`^(${req.query.find}).+$`, "i")
+  const products = await Product.find({ name: regex })
+    .sort({
+      updated_at: -1,
+    })
+    .sort({ created_at: -1 })
+    .limit(10)
+  res.send(products)
+})
+
 export {
   getProducts,
   getProduct,
@@ -202,4 +251,6 @@ export {
   addProduct,
   updateProduct,
   upload,
+  searchProductsSuggesstions,
+  searchProducts,
 }

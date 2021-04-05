@@ -43,6 +43,7 @@ const Search = () => {
           Search
         </label>
         <input
+          autoComplete='off'
           onFocus={() => setToggle(false)}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}

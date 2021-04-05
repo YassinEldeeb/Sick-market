@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react"
 import styled from "styled-components"
 import { useDispatch, useSelector } from "react-redux"
-import { useHistory, useLocation } from "react-router-dom"
+import { useHistory, useLocation, Link } from "react-router-dom"
 import { parseISO, format } from "date-fns"
 import { useLastLocation } from "react-router-last-location"
 import { motion, AnimatePresence } from "framer-motion"
-import { popup2 } from "../animations"
+import { popup2, popupLeft } from "../animations"
 import Loader from "../components/loader"
 import { Scrollbars } from "react-custom-scrollbars"
 import Input from "../components/DashboardInput"
@@ -14,9 +14,9 @@ import editProduct from "../actions/editProduct"
 import DashboardError from "../components/DashboardError"
 import EditCropImg from "../components/EditCropImg"
 import { DashboardProductDetailAction } from "../actions/products"
+import info from "../img/info.svg"
 
 const DashboardEditProduct = () => {
-  const lastLocation = useLastLocation()
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
@@ -130,7 +130,10 @@ const DashboardEditProduct = () => {
   const [addedImage, setAddedImage] = useState(null)
   const [imageType, setImageType] = useState(null)
 
+  const [openInfo, setOpenInfo] = useState(false)
+
   useEffect(() => {
+    setOpenInfo(false)
     if (
       location.pathname.split("/")[4] &&
       location.pathname.split("/")[3] === "edit" &&
@@ -156,6 +159,7 @@ const DashboardEditProduct = () => {
     const id = location.pathname.split("/")[4]
     dispatch(editProduct(id, formData, dataObj))
   }
+
   return (
     <StyledUserAction
       id={`${location.pathname.split("/")[3] === "edit" ? "active" : ""}`}
@@ -210,7 +214,9 @@ const DashboardEditProduct = () => {
               </AnimatePresence>
               <motion.div className='createSection'>
                 {error && <DashboardError error={error} />}
+
                 <h1 className='title'>Edit Product</h1>
+
                 <form onSubmit={addProductHandler}>
                   <Input label='Name' value={name} setValue={setName} />
                   <Input
@@ -255,7 +261,56 @@ const DashboardEditProduct = () => {
                 </form>
               </motion.div>
               <div className='preview'>
-                <h5>Preview</h5>
+                <div className='cardTitle'>
+                  <h5>Preview</h5>
+                  <div className='info'>
+                    <img
+                      className={`${openInfo ? "active" : ""}`}
+                      onClick={() => setOpenInfo(!openInfo)}
+                      src={info}
+                    />
+                    <AnimatePresence>
+                      {openInfo && (
+                        <motion.div
+                          initial='hidden'
+                          animate='show'
+                          exit='exit'
+                          variants={popupLeft}
+                          className='data'
+                        >
+                          <motion.ul>
+                            <motion.li layout>
+                              Stock value:{" "}
+                              {dashboardProduct.countInStock *
+                                dashboardProduct.price}{" "}
+                              <span className='currency'>EGP</span>
+                            </motion.li>
+                            <motion.li layout>
+                              Product Created by:
+                              <Link className='links'>
+                                {dashboardProduct.user.name}
+                              </Link>
+                            </motion.li>
+                            <motion.li layout>
+                              Created at:{" "}
+                              {format(
+                                parseISO(dashboardProduct.createdAt),
+                                "yyyy-MM-dd / hh:mm a"
+                              )}
+                            </motion.li>
+                            <motion.li layout>
+                              Last updated:{" "}
+                              {format(
+                                parseISO(dashboardProduct.updatedAt),
+                                "yyyy-MM-dd / hh:mm a"
+                              )}
+                            </motion.li>
+                          </motion.ul>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
                 <Product
                   noImage={noImage}
                   crop={crop}
@@ -285,6 +340,87 @@ const DashboardEditProduct = () => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  .links {
+    margin-left: 0.3rem;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .currency {
+    display: inline-block;
+    font-size: calc(0.25rem + 0.4vw);
+    height: max-content;
+    transform: translate(-11%, -7%);
+  }
+  ul li:first-child {
+    position: relative;
+  }
+  .cardTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .data {
+    background: #45467f;
+    border-radius: 10px;
+    z-index: 5;
+    position: absolute;
+    left: -5%;
+    top: 50%;
+    transform: translate(-105%, -50%);
+    cursor: auto;
+    box-shadow: rgba(29, 32, 62, 0.42) 0px 2px 10px;
+    &::after {
+      content: "";
+      width: 0;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translate(100%, -50%);
+      height: 0;
+      border-top: 8px solid transparent;
+      border-left: 14px solid #45467f;
+      border-bottom: 8px solid transparent;
+    }
+    ul {
+      padding: 0.8rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      list-style-position: inside;
+      li {
+        width: max-content;
+        padding-bottom: 0.2rem;
+        &:last-child {
+          padding-bottom: 0rem;
+        }
+      }
+    }
+  }
+  .info {
+    width: 33px;
+    height: 33px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    display: flex;
+    position: relative;
+    img {
+      width: 100%;
+      height: 100%;
+      filter: brightness(1.1);
+      border-radius: 50%;
+
+      &.active {
+        filter: brightness(1);
+        box-shadow: rgba(29, 32, 62, 0.21) 0px 2px 10px;
+      }
+      &:hover {
+        filter: brightness(1);
+      }
+    }
+  }
   #loader:first-child {
     width: calc(0.65rem + 0.5vw) !important;
     height: calc(0.65rem + 0.5vw) !important;
@@ -307,13 +443,13 @@ const StyledUserAction = styled(motion.div)`
     h5 {
       font-size: calc(1rem + 0.3vw);
       font-weight: 500;
-      margin-bottom: 0.5rem;
       pointer-events: none;
     }
   }
   .productPreview {
     width: calc(200px + 5vw);
     height: max-content;
+    z-index: -1;
   }
   .buttonCont {
     display: flex;
@@ -366,8 +502,6 @@ const StyledUserAction = styled(motion.div)`
   position: absolute;
   left: 50%;
   top: 0;
-  -webkit-transform: translate(-50%, 0%);
-  -ms-transform: translate(-50%, 0%);
   transform: translate(-50%, 0%);
   cursor: pointer;
   pointer-events: none;

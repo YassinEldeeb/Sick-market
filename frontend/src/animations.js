@@ -16,6 +16,19 @@ export const popup = {
     y: 5,
   },
 }
+export const popupLeft = {
+  hidden: {
+    opacity: 0,
+  },
+  show: {
+    opacity: 1,
+    transition: { duration: 0.1 },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.1 },
+  },
+}
 export const popup3 = {
   hidden: {
     opacity: 0,

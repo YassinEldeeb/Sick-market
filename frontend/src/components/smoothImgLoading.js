@@ -40,7 +40,6 @@ const StyledImg = styled.div`
   position: relative;
   display: flex;
   height: 100%;
-
   img {
     max-height: 100%;
     opacity: 0;

@@ -14,6 +14,8 @@ import http from "http"
 import SocketService from "./webSockets/socketService.js"
 import wakeUpDyno from "./utils/wakeUpDyno.js"
 
+import Category from "./models/category.js"
+
 const app = express()
 const server = http.Server(app)
 

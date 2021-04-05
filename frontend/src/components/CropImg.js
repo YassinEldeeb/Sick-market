@@ -114,7 +114,7 @@ const CropImg = ({
               return "jpeg"
           }
         }
-        console.log("TYPE:", type(), blob)
+        formData.delete("upload")
         formData.append("upload", blob, `image.${type()}`)
       })
     }

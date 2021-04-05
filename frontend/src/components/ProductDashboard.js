@@ -43,9 +43,14 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
 
   return (
     <StyledUser variants={animCondition()}>
-      <ReactTooltip effect='solid' delayHide={100} delayShow={100} />
+      <ReactTooltip
+        id='product-card-tooltip'
+        effect='solid'
+        delayHide={100}
+        delayShow={100}
+      />
       <div className='id'>
-        <p data-tip={"#" + product._id}>
+        <p data-for='product-card-tooltip' data-tip={"#" + product._id}>
           #{product._id.substr(product._id.length - 4)}
         </p>
       </div>
@@ -57,19 +62,29 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
           src={product.image}
           alt=''
         />
-        <p data-tip={product.name}>{product.name}</p>
+        <p data-for='product-card-tooltip' data-tip={product.name}>
+          {product.name}
+        </p>
       </div>
       <div className='Price'>
-        <p data-tip={product.price}>{product.price}</p>
+        <p data-for='product-card-tooltip' data-tip={product.price}>
+          {product.price}
+        </p>
       </div>
       <div className='Category'>
-        <p data-tip={product.category}>{product.category}</p>
+        <p data-for='product-card-tooltip' data-tip={product.category}>
+          {product.category}
+        </p>
       </div>
       <div className='Brand'>
-        <p data-tip={product.brand}>{product.brand}</p>
+        <p data-for='product-card-tooltip' data-tip={product.brand}>
+          {product.brand}
+        </p>
       </div>
       <div className='Stock'>
-        <p data-tip={product.countInStock}>{product.countInStock}</p>
+        <p data-for='product-card-tooltip' data-tip={product.countInStock}>
+          {product.countInStock}
+        </p>
       </div>
       <div className='Actions'>
         <div className='ActionCont'>
