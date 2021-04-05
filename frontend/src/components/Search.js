@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import arrow from "../img/arrow2.svg"
-import search from "../img/search.svg"
-import xSign from "../img/xSign.svg"
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import arrow from '../img/arrow2.svg'
+import search from '../img/search.svg'
+import xSign from '../img/xSign.svg'
 
 const Search = () => {
   const [toggle, setToggle] = useState(false)
-  const [toggleValue, setToggleValue] = useState("All")
-  const [inputValue, setInputValue] = useState("")
+  const [toggleValue, setToggleValue] = useState('All')
+  const [inputValue, setInputValue] = useState('')
   const [activeDelete, setActiveDelete] = useState(false)
 
   useEffect(() => {
-    if (inputValue === "" && activeDelete === true) {
+    if (inputValue === '' && activeDelete === true) {
       setActiveDelete(false)
-    } else if (inputValue !== "" && activeDelete === false) {
+    } else if (inputValue !== '' && activeDelete === false) {
       setActiveDelete(true)
     }
   }, [inputValue, activeDelete])
@@ -21,10 +21,10 @@ const Search = () => {
   const formSubmitHandler = (e) => {
     e.preventDefault()
   }
-  document.body.addEventListener("click", (e) => {
+  document.body.addEventListener('click', (e) => {
     if (
-      !e.target.classList.contains("dropDown-select-category") &&
-      !e.target.classList.contains("dropDown") &&
+      !e.target.classList.contains('dropDown-select-category') &&
+      !e.target.classList.contains('dropDown') &&
       toggle
     ) {
       setToggle(false)
@@ -51,8 +51,8 @@ const Search = () => {
           id='search'
         />
         <img
-          onClick={() => setInputValue("")}
-          style={{ display: `${activeDelete ? "block" : "none"}` }}
+          onClick={() => setInputValue('')}
+          style={{ display: `${activeDelete ? 'block' : 'none'}` }}
           className='xSign'
           src={xSign}
           alt='X icon'
@@ -63,14 +63,14 @@ const Search = () => {
       </button>
       <div
         className='dropDown-select-category'
-        style={{ display: `${toggle ? "block" : "none"}` }}
+        style={{ display: `${toggle ? 'block' : 'none'}` }}
       >
         <p className='selectParagraph'>Select</p>
         <p
           onClick={(e) => {
             setToggleValue(e.target.innerText)
           }}
-          className={`${toggleValue === "All" ? "active" : ""}`}
+          className={`${toggleValue === 'All' ? 'active' : ''}`}
         >
           All
         </p>
@@ -78,7 +78,7 @@ const Search = () => {
           onClick={(e) => {
             setToggleValue(e.target.innerText)
           }}
-          className={`${toggleValue === "Arts & Crafts" ? "active" : ""}`}
+          className={`${toggleValue === 'Arts & Crafts' ? 'active' : ''}`}
         >
           Arts & Crafts
         </p>
@@ -86,7 +86,7 @@ const Search = () => {
           onClick={(e) => {
             setToggleValue(e.target.innerText)
           }}
-          className={`${toggleValue === "Automative" ? "active" : ""}`}
+          className={`${toggleValue === 'Automative' ? 'active' : ''}`}
         >
           Automative
         </p>
@@ -94,7 +94,7 @@ const Search = () => {
           onClick={(e) => {
             setToggleValue(e.target.innerText)
           }}
-          className={`${toggleValue === "Baby" ? "active" : ""}`}
+          className={`${toggleValue === 'Baby' ? 'active' : ''}`}
         >
           Baby
         </p>
@@ -103,7 +103,7 @@ const Search = () => {
             setToggleValue(e.target.innerText)
           }}
           className={`${
-            toggleValue === "Beauty & Personal Care" ? "active" : ""
+            toggleValue === 'Beauty & Personal Care' ? 'active' : ''
           }`}
         >
           Beauty & Personal Care
@@ -112,7 +112,7 @@ const Search = () => {
           onClick={(e) => {
             setToggleValue(e.target.innerText)
           }}
-          className={`${toggleValue === "Books" ? "active" : ""}`}
+          className={`${toggleValue === 'Books' ? 'active' : ''}`}
         >
           Books
         </p>
@@ -120,7 +120,7 @@ const Search = () => {
           onClick={(e) => {
             setToggleValue(e.target.innerText)
           }}
-          className={`${toggleValue === "Computers" ? "active" : ""}`}
+          className={`${toggleValue === 'Computers' ? 'active' : ''}`}
         >
           Computers
         </p>
@@ -128,7 +128,7 @@ const Search = () => {
           onClick={(e) => {
             setToggleValue(e.target.innerText)
           }}
-          className={`${toggleValue === "Digital Music" ? "active" : ""}`}
+          className={`${toggleValue === 'Digital Music' ? 'active' : ''}`}
         >
           Digital Music
         </p>
@@ -136,7 +136,7 @@ const Search = () => {
           onClick={(e) => {
             setToggleValue(e.target.innerText)
           }}
-          className={`${toggleValue === "Electronics" ? "active" : ""}`}
+          className={`${toggleValue === 'Electronics' ? 'active' : ''}`}
         >
           Electronics
         </p>
@@ -185,7 +185,8 @@ const StyledSearch = styled.form`
 
     img {
       pointer-events: none;
-      width: 16px;
+      width: 10px;
+      margin-top: 0.15rem;
     }
     p {
       font-size: calc(0.54rem + 0.5vw);

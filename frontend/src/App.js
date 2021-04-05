@@ -1,35 +1,35 @@
-import React, { useState, useEffect, lazy, Suspense } from "react"
-import { BrowserRouter, Route, Switch } from "react-router-dom"
-import { LastLocationProvider } from "react-router-last-location"
-import Global from "./components/GlobalStyles"
-import { useDispatch, useSelector } from "react-redux"
-import checkToken from "./actions/checkToken"
-import Loader from "./components/loader"
-import Nav from "./components/Nav"
-import JustComponentForApp from "./components/justComponentForApp"
+import React, { useState, useEffect, lazy, Suspense } from 'react'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { LastLocationProvider } from 'react-router-last-location'
+import Global from './components/GlobalStyles'
+import { useDispatch, useSelector } from 'react-redux'
+import checkToken from './actions/checkToken'
+import Loader from './components/loader'
+import Nav from './components/Nav'
+import JustComponentForApp from './components/justComponentForApp'
+import EditProfile from './pages/edit-profile'
+import ChangePassword from './pages/changePassword'
+import MyOrders from './pages/MyOrders'
+const Home = lazy(() => import('./pages/Home'))
+const ProductDetail = lazy(() => import('./pages/ProductDetail'))
+const Description = lazy(() => import('./pages/Description'))
+const Cart = lazy(() => import('./pages/Cart'))
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
+const Verify = lazy(() => import('./pages/Verify'))
+const ChangeEmail = lazy(() => import('./pages/changeEmail'))
 
-const Home = lazy(() => import("./pages/Home"))
-const ProductDetail = lazy(() => import("./pages/ProductDetail"))
-const Description = lazy(() => import("./pages/Description"))
-const Cart = lazy(() => import("./pages/Cart"))
-const Login = lazy(() => import("./pages/Login"))
-const Register = lazy(() => import("./pages/Register"))
-const Verify = lazy(() => import("./pages/Verify"))
-const ChangeEmail = lazy(() => import("./pages/changeEmail"))
-const EditProfile = lazy(() => import("./pages/edit-profile"))
-const ChangePassword = lazy(() => import("./pages/changePassword"))
-const NotFound = lazy(() => import("./pages/notFound"))
-const Shipping = lazy(() => import("./pages/Shipping"))
-const Payment = lazy(() => import("./pages/Payment"))
-const PlaceOrder = lazy(() => import("./pages/PlaceOrder"))
-const ForgotPassword = lazy(() => import("./pages/ForgotPassword"))
-const ResetPassword = lazy(() => import("./pages/ResetPassword"))
-const OrderDetails = lazy(() => import("./pages/orderDetails"))
-const MyOrders = lazy(() => import("./pages/MyOrders"))
-const Dashboard = lazy(() => import("./pages/Dashboard"))
+const NotFound = lazy(() => import('./pages/notFound'))
+const Shipping = lazy(() => import('./pages/Shipping'))
+const Payment = lazy(() => import('./pages/Payment'))
+const PlaceOrder = lazy(() => import('./pages/PlaceOrder'))
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword'))
+const OrderDetails = lazy(() => import('./pages/orderDetails'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
 
 const App = () => {
-  const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
+  const savedCart = JSON.parse(localStorage.getItem('sickCartProducts'))
   const [activeMenu, setActiveMenu] = useState(false)
 
   const qtyArr = savedCart ? savedCart.map((each) => each.qty) : []
@@ -41,7 +41,7 @@ const App = () => {
   const [cartCount, setCartCount] = useState(
     initialCartValue ? initialCartValue : 0
   )
-  document.body.style.overflow = activeMenu ? "hidden" : "auto"
+  document.body.style.overflow = activeMenu ? 'hidden' : 'auto'
   const dispatch = useDispatch()
   const { loading, validToken, token } = useSelector((state) => state.userInfo)
 
@@ -122,37 +122,37 @@ const App = () => {
               <Route path='/account'></Route>
 
               <Route path='/dashboard/orders'>
-                <Dashboard pageContent={"orders"} />
+                <Dashboard pageContent={'orders'} />
               </Route>
               <Route path='/dashboard/statistics'>
-                <Dashboard pageContent={"statistics"} />
+                <Dashboard pageContent={'statistics'} />
               </Route>
               <Route path='/dashboard/categories'>
-                <Dashboard pageContent={"categories"} />
+                <Dashboard pageContent={'categories'} />
               </Route>
               <Route path='/dashboard/geomap'>
-                <Dashboard pageContent={"geomap"} />
+                <Dashboard pageContent={'geomap'} />
               </Route>
               <Route path='/dashboard/products'>
-                <Dashboard pageContent={"products"} />
+                <Dashboard pageContent={'products'} />
               </Route>
               <Route path='/dashboard/discounts'>
-                <Dashboard pageContent={"discounts"} />
+                <Dashboard pageContent={'discounts'} />
               </Route>
               <Route path='/dashboard/employees'>
-                <Dashboard pageContent={"employees"} />
+                <Dashboard pageContent={'employees'} />
               </Route>
               <Route path='/dashboard/customers'>
-                <Dashboard pageContent={"customers"} />
+                <Dashboard pageContent={'customers'} />
               </Route>
               <Route path='/dashboard/chat'>
-                <Dashboard pageContent={"chat"} />
+                <Dashboard pageContent={'chat'} />
               </Route>
               <Route path='/dashboard/emails'>
-                <Dashboard pageContent={"emails"} />
+                <Dashboard pageContent={'emails'} />
               </Route>
               <Route path='/dashboard'>
-                <Dashboard pageContent={""} />
+                <Dashboard pageContent={''} />
               </Route>
               <Route>
                 <NotFound />

@@ -1,31 +1,32 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux"
-import getDashboardUsersAction from "../actions/getDashboardUsers"
-import SearchDashboardCustomers from "../actions/searchUser"
-import Loader from "../components/loader"
-import UserDashboard from "../components/userDashboard"
-import DashboardError from "../components/DashboardError"
-import { motion } from "framer-motion"
-import { hide } from "../animations"
-import search from "../img/searchIcon.svg"
-import { useHistory, useLocation } from "react-router-dom"
-import smallX from "../img/smallX.svg"
-import DashboardUserAction from "./DashboardUserAction"
-import { useLastLocation } from "react-router-last-location"
-import { throttle } from "underscore"
-import socket from "../clientSocket/socket"
-import { useInView } from "react-intersection-observer"
-import infiniteScrollUsersAction from "../actions/infiniteScrollUsers"
-import infiniteScrollSearchUsersAction from "../actions/infiniteScrollSearchedUsers"
-import ConfirmPopup from "../components/confirmPopup"
-import arrow from "../img/arrow2.svg"
-import { v4 as uuid } from "uuid"
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import getDashboardUsersAction from '../actions/getDashboardUsers'
+import SearchDashboardCustomers from '../actions/searchUser'
+import Loader from '../components/loader'
+import UserDashboard from '../components/userDashboard'
+import DashboardError from '../components/DashboardError'
+import { motion } from 'framer-motion'
+import { hide } from '../animations'
+import search from '../img/searchIcon.svg'
+import { useHistory, useLocation } from 'react-router-dom'
+import smallX from '../img/smallX.svg'
+import DashboardUserAction from './DashboardUserAction'
+import { useLastLocation } from 'react-router-last-location'
+import { throttle } from 'underscore'
+import socket from '../clientSocket/socket'
+import { useInView } from 'react-intersection-observer'
+import infiniteScrollUsersAction from '../actions/infiniteScrollUsers'
+import infiniteScrollSearchUsersAction from '../actions/infiniteScrollSearchedUsers'
+import ConfirmPopup from '../components/confirmPopup'
+import arrow from '../img/sort.svg'
+import { v4 as uuid } from 'uuid'
+import { useRef } from 'react'
 
 const DashboardCustomers = () => {
-  const filterStoredValue = localStorage.getItem("filterUsers")
-    ? localStorage.getItem("filterUsers")
-    : "newest"
+  const filterStoredValue = localStorage.getItem('filterUsers')
+    ? localStorage.getItem('filterUsers')
+    : 'newest'
   const [filterValue, setFilterValue] = useState(filterStoredValue)
   const [changed, setChanged] = useState(false)
 
@@ -36,7 +37,7 @@ const DashboardCustomers = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation()
-  const searchUser = location.search.split("=")[1]
+  const searchUser = location.search.split('=')[1]
 
   const {
     success,
@@ -60,7 +61,7 @@ const DashboardCustomers = () => {
   const dashboardSearchUsers = useSelector(
     (state) => state.dashboardSearchUsers
   )
-  const [searchValue, setSearchValue] = useState("")
+  const [searchValue, setSearchValue] = useState('')
   const [isSearch, setIsSearch] = useState(false)
 
   useEffect(() => {
@@ -75,25 +76,25 @@ const DashboardCustomers = () => {
   }, [searchUser])
 
   const lastLocationValue = lastLocation
-    ? !lastLocation.pathname.split("/")[3]
+    ? !lastLocation.pathname.split('/')[3]
     : true
 
   const [lastSearch, setLastSearch] = useState(null)
 
   useEffect(() => {
-    if (lastLocation && lastLocation.search.split("=")[1]) {
-      setLastSearch(lastLocation.search.split("=")[1])
+    if (lastLocation && lastLocation.search.split('=')[1]) {
+      setLastSearch(lastLocation.search.split('=')[1])
     } else {
       setLastSearch(null)
     }
   }, [lastLocation])
 
   useEffect(() => {
-    if (!searchUser && !location.pathname.split("/")[3]) {
+    if (!searchUser && !location.pathname.split('/')[3]) {
       if (!users || lastLocationValue) {
         dispatch(getDashboardUsersAction(filterValue))
       }
-    } else if (lastLocationValue && !location.pathname.split("/")[3]) {
+    } else if (lastLocationValue && !location.pathname.split('/')[3]) {
       if (searchUser || !searchedUsers) {
         dispatch(SearchDashboardCustomers(searchUser))
       }
@@ -113,11 +114,11 @@ const DashboardCustomers = () => {
   }
   const returnHandler = () => {
     history.push(`/dashboard/customers`)
-    setSearchValue("")
+    setSearchValue('')
   }
   const headerCondition = () => {
     if (!isSearch) {
-      if (location.pathname.split("/")[3]) return true
+      if (location.pathname.split('/')[3]) return true
       if (users && users.length > 0) return true
       else return false
     } else {
@@ -126,13 +127,13 @@ const DashboardCustomers = () => {
     }
   }
   const condition = () => {
-    if (loading && !error && !searchUser && !location.pathname.split("/")[3]) {
+    if (loading && !error && !searchUser && !location.pathname.split('/')[3]) {
       return true
     } else if (
       searchLoading &&
       !searchedError &&
       searchUser &&
-      !location.pathname.split("/")[3]
+      !location.pathname.split('/')[3]
     ) {
       return true
     } else {
@@ -159,8 +160,8 @@ const DashboardCustomers = () => {
   useEffect(() => {
     if (
       location &&
-      location.pathname.split("/")[2] === "customers" &&
-      !location.pathname.split("/")[3] &&
+      location.pathname.split('/')[2] === 'customers' &&
+      !location.pathname.split('/')[3] &&
       !searchValue
     ) {
       dashboardSearchUsers.users = null
@@ -172,10 +173,10 @@ const DashboardCustomers = () => {
 
   useEffect(() => {
     const container = document.querySelector(
-      ".large-scrollable-content div:first-child"
+      '.large-scrollable-content div:first-child'
     )
     container.addEventListener(
-      "scroll",
+      'scroll',
       throttle(() => {
         setScrolled(container.scrollTop)
       }, 100)
@@ -184,15 +185,15 @@ const DashboardCustomers = () => {
 
   useEffect(() => {
     const container = document.querySelector(
-      ".large-scrollable-content div:first-child"
+      '.large-scrollable-content div:first-child'
     )
-    if (location.pathname.split("/")[3]) container.style.overflowY = "hidden"
-    else container.style.overflowY = "scroll"
+    if (location.pathname.split('/')[3]) container.style.overflowY = 'hidden'
+    else container.style.overflowY = 'scroll'
   }, [location.pathname])
 
   useEffect(() => {
-    const cardCont = document.querySelector(".cardCont")
-    const popups = document.querySelectorAll(".confirmationPopup")
+    const cardCont = document.querySelector('.cardCont')
+    const popups = document.querySelectorAll('.confirmationPopup')
 
     popups.forEach((e) => (e.style.top = `${scrolled}px`))
     cardCont.style.top = `${scrolled}px`
@@ -200,10 +201,10 @@ const DashboardCustomers = () => {
 
   const { user: userInfo } = useSelector((state) => state.userInfo)
   useEffect(() => {
-    if (userInfo.rank === "admin") {
-      socket.on("NewUser", () => {
+    if (userInfo.rank === 'admin') {
+      socket.on('NewUser', () => {
         dispatch({
-          type: "NEW_DASHBOARD_USERS",
+          type: 'NEW_DASHBOARD_USERS',
         })
       })
     }
@@ -247,7 +248,7 @@ const DashboardCustomers = () => {
       }
     }
   }, [inView2])
-  const [rankValue, setRankValue] = useState("")
+  const [rankValue, setRankValue] = useState('')
   const { asking } = useSelector((state) => state.editRank)
   const { asking: deleteAsking } = useSelector((state) => state.deleteUser)
 
@@ -256,21 +257,43 @@ const DashboardCustomers = () => {
 
     if (value !== filterValue) {
       setChanged(true)
-      localStorage.setItem("filterUsers", value)
+      localStorage.setItem('filterUsers', value)
       setFilterValue(value)
     }
   }
-  const filter = ["newest", "top paid"]
+  const filter = ['newest', 'top paid']
 
   const [openFilter, setOpenFilter] = useState(false)
 
   const lastSearchValue = lastLocation
-    ? lastLocation.search.split("=")[1]
+    ? lastLocation.search.split('=')[1]
     : false
 
   const condition5 = () =>
-    (!location.search.split("=")[1] && !location.pathname.split("/")[3]) ||
-    (location.pathname.split("/")[3] && !lastSearchValue)
+    (!location.search.split('=')[1] && !location.pathname.split('/')[3]) ||
+    (location.pathname.split('/')[3] && !lastSearchValue)
+
+  const useOutsideAlerter = (ref, reset) => {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          reset()
+        }
+      }
+
+      // Bind the event listener
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener('mousedown', handleClickOutside)
+      }
+    }, [ref])
+  }
+  const sortRef = useRef(null)
+  useOutsideAlerter(sortRef, () => setOpenFilter(false))
 
   return (
     <StyledOrders>
@@ -280,14 +303,14 @@ const DashboardCustomers = () => {
         condition={asking}
         type='rank'
         action={`move ${
-          userActions.user ? userActions.user.name : ""
-        } to employed ${rankValue + "(s)"}`}
+          userActions.user ? userActions.user.name : ''
+        } to employed ${rankValue + '(s)'}`}
       />
       <ConfirmPopup
         type='delete'
         condition={deleteAsking}
         action={`Delete ${
-          userActions.user ? userActions.user.name : ""
+          userActions.user ? userActions.user.name : ''
         }'s account`}
       />
       {condition() ? (
@@ -297,34 +320,35 @@ const DashboardCustomers = () => {
           {condition2() && (
             <div
               className='cont'
-              id={`${location.pathname.split("/")[3] && user ? "blur" : ""}`}
+              id={`${location.pathname.split('/')[3] && user ? 'blur' : ''}`}
             >
               <div className='title'>
                 <h1>Customers</h1>
                 <p>
                   {(searchUser && searchedUsers) ||
-                  (location.pathname.split("/")[3] && searchedUsers) ||
-                  (location.pathname.split("/")[3] &&
+                  (location.pathname.split('/')[3] && searchedUsers) ||
+                  (location.pathname.split('/')[3] &&
                     lastSearch &&
                     searchedUsers)
                     ? searchedCount
-                    : count}{" "}
+                    : count}{' '}
                   Customers Found
                 </p>
               </div>
               <form className='search' onSubmit={searchHandler}>
-                {(location.search.split("=")[1] && <div></div>) ||
-                  (lastSearchValue && location.pathname.split("/")[3] && (
+                {(location.search.split('=')[1] && <div></div>) ||
+                  (lastSearchValue && location.pathname.split('/')[3] && (
                     <div></div>
                   ))}
                 {condition5() && (
                   <div
-                    className={`filter ${openFilter ? "activeFilter" : ""}`}
+                    ref={sortRef}
+                    className={`filter ${openFilter ? 'activeFilter' : ''}`}
                     onClick={() => setOpenFilter(!openFilter)}
                   >
                     <p className='value'>{filterValue}</p>
                     <img
-                      className={`${openFilter ? "activeFilterImg" : ""}`}
+                      className={`${openFilter ? 'activeFilterImg' : ''}`}
                       src={arrow}
                       alt=''
                     />
@@ -385,10 +409,10 @@ const DashboardCustomers = () => {
                 exit='exit'
               >
                 {(lastSearch &&
-                  location.pathname.split("/")[3] &&
+                  location.pathname.split('/')[3] &&
                   searchedUsers) ||
                 (searchUser && searchedUsers) ||
-                (location.pathname.split("/")[3] && searchedUsers)
+                (location.pathname.split('/')[3] && searchedUsers)
                   ? searchedUsers.map((each) => (
                       <UserDashboard key={each._id} user={each} />
                     ))
@@ -406,10 +430,10 @@ const DashboardCustomers = () => {
                 searchedUsers ? (
                   <p className='end'>Yay! You have seen it all</p>
                 ) : (
-                  ""
+                  ''
                 )
               ) : (
-                ""
+                ''
               )}
               {!end && !searchedUsers ? (
                 <Loader
@@ -419,7 +443,7 @@ const DashboardCustomers = () => {
               ) : !searchedUsers ? (
                 <p className='end'>Yay! You have seen it all</p>
               ) : (
-                ""
+                ''
               )}
             </div>
           )}
@@ -501,7 +525,7 @@ const StyledOrders = styled(motion.div)`
     color: white;
     font-size: calc(0.85rem + 0.3vw);
     border-radius: 10px;
-    transition: 0.2s ease;
+    transition: 0.13s ease;
     position: relative;
     display: flex;
     justify-content: center;
@@ -512,9 +536,8 @@ const StyledOrders = styled(motion.div)`
       filter: brightness(1000);
       margin-left: 0.4rem;
       transition: 0.08s ease;
-    }
-    .activeFilterImg {
-      transform: rotate(180deg);
+      width: 16px;
+      height: 16px;
     }
     .value {
       color: rgba(255, 255, 255, 1) !important;
@@ -548,7 +571,7 @@ const StyledOrders = styled(motion.div)`
           margin-top: 0rem;
         }
         &:hover {
-          background: #3f4175;
+          background: rgb(58, 59, 107);
           color: rgba(255, 255, 255, 1) !important;
         }
       }

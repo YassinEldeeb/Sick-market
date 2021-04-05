@@ -1,25 +1,31 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import { productListAction } from "../actions/products"
-import Loader from "../components/loader"
-import DashboardError from "../components/DashboardError"
-import { motion } from "framer-motion"
-import { hide } from "../animations"
-import search from "../img/searchIcon.svg"
-import { useHistory, useLocation } from "react-router-dom"
-import smallX from "../img/smallX.svg"
-import { useLastLocation } from "react-router-last-location"
-import { throttle } from "underscore"
-import socket from "../clientSocket/socket"
-import { useInView } from "react-intersection-observer"
-import infiniteScrollUsersAction from "../actions/infiniteScrollUsers"
-import infiniteScrollSearchUsersAction from "../actions/infiniteScrollSearchedUsers"
-import ConfirmPopup from "../components/confirmPopup"
-import ProductDashboard from "../components/ProductDashboard"
-import { useDispatch, useSelector } from "react-redux"
-import deleteProduct from "../actions/deleteProduct"
-import DashboardNewProduct from "./DashboardNewProduct"
-import DashboardEditProduct from "./DashboardEditProduct"
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { productListAction } from '../actions/products'
+import Loader from '../components/loader'
+import DashboardError from '../components/DashboardError'
+import { motion } from 'framer-motion'
+import { hide } from '../animations'
+import search from '../img/searchIcon.svg'
+import { useHistory, useLocation } from 'react-router-dom'
+import smallX from '../img/smallX.svg'
+import { useLastLocation } from 'react-router-last-location'
+import { throttle } from 'underscore'
+import socket from '../clientSocket/socket'
+import { useInView } from 'react-intersection-observer'
+import infiniteScrollUsersAction from '../actions/infiniteScrollUsers'
+import infiniteScrollSearchUsersAction from '../actions/infiniteScrollSearchedUsers'
+import ConfirmPopup from '../components/confirmPopup'
+import ProductDashboard from '../components/ProductDashboard'
+import { useDispatch, useSelector } from 'react-redux'
+import deleteProduct from '../actions/deleteProduct'
+import DashboardNewProduct from './DashboardNewProduct'
+import DashboardEditProduct from './DashboardEditProduct'
+import filter from '../img/filter.svg'
+import sort from '../img/sort.svg'
+import connect from '../img/connect.svg'
+import Input from '../components/DashboardInput'
+import arrow from '../img/arrow3.svg'
+import { useRef } from 'react'
 
 const DashboardProducts = () => {
   const { products, error, loading, count } = useSelector(
@@ -37,25 +43,25 @@ const DashboardProducts = () => {
   useEffect(() => {
     if (lastLocation) {
       if (
-        location.pathname.split("/")[3] === "add" ||
-        (lastLocation.pathname.split("/")[2] &&
-          lastLocation.pathname.split("/")[1] === "products" &&
-          !lastLocation.pathname.split("/")[3]) ||
-        (lastLocation.pathname.split("/")[3] === "add" && products) ||
-        (lastLocation.pathname === "/dashboard/products" &&
-          location.pathname === "/dashboard/products/add") ||
-        (location.pathname === "/dashboard/products/add" &&
-          lastLocation.pathname === "/dashboard/products/add") ||
-        (lastLocation.pathname.split("/")[3] === "edit" && products) ||
-        (location.pathname.split("/")[3] === "edit" && products)
+        location.pathname.split('/')[3] === 'add' ||
+        (lastLocation.pathname.split('/')[2] &&
+          lastLocation.pathname.split('/')[1] === 'products' &&
+          !lastLocation.pathname.split('/')[3]) ||
+        (lastLocation.pathname.split('/')[3] === 'add' && products) ||
+        (lastLocation.pathname === '/dashboard/products' &&
+          location.pathname === '/dashboard/products/add') ||
+        (location.pathname === '/dashboard/products/add' &&
+          lastLocation.pathname === '/dashboard/products/add') ||
+        (lastLocation.pathname.split('/')[3] === 'edit' && products) ||
+        (location.pathname.split('/')[3] === 'edit' && products)
       ) {
         return
       }
       dispatch(productListAction())
     } else {
       if (
-        location.pathname.split("/")[3] !== "add" &&
-        location.pathname.split("/")[3] !== "edit"
+        location.pathname.split('/')[3] !== 'add' &&
+        location.pathname.split('/')[3] !== 'edit'
       )
         dispatch(productListAction())
     }
@@ -72,9 +78,9 @@ const DashboardProducts = () => {
 
   useEffect(() => {
     const container = document.querySelector(
-      ".large-scrollable-content div:first-child"
+      '.large-scrollable-content div:first-child'
     )
-    container.addEventListener("scroll", () => {
+    container.addEventListener('scroll', () => {
       setTimeout(
         throttle(() => {
           setScrolled(container.scrollTop)
@@ -86,15 +92,15 @@ const DashboardProducts = () => {
 
   useEffect(() => {
     const container = document.querySelector(
-      ".large-scrollable-content div:first-child"
+      '.large-scrollable-content div:first-child'
     )
-    if (location.pathname.split("/")[3]) container.style.overflowY = "hidden"
-    else container.style.overflowY = "scroll"
+    if (location.pathname.split('/')[3]) container.style.overflowY = 'hidden'
+    else container.style.overflowY = 'scroll'
   }, [location.pathname])
 
   useEffect(() => {
-    const cardCont = document.querySelector(".cardCont")
-    const popups = document.querySelectorAll(".confirmationPopup")
+    const cardCont = document.querySelector('.cardCont')
+    const popups = document.querySelectorAll('.confirmationPopup')
 
     popups.forEach((e) => (e.style.top = `${scrolled}px`))
     cardCont.style.top = `${scrolled}px`
@@ -103,7 +109,7 @@ const DashboardProducts = () => {
   const { user: userInfo } = useSelector((state) => state.userInfo)
 
   useEffect(() => {
-    if (userInfo.rank === "admin") {
+    if (userInfo.rank === 'admin') {
       //?Stock update Realtime
       //   socket.on("NewUser", () => {
       //     dispatch({
@@ -112,16 +118,16 @@ const DashboardProducts = () => {
       //   })
     }
   }, [])
-  const [searchValue, setSearchValue] = useState("")
+  const [searchValue, setSearchValue] = useState('')
 
   const animCondition = () => {
     if (lastLocation) {
       if (
-        lastLocation.pathname.split("/")[2] &&
-        lastLocation.pathname.split("/")[1].toLowerCase() === "products" &&
-        !lastLocation.pathname.split("/")[3]
+        lastLocation.pathname.split('/')[2] &&
+        lastLocation.pathname.split('/')[1].toLowerCase() === 'products' &&
+        !lastLocation.pathname.split('/')[3]
       ) {
-        return ""
+        return ''
       } else {
         return hide
       }
@@ -133,7 +139,7 @@ const DashboardProducts = () => {
   const { asking: deleteAsking, confirm } = useSelector(
     (state) => state.deleteProduct
   )
-  const [clickedForDelete, setClickedForDelete] = useState("")
+  const [clickedForDelete, setClickedForDelete] = useState('')
 
   useEffect(() => {
     if (confirm) {
@@ -143,18 +149,18 @@ const DashboardProducts = () => {
 
   const lastCondition = () =>
     lastLocation
-      ? lastLocation.pathname.split("/")[3] !== "add" ||
-        lastLocation.pathname.split("/")[3] !== "edit"
+      ? lastLocation.pathname.split('/')[3] !== 'add' ||
+        lastLocation.pathname.split('/')[3] !== 'edit'
       : true
   const lastCondition2 = () =>
     lastLocation
-      ? lastLocation.pathname.split("/")[3] === "add" ||
-        lastLocation.pathname.split("/")[3] === "edit"
+      ? lastLocation.pathname.split('/')[3] === 'add' ||
+        lastLocation.pathname.split('/')[3] === 'edit'
       : true
 
   const condition4 = () => {
     if (lastLocation) {
-      if (lastLocation.pathname.split("/")[3] !== "edit") {
+      if (lastLocation.pathname.split('/')[3] !== 'edit') {
         return true
       } else {
         return false
@@ -163,6 +169,76 @@ const DashboardProducts = () => {
       return false
     }
   }
+
+  const [openFilter, setOpenFilter] = useState(false)
+  const [brand, setBrand] = useState('')
+  const [category, setCategory] = useState('')
+  const [sortValue, setSortValue] = useState('Date')
+  const [sortType, setSortType] = useState('Newest')
+  const [sortValues, setSortValues] = useState([
+    'Date',
+    'Price',
+    'Rating',
+    'Selling by qty',
+    'Selling by value',
+  ])
+  const [sortValueTypes, setSortValueTypes] = useState(['Newest', 'Oldest'])
+
+  const [openType, setOpenType] = useState(false)
+  const [openValue, setOpenValue] = useState(false)
+
+  useEffect(() => {
+    switch (sortValue) {
+      case 'Date':
+        setSortValueTypes(['Newest', 'Oldest'])
+        setSortType('Newest')
+        break
+      case 'Price':
+        setSortValueTypes(['Highest', 'Lowest'])
+        setSortType('Highest')
+        break
+      case 'Rating':
+        setSortValueTypes(['Top Rated', 'Underrated'])
+        setSortType('Top Rated')
+        break
+      case 'Selling by qty':
+        setSortValueTypes(['Highest', 'Lowest'])
+        setSortType('Highest')
+        break
+      case 'Selling by value':
+        setSortValueTypes(['Highest', 'Lowest'])
+        setSortType('Highest')
+        break
+      default:
+        break
+    }
+  }, [sortValue])
+
+  const useOutsideAlerter = (ref, reset) => {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          reset()
+        }
+      }
+
+      // Bind the event listener
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener('mousedown', handleClickOutside)
+      }
+    }, [ref])
+  }
+  const filterRef = useRef(null)
+  useOutsideAlerter(filterRef, () => setOpenFilter(false))
+  const valueRef = useRef(null)
+  useOutsideAlerter(valueRef, () => setOpenValue(false))
+  const typeRef = useRef(null)
+  useOutsideAlerter(typeRef, () => setOpenType(false))
 
   return (
     <StyledOrders>
@@ -178,16 +254,16 @@ const DashboardProducts = () => {
       {!loading && (
         <>
           {(products && lastLocation
-            ? lastLocation.pathname.split("/")[1] === "products"
+            ? lastLocation.pathname.split('/')[1] === 'products'
             : false && lastLocation
-            ? !lastLocation.pathname.split("/")[3]
+            ? !lastLocation.pathname.split('/')[3]
             : false) ||
           (products && !loading && lastCondition()) ||
           (products && lastCondition2()) ||
-          ((location.pathname.split("/")[3] === "add" || condition4()) &&
+          ((location.pathname.split('/')[3] === 'add' || condition4()) &&
             products) ? (
             <div
-              id={`${location.pathname.split("/")[3] === "add" ? "blur" : ""}`}
+              id={`${location.pathname.split('/')[3] === 'add' ? 'blur' : ''}`}
               className='cont'
             >
               <div className='head'>
@@ -196,13 +272,118 @@ const DashboardProducts = () => {
                   <p>{count} Products Found</p>
                 </div>
                 <button
-                  onClick={() => history.push("/dashboard/products/add")}
+                  onClick={() => history.push('/dashboard/products/add')}
                   className='addProduct'
                 >
                   Add new Product
                 </button>
               </div>
               <form className='search' onSubmit={searchHandler}>
+                <div
+                  ref={filterRef}
+                  onClick={(e) => {
+                    if (e.target.classList.contains('filter')) {
+                      setOpenFilter(!openFilter)
+                      setOpenType(false)
+                      setOpenValue(false)
+                    }
+                  }}
+                  className={`filter ${openFilter ? 'activeFilter' : ''}`}
+                >
+                  <p className='filterTitle'>Fitler</p>
+                  <svg
+                    width='14'
+                    height='14'
+                    viewBox='0 0 14 14'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <g clip-path='url(#clip0)'>
+                      <path
+                        d='M5.33335 6.61553C5.48026 6.77541 5.56092 6.98426 5.56092 7.20031V13.5667C5.56092 13.9498 6.02327 14.1443 6.29694 13.8749L8.07289 11.8397C8.31055 11.5545 8.44162 11.4133 8.44162 11.131V7.20175C8.44162 6.9857 8.52372 6.77685 8.6692 6.61695L13.7651 1.08746C14.1468 0.672643 13.853 0 13.2884 0H0.714129C0.149512 0 -0.145759 0.671203 0.237374 1.08746L5.33335 6.61553Z'
+                        fill='white'
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id='clip0'>
+                        <rect width='14' height='14' fill='white' />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  {openFilter && (
+                    <div className='filterDropDown'>
+                      <div className='sort'>
+                        <p>
+                          <span className='sortText'>Sort</span>
+                          <img src={sort} />
+                        </p>
+                        <div className='sortDiv'>
+                          <div
+                            ref={typeRef}
+                            onClick={() => {
+                              setOpenType(!openType)
+                            }}
+                            className='sortValue'
+                          >
+                            <p>{sortValue}</p>
+                            <img src={arrow} />
+                            {openType && (
+                              <div className='sortValueDropDown selectDropDown'>
+                                {sortValues.map((e) => (
+                                  <h3
+                                    className={`${
+                                      sortValue === e ? 'active' : ''
+                                    }`}
+                                    onClick={(e) => {
+                                      setSortValue(e.target.innerText)
+                                    }}
+                                  >
+                                    {e}
+                                  </h3>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <img src={connect} />
+                          <div
+                            ref={valueRef}
+                            onClick={() => {
+                              setOpenValue(!openValue)
+                            }}
+                            className='sortType'
+                          >
+                            <p>{sortType}</p>
+                            <img src={arrow} />
+                            {openValue && (
+                              <div className='sortTypeDropDown selectDropDown'>
+                                {sortValueTypes.map((e) => (
+                                  <h3
+                                    className={`${
+                                      sortType === e ? 'active' : ''
+                                    }`}
+                                    onClick={(e) => {
+                                      setSortType(e.target.innerText)
+                                    }}
+                                  >
+                                    {e}
+                                  </h3>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className='brand'>
+                        <p>Brand</p>
+                        <Input value={brand} setValue={setBrand} />
+                      </div>
+                      <div className='category'>
+                        <p>Category</p>
+                        <Input value={category} setValue={setCategory} />
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <div className='searchContainer'>
                   <div className='inputCont'>
                     <input
@@ -267,7 +448,7 @@ const DashboardProducts = () => {
               )}
             </div>
           ) : (
-            ""
+            ''
           )}
         </>
       )}
@@ -276,6 +457,75 @@ const DashboardProducts = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  .sortValue,
+  .sortType {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    .selectDropDown {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: max-content;
+      height: max-content;
+      transform: translate(0, 105%);
+      background: #4b4d8b;
+      box-shadow: rgba(29, 32, 62, 0.42) 0px 2px 10px;
+      border-radius: 7px;
+      overflow: hidden;
+      padding: 0.3rem;
+      cursor: auto;
+      h3 {
+        padding: 0.4rem 0.6rem;
+        font-weight: 400;
+        font-size: calc(0.8rem + 0.3vw);
+        color: rgba(255, 255, 255, 0.9) !important;
+        transition: 0.1s ease;
+        background: #4b4d8b;
+        border-radius: 5px;
+        margin-bottom: 0.15rem;
+        cursor: pointer;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        &:hover:not(.active) {
+          background: #43457e;
+        }
+        &.active {
+          background: #40427a;
+        }
+      }
+    }
+    img {
+      margin: 0 0 0 0.35rem !important;
+      width: 12px !important;
+      height: 12px !important;
+    }
+  }
+  .sortType {
+    display: flex;
+    height: max-content;
+    padding: 0.6rem 1.1rem;
+    background: #373864;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .sortType p {
+    margin-right: 0 !important;
+    height: max-content;
+    font-size: calc(0.8rem + 0.3vw) !important;
+    pointer-events: none;
+    user-select: none;
+  }
+  .sortDiv {
+    display: flex;
+    justify-content: flex-start;
+    width: max-content;
+    align-items: center;
+    width: calc(13.5rem + 3vw) !important;
+  }
   &#blur {
     filter: blur(2px);
   }
@@ -361,29 +611,31 @@ const StyledOrders = styled(motion.div)`
     display: flex;
   }
   .activeFilter {
-    cursor: auto !important;
-    background: #42447a !important;
+    background: #373864 !important;
   }
   .filter {
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 1.3rem;
     background: rgb(48, 49, 89);
-    color: white;
     font-size: calc(0.85rem + 0.3vw);
     border-radius: 10px;
-    transition: 0.2s ease;
+    transition: 0.13s ease;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-
-    img {
-      filter: brightness(1000);
-      margin-left: 0.4rem;
-      transition: 0.08s ease;
+    .filterTitle {
+      pointer-events: none;
+      user-select: none;
+      color: rgba(255, 255, 255, 0.9) !important;
     }
-    .activeFilterImg {
-      transform: rotate(180deg);
+
+    svg {
+      margin-left: 0.35rem;
+      transition: 0.08s ease;
+      width: 13px;
+      height: 13px;
+      pointer-events: none;
     }
     .value {
       color: rgba(255, 255, 255, 1) !important;
@@ -393,40 +645,87 @@ const StyledOrders = styled(motion.div)`
       position: absolute;
       left: 0;
       bottom: 0;
-      transform: translate(0, 107%);
+      transform: translate(0, 104%);
       background: rgb(61, 62, 112);
       box-shadow: rgba(29, 32, 62, 0.42) 0px 2px 10px;
-      border-radius: 6px;
+      border-radius: 10px;
       width: 90%;
       min-width: max-content;
       font-size: calc(0.85rem + 0.3vw);
       z-index: 4;
-      overflow: hidden;
-      p {
+      cursor: auto;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      flex-direction: column;
+      padding: 1.3rem 1.8rem;
+      .sortValue {
+        display: flex;
+        padding: 0.6rem 1.1rem;
+        background: #373864;
+        border-radius: 10px;
         cursor: pointer;
-        color: rgba(255, 255, 255, 0.9) !important;
-        margin-top: 0.3rem;
-        transition: 0.2s ease;
-        padding: 0.5rem 0.7rem !important;
-        &:first-child {
-          margin-top: 0rem;
-          padding-bottom: 0.35rem !important;
-        }
-        &:last-child {
-          padding-top: 0.35rem !important;
-          margin-top: 0rem;
-        }
-        &:hover {
-          background: #3f4175;
-          color: rgba(255, 255, 255, 1) !important;
+        height: max-content;
+        p {
+          font-size: calc(0.8rem + 0.3vw) !important;
+          pointer-events: none;
+          user-select: none;
+          margin-right: 0 !important;
+          height: max-content;
         }
       }
+      .sortText {
+        margin-right: 0.45rem;
+      }
+      .sort img {
+        width: 20px;
+        height: 20px;
+        pointer-events: none;
+        user-select: none;
+        margin: 0 0.5rem;
+      }
+
+      .sort,
+      .brand,
+      .category {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 0.9rem;
+        p {
+          margin-right: 3.5rem;
+          font-size: calc(1rem + 0.3vw);
+        }
+        input {
+          margin-bottom: 0;
+          margin-right: 0;
+          width: calc(13.5rem + 3vw) !important;
+          background: rgba(77, 79, 142, 90%) !important;
+          &:focus {
+            background: rgba(77, 79, 142, 100%) !important;
+          }
+        }
+      }
+      .category {
+        padding-bottom: 0rem;
+      }
+      p {
+        color: rgba(255, 255, 255, 1) !important;
+      }
+    }
+  }
+  .sort p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      margin: 0rem !important;
     }
   }
   .search {
     display: flex;
     //!Space-between
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
     margin-top: 0.8rem;
@@ -527,6 +826,22 @@ const StyledOrders = styled(motion.div)`
   }
   #greybackground path {
     stroke: #363761 !important;
+  }
+  .sort p img {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  .sortType,
+  .sortValue {
+    width: calc((6.75rem + 1.5vw) - (0.5rem + 10px)) !important;
+    p {
+      display: block !important;
+      justify-content: flex-start !important;
+      overflow: hidden !important;
+      white-space: nowrap !important;
+      text-overflow: ellipsis !important;
+      justify-content: flex-start !important;
+    }
   }
 `
 

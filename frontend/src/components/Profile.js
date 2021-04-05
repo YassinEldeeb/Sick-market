@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import arrow from "../img/arrow2.svg"
-import { Link, useHistory, useLocation } from "react-router-dom"
-import { useSelector, useDispatch } from "react-redux"
-import { userLogoutAction, userLogoutAllAction } from "../actions/logout"
-import SmoothImg from "../components/smoothImgLoading"
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import arrow from '../img/arrow3.svg'
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { userLogoutAction, userLogoutAllAction } from '../actions/logout'
+import SmoothImg from '../components/smoothImgLoading'
 
 const Profile = () => {
   const [dropDown, setDropDown] = useState(false)
   const dispatch = useDispatch()
   const userInfo = useSelector((state) => state.userInfo)
-  function truncate(str = "") {
-    return str.length > 15 ? str.substr(0, 15 - 1) + ".." : str
+  function truncate(str = '') {
+    return str.length > 15 ? str.substr(0, 15 - 1) + '..' : str
   }
   const history = useHistory()
   const location = useLocation()
 
   useEffect(() => {
-    if (!userInfo.user && location.pathname.split("/")[1] === "account") {
-      history.push("/login")
+    if (!userInfo.user && location.pathname.split('/')[1] === 'account') {
+      history.push('/login')
     }
   }, [location.pathname])
 
-  document.body.addEventListener("click", (e) => {
+  document.body.addEventListener('click', (e) => {
     e.stopPropagation()
     if (
-      !e.target.classList.contains("lazyImgLoader") &&
-      !e.target.classList.contains("show") &&
-      !e.target.classList.contains("loading") &&
-      !e.target.classList.contains("profilePicImg") &&
-      !e.target.classList.contains("profilePic") &&
-      !e.target.classList.contains("rank") &&
-      !e.target.classList.contains("arrowProfile") &&
-      !e.target.classList.contains("name") &&
-      !e.target.classList.contains("profile")
+      !e.target.classList.contains('lazyImgLoader') &&
+      !e.target.classList.contains('show') &&
+      !e.target.classList.contains('loading') &&
+      !e.target.classList.contains('profilePicImg') &&
+      !e.target.classList.contains('profilePic') &&
+      !e.target.classList.contains('rank') &&
+      !e.target.classList.contains('arrowProfile') &&
+      !e.target.classList.contains('name') &&
+      !e.target.classList.contains('profile')
     ) {
       if (dropDown) {
         setDropDown(false)
@@ -43,7 +43,7 @@ const Profile = () => {
   const imgSrcCondition = () => {
     if (
       userInfo.user.profilePicLink &&
-      userInfo.user.profilePicLink !== "cleared"
+      userInfo.user.profilePicLink !== 'cleared'
     ) {
       return userInfo.user.profilePicLink
     } else {
@@ -57,14 +57,14 @@ const Profile = () => {
           <div className='profilePic'>
             <div className='profilePicImg'>
               <SmoothImg
-                loaderId={"profileLoading"}
-                width={"100%"}
-                height={"100%"}
+                loaderId={'profileLoading'}
+                width={'100%'}
+                height={'100%'}
                 src={imgSrcCondition()}
                 alt=''
               />
             </div>
-            {userInfo.user.rank && userInfo.user.rank !== "user" && (
+            {userInfo.user.rank && userInfo.user.rank !== 'user' && (
               <div className='rank'>
                 <span className='rank'>{userInfo.user.rank}</span>
               </div>
@@ -73,14 +73,15 @@ const Profile = () => {
           <h1 className='name'>{truncate(userInfo.user.name)}</h1>
           <img
             style={{
-              transform: `rotate${dropDown ? "(180deg)" : "(0deg)"}`,
-              width: "19px",
+              transform: `translateY(15%) rotate${
+                dropDown ? '(180deg)' : '(0deg)'
+              }`,
             }}
             className='arrowProfile'
             src={arrow}
             alt='arrow'
           />
-          <div className={`dropMenu ${dropDown ? "active" : ""}`}>
+          <div className={`dropMenu ${dropDown ? 'active' : ''}`}>
             <div className='account'>
               <Link to='/account/edit-profile'>Account</Link>
             </div>
@@ -139,10 +140,12 @@ const StyledProfile = styled.div`
     align-items: center;
     position: relative;
     .arrowProfile {
+      position: relative;
       transition: 0.02s ease;
-      margin-left: calc(0.1rem);
-      filter: brightness(1000000%);
-      transform: translateY(25%);
+      margin-left: 0.2rem;
+      transform: translateY(15%);
+      width: 13px;
+      height: 13px;
     }
     .profilePic {
       width: 48px;

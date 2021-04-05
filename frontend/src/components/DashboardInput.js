@@ -1,12 +1,12 @@
-import React from "react"
-import styled from "styled-components"
-import { v4 as uuid } from "uuid"
+import React from 'react'
+import styled from 'styled-components'
+import { v4 as uuid } from 'uuid'
 
-const Input = ({ value, setValue, label, type = "text", input = true }) => {
+const Input = ({ value, setValue, label, type = 'text', input = true }) => {
   const randomId = uuid()
   return (
     <StyledInput>
-      <label htmlFor={`dashboardInput${randomId}`}>{label}</label>
+      {label && <label htmlFor={`dashboardInput${randomId}`}>{label}</label>}
       {input ? (
         <input
           value={value}
@@ -26,6 +26,7 @@ const Input = ({ value, setValue, label, type = "text", input = true }) => {
     </StyledInput>
   )
 }
+
 const StyledInput = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -36,15 +37,14 @@ const StyledInput = styled.div`
     color: rgba(255, 255, 255, 0.8);
     margin-bottom: 0.25rem;
   }
-  input[type="number"] {
+  input[type='number'] {
     -moz-appearance: textfield;
   }
   textarea {
-    max-width: calc(700px + 10vw);
-    min-width: calc(100px + 10vw);
     min-height: calc(25px + 2vh);
     width: calc(330px + 5vw);
     height: calc(100px + 5vh);
+    resize: vertical;
   }
   textarea,
   input {
