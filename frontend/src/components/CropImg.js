@@ -56,7 +56,7 @@ const CropImg = ({
     const scaleX = image.naturalWidth / image.width
     const scaleY = image.naturalHeight / image.height
     const ctx = canvas.getContext('2d')
-    const pixelRatio = 20
+    const pixelRatio = 4
 
     canvas.width = crop.width * pixelRatio
     canvas.height = crop.height * pixelRatio
