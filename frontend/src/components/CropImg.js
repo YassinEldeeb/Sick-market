@@ -191,18 +191,18 @@ const CropImg = ({
         </DropZone>
       )}
 
-      <motion.div className={`buttons ${image ? 'activeCrop' : ''}`}>
-        <motion.button onClick={cancelHandler} className='cancel'>
+      <div className={`buttons ${image ? 'activeCrop' : ''}`}>
+        <button onClick={cancelHandler} className='cancel'>
           Cancel
-        </motion.button>
-        <motion.button
+        </button>
+        <button
           onClick={confirmHandler}
           className='confirm'
           id={`${completedCrop ? '' : 'notActive'}`}
         >
           Confirm
-        </motion.button>
-      </motion.div>
+        </button>
+      </div>
     </StyledCart>
   )
 }

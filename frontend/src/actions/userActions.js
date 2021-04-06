@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from 'axios'
 
 const userActions = (id, search) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: "USERS_ACTIONS_REQUEST",
+      type: 'USERS_ACTIONS_REQUEST',
     })
 
     const { userInfo } = getState((state) => state.userInfo)
@@ -14,7 +14,6 @@ const userActions = (id, search) => async (dispatch, getState) => {
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
     const users = dashboardUsers.users
-    console.log(dashboardSearchUsers)
     const sUsers = dashboardSearchUsers.users
     const config = {
       headers: {
@@ -52,12 +51,12 @@ const userActions = (id, search) => async (dispatch, getState) => {
     }
 
     dispatch({
-      type: "USERS_ACTIONS_SUCCESS",
+      type: 'USERS_ACTIONS_SUCCESS',
       payload: payloadData,
     })
   } catch (error) {
     dispatch({
-      type: "USERS_ACTIONS_FAIL",
+      type: 'USERS_ACTIONS_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

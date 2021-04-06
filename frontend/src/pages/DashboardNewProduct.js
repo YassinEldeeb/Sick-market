@@ -14,26 +14,14 @@ import DashboardError from '../components/DashboardError'
 import CropImg from '../components/CropImg'
 import { throttle } from 'underscore'
 
-const DashboardNewProduct = () => {
+const DashboardNewProduct = ({ scrolled, setScrolled }) => {
   const lastLocation = useLastLocation()
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
 
   const [scrollableContent, setScrollableContent] = useState(null)
-  const [scrolled, setScrolled] = useState(0)
 
-  useEffect(() => {
-    const firstChild = document.querySelector(
-      '.card-large-scrollable-content div:first-child'
-    )
-    if (firstChild) {
-      firstChild.scroll({
-        top: 0,
-        left: 0,
-      })
-    }
-  }, [])
   useEffect(() => {
     const firstChild = document.querySelector(
       '.card-large-scrollable-content div:first-child'
@@ -149,14 +137,6 @@ const DashboardNewProduct = () => {
   const [image, setImage] = useState(null)
   const [imageType, setImageType] = useState(null)
 
-  useEffect(() => {
-    if (
-      location.pathname.split('/')[4] !== 'image' &&
-      location.pathname.split('/')[3] !== 'add'
-    ) {
-      setScrolled(0)
-    }
-  }, [location.pathname])
   return (
     <StyledUserAction
       id={`${location.pathname.split('/')[3] === 'add' ? 'active' : ''}`}

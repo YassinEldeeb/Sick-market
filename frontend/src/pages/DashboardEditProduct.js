@@ -15,24 +15,60 @@ import DashboardError from '../components/DashboardError'
 import EditCropImg from '../components/EditCropImg'
 import { DashboardProductDetailAction } from '../actions/products'
 import info from '../img/info.svg'
+import { throttle } from 'underscore'
 
-const DashboardEditProduct = () => {
+const DashboardEditProduct = ({ scrolled, setScrolled }) => {
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
-  const { dashboardProduct } = useSelector((state) => state.product)
+  const { dashboardProduct, error: editError } = useSelector(
+    (state) => state.product
+  )
   const [loaded, setLoaded] = useState(false)
+
+  const [scrollableContent, setScrollableContent] = useState(null)
 
   useEffect(() => {
     const firstChild = document.querySelector(
       '.card-big-large-scrollable-content div:first-child'
     )
-
+    const thirdChild = document.querySelectorAll(
+      '.card-big-large-scrollable-content div:last-child'
+    )
     if (firstChild) {
+      setScrollableContent(firstChild)
+      if (
+        location.pathname.split('/')[3] === 'edit' &&
+        location.pathname.split('/')[5] === 'image'
+      ) {
+        firstChild.classList.add('disableScrolling')
+      } else {
+        firstChild.classList.remove('disableScrolling')
+      }
       firstChild.classList.add('addMoreMargin2')
       setLoaded(false)
     }
+    if (
+      thirdChild[thirdChild.length - 2] &&
+      location.pathname.split('/')[3] === 'edit' &&
+      location.pathname.split('/')[5] === 'image'
+    ) {
+      thirdChild[thirdChild.length - 2].style.display = 'none'
+    } else if (thirdChild[thirdChild.length - 2]) {
+      thirdChild[thirdChild.length - 2].style.display = 'block'
+    }
   }, [location.pathname, loaded])
+
+  useEffect(() => {
+    if (scrollableContent) {
+      scrollableContent.addEventListener(
+        'scroll',
+        throttle(() => {
+          setScrolled(scrollableContent.scrollTop)
+        }, 100)
+      )
+    }
+  }, [scrollableContent])
 
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
@@ -66,7 +102,7 @@ const DashboardEditProduct = () => {
   )
 
   useEffect(() => {
-    if (error) {
+    if (editError) {
       const firstChild = document.querySelector(
         '.card-large-scrollable-content div:first-child'
       )
@@ -78,7 +114,7 @@ const DashboardEditProduct = () => {
         })
       }
     }
-  }, [error])
+  }, [editError])
 
   useEffect(() => {
     if (editSuccess) {
@@ -134,11 +170,7 @@ const DashboardEditProduct = () => {
 
   useEffect(() => {
     setOpenInfo(false)
-    if (
-      location.pathname.split('/')[4] &&
-      location.pathname.split('/')[3] === 'edit' &&
-      location.pathname.split('/')[5] !== 'image'
-    )
+    if (location.pathname.split('/')[3] === 'edit' && !dashboardProduct)
       dispatch(DashboardProductDetailAction(location.pathname.split('/')[4]))
   }, [location.pathname])
 
@@ -209,6 +241,7 @@ const DashboardEditProduct = () => {
                     formData={formData}
                     setFormData={setFormData}
                     productImg={image}
+                    scrolled={scrolled}
                   />
                 )}
               </AnimatePresence>
@@ -524,6 +557,9 @@ const StyledUserAction = styled(motion.div)`
     border-radius: 20px;
     width: calc(100% - (calc(2.5rem + 0.5vh) * 2));
     height: 82vh;
+  }
+  .disableScrolling {
+    overflow-y: hidden !important;
   }
 `
 

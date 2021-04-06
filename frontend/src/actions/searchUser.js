@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from 'axios'
 
 const searchDashboardUsersAction = (search) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: "SEARCH_DASHBOARD_USERS_REQUEST",
+      type: 'SEARCH_DASHBOARD_USERS_REQUEST',
     })
     const { userInfo } = getState((state) => state.userInfo)
     const cancelToken = axios.CancelToken
@@ -15,18 +15,17 @@ const searchDashboardUsersAction = (search) => async (dispatch, getState) => {
       cancelToken: source.token,
     }
     const { data } = await axios.post(
-      "/api/users/search?limit=10",
+      '/api/users/search?limit=10',
       { search },
       config
     )
-    console.log("Data", data)
     dispatch({
-      type: "SEARCH_DASHBOARD_USERS_SUCCESS",
+      type: 'SEARCH_DASHBOARD_USERS_SUCCESS',
       payload: data,
     })
   } catch (error) {
     dispatch({
-      type: "SEARCH_DASHBOARD_USERS_FAIL",
+      type: 'SEARCH_DASHBOARD_USERS_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

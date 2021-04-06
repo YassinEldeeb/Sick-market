@@ -12,8 +12,6 @@ import { useLastLocation } from 'react-router-last-location'
 import { throttle } from 'underscore'
 import socket from '../clientSocket/socket'
 import { useInView } from 'react-intersection-observer'
-import infiniteScrollUsersAction from '../actions/infiniteScrollUsers'
-import infiniteScrollSearchUsersAction from '../actions/infiniteScrollSearchedUsers'
 import ConfirmPopup from '../components/confirmPopup'
 import ProductDashboard from '../components/ProductDashboard'
 import { useDispatch, useSelector } from 'react-redux'
@@ -53,7 +51,7 @@ const DashboardProducts = () => {
         (location.pathname === '/dashboard/products/add' &&
           lastLocation.pathname === '/dashboard/products/add') ||
         (lastLocation.pathname.split('/')[3] === 'edit' && products) ||
-        (location.pathname.split('/')[3] === 'edit' && products)
+        location.pathname.split('/')[3] === 'edit'
       ) {
         return
       }
@@ -240,10 +238,58 @@ const DashboardProducts = () => {
   const typeRef = useRef(null)
   useOutsideAlerter(typeRef, () => setOpenType(false))
 
+  const [cardScrolled, setCardScrolled] = useState(0)
+  const [cardScrolled2, setCardScrolled2] = useState(0)
+
+  useEffect(() => {
+    if (
+      location.pathname.split('/')[3] !== 'add' &&
+      location.pathname.split('/')[4] !== 'image'
+    ) {
+      setCardScrolled(0)
+
+      const firstChild = document.querySelector(
+        '.card-large-scrollable-content div:first-child'
+      )
+      if (firstChild) {
+        setTimeout(() => {
+          firstChild.scroll({
+            top: 0,
+            left: 0,
+          })
+        }, 250)
+      }
+    }
+    if (
+      location.pathname.split('/')[3] !== 'edit' &&
+      location.pathname.split('/')[5] !== 'image'
+    ) {
+      setCardScrolled2(0)
+
+      const firstChild = document.querySelector(
+        '.card-big-large-scrollable-content div:first-child'
+      )
+      if (firstChild) {
+        setTimeout(() => {
+          firstChild.scroll({
+            top: 0,
+            left: 0,
+          })
+        }, 250)
+      }
+    }
+  }, [location.pathname])
+
   return (
     <StyledOrders>
-      <DashboardNewProduct />
-      <DashboardEditProduct />
+      <DashboardNewProduct
+        scrolled={cardScrolled}
+        setScrolled={setCardScrolled}
+      />
+      <DashboardEditProduct
+        scrolled={cardScrolled2}
+        setScrolled={setCardScrolled2}
+      />
       <ConfirmPopup
         condition={deleteAsking}
         type='deleteProduct'

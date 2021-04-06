@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import getOrderAction from "../actions/getOrder"
-import { useLocation, Link } from "react-router-dom"
-import styled from "styled-components"
-import PlaceOrderItem from "../components/PlaceOrderItem"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import QrReader from "react-qr-reader"
-import qrCodeImg from "../img/qrCode.png"
-import closeImg from "../img/close.svg"
-import Lottie from "react-lottie"
-import animationData from "../lotties/41791-loading-wrong.json"
-import animationData2 from "../lotties/41793-correct.json"
-import axios from "axios"
-import { PayPalButton } from "react-paypal-button-v2"
-import orderPayAction from "../actions/orderPay"
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import getOrderAction from '../actions/getOrder'
+import { useLocation, Link } from 'react-router-dom'
+import styled from 'styled-components'
+import PlaceOrderItem from '../components/PlaceOrderItem'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import QrReader from 'react-qr-reader'
+import qrCodeImg from '../img/qrCode.png'
+import closeImg from '../img/close.svg'
+import Lottie from 'react-lottie'
+import animationData from '../lotties/41791-loading-wrong.json'
+import animationData2 from '../lotties/41793-correct.json'
+import axios from 'axios'
+import { PayPalButton } from 'react-paypal-button-v2'
+import orderPayAction from '../actions/orderPay'
 
 const OrderDetails = () => {
   const orderThatIsPlaced = useSelector((state) => state.order)
@@ -42,7 +42,7 @@ const OrderDetails = () => {
   }
 
   function truncate(str) {
-    return str.length > 30 ? str.substr(0, 30 - 1) + ".." : str
+    return str.length > 30 ? str.substr(0, 30 - 1) + '..' : str
   }
   const toFixedFN = (num) => {
     return Number(num).toFixed(2)
@@ -69,7 +69,7 @@ const OrderDetails = () => {
       let currency
       try {
         const { data } = await axios.get(
-          "https://api.currencyfreaks.com/latest?apikey=a85d31d75fc34b3e999bc0e87c08a8a9&symbols=EGP",
+          'https://api.currencyfreaks.com/latest?apikey=a85d31d75fc34b3e999bc0e87c08a8a9&symbols=EGP',
           {
             cancelToken: source.token,
           }
@@ -88,18 +88,18 @@ const OrderDetails = () => {
     if (
       (!order.totalPrice && !orderLoading) ||
       success ||
-      (order._id !== location.pathname.split("/")[2] && !orderLoading)
+      (order._id !== location.pathname.split('/')[2] && !orderLoading)
     ) {
-      dispatch({ type: "ORDER_PAY_RESET" })
-      dispatch(getOrderAction(location.pathname.split("/")[2]))
+      dispatch({ type: 'ORDER_PAY_RESET' })
+      dispatch(getOrderAction(location.pathname.split('/')[2]))
     }
   }, [location, dispatch, success, order])
 
   useEffect(() => {
     const addPaypalScript = async () => {
-      const { data: clientId } = await axios.get("/api/config/paypal")
-      const script = document.createElement("script")
-      script.type = "text/javascript"
+      const { data: clientId } = await axios.get('/api/config/paypal')
+      const script = document.createElement('script')
+      script.type = 'text/javascript'
       script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
       script.async = true
       script.onload = () => {
@@ -121,7 +121,7 @@ const OrderDetails = () => {
     }
   }, [order.isPaid])
 
-  const [qrResult, setQrResult] = useState("No result")
+  const [qrResult, setQrResult] = useState('No result')
   const [showScanner, setShowScanner] = useState(false)
   const qrScanHandler = (result) => {
     if (result) {
@@ -152,7 +152,6 @@ const OrderDetails = () => {
   }
 
   const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult)
     dispatch(orderPayAction(order._id, paymentResult))
   }
 
@@ -162,13 +161,12 @@ const OrderDetails = () => {
         <div
           className='qrCodeWrapper'
           onClick={(e) => {
-            console.log(e.currentTarget)
-            if (e.currentTarget.classList[0] === "qrCodeWrapper")
+            if (e.currentTarget.classList[0] === 'qrCodeWrapper')
               setShowScanner(false)
           }}
         >
           <QrReader
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             delay={300}
             onError={qrErrorHandler}
             onScan={qrScanHandler}
@@ -187,8 +185,8 @@ const OrderDetails = () => {
       <div
         className='content'
         style={{
-          alignItems: `${error ? "flex-start" : "center"}`,
-          width: `${error ? "90%" : "85%"}`,
+          alignItems: `${error ? 'flex-start' : 'center'}`,
+          width: `${error ? '90%' : '85%'}`,
         }}
       >
         {orderLoading && <Loader />}
@@ -198,12 +196,12 @@ const OrderDetails = () => {
             visiblity={error ? true : false}
             msg={
               error
-                ? error.includes("timed out")
-                  ? "Network Error"
-                  : error.includes("mongo")
-                  ? "Server Error"
+                ? error.includes('timed out')
+                  ? 'Network Error'
+                  : error.includes('mongo')
+                  ? 'Server Error'
                   : error
-                : "Ok"
+                : 'Ok'
             }
             hidden={error ? false : true}
             type='error'
@@ -215,15 +213,15 @@ const OrderDetails = () => {
               <Link to='/account/orders'>
                 #Order:<div className='line'></div>
               </Link>
-              <span>{" " + order._id}</span>
+              <span>{' ' + order._id}</span>
             </h1>
             <div className='actualContent'>
               {showSVGAnimation === false && (
                 <div className='failureOrderScreen'>
                   <Lottie
                     options={defaultOptions}
-                    width={"50%"}
-                    height={"50%"}
+                    width={'50%'}
+                    height={'50%'}
                   />
                   <img
                     onClick={() => {
@@ -239,8 +237,8 @@ const OrderDetails = () => {
                 <div className='successOrderScreen'>
                   <Lottie
                     options={defaultOptions2}
-                    width={"50%"}
-                    height={"50%"}
+                    width={'50%'}
+                    height={'50%'}
                   />
                   <img
                     onClick={() => {
@@ -258,9 +256,9 @@ const OrderDetails = () => {
                   <p>Name: {order.user.name}</p>
                   <p>Email: {order.user.email}</p>
                   <p className='lastChild'>
-                    Address: {order.shippingAddress.address},{" "}
-                    {order.shippingAddress.city},{" "}
-                    {order.shippingAddress.governorate}, Egypt,{" "}
+                    Address: {order.shippingAddress.address},{' '}
+                    {order.shippingAddress.city},{' '}
+                    {order.shippingAddress.governorate}, Egypt,{' '}
                     {order.shippingAddress.phoneNumber}
                   </p>
                   <div className='flex'>
@@ -278,13 +276,13 @@ const OrderDetails = () => {
                   <h1>Payment Method :</h1>
                   <p>Method: {order.paymentMethod}</p>
                   {!order.isPaid && <Message type='error' msg='Not Paid' />}
-                  {order.isPaid && <Message msg={"Paid on " + order.paidAt} />}
+                  {order.isPaid && <Message msg={'Paid on ' + order.paidAt} />}
                 </div>
                 <div className='order-section section'>
                   <h1>
                     {order.orderItems.length === 1
-                      ? "Order Item :"
-                      : "Order Items :"}
+                      ? 'Order Item :'
+                      : 'Order Items :'}
                   </h1>
                   {order.orderItems.map((each) => (
                     <PlaceOrderItem
@@ -333,7 +331,7 @@ const OrderDetails = () => {
                 <div className='row4 row'>
                   <h1>Total :</h1>
                   <p
-                    className={`${order.couponDiscount > 0 ? "discount" : ""}`}
+                    className={`${order.couponDiscount > 0 ? 'discount' : ''}`}
                   >
                     {order.couponDiscount > 0 && (
                       <h1 className='lastPrice'>
@@ -356,7 +354,7 @@ const OrderDetails = () => {
                             (Number(order.itemsPrice) * 14) / 100 +
                             -order.couponDiscount
                         )
-                      : "+" +
+                      : '+' +
                         Math.abs(
                           toFixedFN(
                             Number(order.itemsPrice) +
@@ -372,8 +370,8 @@ const OrderDetails = () => {
                             50 +
                             (Number(order.totalPrice) * 14) / 100
                         ) === order.couponDiscount
-                          ? "free"
-                          : ""
+                          ? 'free'
+                          : ''
                       }`}
                     >
                       EGP
@@ -381,7 +379,7 @@ const OrderDetails = () => {
                   </p>
                 </div>
                 {!order.isPaid &&
-                  order.paymentMethod !== "Cash on Delivery" && (
+                  order.paymentMethod !== 'Cash on Delivery' && (
                     <div className='row row6'>
                       {sdkReady && currency && !orderPayLoading ? (
                         <PayPalButton

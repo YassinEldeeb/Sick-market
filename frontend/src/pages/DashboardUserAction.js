@@ -124,7 +124,6 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
     if (deleteSuccess) {
       if (lastLocation.search) {
         const add = lastLocation.search.split('=')[1]
-        console.log(lastLocation.pathname)
         history.push(lastLocation.pathname + '?search=' + add)
       } else {
         history.push('/dashboard/customers')
@@ -135,7 +134,6 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
     if (rankSuccess) {
       if (lastLocation.search) {
         const add = lastLocation.search.split('=')[1]
-        console.log(lastLocation.pathname)
         history.push(lastLocation.pathname + '?search=' + add)
       } else {
         history.push('/dashboard/customers')

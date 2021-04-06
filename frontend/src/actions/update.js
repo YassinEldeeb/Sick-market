@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from 'axios'
 
 const userUpdateAction = (name, email, password, newPassword) => async (
   dispatch,
@@ -6,13 +6,13 @@ const userUpdateAction = (name, email, password, newPassword) => async (
 ) => {
   const userInfo = getState().userInfo
   try {
-    dispatch({ type: "UPDATE_USER_REQUEST" })
+    dispatch({ type: 'UPDATE_USER_REQUEST' })
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
 
     const config = {
       headers: {
-        Content_Type: "application/json",
+        Content_Type: 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
       cancelToken: source.token,
@@ -33,22 +33,21 @@ const userUpdateAction = (name, email, password, newPassword) => async (
       }
       return passedObj
     }
-    console.log(passedObjFN())
 
     const { data } = await axios.patch(
-      "/api/users/profile",
+      '/api/users/profile',
       passedObjFN(),
       config
     )
-    dispatch({ type: "UPDATE_USER_SUCCESS", payload: data })
+    dispatch({ type: 'UPDATE_USER_SUCCESS', payload: data })
 
     localStorage.setItem(
-      "sickUserInfo",
+      'sickUserInfo',
       JSON.stringify({ user: data, token: userInfo.token })
     )
   } catch (error) {
     dispatch({
-      type: "UPDATE_USER_FAIL",
+      type: 'UPDATE_USER_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

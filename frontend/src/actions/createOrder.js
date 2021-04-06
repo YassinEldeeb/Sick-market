@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from 'axios'
 
 const createOrderAction = (setCartCount, isBuyNow) => async (
   dispatch,
@@ -9,12 +9,12 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
   const { product } = getState().buyNowProduct
 
   try {
-    dispatch({ type: "CREATE_ORDER_REQUEST" })
+    dispatch({ type: 'CREATE_ORDER_REQUEST' })
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
     const config = {
       headers: {
-        Content_Type: "application/json",
+        Content_Type: 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
       cancelToken: source.token,
@@ -44,7 +44,7 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
     }
 
     const { data } = await axios.post(
-      "/api/orders",
+      '/api/orders',
       {
         user: userInfo.user._id,
         orderItems: modifiedCart(),
@@ -76,11 +76,11 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
       config
     )
     if (!isBuyNow) {
-      localStorage.removeItem("sickCartProducts")
+      localStorage.removeItem('sickCartProducts')
       setCartCount(0)
     }
 
-    dispatch({ type: "CREATE_ORDER_SUCCESS", payload: data })
+    dispatch({ type: 'CREATE_ORDER_SUCCESS', payload: data })
     if (!isBuyNow) {
       cart.cartItems = []
     }
@@ -88,9 +88,8 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
     cart.totalPrice = null
     cart.shipping = null
   } catch (error) {
-    console.log(cart)
     dispatch({
-      type: "CREATE_ORDER_FAIL",
+      type: 'CREATE_ORDER_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

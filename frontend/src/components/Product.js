@@ -1,10 +1,10 @@
-import React from "react"
-import styled from "styled-components"
-import { Link, useLocation } from "react-router-dom"
-import Rating from "./Rating"
-import { useDispatch } from "react-redux"
-import add from "../img/add.svg"
-import SmoothImg from "./smoothImgLoading"
+import React from 'react'
+import styled from 'styled-components'
+import { Link, useLocation } from 'react-router-dom'
+import Rating from './Rating'
+import { useDispatch } from 'react-redux'
+import add from '../img/add.svg'
+import SmoothImg from './smoothImgLoading'
 
 const Product = ({
   data,
@@ -18,50 +18,49 @@ const Product = ({
   const location = useLocation()
   const dispatch = useDispatch()
   function truncate(str) {
-    return str.length > 35 ? str.substr(0, 35 - 1) + "..." : str
+    return str.length > 35 ? str.substr(0, 35 - 1) + '...' : str
   }
 
   const linkCondition = () => {
-    if (type !== "preview") {
+    if (type !== 'preview') {
       return `/products/${data._id}`
     } else {
       if (edit) {
         return `/dashboard/products/edit/${
-          location.pathname.split("/")[4]
+          location.pathname.split('/')[4]
         }/image`
       } else {
-        return "/dashboard/products/add/image"
+        return '/dashboard/products/add/image'
       }
     }
   }
-  console.log(data.image, noImage)
   return (
-    <StyledProduct className={`${providedClassName ? providedClassName : ""}`}>
+    <StyledProduct className={`${providedClassName ? providedClassName : ''}`}>
       <Link
         className='previewImg'
         to={linkCondition()}
         onClick={() => {
-          if (type !== "preview") dispatch({ type: "PRODUCT_DETAIL_REQUEST" })
+          if (type !== 'preview') dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })
         }}
       >
-        {completedCrop && type === "preview" ? (
+        {completedCrop && type === 'preview' ? (
           <canvas className='canvasPreview' ref={previewCanvasRef} />
-        ) : type === "preview" ? (
+        ) : type === 'preview' ? (
           <>
-            <img src={noImage ? "/uploads/no.jpg" : data.image} alt='product' />
+            <img src={noImage ? '/uploads/no.jpg' : data.image} alt='product' />
 
             <div className='addLayer'>
               <img className='add' src={add} alt='' />
             </div>
           </>
         ) : (
-          ""
+          ''
         )}
 
-        {type !== "preview" && (
+        {type !== 'preview' && (
           <SmoothImg
-            width={"640px"}
-            height={"510px"}
+            width={'640px'}
+            height={'510px'}
             src={data.image}
             alt='product'
           />
@@ -70,9 +69,9 @@ const Product = ({
       <div className='product_description'>
         <p>Brand: {data.brand}</p>
         <Link
-          to={`${type !== "preview" ? `/products/${data._id}` : "#"}`}
+          to={`${type !== 'preview' ? `/products/${data._id}` : '#'}`}
           onClick={() => {
-            dispatch({ type: "PRODUCT_DETAIL_REQUEST" })
+            dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })
           }}
         >
           <h1>{truncate(data.name)}</h1>

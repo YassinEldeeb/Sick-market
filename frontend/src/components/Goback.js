@@ -1,36 +1,35 @@
-import React from "react"
-import arrow from "../img/gobackArrow.svg"
-import styled from "styled-components"
-import { Link, useLocation } from "react-router-dom"
-import { useLastLocation } from "react-router-last-location"
+import React from 'react'
+import arrow from '../img/gobackArrow.svg'
+import styled from 'styled-components'
+import { Link, useLocation } from 'react-router-dom'
+import { useLastLocation } from 'react-router-last-location'
 
-const Goback = ({ toPath, providedClassName, text = "Go back" }) => {
+const Goback = ({ toPath, providedClassName, text = 'Go back' }) => {
   const location = useLocation()
-  const isBuyNow = location.search.split("=")[1] === "buyNow"
+  const isBuyNow = location.search.split('=')[1] === 'buyNow'
 
   const lastLocation = useLastLocation()
   let linkValue
-  if (lastLocation && lastLocation.pathname.includes("dashboard")) {
+  if (lastLocation && lastLocation.pathname.includes('dashboard')) {
     const search = lastLocation
       ? lastLocation.search
         ? lastLocation.search
-        : ""
-      : ""
+        : ''
+      : ''
     linkValue = lastLocation.pathname + search
-    console.log("Link Value", search)
   } else if (toPath) {
     linkValue = toPath
   } else if (
     lastLocation &&
-    !lastLocation.pathname.includes("product-description") &&
-    !lastLocation.pathname.includes("products")
+    !lastLocation.pathname.includes('product-description') &&
+    !lastLocation.pathname.includes('products')
   ) {
-    linkValue = `${lastLocation.pathname}${isBuyNow ? "?order=buyNow" : ""}`
+    linkValue = `${lastLocation.pathname}${isBuyNow ? '?order=buyNow' : ''}`
   } else {
-    linkValue = "/"
+    linkValue = '/'
   }
   return (
-    <StyledGo className={`${providedClassName ? providedClassName : ""}`}>
+    <StyledGo className={`${providedClassName ? providedClassName : ''}`}>
       <Link to={linkValue} className='flexCont'>
         <img src={arrow} alt='arrow' />
         <h1>{text}</h1>

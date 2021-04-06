@@ -8,7 +8,6 @@ import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import DropZone from 'react-drop-zone'
 import smallX from '../img/noImage.svg'
-import ReactTooltip from 'react-tooltip'
 
 const EditCropImg = ({
   completedCrop,
@@ -25,6 +24,7 @@ const EditCropImg = ({
   noImage,
   setNoImage,
   productImg,
+  scrolled,
 }) => {
   const location = useLocation()
   const history = useHistory()
@@ -125,10 +125,17 @@ const EditCropImg = ({
     }
     history.push(`/dashboard/products/edit/${location.pathname.split('/')[4]}`)
   }
-  console.log('No', noImage)
+
   return (
     <>
-      <StyledCart variants={show} animate='show' initial='hidden' exit='exit'>
+      <StyledCart
+        scrolled={scrolled}
+        variants={show}
+        animate='show'
+        initial='hidden'
+        exit='exit'
+        transformTemplate={({ x }) => `translateX(${x})`}
+      >
         <AnimatePresence>
           {image && (
             <motion.div
@@ -193,9 +200,9 @@ const EditCropImg = ({
           </DropZone>
         )}
 
-        <motion.div layout className={`buttons ${image ? 'activeCrop' : ''}`}>
+        <div className={`buttons ${image ? 'activeCrop' : ''}`}>
           {productImg !== '/uploads/no.jpg' && !noImage && (
-            <motion.img
+            <img
               onClick={() => {
                 setNoImage(true)
                 formData.append('image', 'no')
@@ -213,24 +220,19 @@ const EditCropImg = ({
               }}
               src={smallX}
               className='deleteIcon'
-            ></motion.img>
+            ></img>
           )}
-          <motion.button
-            layoutId='Btn123'
-            onClick={cancelHandler}
-            className='cancel'
-          >
+          <button onClick={cancelHandler} className='cancel'>
             {image ? 'Previous Img' : 'Cancel'}
-          </motion.button>
-          <motion.button
+          </button>
+          <button
             onClick={confirmHandler}
-            layoutId='Btn123'
             className={`confirm ${noImage ? 'previousImage' : ''}`}
             id={`${completedCrop ? '' : 'notActive'}`}
           >
             {noImage ? 'Previous Img' : 'Confirm'}
-          </motion.button>
-        </motion.div>
+          </button>
+        </div>
       </StyledCart>
     </>
   )
@@ -261,7 +263,7 @@ const StyledCart = styled(motion.div)`
   }
   position: absolute;
   left: 0;
-  top: 0;
+  top: ${(props) => props.scrolled}px;
   height: 100%;
   width: 50%;
   background: #2c2d50;
