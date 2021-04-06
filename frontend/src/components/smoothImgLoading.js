@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import styled from "styled-components"
+import React, { useState } from 'react'
+import styled from 'styled-components'
 
 const SmoothImg = ({
   src,
@@ -18,16 +18,16 @@ const SmoothImg = ({
     <StyledImg
       imgTransition={imgTransition}
       loadingAnimation={loadingAnimation}
-      className={`${providedClassName ? providedClassName : ""}`}
+      className={`${providedClassName ? providedClassName : ''}`}
     >
       <div
         style={{ width, height }}
-        className={`lazyImgLoader ${loaded ? "hide" : ""}`}
-        id={`${loaderId ? loaderId : ""}`}
+        className={`lazyImgLoader ${loaded ? 'hide' : ''}`}
+        id={`${loaderId ? loaderId : ''}`}
       ></div>
       <img
-        id={`${imgId ? imgId : ""}`}
-        className={`${loaded ? "show" : ""}`}
+        id={`${imgId ? imgId : ''}`}
+        className={`${loaded ? 'show' : ''}`}
         onLoad={() => setLoaded(true)}
         src={src}
         alt={alt}
@@ -55,7 +55,7 @@ const StyledImg = styled.div`
     pointer-events: all;
   }
   .lazyImgLoader {
-    z-index: 2;
+    z-index: 1;
     transition: ${(props) => props.imgTransition / 1000}s ease;
     max-height: 100%;
     max-width: 100%;

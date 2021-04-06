@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useRef } from "react"
-import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux"
-import { useHistory, useLocation, Link } from "react-router-dom"
-import { parseISO, format } from "date-fns"
-import { useLastLocation } from "react-router-last-location"
-import { motion, AnimatePresence } from "framer-motion"
-import { popup2, popupLeft } from "../animations"
-import Loader from "../components/loader"
-import { Scrollbars } from "react-custom-scrollbars"
-import Input from "../components/DashboardInput"
-import Product from "../components/Product"
-import editProduct from "../actions/editProduct"
-import DashboardError from "../components/DashboardError"
-import EditCropImg from "../components/EditCropImg"
-import { DashboardProductDetailAction } from "../actions/products"
-import info from "../img/info.svg"
+import React, { useState, useEffect, useRef } from 'react'
+import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory, useLocation, Link } from 'react-router-dom'
+import { parseISO, format } from 'date-fns'
+import { useLastLocation } from 'react-router-last-location'
+import { motion, AnimatePresence } from 'framer-motion'
+import { popup2, popupLeft } from '../animations'
+import Loader from '../components/loader'
+import { Scrollbars } from 'react-custom-scrollbars'
+import Input from '../components/DashboardInput'
+import Product from '../components/Product'
+import editProduct from '../actions/editProduct'
+import DashboardError from '../components/DashboardError'
+import EditCropImg from '../components/EditCropImg'
+import { DashboardProductDetailAction } from '../actions/products'
+import info from '../img/info.svg'
 
 const DashboardEditProduct = () => {
   const dispatch = useDispatch()
@@ -25,22 +25,22 @@ const DashboardEditProduct = () => {
 
   useEffect(() => {
     const firstChild = document.querySelector(
-      ".card-big-large-scrollable-content div:first-child"
+      '.card-big-large-scrollable-content div:first-child'
     )
 
     if (firstChild) {
-      firstChild.classList.add("addMoreMargin2")
+      firstChild.classList.add('addMoreMargin2')
       setLoaded(false)
     }
   }, [location.pathname, loaded])
 
-  const [name, setName] = useState("")
-  const [price, setPrice] = useState("")
-  const [brand, setBrand] = useState("")
-  const [stock, setStock] = useState("")
-  const [category, setCategory] = useState("")
-  const [description, setDescription] = useState("")
-  const [qtyPerUser, setQtyPerUser] = useState("")
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState('')
+  const [brand, setBrand] = useState('')
+  const [stock, setStock] = useState('')
+  const [category, setCategory] = useState('')
+  const [description, setDescription] = useState('')
+  const [qtyPerUser, setQtyPerUser] = useState('')
 
   const [formData, setFormData] = useState(new FormData())
 
@@ -68,13 +68,13 @@ const DashboardEditProduct = () => {
   useEffect(() => {
     if (error) {
       const firstChild = document.querySelector(
-        ".card-large-scrollable-content div:first-child"
+        '.card-large-scrollable-content div:first-child'
       )
       if (firstChild) {
         firstChild.scroll({
           top: 0,
           left: 0,
-          behavior: "smooth",
+          behavior: 'smooth',
         })
       }
     }
@@ -82,25 +82,25 @@ const DashboardEditProduct = () => {
 
   useEffect(() => {
     if (editSuccess) {
-      setName("")
-      setPrice("")
-      setBrand("")
-      setStock("")
-      setCategory("")
-      setDescription("")
-      setQtyPerUser("")
+      setName('')
+      setPrice('')
+      setBrand('')
+      setStock('')
+      setCategory('')
+      setDescription('')
+      setQtyPerUser('')
       setImageType(null)
       setNoImage(false)
       setFormData(new FormData())
       setCrop({
         aspect: 64 / 51,
-        unit: "%",
-        width: "80",
+        unit: '%',
+        width: '80',
       })
       setCompletedCrop(null)
       setAddedImage(null)
 
-      history.push("/dashboard/products")
+      history.push('/dashboard/products')
     }
   }, [editSuccess])
 
@@ -122,10 +122,10 @@ const DashboardEditProduct = () => {
   const previewCanvasRef = useRef(null)
   const [crop, setCrop] = useState({
     aspect: 64 / 51,
-    unit: "%",
-    width: "80",
+    unit: '%',
+    width: '80',
   })
-  const [image, setImage] = useState("/uploads/no.jpg")
+  const [image, setImage] = useState('/uploads/no.jpg')
   const [noImage, setNoImage] = useState(false)
   const [addedImage, setAddedImage] = useState(null)
   const [imageType, setImageType] = useState(null)
@@ -135,11 +135,11 @@ const DashboardEditProduct = () => {
   useEffect(() => {
     setOpenInfo(false)
     if (
-      location.pathname.split("/")[4] &&
-      location.pathname.split("/")[3] === "edit" &&
-      location.pathname.split("/")[5] !== "image"
+      location.pathname.split('/')[4] &&
+      location.pathname.split('/')[3] === 'edit' &&
+      location.pathname.split('/')[5] !== 'image'
     )
-      dispatch(DashboardProductDetailAction(location.pathname.split("/")[4]))
+      dispatch(DashboardProductDetailAction(location.pathname.split('/')[4]))
   }, [location.pathname])
 
   const editProductHandler = (e) => {
@@ -156,31 +156,31 @@ const DashboardEditProduct = () => {
     for (const e in dataObj) {
       formData.append(e, dataObj[e])
     }
-    const id = location.pathname.split("/")[4]
+    const id = location.pathname.split('/')[4]
     dispatch(editProduct(id, formData, dataObj))
   }
 
   return (
     <StyledUserAction
-      id={`${location.pathname.split("/")[3] === "edit" ? "active" : ""}`}
+      id={`${location.pathname.split('/')[3] === 'edit' ? 'active' : ''}`}
       className='cardCont'
       onClick={(e) => {
         if (
-          e.target.classList.contains("cardCont") &&
-          (location.pathname.split("/")[5] !== "image" || !addedImage)
+          e.target.classList.contains('cardCont') &&
+          (location.pathname.split('/')[5] !== 'image' || !addedImage)
         ) {
           setCrop({
             aspect: 64 / 51,
-            unit: "%",
-            width: "80",
+            unit: '%',
+            width: '80',
           })
           setCompletedCrop(null)
-          history.push("/dashboard/products")
+          history.push('/dashboard/products')
         }
       }}
     >
       <AnimatePresence>
-        {location.pathname.split("/")[3] === "edit" && dashboardProduct && (
+        {location.pathname.split('/')[3] === 'edit' && dashboardProduct && (
           <motion.div
             variants={popup2}
             initial='hidden'
@@ -193,7 +193,7 @@ const DashboardEditProduct = () => {
               className='card-big-large-scrollable-content'
             >
               <AnimatePresence>
-                {location.pathname.split("/")[5] === "image" && (
+                {location.pathname.split('/')[5] === 'image' && (
                   <EditCropImg
                     noImage={noImage}
                     setNoImage={setNoImage}
@@ -265,7 +265,7 @@ const DashboardEditProduct = () => {
                   <h5>Preview</h5>
                   <div className='info'>
                     <img
-                      className={`${openInfo ? "active" : ""}`}
+                      className={`${openInfo ? 'active' : ''}`}
                       onClick={() => setOpenInfo(!openInfo)}
                       src={info}
                     />
@@ -280,9 +280,9 @@ const DashboardEditProduct = () => {
                         >
                           <motion.ul>
                             <motion.li layout>
-                              Stock value:{" "}
+                              Stock value:{' '}
                               {dashboardProduct.countInStock *
-                                dashboardProduct.price}{" "}
+                                dashboardProduct.price}{' '}
                               <span className='currency'>EGP</span>
                             </motion.li>
                             <motion.li layout>
@@ -292,17 +292,17 @@ const DashboardEditProduct = () => {
                               </Link>
                             </motion.li>
                             <motion.li layout>
-                              Created at:{" "}
+                              Created at:{' '}
                               {format(
                                 parseISO(dashboardProduct.createdAt),
-                                "yyyy-MM-dd / hh:mm a"
+                                'yyyy-MM-dd / hh:mm a'
                               )}
                             </motion.li>
                             <motion.li layout>
-                              Last updated:{" "}
+                              Last updated:{' '}
                               {format(
                                 parseISO(dashboardProduct.updatedAt),
-                                "yyyy-MM-dd / hh:mm a"
+                                'yyyy-MM-dd / hh:mm a'
                               )}
                             </motion.li>
                           </motion.ul>
@@ -320,9 +320,9 @@ const DashboardEditProduct = () => {
                   type='preview'
                   providedClassName='productPreview'
                   data={{
-                    name: name.length ? name : "Test",
-                    price: price !== "" ? price : 0,
-                    brand: brand.length ? brand : "Test",
+                    name: name.length ? name : 'Test',
+                    price: price !== '' ? price : 0,
+                    brand: brand.length ? brand : 'Test',
                     countInStock: stock,
                     category,
                     image,
@@ -372,7 +372,7 @@ const StyledUserAction = styled(motion.div)`
     cursor: auto;
     box-shadow: rgba(29, 32, 62, 0.42) 0px 2px 10px;
     &::after {
-      content: "";
+      content: '';
       width: 0;
       position: absolute;
       right: 0;

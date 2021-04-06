@@ -99,11 +99,11 @@ const DashboardProducts = () => {
   }, [location.pathname])
 
   useEffect(() => {
-    const cardCont = document.querySelector('.cardCont')
+    const cardCont = document.querySelectorAll('.cardCont')
     const popups = document.querySelectorAll('.confirmationPopup')
 
     popups.forEach((e) => (e.style.top = `${scrolled}px`))
-    cardCont.style.top = `${scrolled}px`
+    cardCont.forEach((e) => (e.style.top = `${scrolled}px`))
   }, [scrolled])
 
   const { user: userInfo } = useSelector((state) => state.userInfo)
@@ -457,6 +457,8 @@ const DashboardProducts = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  overflow-x: hidden;
+  height: 100%;
   .sortValue,
   .sortType {
     display: flex;
@@ -584,7 +586,6 @@ const StyledOrders = styled(motion.div)`
     /* Microsoft Edge */
     color: rgba(255, 255, 255, 0.7) !important;
   }
-  height: max-content;
   position: relative;
   #blur {
     filter: blur(2px);

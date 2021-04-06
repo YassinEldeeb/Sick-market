@@ -456,6 +456,8 @@ const DashboardCustomers = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  overflow-x: hidden;
+  height: 100%;
   .infiniteLoader {
     margin-bottom: 0.6rem;
   }

@@ -1,14 +1,14 @@
-import React, { useEffect, useRef } from "react"
-import styled from "styled-components"
-import add from "../img/choose.svg"
-import { motion, AnimatePresence } from "framer-motion"
-import { show, popup3 } from "../animations"
-import { useHistory, useLocation } from "react-router-dom"
-import ReactCrop from "react-image-crop"
-import "react-image-crop/dist/ReactCrop.css"
-import DropZone from "react-drop-zone"
-import smallX from "../img/noImage.svg"
-import ReactTooltip from "react-tooltip"
+import React, { useEffect, useRef } from 'react'
+import styled from 'styled-components'
+import add from '../img/choose.svg'
+import { motion, AnimatePresence } from 'framer-motion'
+import { show, popup3 } from '../animations'
+import { useHistory, useLocation } from 'react-router-dom'
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css'
+import DropZone from 'react-drop-zone'
+import smallX from '../img/noImage.svg'
+import ReactTooltip from 'react-tooltip'
 
 const EditCropImg = ({
   completedCrop,
@@ -32,12 +32,12 @@ const EditCropImg = ({
     setFormData(new FormData())
     setCrop({
       aspect: 64 / 51,
-      unit: "%",
-      width: "80",
+      unit: '%',
+      width: '80',
     })
     setImage(null)
     setCompletedCrop(null)
-    history.push(`/dashboard/products/edit/${location.pathname.split("/")[4]}`)
+    history.push(`/dashboard/products/edit/${location.pathname.split('/')[4]}`)
   }
 
   const uploadFileHandler = (e) => {
@@ -45,7 +45,7 @@ const EditCropImg = ({
     setNoImage(false)
 
     const reader = new FileReader()
-    reader.addEventListener("load", () => setImage(reader.result))
+    reader.addEventListener('load', () => setImage(reader.result))
     reader.readAsDataURL(e)
   }
 
@@ -61,14 +61,14 @@ const EditCropImg = ({
 
     const scaleX = image.naturalWidth / image.width
     const scaleY = image.naturalHeight / image.height
-    const ctx = canvas.getContext("2d")
-    const pixelRatio = 4.5
+    const ctx = canvas.getContext('2d')
+    const pixelRatio = 20
 
     canvas.width = crop.width * pixelRatio
     canvas.height = crop.height * pixelRatio
 
     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
-    ctx.imageSmoothingQuality = "high"
+    ctx.imageSmoothingQuality = 'high'
     ctx.imageSmoothingEnabled = false
 
     ctx.drawImage(
@@ -84,19 +84,19 @@ const EditCropImg = ({
     )
   }, [completedCrop])
 
-  window.addEventListener("resize", () => {
+  window.addEventListener('resize', () => {
     if (imgRef) {
-      const cont = document.querySelector(".ReactCrop")
-      const contDiv = document.querySelector(".ReactCrop div")
-      const motionCont = document.querySelector(".motionCont")
+      const cont = document.querySelector('.ReactCrop')
+      const contDiv = document.querySelector('.ReactCrop div')
+      const motionCont = document.querySelector('.motionCont')
 
-      if (motionCont) motionCont.style.width = "max-content"
+      if (motionCont) motionCont.style.width = 'max-content'
 
       if (contDiv) {
         contDiv.style.height = `100%`
       }
       if (cont && imgRef.current) {
-        cont.style.width = "100%"
+        cont.style.width = '100%'
         cont.style.width = `${imgRef.current.width}px`
         cont.style.height = `100%`
       }
@@ -108,24 +108,24 @@ const EditCropImg = ({
       previewCanvasRef.current.toBlob(async (blob) => {
         const type = () => {
           switch (imageType) {
-            case "image/png":
-              return "png"
-            case "image/jpg":
-              return "jpg"
-            case "image/jpeg":
-              return "jpeg"
+            case 'image/png':
+              return 'png'
+            case 'image/jpg':
+              return 'jpg'
+            case 'image/jpeg':
+              return 'jpeg'
           }
         }
-        formData.delete("upload")
-        formData.append("upload", blob, `image.${type()}`)
+        formData.delete('upload')
+        formData.append('upload', blob, `image.${type()}`)
       })
     } else if (noImage && !imageType) {
       setImage(null)
       setNoImage(false)
     }
-    history.push(`/dashboard/products/edit/${location.pathname.split("/")[4]}`)
+    history.push(`/dashboard/products/edit/${location.pathname.split('/')[4]}`)
   }
-  console.log("No", noImage)
+  console.log('No', noImage)
   return (
     <>
       <StyledCart variants={show} animate='show' initial='hidden' exit='exit'>
@@ -140,11 +140,11 @@ const EditCropImg = ({
               <ReactCrop
                 onImageLoaded={(img) => {
                   imgRef.current = img
-                  const image = document.querySelector(".ReactCrop div img")
-                  const cont = document.querySelector(".ReactCrop")
-                  const contDiv = document.querySelector(".ReactCrop div")
-                  const motionCont = document.querySelector(".motionCont")
-                  motionCont.style.width = "max-content"
+                  const image = document.querySelector('.ReactCrop div img')
+                  const cont = document.querySelector('.ReactCrop')
+                  const contDiv = document.querySelector('.ReactCrop div')
+                  const motionCont = document.querySelector('.motionCont')
+                  motionCont.style.width = 'max-content'
 
                   cont.style.width = `${image.width}px`
                   cont.style.height = `max-content`
@@ -163,12 +163,12 @@ const EditCropImg = ({
 
         {!image && (
           <DropZone
-            accept={".jpg, .jpeg, .png"}
+            accept={'.jpg, .jpeg, .png'}
             className='dropOrSelect'
             onDrop={(file) => uploadFileHandler(file)}
           >
             {({ over, overDocument }) => (
-              <div className={`dropOrSelect ${over ? "active" : ""}`}>
+              <div className={`dropOrSelect ${over ? 'active' : ''}`}>
                 <img src={add} />
                 {!over && !overDocument && (
                   <p>
@@ -193,22 +193,22 @@ const EditCropImg = ({
           </DropZone>
         )}
 
-        <motion.div layout className={`buttons ${image ? "activeCrop" : ""}`}>
-          {productImg !== "/uploads/no.jpg" && !noImage && (
+        <motion.div layout className={`buttons ${image ? 'activeCrop' : ''}`}>
+          {productImg !== '/uploads/no.jpg' && !noImage && (
             <motion.img
               onClick={() => {
                 setNoImage(true)
-                formData.append("image", "no")
+                formData.append('image', 'no')
                 setCrop({
                   aspect: 64 / 51,
-                  unit: "%",
-                  width: "80",
+                  unit: '%',
+                  width: '80',
                 })
                 setImage(null)
                 setImageType(null)
                 setCompletedCrop(null)
                 history.push(
-                  `/dashboard/products/edit/${location.pathname.split("/")[4]}`
+                  `/dashboard/products/edit/${location.pathname.split('/')[4]}`
                 )
               }}
               src={smallX}
@@ -220,15 +220,15 @@ const EditCropImg = ({
             onClick={cancelHandler}
             className='cancel'
           >
-            {image ? "Previous Img" : "Cancel"}
+            {image ? 'Previous Img' : 'Cancel'}
           </motion.button>
           <motion.button
             onClick={confirmHandler}
             layoutId='Btn123'
-            className={`confirm ${noImage ? "previousImage" : ""}`}
-            id={`${completedCrop ? "" : "notActive"}`}
+            className={`confirm ${noImage ? 'previousImage' : ''}`}
+            id={`${completedCrop ? '' : 'notActive'}`}
           >
-            {noImage ? "Previous Img" : "Confirm"}
+            {noImage ? 'Previous Img' : 'Confirm'}
           </motion.button>
         </motion.div>
       </StyledCart>
