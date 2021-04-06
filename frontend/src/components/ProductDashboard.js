@@ -1,17 +1,17 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import { parseISO, format } from "date-fns"
-import pen from "../img/pen.svg"
-import trash from "../img/trash.svg"
-import eye from "../img/eyeSee.svg"
-import ReactTooltip from "react-tooltip"
-import { motion } from "framer-motion"
-import { popup } from "../animations"
-import { Link, useLocation } from "react-router-dom"
-import Loader from "../components/loader"
-import { useSelector, useDispatch } from "react-redux"
-import { useLastLocation } from "react-router-last-location"
-import SmoothImg from "../components/smoothImgLoading"
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { parseISO, format } from 'date-fns'
+import pen from '../img/pen.svg'
+import trash from '../img/trash.svg'
+import eye from '../img/eyeSee.svg'
+import ReactTooltip from 'react-tooltip'
+import { motion } from 'framer-motion'
+import { popup } from '../animations'
+import { Link, useLocation } from 'react-router-dom'
+import Loader from '../components/loader'
+import { useSelector, useDispatch } from 'react-redux'
+import { useLastLocation } from 'react-router-last-location'
+import SmoothImg from '../components/smoothImgLoading'
 
 const ProductDashboard = ({ product, setClickedForDelete }) => {
   const location = useLocation()
@@ -27,11 +27,11 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
   const animCondition = () => {
     if (lastLocation) {
       if (
-        lastLocation.pathname.split("/")[2] &&
-        lastLocation.pathname.split("/")[1].toLowerCase() === "products" &&
-        !lastLocation.pathname.split("/")[3]
+        lastLocation.pathname.split('/')[2] &&
+        lastLocation.pathname.split('/')[1].toLowerCase() === 'products' &&
+        !lastLocation.pathname.split('/')[3]
       ) {
-        return ""
+        return ''
       } else {
         return popup
       }
@@ -50,14 +50,14 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
         delayShow={100}
       />
       <div className='id'>
-        <p data-for='product-card-tooltip' data-tip={"#" + product._id}>
+        <p data-for='product-card-tooltip' data-tip={'#' + product._id}>
           #{product._id.substr(product._id.length - 4)}
         </p>
       </div>
       <div className='name'>
         <SmoothImg
-          width={"52px"}
-          height={"41.5px"}
+          width={'52px'}
+          height={'41.5px'}
           loaderId='loaderImg'
           src={product.image}
           alt=''
@@ -103,10 +103,13 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
         <div className='ActionCont'>
           <div
             onClick={() => {
-              setClicked(true)
-              setClickedForDelete(product)
-              dispatch({ type: "CONFIRM_DELETE_PRODUCT_REQUEST" })
+              if (!deleteLoading) {
+                setClicked(true)
+                setClickedForDelete(product)
+                dispatch({ type: 'CONFIRM_DELETE_PRODUCT_REQUEST' })
+              }
             }}
+            id={`${deleteLoading ? 'deleting' : ''}`}
             className='actionOption trash'
           >
             {!deleteLoading ? (
@@ -124,6 +127,9 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
 }
 
 const StyledUser = styled(motion.div)`
+  #deleting {
+    cursor: not-allowed !important;
+  }
   #loaderImg {
     border-radius: 10px;
   }

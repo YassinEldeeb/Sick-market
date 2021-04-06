@@ -1,52 +1,52 @@
-import React, { useEffect } from "react"
-import styled from "styled-components"
-import { Scrollbars } from "react-custom-scrollbars"
-import { useLocation, useHistory } from "react-router-dom"
-import { useSelector } from "react-redux"
-import { useLastLocation } from "react-router-last-location"
-import { v4 as uuid } from "uuid"
-import statistics from "../img/statistics.svg"
-import orders from "../img/cartD.svg"
-import categories from "../img/categories.svg"
-import GeoMap from "../img/world.svg"
-import Products from "../img/products.svg"
-import discounts from "../img/discounts.svg"
-import employees from "../img/employees.svg"
-import customers from "../img/customers.svg"
-import chat from "../img/chat.svg"
-import emails from "../img/emails.svg"
-import home from "../img/home.svg"
+import React, { useEffect } from 'react'
+import styled from 'styled-components'
+import { Scrollbars } from 'react-custom-scrollbars'
+import { useLocation, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useLastLocation } from 'react-router-last-location'
+import { v4 as uuid } from 'uuid'
+import statistics from '../img/statistics.svg'
+import orders from '../img/cartD.svg'
+import categories from '../img/categories.svg'
+import GeoMap from '../img/world.svg'
+import Products from '../img/products.svg'
+import discounts from '../img/discounts.svg'
+import employees from '../img/employees.svg'
+import customers from '../img/customers.svg'
+import chat from '../img/chat.svg'
+import emails from '../img/emails.svg'
+import home from '../img/home.svg'
 
-import DashboardTab from "../components/DashboardTab"
-import DashboardCustomers from "./DashboardCustomers"
-import DashboardProducts from "./DashboardProducts"
+import DashboardTab from '../components/DashboardTab'
+import DashboardCustomers from './DashboardCustomers'
+import DashboardProducts from './DashboardProducts'
 
 const Dashboard = ({ pageContent }) => {
   const lastLocation = useLastLocation()
 
   const main = [
-    { text: "Statistics", i: statistics },
-    { text: "Orders", i: orders },
-    { text: "Categories", i: categories },
-    { text: "GeoMap", i: GeoMap },
-    { text: "Products", i: Products },
-    { text: "Discounts", i: discounts },
-    { text: "Employees", i: employees },
-    { text: "Customers", i: customers },
+    { text: 'Statistics', i: statistics },
+    { text: 'Orders', i: orders },
+    { text: 'Categories', i: categories },
+    { text: 'GeoMap', i: GeoMap },
+    { text: 'Products', i: Products },
+    { text: 'Discounts', i: discounts },
+    { text: 'Employees', i: employees },
+    { text: 'Customers', i: customers },
   ]
   main.forEach((e) => (e.active = e.text.toLowerCase() === pageContent))
   const communicate = [
-    { text: "Notify", i: chat },
-    { text: "Emails", i: emails },
+    { text: 'Notify', i: chat },
+    { text: 'Emails', i: emails },
   ]
 
   let Content
   const pageSort = () => {
     switch (pageContent) {
-      case "customers":
+      case 'customers':
         Content = <DashboardCustomers />
         break
-      case "products":
+      case 'products':
         Content = <DashboardProducts />
         break
     }
@@ -63,52 +63,52 @@ const Dashboard = ({ pageContent }) => {
 
   useEffect(() => {
     const firstChild = document.querySelector(
-      ".large-scrollable-content div:first-child"
+      '.large-scrollable-content div:first-child'
     )
     const firstChild2 = document.querySelector(
-      ".scrollable.dashboardTabs div:first-child"
+      '.scrollable.dashboardTabs div:first-child'
     )
-    if (firstChild && !firstChild.classList.contains("addMoreMargin")) {
-      firstChild.classList.add("addMoreMargin")
+    if (firstChild && !firstChild.classList.contains('addMoreMargin')) {
+      firstChild.classList.add('addMoreMargin')
     }
-    if (firstChild2 && !firstChild2.classList.contains("addMoreMargin")) {
-      firstChild2.classList.add("addMoreMargin")
+    if (firstChild2 && !firstChild2.classList.contains('addMoreMargin')) {
+      firstChild2.classList.add('addMoreMargin')
     }
-    if (!location.pathname.split("/")[3]) {
-      if (!lastLocation || !lastLocation.pathname.split("/")[3])
+    if (!location.pathname.split('/')[3]) {
+      if (!lastLocation || !lastLocation.pathname.split('/')[3])
         firstChild.scroll({
           top: 0,
         })
     }
 
-    if (user.rank !== "admin") {
-      history.push("/")
+    if (user.rank !== 'admin') {
+      history.push('/')
     }
     if (
-      location.pathname.split("/")[1] === "dashboard" &&
-      !location.pathname.split("/")[2]
+      location.pathname.split('/')[1] === 'dashboard' &&
+      !location.pathname.split('/')[2]
     ) {
-      history.push("/dashboard/statistics")
+      history.push('/dashboard/statistics')
     }
     if (
-      !location.pathname.split("/")[3] && lastLocation
-        ? !lastLocation.pathname.split("/")[3]
+      !location.pathname.split('/')[3] && lastLocation
+        ? !lastLocation.pathname.split('/')[3]
         : false
     ) {
       dashboardUsers.loading = true
 
-      document.querySelector(".content div:first-child").scroll({
+      document.querySelector('.content div:first-child').scroll({
         top: 0,
         left: 0,
       })
-    } else if (lastLocation ? lastLocation.pathname.split("/")[3] : false) {
+    } else if (lastLocation ? lastLocation.pathname.split('/')[3] : false) {
       userActions.loading = true
     }
   }, [location.pathname, lastLocation])
 
   useEffect(() => {
     const dashboardTabs = document.querySelector(
-      ".dashboardTabs div:first-child"
+      '.dashboardTabs div:first-child'
     )
     dashboardTabs.scroll({
       top: 0,
@@ -119,16 +119,16 @@ const Dashboard = ({ pageContent }) => {
   useEffect(() => {
     if (
       lastLocation
-        ? lastLocation.pathname.split("/")[1] !== "products"
-        : true || location.pathname.split("/")[1] !== "products"
+        ? lastLocation.pathname.split('/')[1] !== 'products'
+        : true || location.pathname.split('/')[1] !== 'products'
     ) {
       if (
-        location.pathname.split("/")[2] !== "products" ||
+        location.pathname.split('/')[2] !== 'products' ||
         (lastLocation
-          ? lastLocation.pathname.split("/")[2] !== "products"
+          ? lastLocation.pathname.split('/')[2] !== 'products'
           : false &&
-            location.pathname.split("/")[2] !== "products" &&
-            !location.pathname.split("/")[3])
+            location.pathname.split('/')[2] !== 'products' &&
+            !location.pathname.split('/')[3])
       ) {
         productList.loading = true
         productList.success = false
@@ -136,21 +136,20 @@ const Dashboard = ({ pageContent }) => {
       }
     }
 
-    if (location.pathname.split("/")[3] === "add") {
+    if (location.pathname.split('/')[3] === 'add') {
       const firstChild = document.querySelector(
-        ".large-scrollable-content div:first-child"
+        '.large-scrollable-content div:first-child'
       )
-      firstChild.style.overflowY = "hidden !important"
+      firstChild.style.overflowY = 'hidden !important'
     }
   }, [location.pathname])
-
   return (
     <StyledDashboard>
       <div className='sidebar'>
         <Scrollbars className='scrollable dashboardTabs'>
           <DashboardTab
             providedClassName='backHome'
-            text={"Home"}
+            text={'Home'}
             icon={home}
           />
           <p>Main</p>
@@ -173,7 +172,11 @@ const Dashboard = ({ pageContent }) => {
           ))}
         </Scrollbars>
       </div>
-      <Scrollbars className='content large-scrollable-content'>
+      <Scrollbars
+        className='content large-scrollable-content'
+        marginWidth='-20px'
+        marginHeight='-20px'
+      >
         {Content}
       </Scrollbars>
     </StyledDashboard>
@@ -182,8 +185,8 @@ const Dashboard = ({ pageContent }) => {
 
 const StyledDashboard = styled.div`
   .addMoreMargin {
-    margin-bottom: -20px !important;
-    overflow: auto;
+    height: 100% !important;
+    overflow: auto !important;
   }
   .backHome {
     padding: calc(0.45rem + 0.3vw) calc(1rem + 0.3vw);
@@ -216,7 +219,7 @@ const StyledDashboard = styled.div`
   .sidebar {
     position: relative;
     background: linear-gradient(280deg, #373965, #2a2b4a);
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: white;
     min-width: calc(255px + 3vw);
   }

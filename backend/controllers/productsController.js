@@ -1,10 +1,10 @@
-import asyncHandler from "express-async-handler"
-import Product from "../models/productModel.js"
-import fs from "fs"
-import { fileURLToPath } from "url"
-import path, { dirname, join } from "path"
-import multer from "multer"
-import sharp from "sharp"
+import asyncHandler from 'express-async-handler'
+import Product from '../models/productModel.js'
+import fs from 'fs'
+import { fileURLToPath } from 'url'
+import path, { dirname, join } from 'path'
+import multer from 'multer'
+import sharp from 'sharp'
 
 const __dirname = path.resolve()
 
@@ -12,34 +12,34 @@ const __dirname = path.resolve()
 const getProducts = asyncHandler(async (req, res) => {
   let sort = {}
   if (req.query.createdAt) {
-    sort = { createdAt: req.query.createdAt === "newest" ? -1 : 1 }
+    sort = { createdAt: req.query.createdAt === 'newest' ? -1 : 1 }
   } else if (req.query.price) {
     sort = {
-      price: req.query.price === "highest" ? -1 : 1,
+      price: req.query.price === 'highest' ? -1 : 1,
     }
   } else if (req.query.topRated) {
     sort = {
-      rating: req.query.topRated === "highest" ? -1 : 1,
+      rating: req.query.topRated === 'highest' ? -1 : 1,
     }
   } else if (req.query.topSelling) {
     sort = {
-      paidAmount: req.query.topSelling === "highest" ? -1 : 1,
+      paidAmount: req.query.topSelling === 'highest' ? -1 : 1,
     }
   } else if (req.query.topSoldStocks) {
     sort = {
-      paidStock: req.query.topSoldStocks === "highest" ? -1 : 1,
+      paidStock: req.query.topSoldStocks === 'highest' ? -1 : 1,
     }
   }
 
   let findObj = {}
   if (req.body.brand) {
-    const regex = new RegExp(req.body.brand, "i")
+    const regex = new RegExp(req.body.brand, 'i')
     findObj = { brand: regex }
   }
   if (req.body.category) findObj.category = req.body.category
   const products = await Product.find(findObj)
     .sort(sort)
-    .populate("user", "name")
+    .populate('user', 'name')
   const productsCount = await Product.countDocuments({})
 
   res.send({ products, count: productsCount })
@@ -47,12 +47,12 @@ const getProducts = asyncHandler(async (req, res) => {
 
 //Get Product - /api/products/:id @Public
 const getProduct = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id).populate("user", "name")
+  const product = await Product.findById(req.params.id).populate('user', 'name')
   if (product) {
     res.send(product)
   } else {
     res.status(404)
-    throw new Error("Product not Found!")
+    throw new Error('Product not Found!')
   }
 })
 
@@ -61,19 +61,19 @@ const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id)
   if (product) {
     if (
-      product.image !== "/uploads/no.jpg" &&
+      product.image !== '/uploads/no.jpg' &&
       fs.existsSync(join(__dirname, product.image))
     ) {
       fs.unlinkSync(join(__dirname, product.image))
-      console.log("Image is Removed")
+      console.log('Image is Removed')
     }
 
     await product.remove()
 
-    res.send({ msg: "Product is Deleted." })
+    res.send({ msg: 'Product is Deleted.' })
   } else {
     res.status(404)
-    throw new Error("Product not Found!")
+    throw new Error('Product not Found!')
   }
 })
 
@@ -86,7 +86,7 @@ const upload = multer({
   },
   fileFilter(req, file, cb) {
     if (!file.originalname.toLowerCase().match(/\.(jpg|jpeg|png)$/)) {
-      return cb(new Error("Please provide an image"))
+      return cb(new Error('Please provide an image'))
     }
     cb(undefined, true)
   },
@@ -114,29 +114,29 @@ const addProduct = asyncHandler(async (req, res) => {
   ) {
     res.status(400)
     throw new Error(
-      "name, brand, category, description, price, countInStock, qtyPerUser and Image are Required"
+      'name, brand, category, description, price, countInStock, qtyPerUser and Image are Required'
     )
   }
 
   let image
   if (req.file) {
-    fs.access("uploads/", (err) => {
+    fs.access('uploads/', (err) => {
       if (err) {
-        fs.mkdirSync("uploads/")
+        fs.mkdirSync('uploads/')
       }
     })
 
     const fileName =
       req.file.fieldname +
-      "-" +
+      '-' +
       Date.now() +
       path.extname(req.file.originalname).toLowerCase()
     image = `/uploads/${fileName}`
     await sharp(req.file.buffer)
       .resize({ width: 640, height: 510 })
-      .toFile("uploads/" + fileName)
+      .toFile('uploads/' + fileName)
   } else {
-    image = "/uploads/no.jpg"
+    image = '/uploads/no.jpg'
   }
   const newProduct = new Product({
     name,
@@ -150,15 +150,18 @@ const addProduct = asyncHandler(async (req, res) => {
     user: req.user._id,
   })
   await newProduct.save()
-
-  res.status(201).send(newProduct)
+  const newPopulatedProduct = await Product.findOne(newProduct._id).populate(
+    'user',
+    'name'
+  )
+  res.status(201).send(newPopulatedProduct)
 })
 
 const updateProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id)
 
   if (!product) {
-    throw new Error("Product not Found")
+    throw new Error('Product not Found')
   }
   const {
     name,
@@ -173,39 +176,39 @@ const updateProduct = asyncHandler(async (req, res) => {
 
   let finalImage
   if (req.file) {
-    fs.access("uploads/", (err) => {
+    fs.access('uploads/', (err) => {
       if (err) {
-        fs.mkdirSync("uploads/")
+        fs.mkdirSync('uploads/')
       }
     })
 
     const fileName =
       req.file.fieldname +
-      "-" +
+      '-' +
       Date.now() +
       path.extname(req.file.originalname).toLowerCase()
     finalImage = `/uploads/${fileName}`
     if (
-      product.image !== "/uploads/no.jpg" &&
+      product.image !== '/uploads/no.jpg' &&
       fs.existsSync(join(__dirname, product.image))
     ) {
       fs.unlinkSync(join(__dirname, product.image))
-      console.log("Image is Removed")
+      console.log('Image is Removed')
     }
     await sharp(req.file.buffer)
       .resize({ width: 640, height: 510 })
-      .toFile("uploads/" + fileName)
+      .toFile('uploads/' + fileName)
   } else {
     finalImage = product.image
   }
-  if (image === "no") {
+  if (image === 'no') {
     if (
-      product.image !== "/uploads/no.jpg" &&
+      product.image !== '/uploads/no.jpg' &&
       fs.existsSync(join(__dirname, product.image))
     ) {
       fs.unlinkSync(join(__dirname, product.image))
-      console.log("Image is Removed")
-      finalImage = "/uploads/no.jpg"
+      console.log('Image is Removed')
+      finalImage = '/uploads/no.jpg'
     }
   }
 
@@ -224,7 +227,7 @@ const updateProduct = asyncHandler(async (req, res) => {
 })
 
 const searchProductsSuggesstions = asyncHandler(async (req, res) => {
-  const regex = new RegExp(`^(${req.query.search}).+$`, "i")
+  const regex = new RegExp(`^(${req.query.search}).+$`, 'i')
   const products = await Product.find({ name: regex }, { name: 1 })
     .sort({
       updated_at: -1,
@@ -234,7 +237,7 @@ const searchProductsSuggesstions = asyncHandler(async (req, res) => {
   res.send(products)
 })
 const searchProducts = asyncHandler(async (req, res) => {
-  const regex = new RegExp(`^(${req.query.find}).+$`, "i")
+  const regex = new RegExp(`^(${req.query.find}).+$`, 'i')
   const products = await Product.find({ name: regex })
     .sort({
       updated_at: -1,

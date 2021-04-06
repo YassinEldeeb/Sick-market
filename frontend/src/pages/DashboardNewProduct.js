@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useRef } from "react"
-import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux"
-import { useHistory, useLocation } from "react-router-dom"
-import { useLastLocation } from "react-router-last-location"
-import { motion, AnimatePresence } from "framer-motion"
-import { popup2 } from "../animations"
-import Loader from "../components/loader"
-import { Scrollbars } from "react-custom-scrollbars"
-import Input from "../components/DashboardInput"
-import Product from "../components/Product"
-import { addNewProductAction } from "../actions/addProduct"
-import DashboardError from "../components/DashboardError"
-import CropImg from "../components/CropImg"
-import { throttle } from "underscore"
+import React, { useState, useEffect, useRef } from 'react'
+import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory, useLocation } from 'react-router-dom'
+import { useLastLocation } from 'react-router-last-location'
+import { motion, AnimatePresence } from 'framer-motion'
+import { popup2 } from '../animations'
+import Loader from '../components/loader'
+import { Scrollbars } from 'react-custom-scrollbars'
+import Input from '../components/DashboardInput'
+import Product from '../components/Product'
+import { addNewProductAction } from '../actions/addProduct'
+import DashboardError from '../components/DashboardError'
+import CropImg from '../components/CropImg'
+import { throttle } from 'underscore'
 
 const DashboardNewProduct = () => {
   const lastLocation = useLastLocation()
@@ -25,7 +25,7 @@ const DashboardNewProduct = () => {
 
   useEffect(() => {
     const firstChild = document.querySelector(
-      ".card-large-scrollable-content div:first-child"
+      '.card-large-scrollable-content div:first-child'
     )
     if (firstChild) {
       firstChild.scroll({
@@ -36,54 +36,53 @@ const DashboardNewProduct = () => {
   }, [])
   useEffect(() => {
     const firstChild = document.querySelector(
-      ".card-large-scrollable-content div:first-child"
+      '.card-large-scrollable-content div:first-child'
     )
     const thirdChild = document.querySelectorAll(
-      ".card-large-scrollable-content div:last-child"
+      '.card-large-scrollable-content div:last-child'
     )
 
     if (firstChild) {
       if (
-        location.pathname.split("/")[3] === "add" &&
-        location.pathname.split("/")[4] === "image"
+        location.pathname.split('/')[3] === 'add' &&
+        location.pathname.split('/')[4] === 'image'
       ) {
-        firstChild.classList.add("disableScrolling")
+        firstChild.classList.add('disableScrolling')
       } else {
-        firstChild.classList.remove("disableScrolling")
+        firstChild.classList.remove('disableScrolling')
       }
       if (firstChild) setScrollableContent(firstChild)
-      firstChild.classList.add("addMoreMargin2")
+      firstChild.classList.add('addMoreMargin2')
     }
     if (
       thirdChild[thirdChild.length - 2] &&
-      location.pathname.split("/")[3] === "add" &&
-      location.pathname.split("/")[4] === "image"
+      location.pathname.split('/')[3] === 'add' &&
+      location.pathname.split('/')[4] === 'image'
     ) {
-      thirdChild[thirdChild.length - 2].style.display = "none"
+      thirdChild[thirdChild.length - 2].style.display = 'none'
     } else if (thirdChild[thirdChild.length - 2]) {
-      thirdChild[thirdChild.length - 2].style.display = "block"
+      thirdChild[thirdChild.length - 2].style.display = 'block'
     }
   }, [location.pathname, lastLocation])
 
   useEffect(() => {
     if (scrollableContent) {
       scrollableContent.addEventListener(
-        "scroll",
+        'scroll',
         throttle(() => {
           setScrolled(scrollableContent.scrollTop)
         }, 100)
       )
     }
-    console.log("SCROLLABLE CONTENT", scrollableContent)
   }, [scrollableContent])
 
-  const [name, setName] = useState("")
-  const [price, setPrice] = useState("")
-  const [brand, setBrand] = useState("")
-  const [stock, setStock] = useState("")
-  const [category, setCategory] = useState("")
-  const [description, setDescription] = useState("")
-  const [qtyPerUser, setQtyPerUser] = useState("")
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState('')
+  const [brand, setBrand] = useState('')
+  const [stock, setStock] = useState('')
+  const [category, setCategory] = useState('')
+  const [description, setDescription] = useState('')
+  const [qtyPerUser, setQtyPerUser] = useState('')
 
   const [formData, setFormData] = useState(new FormData())
 
@@ -111,31 +110,31 @@ const DashboardNewProduct = () => {
   useEffect(() => {
     if (newError) {
       const firstChild = document.querySelector(
-        ".card-large-scrollable-content div:first-child"
+        '.card-large-scrollable-content div:first-child'
       )
       firstChild.scroll({
         top: 0,
         left: 0,
-        behavior: "smooth",
+        behavior: 'smooth',
       })
     }
   }, [newError])
 
   useEffect(() => {
     if (success) {
-      setName("")
-      setPrice("")
-      setBrand("")
-      setStock("")
-      setCategory("")
-      setDescription("")
-      setQtyPerUser("")
+      setName('')
+      setPrice('')
+      setBrand('')
+      setStock('')
+      setCategory('')
+      setDescription('')
+      setQtyPerUser('')
       setFormData(new FormData())
       setCompletedCrop(null)
       setImageType(null)
       setImage(null)
 
-      history.push("/dashboard/products")
+      history.push('/dashboard/products')
     }
   }, [success])
 
@@ -144,34 +143,42 @@ const DashboardNewProduct = () => {
   const previewCanvasRef = useRef(null)
   const [crop, setCrop] = useState({
     aspect: 64 / 51,
-    unit: "%",
-    width: "80",
+    unit: '%',
+    width: '80',
   })
   const [image, setImage] = useState(null)
   const [imageType, setImageType] = useState(null)
 
+  useEffect(() => {
+    if (
+      location.pathname.split('/')[4] !== 'image' &&
+      location.pathname.split('/')[3] !== 'add'
+    ) {
+      setScrolled(0)
+    }
+  }, [location.pathname])
   return (
     <StyledUserAction
-      id={`${location.pathname.split("/")[3] === "add" ? "active" : ""}`}
+      id={`${location.pathname.split('/')[3] === 'add' ? 'active' : ''}`}
       className='cardCont'
       onClick={(e) => {
         if (
-          e.target.classList.contains("cardCont") &&
-          (location.pathname.split("/")[4] !== "image" || !image)
+          e.target.classList.contains('cardCont') &&
+          (location.pathname.split('/')[4] !== 'image' || !image)
         ) {
           setCrop({
             aspect: 64 / 51,
-            unit: "%",
-            width: "80",
+            unit: '%',
+            width: '80',
           })
           setCompletedCrop(null)
           setImage(null)
-          history.push("/dashboard/products")
+          history.push('/dashboard/products')
         }
       }}
     >
       <AnimatePresence>
-        {location.pathname.split("/")[3] === "add" && (
+        {location.pathname.split('/')[3] === 'add' && (
           <motion.div
             variants={popup2}
             initial='hidden'
@@ -181,7 +188,7 @@ const DashboardNewProduct = () => {
           >
             <Scrollbars className='card-large-scrollable-content'>
               <AnimatePresence>
-                {location.pathname.split("/")[4] === "image" && (
+                {location.pathname.split('/')[4] === 'image' && (
                   <CropImg
                     previewCanvasRef={previewCanvasRef}
                     completedCrop={completedCrop}
@@ -195,7 +202,6 @@ const DashboardNewProduct = () => {
                     formData={formData}
                     setFormData={setFormData}
                     scrolled={scrolled}
-                    setScrolled={setScrolled}
                   />
                 )}
               </AnimatePresence>
@@ -251,12 +257,12 @@ const DashboardNewProduct = () => {
                   type='preview'
                   providedClassName='productPreview'
                   data={{
-                    name: name.length ? name : "Test",
+                    name: name.length ? name : 'Test',
                     price: price.length ? price : 0,
-                    brand: brand.length ? brand : "Test",
+                    brand: brand.length ? brand : 'Test',
                     countInStock: stock,
                     category,
-                    image: "/uploads/no.jpg",
+                    image: '/uploads/no.jpg',
                     numReviews: 0,
                   }}
                 />

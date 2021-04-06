@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react"
-import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux"
-import DashboardError from "../components/DashboardError"
-import { useHistory, useLocation } from "react-router-dom"
-import userActions from "../actions/userActions"
-import { parseISO, format } from "date-fns"
-import Switch from "react-switch"
-import { useLastLocation } from "react-router-last-location"
-import { motion, AnimatePresence } from "framer-motion"
-import { popup2 } from "../animations"
-import canOrderAction from "../actions/canOrder"
-import canReviewAction from "../actions/canReview"
-import deleteUserAction from "../actions/deleteUser"
-import Loader from "../components/loader"
-import verified from "../img/verified.svg"
-import editRank from "../actions/editRank"
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import DashboardError from '../components/DashboardError'
+import { useHistory, useLocation } from 'react-router-dom'
+import userActions from '../actions/userActions'
+import { parseISO, format } from 'date-fns'
+import Switch from 'react-switch'
+import { useLastLocation } from 'react-router-last-location'
+import { motion, AnimatePresence } from 'framer-motion'
+import { popup2 } from '../animations'
+import canOrderAction from '../actions/canOrder'
+import canReviewAction from '../actions/canReview'
+import deleteUserAction from '../actions/deleteUser'
+import Loader from '../components/loader'
+import verified from '../img/verified.svg'
+import editRank from '../actions/editRank'
 
 const DashboardUserAction = ({ setRankValue, rankValue }) => {
   const lastLocation = useLastLocation()
@@ -27,11 +27,11 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
   const [ordering, setOrdering] = useState(true)
 
   useEffect(() => {
-    if (location.pathname.split("/")[3]) {
+    if (location.pathname.split('/')[3]) {
       dispatch(
         userActions(
-          location.pathname.split("/")[3],
-          lastLocation ? lastLocation.search.split("=")[1] : true
+          location.pathname.split('/')[3],
+          lastLocation ? lastLocation.search.split('=')[1] : true
         )
       )
     }
@@ -49,7 +49,7 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
   }, [location.pathname])
 
   const imgSrcCondition = () => {
-    if (user.profilePicLink && user.profilePicLink !== "cleared") {
+    if (user.profilePicLink && user.profilePicLink !== 'cleared') {
       return user.profilePicLink
     } else {
       return `/api/users/profilePic/${user._id}`
@@ -70,25 +70,25 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
   const reviewChange = (e) => {
     dispatch(
       canReviewAction(
-        location.pathname.split("/")[3],
+        location.pathname.split('/')[3],
         e,
-        location.search.split("=")[1]
+        location.search.split('=')[1]
       )
     )
   }
   const orderChange = (e) => {
     dispatch(
       canOrderAction(
-        location.pathname.split("/")[3],
+        location.pathname.split('/')[3],
         e,
-        location.search.split("=")[1]
+        location.search.split('=')[1]
       )
     )
   }
 
   const deleteHandler = () => {
     dispatch({
-      type: "CONFIRM_DELETE_REQUEST",
+      type: 'CONFIRM_DELETE_REQUEST',
     })
   }
 
@@ -123,29 +123,29 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
   useEffect(() => {
     if (deleteSuccess) {
       if (lastLocation.search) {
-        const add = lastLocation.search.split("=")[1]
+        const add = lastLocation.search.split('=')[1]
         console.log(lastLocation.pathname)
-        history.push(lastLocation.pathname + "?search=" + add)
+        history.push(lastLocation.pathname + '?search=' + add)
       } else {
-        history.push("/dashboard/customers")
+        history.push('/dashboard/customers')
       }
     }
   }, [deleteSuccess])
   useEffect(() => {
     if (rankSuccess) {
       if (lastLocation.search) {
-        const add = lastLocation.search.split("=")[1]
+        const add = lastLocation.search.split('=')[1]
         console.log(lastLocation.pathname)
-        history.push(lastLocation.pathname + "?search=" + add)
+        history.push(lastLocation.pathname + '?search=' + add)
       } else {
-        history.push("/dashboard/customers")
+        history.push('/dashboard/customers')
       }
     }
   }, [rankSuccess])
 
   const options = [
-    { value: "admin", label: "admin" },
-    { value: "delivery", label: "delivery" },
+    { value: 'admin', label: 'admin' },
+    { value: 'delivery', label: 'delivery' },
   ]
 
   const [selectOpen, setSelectOpen] = useState(false)
@@ -158,9 +158,9 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
     if (confirm) {
       dispatch(
         editRank(
-          location.pathname.split("/")[3],
+          location.pathname.split('/')[3],
           rankValue,
-          lastLocation.search.split("=")[1]
+          lastLocation.search.split('=')[1]
         )
       )
     }
@@ -170,8 +170,8 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
     if (deleteConfirm) {
       dispatch(
         deleteUserAction(
-          location.pathname.split("/")[3],
-          lastLocation.search.split("=")[1]
+          location.pathname.split('/')[3],
+          lastLocation.search.split('=')[1]
         )
       )
     }
@@ -180,16 +180,16 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
   return (
     <StyledUserAction
       className='cardCont'
-      id={`${user ? "active" : ""}`}
+      id={`${user ? 'active' : ''}`}
       onClick={(e) => {
-        if (e.target.classList.contains("cardCont") && !clicked) {
-          history.push(lastLocation ? lastLocation : "/dashboard/customers")
+        if (e.target.classList.contains('cardCont') && !clicked) {
+          history.push(lastLocation ? lastLocation : '/dashboard/customers')
         }
       }}
     >
       <AnimatePresence>
         {error && <DashboardError error={error} />}
-        {!loading && user && location.pathname.split("/")[3] && (
+        {!loading && user && location.pathname.split('/')[3] && (
           <motion.div
             variants={popup2}
             initial='hidden'
@@ -204,15 +204,15 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
                   <div className='descCont'>
                     <h1>
                       <p className='email'>
-                        {user.email}{" "}
-                        {user.status === "Verified" && (
+                        {user.email}{' '}
+                        {user.status === 'Verified' && (
                           <img id='verified' src={verified} alt='' />
                         )}
                       </p>
                       {user.name}
                     </h1>
                     <p className='date'>
-                      {format(parseISO(user.joinedIn), "yyyy-MM-dd")}
+                      {format(parseISO(user.joinedIn), 'yyyy-MM-dd')}
                     </p>
                   </div>
                   <p>
@@ -235,7 +235,7 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
                     <Loader />
                   ) : (
                     <svg
-                      className={`${selectOpen ? "active" : ""}`}
+                      className={`${selectOpen ? 'active' : ''}`}
                       width='20'
                       height='20'
                       viewBox='0 0 20 20'
@@ -255,7 +255,7 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
                           onClick={() => {
                             setRankValue(e.value)
                             dispatch({
-                              type: "CONFIRM_RANK_REQUEST",
+                              type: 'CONFIRM_RANK_REQUEST',
                             })
                           }}
                         >
@@ -269,7 +269,7 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
               <div className='allow allow2'>
                 <h2>Allow Reviewing Products</h2>
                 <Switch
-                  className={`${reviewLoading ? "loading" : ""}`}
+                  className={`${reviewLoading ? 'loading' : ''}`}
                   offColor='#FF6969'
                   onColor='#24CA84'
                   checked={review}
@@ -282,7 +282,7 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
               <div className='allow allow3'>
                 <h2>Allow Ordering Products</h2>
                 <Switch
-                  className={`${orderingLoading ? "loading" : ""}`}
+                  className={`${orderingLoading ? 'loading' : ''}`}
                   offColor='#FF6969'
                   onColor='#24CA84'
                   checked={ordering}
@@ -294,7 +294,14 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
               </div>
 
               <div className='btnCont'>
-                <button onClick={deleteHandler}>
+                <button
+                  id={`${deleteLoading ? 'deleting' : ''}`}
+                  onClick={() => {
+                    if (!deleteLoading) {
+                      deleteHandler()
+                    }
+                  }}
+                >
                   Delete Account{deleteLoading && <Loader />}
                 </button>
               </div>
@@ -307,6 +314,9 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  #deleting {
+    cursor: not-allowed !important;
+  }
   svg.active {
     transform: rotate(180deg) !important;
   }

@@ -1,12 +1,12 @@
-import React, { useEffect, useRef } from "react"
-import styled from "styled-components"
-import add from "../img/choose.svg"
-import { motion, AnimatePresence } from "framer-motion"
-import { show, popup3 } from "../animations"
-import { useHistory } from "react-router-dom"
-import ReactCrop from "react-image-crop"
-import "react-image-crop/dist/ReactCrop.css"
-import DropZone from "react-drop-zone"
+import React, { useEffect, useRef } from 'react'
+import styled from 'styled-components'
+import add from '../img/choose.svg'
+import { motion, AnimatePresence } from 'framer-motion'
+import { show, popup3 } from '../animations'
+import { useHistory } from 'react-router-dom'
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css'
+import DropZone from 'react-drop-zone'
 
 const CropImg = ({
   completedCrop,
@@ -21,29 +21,25 @@ const CropImg = ({
   formData,
   setFormData,
   scrolled,
-  setScrolled,
 }) => {
-  useEffect(() => {
-    setScrolled(0)
-  }, [])
   const history = useHistory()
   const cancelHandler = () => {
     setFormData(new FormData())
     setCrop({
       aspect: 64 / 51,
-      unit: "%",
-      width: "80",
+      unit: '%',
+      width: '80',
     })
     setCompletedCrop(null)
     setImage(null)
-    history.push("/dashboard/products/add")
+    history.push('/dashboard/products/add')
   }
 
   const uploadFileHandler = (e) => {
     setImageType(e.type)
 
     const reader = new FileReader()
-    reader.addEventListener("load", () => setImage(reader.result))
+    reader.addEventListener('load', () => setImage(reader.result))
     reader.readAsDataURL(e)
   }
 
@@ -59,14 +55,14 @@ const CropImg = ({
 
     const scaleX = image.naturalWidth / image.width
     const scaleY = image.naturalHeight / image.height
-    const ctx = canvas.getContext("2d")
-    const pixelRatio = 4.5
+    const ctx = canvas.getContext('2d')
+    const pixelRatio = window.devicePixelRatio
 
     canvas.width = crop.width * pixelRatio
     canvas.height = crop.height * pixelRatio
 
     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
-    ctx.imageSmoothingQuality = "high"
+    ctx.imageSmoothingQuality = 'high'
     ctx.imageSmoothingEnabled = false
 
     ctx.drawImage(
@@ -82,19 +78,19 @@ const CropImg = ({
     )
   }, [completedCrop])
 
-  window.addEventListener("resize", () => {
+  window.addEventListener('resize', () => {
     if (imgRef) {
-      const cont = document.querySelector(".ReactCrop")
-      const contDiv = document.querySelector(".ReactCrop div")
-      const motionCont = document.querySelector(".motionCont")
+      const cont = document.querySelector('.ReactCrop')
+      const contDiv = document.querySelector('.ReactCrop div')
+      const motionCont = document.querySelector('.motionCont')
 
-      if (motionCont) motionCont.style.width = "max-content"
+      if (motionCont) motionCont.style.width = 'max-content'
 
       if (contDiv) {
         contDiv.style.height = `100%`
       }
       if (cont && imgRef.current) {
-        cont.style.width = "100%"
+        cont.style.width = '100%'
         cont.style.width = `${imgRef.current.width}px`
         cont.style.height = `100%`
       }
@@ -106,19 +102,19 @@ const CropImg = ({
       previewCanvasRef.current.toBlob((blob) => {
         const type = () => {
           switch (imageType) {
-            case "image/png":
-              return "png"
-            case "image/jpg":
-              return "jpg"
-            case "image/jpeg":
-              return "jpeg"
+            case 'image/png':
+              return 'png'
+            case 'image/jpg':
+              return 'jpg'
+            case 'image/jpeg':
+              return 'jpeg'
           }
         }
-        formData.delete("upload")
-        formData.append("upload", blob, `image.${type()}`)
+        formData.delete('upload')
+        formData.append('upload', blob, `image.${type()}`)
       })
     }
-    history.push("/dashboard/products/add")
+    history.push('/dashboard/products/add')
   }
 
   return (
@@ -141,11 +137,11 @@ const CropImg = ({
             <ReactCrop
               onImageLoaded={(img) => {
                 imgRef.current = img
-                const image = document.querySelector(".ReactCrop div img")
-                const cont = document.querySelector(".ReactCrop")
-                const contDiv = document.querySelector(".ReactCrop div")
-                const motionCont = document.querySelector(".motionCont")
-                motionCont.style.width = "max-content"
+                const image = document.querySelector('.ReactCrop div img')
+                const cont = document.querySelector('.ReactCrop')
+                const contDiv = document.querySelector('.ReactCrop div')
+                const motionCont = document.querySelector('.motionCont')
+                motionCont.style.width = 'max-content'
 
                 cont.style.width = `${image.width}px`
                 cont.style.height = `max-content`
@@ -164,12 +160,12 @@ const CropImg = ({
 
       {!image && (
         <DropZone
-          accept={".jpg, .jpeg, .png"}
+          accept={'.jpg, .jpeg, .png'}
           className='dropOrSelect'
           onDrop={(file) => uploadFileHandler(file)}
         >
           {({ over, overDocument }) => (
-            <div className={`dropOrSelect ${over ? "active" : ""}`}>
+            <div className={`dropOrSelect ${over ? 'active' : ''}`}>
               <img src={add} />
               {!over && !overDocument && (
                 <p>
@@ -194,14 +190,14 @@ const CropImg = ({
         </DropZone>
       )}
 
-      <motion.div className={`buttons ${image ? "activeCrop" : ""}`}>
+      <motion.div className={`buttons ${image ? 'activeCrop' : ''}`}>
         <motion.button onClick={cancelHandler} className='cancel'>
           Cancel
         </motion.button>
         <motion.button
           onClick={confirmHandler}
           className='confirm'
-          id={`${completedCrop ? "" : "notActive"}`}
+          id={`${completedCrop ? '' : 'notActive'}`}
         >
           Confirm
         </motion.button>
