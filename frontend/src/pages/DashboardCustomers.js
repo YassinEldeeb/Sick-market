@@ -457,7 +457,9 @@ const DashboardCustomers = () => {
 
 const StyledOrders = styled(motion.div)`
   overflow-x: hidden;
-  height: 100%;
+  overflow-y: hidden;
+  height: max-content;
+  min-height: 100%;
   .infiniteLoader {
     margin-bottom: 0.6rem;
   }
@@ -491,7 +493,6 @@ const StyledOrders = styled(motion.div)`
     /* Microsoft Edge */
     color: rgba(255, 255, 255, 0.7) !important;
   }
-  height: max-content;
   position: relative;
   #blur {
     filter: blur(2px);

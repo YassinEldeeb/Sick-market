@@ -78,14 +78,12 @@ const DashboardProducts = () => {
     const container = document.querySelector(
       '.large-scrollable-content div:first-child'
     )
-    container.addEventListener('scroll', () => {
-      setTimeout(
-        throttle(() => {
-          setScrolled(container.scrollTop)
-        }),
-        100
-      )
-    })
+    container.addEventListener(
+      'scroll',
+      throttle(() => {
+        setScrolled(container.scrollTop)
+      }, 100)
+    )
   }, [])
 
   useEffect(() => {
@@ -504,7 +502,9 @@ const DashboardProducts = () => {
 
 const StyledOrders = styled(motion.div)`
   overflow-x: hidden;
-  height: 100%;
+  overflow-y: hidden;
+  height: max-content;
+  min-height: 100%;
   .sortValue,
   .sortType {
     display: flex;
