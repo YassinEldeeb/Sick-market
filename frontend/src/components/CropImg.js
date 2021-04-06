@@ -125,6 +125,7 @@ const CropImg = ({
       exit='exit'
       className='cropImg'
       scrolled={scrolled}
+      transformTemplate={({ x }) => `translateX(${x})`}
     >
       <AnimatePresence>
         {image && (

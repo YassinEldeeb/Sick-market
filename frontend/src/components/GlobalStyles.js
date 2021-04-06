@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components"
+import { createGlobalStyle } from 'styled-components'
 
 const Global = createGlobalStyle`
 *{
@@ -36,6 +36,7 @@ img{
     display:flex;
     flex-direction:column;
 }
+
     .starsRating {
       position: relative;
       margin: 0.2rem 0;
