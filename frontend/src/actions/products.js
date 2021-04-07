@@ -1,18 +1,55 @@
 import axios from 'axios'
 
-export const productListAction = () => async (dispatch) => {
+export const productListAction = (
+  type = 'createdAt',
+  value = 'newest',
+  brand,
+  category
+) => async (dispatch) => {
   try {
     dispatch({ type: 'PRODUCT_LIST_REQUEST' })
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
 
-    const { data } = await axios.get('/api/products?createdAt=newest', {
+    let BaseUrl = '/api/products?'
+
+    if (type) {
+      const valueFN = () => {
+        switch (value) {
+          case 'top rated':
+            return 'highest'
+          case 'underrated':
+            return 'lowest'
+
+          default:
+            return value
+        }
+      }
+      BaseUrl += `${type}=${valueFN()}&`
+    }
+    if (brand) {
+      BaseUrl += `brand=${brand}&`
+    }
+    if (category) {
+      BaseUrl += `category=${category}&`
+    }
+    if (type || brand || category) {
+      dispatch({
+        type: 'SORTING_PRODUCTS_REQUEST',
+      })
+    }
+    const { data } = await axios.get(BaseUrl, {
       cancelToken: source.token,
     })
     dispatch({
       type: 'PRODUCT_LIST_SUCCESS',
       payload: data,
     })
+    if (type || brand || category) {
+      dispatch({
+        type: 'SORTING_PRODUCTS_SUCCESS',
+      })
+    }
   } catch (error) {
     dispatch({
       type: 'PRODUCT_LIST_FAIL',

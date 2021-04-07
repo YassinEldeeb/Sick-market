@@ -103,7 +103,7 @@ const DashboardCustomers = () => {
 
   useEffect(() => {
     if (changed) {
-      dispatch(getDashboardUsersAction(filterValue))
+      dispatch(getDashboardUsersAction(filterValue, true))
     }
   }, [filterValue, changed])
 

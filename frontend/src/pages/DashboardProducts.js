@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import { productListAction } from '../actions/products'
 import Loader from '../components/loader'
 import DashboardError from '../components/DashboardError'
-import { motion } from 'framer-motion'
-import { hide } from '../animations'
+import { AnimatePresence, motion } from 'framer-motion'
+import { hide, popupLeft } from '../animations'
 import search from '../img/searchIcon.svg'
 import { useHistory, useLocation } from 'react-router-dom'
 import smallX from '../img/smallX.svg'
@@ -29,7 +29,7 @@ import { useRef } from 'react'
 import { underline } from 'colors'
 
 const DashboardProducts = () => {
-  const { products, error, loading, count } = useSelector(
+  const { products, error, loading, count, filtering } = useSelector(
     (state) => state.productList
   )
 
@@ -174,7 +174,7 @@ const DashboardProducts = () => {
   const [category, setCategory] = useState('')
   const [sortValue, setSortValue] = useState('Date')
   const [sortType, setSortType] = useState('Newest')
-  const [sortValues, setSortValues] = useState([
+  const [sortValues] = useState([
     'Date',
     'Price',
     'Rating',
@@ -298,6 +298,37 @@ const DashboardProducts = () => {
     else container.classList.remove('preventScrolling')
   }, [deleteAsking, location.pathname])
 
+  const [filterArr, setFilterArr] = useState(null)
+
+  const filterHandler = (e) => {
+    e.preventDefault()
+    console.log('Submited')
+    const acutalSortType = () => {
+      switch (sortValue) {
+        case 'Date':
+          return 'createdAt'
+        case 'Price':
+          return 'price'
+        case 'Rating':
+          return 'topRated'
+        case 'Selling by qty':
+          return 'topSoldStocks'
+        case 'Selling by value':
+          return 'topSelling'
+      }
+    }
+
+    setFilterArr([acutalSortType(), sortType.toLowerCase(), brand, category])
+    dispatch(
+      productListAction(
+        acutalSortType(),
+        sortType.toLowerCase(),
+        brand,
+        category
+      )
+    )
+    setOpenFilter(false)
+  }
   return (
     <StyledOrders>
       <DashboardNewProduct
@@ -313,9 +344,9 @@ const DashboardProducts = () => {
         type='deleteProduct'
         action={`Delete "${clickedForDelete.name}"`}
       />
-      {loading && <Loader />}
+      {loading && !filtering && <Loader />}
       {error && <DashboardError error={error} />}
-      {!loading && (
+      {(!loading || filtering) && (
         <>
           {(products && lastLocation
             ? lastLocation.pathname.split('/')[1] === 'products'
@@ -325,7 +356,8 @@ const DashboardProducts = () => {
           (products && !loading && lastCondition()) ||
           (products && lastCondition2()) ||
           ((location.pathname.split('/')[3] === 'add' || condition4()) &&
-            products) ? (
+            products) ||
+          filtering ? (
             <div
               id={`${location.pathname.split('/')[3] === 'add' ? 'blur' : ''}`}
               className='cont'
@@ -344,6 +376,7 @@ const DashboardProducts = () => {
               </div>
               <div className='search' onSubmit={searchHandler}>
                 <form
+                  onSubmit={filterHandler}
                   ref={filterRef}
                   onClick={(e) => {
                     if (e.target.classList.contains('filter')) {
@@ -374,84 +407,92 @@ const DashboardProducts = () => {
                       </clipPath>
                     </defs>
                   </svg>
-                  {openFilter && (
-                    <div className='filterDropDown'>
-                      <div className='sort'>
-                        <p>
-                          <span className='sortText'>Sort</span>
-                          <img src={sort} />
-                        </p>
-                        <div className='sortDiv'>
-                          <div
-                            ref={typeRef}
-                            onClick={() => {
-                              setOpenType(!openType)
-                            }}
-                            className='sortValue'
-                          >
-                            <p>{sortValue}</p>
-                            <img src={arrow} />
-                            {openType && (
-                              <div className='sortValueDropDown selectDropDown'>
-                                {sortValues.map((e) => (
-                                  <h3
-                                    className={`${
-                                      sortValue === e ? 'active' : ''
-                                    }`}
-                                    onClick={(e) => {
-                                      setSortValue(e.target.innerText)
-                                    }}
-                                  >
-                                    {e}
-                                  </h3>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                          <img src={connect} />
-                          <div
-                            ref={valueRef}
-                            onClick={() => {
-                              setOpenValue(!openValue)
-                            }}
-                            className='sortType'
-                          >
-                            <p>{sortType}</p>
-                            <img src={arrow} />
-                            {openValue && (
-                              <div className='sortTypeDropDown selectDropDown'>
-                                {sortValueTypes.map((e) => (
-                                  <h3
-                                    className={`${
-                                      sortType === e ? 'active' : ''
-                                    }`}
-                                    onClick={(e) => {
-                                      setSortType(e.target.innerText)
-                                    }}
-                                  >
-                                    {e}
-                                  </h3>
-                                ))}
-                              </div>
-                            )}
+                  <AnimatePresence>
+                    {openFilter && (
+                      <motion.div
+                        variants={popupLeft}
+                        animate='show'
+                        initial='hidden'
+                        exit='exit'
+                        className='filterDropDown'
+                      >
+                        <div className='sort'>
+                          <p>
+                            <span className='sortText'>Sort</span>
+                            <img src={sort} />
+                          </p>
+                          <div className='sortDiv'>
+                            <div
+                              ref={typeRef}
+                              onClick={() => {
+                                setOpenType(!openType)
+                              }}
+                              className='sortValue'
+                            >
+                              <p>{sortValue}</p>
+                              <img src={arrow} />
+                              {openType && (
+                                <div className='sortValueDropDown selectDropDown'>
+                                  {sortValues.map((e) => (
+                                    <h3
+                                      className={`${
+                                        sortValue === e ? 'active' : ''
+                                      }`}
+                                      onClick={(e) => {
+                                        setSortValue(e.target.innerText)
+                                      }}
+                                    >
+                                      {e}
+                                    </h3>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            <img src={connect} />
+                            <div
+                              ref={valueRef}
+                              onClick={() => {
+                                setOpenValue(!openValue)
+                              }}
+                              className='sortType'
+                            >
+                              <p>{sortType}</p>
+                              <img src={arrow} />
+                              {openValue && (
+                                <div className='sortTypeDropDown selectDropDown'>
+                                  {sortValueTypes.map((e) => (
+                                    <h3
+                                      className={`${
+                                        sortType === e ? 'active' : ''
+                                      }`}
+                                      onClick={(e) => {
+                                        setSortType(e.target.innerText)
+                                      }}
+                                    >
+                                      {e}
+                                    </h3>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className='brand'>
-                        <p>Brand</p>
-                        <Input value={brand} setValue={setBrand} />
-                      </div>
-                      <div className='category'>
-                        <p>Category</p>
-                        <Input value={category} setValue={setCategory} />
-                      </div>
-                      <div className='btnDiv'>
-                        <button type='submit' className='filterBtnSubmit'>
-                          Filter & Sort
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                        <div className='brand'>
+                          <p>Brand</p>
+                          <Input value={brand} setValue={setBrand} />
+                        </div>
+                        <div className='category'>
+                          <p>Category</p>
+                          <Input value={category} setValue={setCategory} />
+                        </div>
+                        <div className='btnDiv'>
+                          <button type='submit' className='filterBtnSubmit'>
+                            Filter & Sort
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </form>
                 <form className='searchContainer'>
                   <div className='inputCont'>
@@ -471,7 +512,7 @@ const DashboardProducts = () => {
                 </form>
               </div>
 
-              {products.length > 0 ? (
+              {(products && products.length > 0) || filtering ? (
                 <div className='headers'>
                   <div className='id'>
                     <p>Id</p>
@@ -506,26 +547,33 @@ const DashboardProducts = () => {
                     </p>
                   </div>
                 </div>
-              ) : (
+              ) : !filtering ? (
                 <p className='center'>No products was found!</p>
+              ) : (
+                ''
               )}
-              {products && (
-                <motion.div
-                  variants={animCondition()}
-                  initial='hidden'
-                  animate='show'
-                  exit='exit'
-                >
-                  {products.map((each) => (
-                    <ProductDashboard
-                      actionsInfo={actionsInfo}
-                      setClickedForDelete={setClickedForDelete}
-                      clickedForDelete={clickedForDelete}
-                      key={each._id}
-                      product={each}
-                    />
-                  ))}
-                </motion.div>
+              {filtering && <Loader providedClassName='filterLoading' />}
+              {!filtering && (
+                <>
+                  {products && (
+                    <motion.div
+                      variants={animCondition()}
+                      initial='hidden'
+                      animate='show'
+                      exit='exit'
+                    >
+                      {products.map((each) => (
+                        <ProductDashboard
+                          actionsInfo={actionsInfo}
+                          setClickedForDelete={setClickedForDelete}
+                          clickedForDelete={clickedForDelete}
+                          key={each._id}
+                          product={each}
+                        />
+                      ))}
+                    </motion.div>
+                  )}
+                </>
               )}
             </div>
           ) : (
@@ -538,6 +586,10 @@ const DashboardProducts = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  .filterLoading #loader {
+    width: calc(2rem + 1vw) !important;
+    height: calc(2rem + 1vw) !important;
+  }
   .addProduct {
     display: flex;
     justify-content: center;

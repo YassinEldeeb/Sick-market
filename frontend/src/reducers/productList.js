@@ -31,6 +31,10 @@ const productListReducer = (state = initialState, action) => {
         newError: action.payload,
         success: false,
       }
+    case 'SORTING_PRODUCTS_REQUEST':
+      return { ...state, filtering: true }
+    case 'SORTING_PRODUCTS_SUCCESS':
+      return { ...state, filtering: false }
     default:
       return state
   }

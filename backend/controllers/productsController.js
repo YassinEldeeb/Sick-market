@@ -32,11 +32,12 @@ const getProducts = asyncHandler(async (req, res) => {
   }
 
   let findObj = {}
-  if (req.body.brand) {
-    const regex = new RegExp(req.body.brand, 'i')
+  if (req.query.brand) {
+    const regex = new RegExp(req.query.brand, 'i')
     findObj = { brand: regex }
   }
-  if (req.body.category) findObj.category = req.body.category
+  if (req.query.category) findObj.category = req.query.category
+
   const products = await Product.find(findObj)
     .sort(sort)
     .populate('user', 'name')

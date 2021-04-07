@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from 'axios'
 
 const editProduct = (id, formData, data) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: "DASHBOARD_PRODUCT_EDIT_REQUEST",
+      type: 'DASHBOARD_PRODUCT_EDIT_REQUEST',
     })
 
     const { userInfo } = getState((state) => state.userInfo)
@@ -35,11 +35,11 @@ const editProduct = (id, formData, data) => async (dispatch, getState) => {
     productList.products = finalArr
 
     dispatch({
-      type: "DASHBOARD_PRODUCT_EDIT_SUCCESS",
+      type: 'DASHBOARD_PRODUCT_EDIT_SUCCESS',
     })
   } catch (error) {
     dispatch({
-      type: "DASHBOARD_PRODUCT_EDIT_FAIL",
+      type: 'DASHBOARD_PRODUCT_EDIT_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

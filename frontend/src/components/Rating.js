@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 
 const Rating = ({ ratingValue, numOfReviews }) => {
   const getStars = () => {
@@ -10,26 +10,33 @@ const Rating = ({ ratingValue, numOfReviews }) => {
         stars.push(0.5)
       }
     }
-    if (Number.isInteger(stars.length / 2)) {
-      for (let i = 0; i < stars.length / 2; i++) {
+    if (rating >= 5) {
+      for (let i = 0; i < 5; i++) {
         renderedStars.push(
           <i key={`star${renderedStars.length}`} className='fas fa-star'></i>
         )
       }
     } else {
-      for (let i = 0; i < Math.floor(stars.length / 2); i++) {
+      if (Number.isInteger(stars.length / 2)) {
+        for (let i = 0; i < stars.length / 2; i++) {
+          renderedStars.push(
+            <i key={`star${renderedStars.length}`} className='fas fa-star'></i>
+          )
+        }
+      } else {
+        for (let i = 0; i < Math.floor(stars.length / 2); i++) {
+          renderedStars.push(
+            <i key={`star${renderedStars.length}`} className='fas fa-star'></i>
+          )
+        }
         renderedStars.push(
-          <i key={`star${renderedStars.length}`} className='fas fa-star'></i>
+          <i
+            key={`star${renderedStars.length}`}
+            className='fas fa-star-half-alt'
+          ></i>
         )
       }
-      renderedStars.push(
-        <i
-          key={`star${renderedStars.length}`}
-          className='fas fa-star-half-alt'
-        ></i>
-      )
     }
-
     while (renderedStars.length < 5) {
       for (let i = 0; i < 5 - renderedStars.length; i++) {
         renderedStars.push(

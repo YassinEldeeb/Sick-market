@@ -52,7 +52,7 @@ const ProductDashboard = ({ product, setClickedForDelete, actionsInfo }) => {
       {actionsInfo && (
         <ReactTooltip
           delayHide={100}
-          delayShow={100}
+          delayShow={700}
           effect='solid'
           id='action-info-tooltip'
         />
