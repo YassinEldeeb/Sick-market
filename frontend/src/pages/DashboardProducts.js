@@ -24,6 +24,7 @@ import connect from '../img/connect.svg'
 import Input from '../components/DashboardInput'
 import arrow from '../img/arrow3.svg'
 import info from '../img/info.svg'
+import add from '../img/addIcon.svg'
 import { useRef } from 'react'
 import { underline } from 'colors'
 
@@ -338,7 +339,7 @@ const DashboardProducts = () => {
                   onClick={() => history.push('/dashboard/products/add')}
                   className='addProduct'
                 >
-                  Add new Product
+                  <img src={add} /> New Product
                 </button>
               </div>
               <div className='search' onSubmit={searchHandler}>
@@ -537,6 +538,16 @@ const DashboardProducts = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  .addProduct {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      margin-right: 0.4rem;
+      width: 19px;
+      height: 19px;
+    }
+  }
   .btnDiv {
     display: flex;
     justify-content: flex-end;

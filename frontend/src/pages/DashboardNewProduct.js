@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useLastLocation } from 'react-router-last-location'
 import { motion, AnimatePresence } from 'framer-motion'
-import { popup2 } from '../animations'
+import { popup2, hide5 } from '../animations'
 import Loader from '../components/loader'
 import { Scrollbars } from 'react-custom-scrollbars'
 import Input from '../components/DashboardInput'
@@ -13,6 +13,7 @@ import { addNewProductAction } from '../actions/addProduct'
 import DashboardError from '../components/DashboardError'
 import CropImg from '../components/CropImg'
 import { throttle } from 'underscore'
+import xSign from '../img/smallX.svg'
 
 const DashboardNewProduct = ({ scrolled, setScrolled }) => {
   const lastLocation = useLastLocation()
@@ -137,6 +138,16 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
   const [image, setImage] = useState(null)
   const [imageType, setImageType] = useState(null)
 
+  const returnHandler = () => {
+    setCrop({
+      aspect: 64 / 51,
+      unit: '%',
+      width: '80',
+    })
+    setCompletedCrop(null)
+    setImage(null)
+    history.push('/dashboard/products')
+  }
   return (
     <StyledUserAction
       id={`${location.pathname.split('/')[3] === 'add' ? 'active' : ''}`}
@@ -146,109 +157,114 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
           e.target.classList.contains('cardCont') &&
           (location.pathname.split('/')[4] !== 'image' || !image)
         ) {
-          setCrop({
-            aspect: 64 / 51,
-            unit: '%',
-            width: '80',
-          })
-          setCompletedCrop(null)
-          setImage(null)
-          history.push('/dashboard/products')
+          returnHandler()
         }
       }}
     >
       <AnimatePresence>
         {location.pathname.split('/')[3] === 'add' && (
-          <motion.div
-            variants={popup2}
-            initial='hidden'
-            animate='show'
-            exit='exit'
-            className='card'
-          >
-            <Scrollbars className='card-large-scrollable-content'>
-              <AnimatePresence>
-                {location.pathname.split('/')[4] === 'image' && (
-                  <CropImg
+          <>
+            <motion.img
+              variants={hide5}
+              onClick={returnHandler}
+              className='CloseModel'
+              src={xSign}
+              initial='hidden'
+              animate='show'
+              exit='exit'
+            />
+
+            <motion.div
+              variants={popup2}
+              initial='hidden'
+              animate='show'
+              exit='exit'
+              className='card'
+            >
+              <Scrollbars className='card-large-scrollable-content'>
+                <AnimatePresence>
+                  {location.pathname.split('/')[4] === 'image' && (
+                    <CropImg
+                      previewCanvasRef={previewCanvasRef}
+                      completedCrop={completedCrop}
+                      setCompletedCrop={setCompletedCrop}
+                      crop={crop}
+                      setCrop={setCrop}
+                      image={image}
+                      setImage={setImage}
+                      imageType={imageType}
+                      setImageType={setImageType}
+                      formData={formData}
+                      setFormData={setFormData}
+                      scrolled={scrolled}
+                    />
+                  )}
+                </AnimatePresence>
+                <motion.div className='createSection'>
+                  {newError && <DashboardError error={newError} />}
+                  <h1 className='title'>New Product</h1>
+                  <form onSubmit={addProductHandler}>
+                    <Input label='Name' value={name} setValue={setName} />
+                    <Input
+                      label='Price'
+                      value={price}
+                      setValue={setPrice}
+                      type='number'
+                    />
+                    <Input label='Brand' value={brand} setValue={setBrand} />
+                    <Input
+                      label='Stock'
+                      value={stock}
+                      setValue={setStock}
+                      type='number'
+                    />
+                    <Input
+                      label='Category'
+                      value={category}
+                      setValue={setCategory}
+                    />
+                    <Input
+                      label='Description'
+                      value={description}
+                      setValue={setDescription}
+                      input={false}
+                    />
+                    <Input
+                      label='Qty per user'
+                      value={qtyPerUser}
+                      setValue={setQtyPerUser}
+                      type='number'
+                    />
+                    <motion.div className='buttonCont'>
+                      <motion.button className='create' type='submit'>
+                        Create Product{newLoading && <Loader />}
+                      </motion.button>
+                    </motion.div>
+                  </form>
+                </motion.div>
+                <div className='preview'>
+                  <h5>Preview</h5>
+                  <Product
+                    crop={crop}
                     previewCanvasRef={previewCanvasRef}
                     completedCrop={completedCrop}
                     setCompletedCrop={setCompletedCrop}
-                    crop={crop}
-                    setCrop={setCrop}
-                    image={image}
-                    setImage={setImage}
-                    imageType={imageType}
-                    setImageType={setImageType}
-                    formData={formData}
-                    setFormData={setFormData}
-                    scrolled={scrolled}
+                    type='preview'
+                    providedClassName='productPreview'
+                    data={{
+                      name: name.length ? name : 'Test',
+                      price: price.length ? price : 0,
+                      brand: brand.length ? brand : 'Test',
+                      countInStock: stock,
+                      category,
+                      image: '/uploads/no.jpg',
+                      numReviews: 0,
+                    }}
                   />
-                )}
-              </AnimatePresence>
-              <motion.div className='createSection'>
-                {newError && <DashboardError error={newError} />}
-                <h1 className='title'>New Product</h1>
-                <form onSubmit={addProductHandler}>
-                  <Input label='Name' value={name} setValue={setName} />
-                  <Input
-                    label='Price'
-                    value={price}
-                    setValue={setPrice}
-                    type='number'
-                  />
-                  <Input label='Brand' value={brand} setValue={setBrand} />
-                  <Input
-                    label='Stock'
-                    value={stock}
-                    setValue={setStock}
-                    type='number'
-                  />
-                  <Input
-                    label='Category'
-                    value={category}
-                    setValue={setCategory}
-                  />
-                  <Input
-                    label='Description'
-                    value={description}
-                    setValue={setDescription}
-                    input={false}
-                  />
-                  <Input
-                    label='Qty per user'
-                    value={qtyPerUser}
-                    setValue={setQtyPerUser}
-                    type='number'
-                  />
-                  <motion.div className='buttonCont'>
-                    <motion.button className='create' type='submit'>
-                      Create Product{newLoading && <Loader />}
-                    </motion.button>
-                  </motion.div>
-                </form>
-              </motion.div>
-              <div className='preview'>
-                <h5>Preview</h5>
-                <Product
-                  crop={crop}
-                  previewCanvasRef={previewCanvasRef}
-                  completedCrop={completedCrop}
-                  setCompletedCrop={setCompletedCrop}
-                  type='preview'
-                  providedClassName='productPreview'
-                  data={{
-                    name: name.length ? name : 'Test',
-                    price: price.length ? price : 0,
-                    brand: brand.length ? brand : 'Test',
-                    countInStock: stock,
-                    category,
-                    image: '/uploads/no.jpg',
-                    numReviews: 0,
-                  }}
-                />
-              </div>
-            </Scrollbars>
-          </motion.div>
+                </div>
+              </Scrollbars>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </StyledUserAction>
@@ -256,6 +272,18 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  .CloseModel {
+    position: absolute;
+    right: 3%;
+    top: 4%;
+    width: 22px;
+    height: 22px;
+    opacity: 0.7;
+    transition: 0.2s ease;
+    &:hover {
+      opacity: 0.9 !important;
+    }
+  }
   #loader:first-child {
     width: calc(0.65rem + 0.5vw) !important;
     height: calc(0.65rem + 0.5vw) !important;

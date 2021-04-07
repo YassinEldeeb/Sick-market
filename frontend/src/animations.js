@@ -50,6 +50,19 @@ export const hide = {
     transition: { staggerChildren: 0.08 },
   },
 }
+export const hide5 = {
+  hidden: {
+    opacity: 0,
+  },
+  show: {
+    opacity: 0.7,
+    transition: { duration: 0.1 },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.1 },
+  },
+}
 export const hide2 = {
   hidden: {
     opacity: 1,
@@ -96,16 +109,16 @@ export const slidePopup = {
 export const show = {
   hidden: {
     opacity: 0,
-    x: "-5%",
+    x: '-5%',
     transition: { duration: 0 },
   },
   show: {
-    x: "0%",
+    x: '0%',
     opacity: 1,
     transition: { duration: 0.25 },
   },
   exit: {
-    x: "-5%",
+    x: '-5%',
     opacity: 0,
     transition: { duration: 0.2 },
   },

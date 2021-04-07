@@ -5,7 +5,7 @@ import { useHistory, useLocation, Link } from 'react-router-dom'
 import { parseISO, format } from 'date-fns'
 import { useLastLocation } from 'react-router-last-location'
 import { motion, AnimatePresence } from 'framer-motion'
-import { popup2, popupLeft } from '../animations'
+import { popup2, popupLeft, hide5 } from '../animations'
 import Loader from '../components/loader'
 import { Scrollbars } from 'react-custom-scrollbars'
 import Input from '../components/DashboardInput'
@@ -16,6 +16,7 @@ import EditCropImg from '../components/EditCropImg'
 import { DashboardProductDetailAction } from '../actions/products'
 import info from '../img/info.svg'
 import { throttle } from 'underscore'
+import xSign from '../img/smallX.svg'
 
 const DashboardEditProduct = ({ scrolled, setScrolled }) => {
   const dispatch = useDispatch()
@@ -170,7 +171,12 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
 
   useEffect(() => {
     setOpenInfo(false)
-    if (location.pathname.split('/')[3] === 'edit' && !dashboardProduct)
+    if (
+      (location.pathname.split('/')[3] === 'edit' && !dashboardProduct) ||
+      (location.pathname.split('/')[3] === 'edit' &&
+        dashboardProduct &&
+        dashboardProduct._id !== Number(location.pathname.split('/')[4]))
+    )
       dispatch(DashboardProductDetailAction(location.pathname.split('/')[4]))
   }, [location.pathname])
 
@@ -192,6 +198,15 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
     dispatch(editProduct(id, formData, dataObj))
   }
 
+  const returnHandler = () => {
+    setCrop({
+      aspect: 64 / 51,
+      unit: '%',
+      width: '80',
+    })
+    setCompletedCrop(null)
+    history.push('/dashboard/products')
+  }
   return (
     <StyledUserAction
       id={`${location.pathname.split('/')[3] === 'edit' ? 'active' : ''}`}
@@ -200,172 +215,176 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
         if (
           e.target.classList.contains('cardCont') &&
           (location.pathname.split('/')[5] !== 'image' || !addedImage)
-        ) {
-          setCrop({
-            aspect: 64 / 51,
-            unit: '%',
-            width: '80',
-          })
-          setCompletedCrop(null)
-          history.push('/dashboard/products')
-        }
+        )
+          returnHandler()
       }}
     >
       <AnimatePresence>
         {location.pathname.split('/')[3] === 'edit' && dashboardProduct && (
-          <motion.div
-            variants={popup2}
-            initial='hidden'
-            animate='show'
-            exit='exit'
-            className='card'
-          >
-            <Scrollbars
-              onLoad={() => setLoaded(true)}
-              className='card-big-large-scrollable-content'
+          <>
+            <motion.img
+              variants={hide5}
+              onClick={returnHandler}
+              className='CloseModel'
+              src={xSign}
+              initial='hidden'
+              animate='show'
+              exit='exit'
+            />
+            <motion.div
+              variants={popup2}
+              initial='hidden'
+              animate='show'
+              exit='exit'
+              className='card'
             >
-              <AnimatePresence>
-                {location.pathname.split('/')[5] === 'image' && (
-                  <EditCropImg
+              <Scrollbars
+                onLoad={() => setLoaded(true)}
+                className='card-big-large-scrollable-content'
+              >
+                <AnimatePresence>
+                  {location.pathname.split('/')[5] === 'image' && (
+                    <EditCropImg
+                      noImage={noImage}
+                      setNoImage={setNoImage}
+                      previewCanvasRef={previewCanvasRef}
+                      completedCrop={completedCrop}
+                      setCompletedCrop={setCompletedCrop}
+                      crop={crop}
+                      setCrop={setCrop}
+                      image={addedImage}
+                      setImage={setAddedImage}
+                      imageType={imageType}
+                      setImageType={setImageType}
+                      formData={formData}
+                      setFormData={setFormData}
+                      productImg={image}
+                      scrolled={scrolled}
+                    />
+                  )}
+                </AnimatePresence>
+                <motion.div className='createSection'>
+                  {error && <DashboardError error={error} />}
+
+                  <h1 className='title'>Edit Product</h1>
+
+                  <form onSubmit={addProductHandler}>
+                    <Input label='Name' value={name} setValue={setName} />
+                    <Input
+                      label='Price'
+                      value={price}
+                      setValue={setPrice}
+                      type='number'
+                    />
+                    <Input label='Brand' value={brand} setValue={setBrand} />
+                    <Input
+                      label='Stock'
+                      value={stock}
+                      setValue={setStock}
+                      type='number'
+                    />
+                    <Input
+                      label='Category'
+                      value={category}
+                      setValue={setCategory}
+                    />
+                    <Input
+                      label='Description'
+                      value={description}
+                      setValue={setDescription}
+                      input={false}
+                    />
+                    <Input
+                      label='Qty per user'
+                      value={qtyPerUser}
+                      setValue={setQtyPerUser}
+                      type='number'
+                    />
+                    <motion.div className='buttonCont'>
+                      <motion.button
+                        onClick={(e) => editProductHandler(e)}
+                        className='create'
+                        type='submit'
+                      >
+                        Edit Product{editLoading && <Loader />}
+                      </motion.button>
+                    </motion.div>
+                  </form>
+                </motion.div>
+                <div className='preview'>
+                  <div className='cardTitle'>
+                    <h5>Preview</h5>
+                    <div className='info'>
+                      <img
+                        className={`${openInfo ? 'active' : ''}`}
+                        onClick={() => setOpenInfo(!openInfo)}
+                        src={info}
+                      />
+                      <AnimatePresence>
+                        {openInfo && (
+                          <motion.div
+                            initial='hidden'
+                            animate='show'
+                            exit='exit'
+                            variants={popupLeft}
+                            className='data'
+                          >
+                            <motion.ul>
+                              <motion.li layout>
+                                Stock value:{' '}
+                                {dashboardProduct.countInStock *
+                                  dashboardProduct.price}{' '}
+                                <span className='currency'>EGP</span>
+                              </motion.li>
+                              <motion.li layout>
+                                Product Created by:
+                                <Link className='links'>
+                                  {dashboardProduct.user.name}
+                                </Link>
+                              </motion.li>
+                              <motion.li layout>
+                                Created at:{' '}
+                                {format(
+                                  parseISO(dashboardProduct.createdAt),
+                                  'yyyy-MM-dd / hh:mm a'
+                                )}
+                              </motion.li>
+                              <motion.li layout>
+                                Last updated:{' '}
+                                {format(
+                                  parseISO(dashboardProduct.updatedAt),
+                                  'yyyy-MM-dd / hh:mm a'
+                                )}
+                              </motion.li>
+                            </motion.ul>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                  <Product
                     noImage={noImage}
-                    setNoImage={setNoImage}
+                    crop={crop}
                     previewCanvasRef={previewCanvasRef}
                     completedCrop={completedCrop}
                     setCompletedCrop={setCompletedCrop}
-                    crop={crop}
-                    setCrop={setCrop}
-                    image={addedImage}
-                    setImage={setAddedImage}
-                    imageType={imageType}
-                    setImageType={setImageType}
-                    formData={formData}
-                    setFormData={setFormData}
-                    productImg={image}
-                    scrolled={scrolled}
+                    type='preview'
+                    providedClassName='productPreview'
+                    data={{
+                      name: name.length ? name : 'Test',
+                      price: price !== '' ? price : 0,
+                      brand: brand.length ? brand : 'Test',
+                      countInStock: stock,
+                      category,
+                      image,
+                      numReviews: 0,
+                    }}
+                    edit={true}
                   />
-                )}
-              </AnimatePresence>
-              <motion.div className='createSection'>
-                {error && <DashboardError error={error} />}
-
-                <h1 className='title'>Edit Product</h1>
-
-                <form onSubmit={addProductHandler}>
-                  <Input label='Name' value={name} setValue={setName} />
-                  <Input
-                    label='Price'
-                    value={price}
-                    setValue={setPrice}
-                    type='number'
-                  />
-                  <Input label='Brand' value={brand} setValue={setBrand} />
-                  <Input
-                    label='Stock'
-                    value={stock}
-                    setValue={setStock}
-                    type='number'
-                  />
-                  <Input
-                    label='Category'
-                    value={category}
-                    setValue={setCategory}
-                  />
-                  <Input
-                    label='Description'
-                    value={description}
-                    setValue={setDescription}
-                    input={false}
-                  />
-                  <Input
-                    label='Qty per user'
-                    value={qtyPerUser}
-                    setValue={setQtyPerUser}
-                    type='number'
-                  />
-                  <motion.div className='buttonCont'>
-                    <motion.button
-                      onClick={(e) => editProductHandler(e)}
-                      className='create'
-                      type='submit'
-                    >
-                      Edit Product{editLoading && <Loader />}
-                    </motion.button>
-                  </motion.div>
-                </form>
-              </motion.div>
-              <div className='preview'>
-                <div className='cardTitle'>
-                  <h5>Preview</h5>
-                  <div className='info'>
-                    <img
-                      className={`${openInfo ? 'active' : ''}`}
-                      onClick={() => setOpenInfo(!openInfo)}
-                      src={info}
-                    />
-                    <AnimatePresence>
-                      {openInfo && (
-                        <motion.div
-                          initial='hidden'
-                          animate='show'
-                          exit='exit'
-                          variants={popupLeft}
-                          className='data'
-                        >
-                          <motion.ul>
-                            <motion.li layout>
-                              Stock value:{' '}
-                              {dashboardProduct.countInStock *
-                                dashboardProduct.price}{' '}
-                              <span className='currency'>EGP</span>
-                            </motion.li>
-                            <motion.li layout>
-                              Product Created by:
-                              <Link className='links'>
-                                {dashboardProduct.user.name}
-                              </Link>
-                            </motion.li>
-                            <motion.li layout>
-                              Created at:{' '}
-                              {format(
-                                parseISO(dashboardProduct.createdAt),
-                                'yyyy-MM-dd / hh:mm a'
-                              )}
-                            </motion.li>
-                            <motion.li layout>
-                              Last updated:{' '}
-                              {format(
-                                parseISO(dashboardProduct.updatedAt),
-                                'yyyy-MM-dd / hh:mm a'
-                              )}
-                            </motion.li>
-                          </motion.ul>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
                 </div>
-                <Product
-                  noImage={noImage}
-                  crop={crop}
-                  previewCanvasRef={previewCanvasRef}
-                  completedCrop={completedCrop}
-                  setCompletedCrop={setCompletedCrop}
-                  type='preview'
-                  providedClassName='productPreview'
-                  data={{
-                    name: name.length ? name : 'Test',
-                    price: price !== '' ? price : 0,
-                    brand: brand.length ? brand : 'Test',
-                    countInStock: stock,
-                    category,
-                    image,
-                    numReviews: 0,
-                  }}
-                  edit={true}
-                />
-              </div>
-            </Scrollbars>
-          </motion.div>
+              </Scrollbars>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </StyledUserAction>
@@ -373,6 +392,18 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  .CloseModel {
+    position: absolute;
+    right: 3%;
+    top: 4%;
+    width: 22px;
+    height: 22px;
+    opacity: 0.7;
+    transition: 0.2s ease;
+    &:hover {
+      opacity: 0.9 !important;
+    }
+  }
   .links {
     margin-left: 0.3rem;
     &:hover {
