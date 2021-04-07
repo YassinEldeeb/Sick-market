@@ -188,6 +188,9 @@ const StyledDashboard = styled.div`
     height: 100% !important;
     overflow: auto !important;
   }
+  .preventScrolling {
+    overflow-y: hidden !important;
+  }
   .backHome {
     padding: calc(0.45rem + 0.3vw) calc(1rem + 0.3vw);
     margin-top: calc(1.5rem + 1vh);

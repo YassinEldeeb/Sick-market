@@ -23,7 +23,9 @@ import sort from '../img/sort.svg'
 import connect from '../img/connect.svg'
 import Input from '../components/DashboardInput'
 import arrow from '../img/arrow3.svg'
+import info from '../img/info.svg'
 import { useRef } from 'react'
+import { underline } from 'colors'
 
 const DashboardProducts = () => {
   const { products, error, loading, count } = useSelector(
@@ -278,6 +280,23 @@ const DashboardProducts = () => {
     }
   }, [location.pathname])
 
+  const actionsInfoStorage = localStorage.getItem('actionsInfo')
+  const [actionsInfo, setActionsInfo] = useState(
+    actionsInfoStorage !== null ? JSON.parse(actionsInfoStorage) : true
+  )
+  useEffect(() => {
+    const container = document.querySelector(
+      '.large-scrollable-content div:first-child'
+    )
+    if (
+      deleteAsking ||
+      location.pathname.split('/')[3] === 'add' ||
+      location.pathname.split('/')[3] === 'edit'
+    )
+      container.classList.add('preventScrolling')
+    else container.classList.remove('preventScrolling')
+  }, [deleteAsking, location.pathname])
+
   return (
     <StyledOrders>
       <DashboardNewProduct
@@ -322,8 +341,8 @@ const DashboardProducts = () => {
                   Add new Product
                 </button>
               </div>
-              <form className='search' onSubmit={searchHandler}>
-                <div
+              <div className='search' onSubmit={searchHandler}>
+                <form
                   ref={filterRef}
                   onClick={(e) => {
                     if (e.target.classList.contains('filter')) {
@@ -425,10 +444,15 @@ const DashboardProducts = () => {
                         <p>Category</p>
                         <Input value={category} setValue={setCategory} />
                       </div>
+                      <div className='btnDiv'>
+                        <button type='submit' className='filterBtnSubmit'>
+                          Filter & Sort
+                        </button>
+                      </div>
                     </div>
                   )}
-                </div>
-                <div className='searchContainer'>
+                </form>
+                <form className='searchContainer'>
                   <div className='inputCont'>
                     <input
                       value={searchValue}
@@ -443,8 +467,8 @@ const DashboardProducts = () => {
                   <button type='submit'>
                     <img src={search} />
                   </button>
-                </div>
-              </form>
+                </form>
+              </div>
 
               {products.length > 0 ? (
                 <div className='headers'>
@@ -467,7 +491,18 @@ const DashboardProducts = () => {
                     <p>Stock</p>
                   </div>
                   <div className='Actions'>
-                    <p>Actions</p>
+                    <p>
+                      Actions
+                      <img
+                        id='actionImgInfo'
+                        className={`${actionsInfo ? 'active' : 'notActive'}`}
+                        onClick={() => {
+                          localStorage.setItem('actionsInfo', !actionsInfo)
+                          setActionsInfo(!actionsInfo)
+                        }}
+                        src={info}
+                      />
+                    </p>
                   </div>
                 </div>
               ) : (
@@ -482,6 +517,7 @@ const DashboardProducts = () => {
                 >
                   {products.map((each) => (
                     <ProductDashboard
+                      actionsInfo={actionsInfo}
                       setClickedForDelete={setClickedForDelete}
                       clickedForDelete={clickedForDelete}
                       key={each._id}
@@ -501,6 +537,43 @@ const DashboardProducts = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  .btnDiv {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.8rem;
+    .filterBtnSubmit {
+      color: white;
+      padding: 0.6rem 1.3rem;
+      background: #56589e;
+      font-size: calc(0.85rem + 0.3vw);
+      &:hover {
+        background: #4c4e8b;
+      }
+    }
+  }
+  #action-info-tooltip {
+    padding: 8px 18px !important;
+  }
+  .Actions {
+    p {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    #actionImgInfo {
+      transition: 0.2s ease;
+      width: 20px;
+      height: 20px;
+      margin-left: 0.55rem;
+      cursor: pointer;
+      &.active {
+        opacity: 1;
+      }
+      &.notActive {
+        opacity: 0.5;
+      }
+    }
+  }
   overflow-x: hidden;
   overflow-y: hidden;
   height: max-content;
@@ -705,7 +778,8 @@ const StyledOrders = styled(motion.div)`
       justify-content: center;
       align-items: stretch;
       flex-direction: column;
-      padding: 1.3rem 1.8rem;
+      padding: 1.35rem 1.75rem;
+
       .sortValue {
         display: flex;
         padding: 0.6rem 1.1rem;
@@ -748,8 +822,9 @@ const StyledOrders = styled(motion.div)`
           margin-right: 0;
           width: calc(13.5rem + 3vw) !important;
           background: rgba(77, 79, 142, 90%) !important;
+          transition: 0.2s ease;
           &:focus {
-            background: rgba(77, 79, 142, 100%) !important;
+            background: rgb(71, 73, 131) !important;
           }
         }
       }

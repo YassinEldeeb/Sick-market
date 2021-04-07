@@ -187,8 +187,9 @@ const DashboardCustomers = () => {
     const container = document.querySelector(
       '.large-scrollable-content div:first-child'
     )
-    if (location.pathname.split('/')[3]) container.style.overflowY = 'hidden'
-    else container.style.overflowY = 'scroll'
+    if (location.pathname.split('/')[3])
+      container.classList.add('preventScrolling')
+    else container.classList.remove('preventScrolling')
   }, [location.pathname])
 
   useEffect(() => {

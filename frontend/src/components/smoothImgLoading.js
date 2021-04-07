@@ -31,6 +31,7 @@ const SmoothImg = ({
         onLoad={() => setLoaded(true)}
         src={src}
         alt={alt}
+        onError={(e) => (e.target.src = '/uploads/no.jpg')}
       />
     </StyledImg>
   )

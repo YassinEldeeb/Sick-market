@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useLastLocation } from 'react-router-last-location'
 import SmoothImg from '../components/smoothImgLoading'
 
-const ProductDashboard = ({ product, setClickedForDelete }) => {
+const ProductDashboard = ({ product, setClickedForDelete, actionsInfo }) => {
   const location = useLocation()
   const { products, error, loading, count } = useSelector(
     (state) => state.productList
@@ -49,6 +49,14 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
         delayHide={100}
         delayShow={100}
       />
+      {actionsInfo && (
+        <ReactTooltip
+          delayHide={100}
+          delayShow={100}
+          effect='solid'
+          id='action-info-tooltip'
+        />
+      )}
       <div className='id'>
         <p data-for='product-card-tooltip' data-tip={'#' + product._id}>
           #{product._id.substr(product._id.length - 4)}
@@ -87,7 +95,11 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
         </p>
       </div>
       <div className='Actions'>
-        <div className='ActionCont'>
+        <div
+          data-tip='Edit Product'
+          data-for='action-info-tooltip'
+          className='ActionCont'
+        >
           <Link
             to={`/dashboard/products/edit/${product._id}`}
             className='actionOption'
@@ -95,12 +107,20 @@ const ProductDashboard = ({ product, setClickedForDelete }) => {
             <img className='gearImg' src={pen} alt='' />
           </Link>
         </div>
-        <div className='ActionCont'>
+        <div
+          data-tip='See Product'
+          data-for='action-info-tooltip'
+          className='ActionCont'
+        >
           <Link to={`/products/${product._id}`} className='actionOption'>
             <img className='gearImg' src={eye} alt='' />
           </Link>
         </div>
-        <div className='ActionCont'>
+        <div
+          data-tip='Delete Product'
+          data-for='action-info-tooltip'
+          className='ActionCont'
+        >
           <div
             onClick={() => {
               if (!deleteLoading) {
