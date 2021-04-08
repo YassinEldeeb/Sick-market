@@ -189,8 +189,14 @@ const DashboardProducts = () => {
   const [category, setCategory] = useState(
     searches.category ? searches.category : ''
   )
-  const [sortValue, setSortValue] = useState('Date')
-  const [sortType, setSortType] = useState('Newest')
+  const sortValueFromSearch = Object.keys(searches)[0]
+    ? Object.keys(searches)[0]
+    : 'Date'
+  const sortTypeFromSearch = searches[Object.keys(searches)[0]]
+    ? searches[Object.keys(searches)[0]]
+    : 'Newest'
+  const [sortValue, setSortValue] = useState(sortValueFromSearch)
+  const [sortType, setSortType] = useState(sortTypeFromSearch)
   const [sortValues] = useState([
     'Date',
     'Price',
