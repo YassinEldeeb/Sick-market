@@ -214,7 +214,8 @@ const DashboardProducts = () => {
     const sortTypeFromSearch = searches[Object.keys(searches)[0]]
       ? searches[Object.keys(searches)[0]].charAt(0).toUpperCase() +
         searches[Object.keys(searches)[0]].slice(1)
-      : 'Newest'
+      : null
+
     switch (sortValue) {
       case 'Date':
         setSortValueTypes(['Newest', 'Oldest'])
@@ -222,6 +223,7 @@ const DashboardProducts = () => {
         break
       case 'Price':
         setSortValueTypes(['Highest', 'Lowest'])
+        console.log(sortTypeFromSearch)
         setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Highest')
         break
       case 'Rating':
