@@ -210,6 +210,34 @@ const DashboardProducts = () => {
   const [openType, setOpenType] = useState(false)
   const [openValue, setOpenValue] = useState(false)
 
+  const [changedValue, setChangedValue] = useState(false)
+
+  useEffect(() => {
+    if (!openFilter) {
+      const brand = searches.brand
+      const category = searches.category
+      if (brand) {
+        setBrand(brand)
+      } else {
+        setBrand('')
+      }
+      if (category) {
+        setCategory(category)
+      } else {
+        setCategory('')
+      }
+      if (sortValueFromSearch) {
+        setSortValue(sortValueFromSearch)
+      } else {
+        setSortValue('Date')
+      }
+      if (sortTypeFromSearch) {
+        setSortType(sortTypeFromSearch)
+      } else {
+        setSortValue('Newest')
+      }
+    }
+  }, [openFilter])
   useEffect(() => {
     const sortTypeFromSearch = searches[Object.keys(searches)[0]]
       ? searches[Object.keys(searches)[0]].charAt(0).toUpperCase() +
@@ -219,28 +247,40 @@ const DashboardProducts = () => {
     switch (sortValue) {
       case 'Date':
         setSortValueTypes(['Newest', 'Oldest'])
-        setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Newest')
+
+        setSortType(
+          sortTypeFromSearch && !changedValue ? sortTypeFromSearch : 'Newest'
+        )
         break
       case 'Price':
         setSortValueTypes(['Highest', 'Lowest'])
-        console.log(sortTypeFromSearch)
-        setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Highest')
+        setSortType(
+          sortTypeFromSearch && !changedValue ? sortTypeFromSearch : 'Highest'
+        )
         break
       case 'Rating':
         setSortValueTypes(['Top Rated', 'Underrated'])
-        setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Top Rated')
+        setSortType(
+          sortTypeFromSearch && !changedValue ? sortTypeFromSearch : 'Top Rated'
+        )
         break
       case 'Selling by qty':
         setSortValueTypes(['Highest', 'Lowest'])
-        setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Highest')
+        setSortType(
+          sortTypeFromSearch && !changedValue ? sortTypeFromSearch : 'Highest'
+        )
         break
       case 'Selling by value':
         setSortValueTypes(['Highest', 'Lowest'])
-        setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Highest')
+        setSortType(
+          sortTypeFromSearch && !changedValue ? sortTypeFromSearch : 'Highest'
+        )
         break
       default:
         break
     }
+
+    setChangedValue(false)
   }, [sortValue])
 
   const useOutsideAlerter = (ref, reset) => {
@@ -373,6 +413,7 @@ const DashboardProducts = () => {
       )
     }
   }, [location.search])
+
   return (
     <StyledOrders>
       <DashboardNewProduct
@@ -484,6 +525,7 @@ const DashboardProducts = () => {
                                       }`}
                                       onClick={(e) => {
                                         setSortValue(e.target.innerText)
+                                        setChangedValue(true)
                                       }}
                                     >
                                       {e}
