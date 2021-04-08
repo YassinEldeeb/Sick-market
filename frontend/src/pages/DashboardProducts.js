@@ -193,7 +193,8 @@ const DashboardProducts = () => {
     ? Object.keys(searches)[0]
     : 'Date'
   const sortTypeFromSearch = searches[Object.keys(searches)[0]]
-    ? searches[Object.keys(searches)[0]]
+    ? searches[Object.keys(searches)[0]].charAt(0).toUpperCase() +
+      searches[Object.keys(searches)[0]].slice(1)
     : 'Newest'
   const [sortValue, setSortValue] = useState(sortValueFromSearch)
   const [sortType, setSortType] = useState(sortTypeFromSearch)
@@ -210,26 +211,30 @@ const DashboardProducts = () => {
   const [openValue, setOpenValue] = useState(false)
 
   useEffect(() => {
+    const sortTypeFromSearch = searches[Object.keys(searches)[0]]
+      ? searches[Object.keys(searches)[0]].charAt(0).toUpperCase() +
+        searches[Object.keys(searches)[0]].slice(1)
+      : 'Newest'
     switch (sortValue) {
       case 'Date':
         setSortValueTypes(['Newest', 'Oldest'])
-        setSortType('Newest')
+        setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Newest')
         break
       case 'Price':
         setSortValueTypes(['Highest', 'Lowest'])
-        setSortType('Highest')
+        setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Highest')
         break
       case 'Rating':
         setSortValueTypes(['Top Rated', 'Underrated'])
-        setSortType('Top Rated')
+        setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Top Rated')
         break
       case 'Selling by qty':
         setSortValueTypes(['Highest', 'Lowest'])
-        setSortType('Highest')
+        setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Highest')
         break
       case 'Selling by value':
         setSortValueTypes(['Highest', 'Lowest'])
-        setSortType('Highest')
+        setSortType(sortTypeFromSearch ? sortTypeFromSearch : 'Highest')
         break
       default:
         break
@@ -324,21 +329,8 @@ const DashboardProducts = () => {
   const filterHandler = (e) => {
     e.preventDefault()
     console.log('Submited')
-    const acutalSortType = () => {
-      switch (sortValue) {
-        case 'Date':
-          return 'createdAt'
-        case 'Price':
-          return 'price'
-        case 'Rating':
-          return 'topRated'
-        case 'Selling by qty':
-          return 'topSoldStocks'
-        case 'Selling by value':
-          return 'topSelling'
-      }
-    }
-    let baseURL = `?${acutalSortType()}=${sortType.toLowerCase()}`
+
+    let baseURL = `?${sortValue}=${sortType.toLowerCase()}`
     if (brand) baseURL += `&brand=${brand}`
     if (category) baseURL += `&category=${category}`
 
@@ -350,8 +342,23 @@ const DashboardProducts = () => {
     const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
 
     if (Object.size(searches)) {
+      const acutalSortType = (sortValue) => {
+        switch (sortValue) {
+          case 'Date':
+            return 'createdAt'
+          case 'Price':
+            return 'price'
+          case 'Rating':
+            return 'topRated'
+          case 'Selling by qty':
+            return 'topSoldStocks'
+          case 'Selling by value':
+            return 'topSelling'
+        }
+      }
+
       const sortValue = Object.keys(searches)[0]
-        ? Object.keys(searches)[0]
+        ? acutalSortType(Object.keys(searches)[0])
         : null
       const sortType = searches[Object.keys(searches)[0]]
         ? searches[Object.keys(searches)[0]]
