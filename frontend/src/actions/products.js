@@ -1,17 +1,15 @@
 import axios from 'axios'
 
-export const productListAction = (
-  type = 'createdAt',
-  value = 'newest',
-  brand,
-  category
-) => async (dispatch) => {
+export const productListAction = (type, value, brand, category) => async (
+  dispatch
+) => {
   try {
     dispatch({ type: 'PRODUCT_LIST_REQUEST' })
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
 
     let BaseUrl = '/api/products?'
+    let BasicURL = '/api/products?createdAt=newest'
 
     if (type) {
       const valueFN = () => {
@@ -33,12 +31,14 @@ export const productListAction = (
     if (category) {
       BaseUrl += `category=${category}&`
     }
+    let sorting = false
     if (type || brand || category) {
+      sorting = true
       dispatch({
         type: 'SORTING_PRODUCTS_REQUEST',
       })
     }
-    const { data } = await axios.get(BaseUrl, {
+    const { data } = await axios.get(sorting ? BaseUrl : BasicURL, {
       cancelToken: source.token,
     })
     dispatch({
