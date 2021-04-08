@@ -27,8 +27,18 @@ import info from '../img/info.svg'
 import add from '../img/addIcon.svg'
 import { useRef } from 'react'
 import { underline } from 'colors'
+import qs from 'qs'
 
 const DashboardProducts = () => {
+  Object.size = function (obj) {
+    var size = 0,
+      key
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) size++
+    }
+    return size
+  }
+
   const { products, error, loading, count, filtering } = useSelector(
     (state) => state.productList
   )
@@ -42,29 +52,31 @@ const DashboardProducts = () => {
   const location = useLocation()
 
   useEffect(() => {
-    if (lastLocation) {
-      if (
-        location.pathname.split('/')[3] === 'add' ||
-        (lastLocation.pathname.split('/')[2] &&
-          lastLocation.pathname.split('/')[1] === 'products' &&
-          !lastLocation.pathname.split('/')[3]) ||
-        (lastLocation.pathname.split('/')[3] === 'add' && products) ||
-        (lastLocation.pathname === '/dashboard/products' &&
-          location.pathname === '/dashboard/products/add') ||
-        (location.pathname === '/dashboard/products/add' &&
-          lastLocation.pathname === '/dashboard/products/add') ||
-        (lastLocation.pathname.split('/')[3] === 'edit' && products) ||
-        location.pathname.split('/')[3] === 'edit'
-      ) {
-        return
-      }
-      dispatch(productListAction())
-    } else {
-      if (
-        location.pathname.split('/')[3] !== 'add' &&
-        location.pathname.split('/')[3] !== 'edit'
-      )
+    if (!location.search) {
+      if (lastLocation) {
+        if (
+          location.pathname.split('/')[3] === 'add' ||
+          (lastLocation.pathname.split('/')[2] &&
+            lastLocation.pathname.split('/')[1] === 'products' &&
+            !lastLocation.pathname.split('/')[3]) ||
+          (lastLocation.pathname.split('/')[3] === 'add' && products) ||
+          (lastLocation.pathname === '/dashboard/products' &&
+            location.pathname === '/dashboard/products/add') ||
+          (location.pathname === '/dashboard/products/add' &&
+            lastLocation.pathname === '/dashboard/products/add') ||
+          (lastLocation.pathname.split('/')[3] === 'edit' && products) ||
+          location.pathname.split('/')[3] === 'edit'
+        ) {
+          return
+        }
         dispatch(productListAction())
+      } else {
+        if (
+          location.pathname.split('/')[3] !== 'add' &&
+          location.pathname.split('/')[3] !== 'edit'
+        )
+          dispatch(productListAction())
+      }
     }
   }, [dispatch, lastLocation])
 
@@ -170,8 +182,13 @@ const DashboardProducts = () => {
   }
 
   const [openFilter, setOpenFilter] = useState(false)
-  const [brand, setBrand] = useState('')
-  const [category, setCategory] = useState('')
+
+  const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
+
+  const [brand, setBrand] = useState(searches.brand ? searches.brand : '')
+  const [category, setCategory] = useState(
+    searches.category ? searches.category : ''
+  )
   const [sortValue, setSortValue] = useState('Date')
   const [sortType, setSortType] = useState('Newest')
   const [sortValues] = useState([
@@ -298,8 +315,6 @@ const DashboardProducts = () => {
     else container.classList.remove('preventScrolling')
   }, [deleteAsking, location.pathname])
 
-  const [filterArr, setFilterArr] = useState(null)
-
   const filterHandler = (e) => {
     e.preventDefault()
     console.log('Submited')
@@ -317,18 +332,32 @@ const DashboardProducts = () => {
           return 'topSelling'
       }
     }
+    let baseURL = `?${acutalSortType()}=${sortType.toLowerCase()}`
+    if (brand) baseURL += `&brand=${brand}`
+    if (category) baseURL += `&category=${category}`
 
-    setFilterArr([acutalSortType(), sortType.toLowerCase(), brand, category])
-    dispatch(
-      productListAction(
-        acutalSortType(),
-        sortType.toLowerCase(),
-        brand,
-        category
-      )
-    )
+    history.push(baseURL)
+
     setOpenFilter(false)
   }
+  useEffect(() => {
+    const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
+
+    if (Object.size(searches)) {
+      const sortValue = Object.keys(searches)[0]
+        ? Object.keys(searches)[0]
+        : null
+      const sortType = searches[Object.keys(searches)[0]]
+        ? searches[Object.keys(searches)[0]]
+        : null
+
+      const brandValue = searches.brand ? searches.brand : null
+      const categoryValue = searches.category ? searches.category : null
+      dispatch(
+        productListAction(sortValue, sortType, brandValue, categoryValue)
+      )
+    }
+  }, [location.search])
   return (
     <StyledOrders>
       <DashboardNewProduct
