@@ -26,7 +26,6 @@ import arrow from '../img/arrow3.svg'
 import info from '../img/info.svg'
 import add from '../img/addIcon.svg'
 import { useRef } from 'react'
-import { underline } from 'colors'
 import qs from 'qs'
 
 const DashboardProducts = () => {
@@ -368,20 +367,33 @@ const DashboardProducts = () => {
     else container.classList.remove('preventScrolling')
   }, [deleteAsking, location.pathname])
 
-  const filterHandler = (e) => {
-    e.preventDefault()
-    console.log('Submited')
+  const filterHandler = (e, reset) => {
+    if (e) {
+      e.preventDefault()
+    }
 
     let baseURL = `?${sortValue}=${sortType.toLowerCase()}`
-    if (brand) baseURL += `&brand=${brand}`
-    if (category) baseURL += `&category=${category}`
 
+    if (reset !== 'all') {
+      if (brand && reset !== 'brand') baseURL += `&brand=${brand}`
+      if (category && reset !== 'category') baseURL += `&category=${category}`
+    } else {
+      baseURL = '/dashboard/products'
+    }
     history.push(baseURL)
 
     setOpenFilter(false)
   }
+  function capitalizeFirstLetter(string) {
+    if (string) return string.charAt(0).toUpperCase() + string.slice(1)
+  }
   useEffect(() => {
-    const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
+    if (!Object.size(searches)) {
+      setSortValue('Date')
+      setSortType('Newest')
+      setBrand('')
+      setCategory('')
+    }
 
     if (Object.size(searches)) {
       const acutalSortType = (sortValue) => {
@@ -402,9 +414,21 @@ const DashboardProducts = () => {
       const sortValue = Object.keys(searches)[0]
         ? acutalSortType(Object.keys(searches)[0])
         : null
+
+      setSortValue(
+        Object.keys(searches)[0]
+          ? capitalizeFirstLetter(Object.keys(searches)[0])
+          : 'Date'
+      )
       const sortType = searches[Object.keys(searches)[0]]
         ? searches[Object.keys(searches)[0]]
         : null
+
+      setSortType(
+        searches[Object.keys(searches)[0]]
+          ? capitalizeFirstLetter(searches[Object.keys(searches)[0]])
+          : 'Newest'
+      )
 
       const brandValue = searches.brand ? searches.brand : null
       const categoryValue = searches.category ? searches.category : null
@@ -565,13 +589,44 @@ const DashboardProducts = () => {
                         </div>
                         <div className='brand'>
                           <p>Brand</p>
-                          <Input value={brand} setValue={setBrand} />
+                          <div className='inputDiv'>
+                            <Input value={brand} setValue={setBrand} />
+                            {searches.brand && (
+                              <img
+                                onClick={() => {
+                                  filterHandler(null, 'brand')
+                                }}
+                                className='clearFilter'
+                                src={smallX}
+                              />
+                            )}
+                          </div>
                         </div>
                         <div className='category'>
                           <p>Category</p>
-                          <Input value={category} setValue={setCategory} />
+                          <div className='inputDiv'>
+                            <Input value={category} setValue={setCategory} />
+                            {searches.category && (
+                              <img
+                                onClick={() => {
+                                  filterHandler(null, 'category')
+                                }}
+                                className='clearFilter'
+                                src={smallX}
+                              />
+                            )}
+                          </div>
                         </div>
                         <div className='btnDiv'>
+                          {Object.size(searches) > 0 && (
+                            <button
+                              onClick={() => filterHandler(null, 'all')}
+                              type='button'
+                              className='resetBtnSubmit'
+                            >
+                              Reset All
+                            </button>
+                          )}
                           <button type='submit' className='filterBtnSubmit'>
                             Filter & Sort
                           </button>
@@ -672,6 +727,20 @@ const DashboardProducts = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  .inputDiv {
+    position: relative;
+  }
+  .clearFilter {
+    position: absolute;
+    top: 50%;
+    right: 7%;
+    transform: translate(0, -50%);
+    cursor: pointer;
+    transition: 0.2s ease;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
   .filterLoading #loader {
     width: calc(2rem + 1vw) !important;
     height: calc(2rem + 1vw) !important;
@@ -690,9 +759,25 @@ const StyledOrders = styled(motion.div)`
     display: flex;
     justify-content: flex-end;
     padding-top: 0.8rem;
+    button {
+      display: flex;
+      align-items: center;
+    }
+    .resetBtnSubmit {
+      color: white;
+      padding: 0.6rem 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      font-size: calc(0.72rem + 0.3vw);
+      transition: 0.2s ease;
+      background: transparent !important;
+      margin-right: 0.5rem;
+      &:hover {
+        opacity: 0.85;
+      }
+    }
     .filterBtnSubmit {
       color: white;
-      padding: 0.6rem 1.3rem;
+      padding: 0.6rem 1.2rem;
       background: #56589e;
       font-size: calc(0.85rem + 0.3vw);
       &:hover {
@@ -735,6 +820,7 @@ const StyledOrders = styled(motion.div)`
     position: relative;
 
     .selectDropDown {
+      z-index: 1;
       position: absolute;
       left: 0;
       bottom: 0;
