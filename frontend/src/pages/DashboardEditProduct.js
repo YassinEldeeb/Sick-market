@@ -126,7 +126,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       setAddedImage(null)
 
       history.push(
-        location.search.split('=')[1]
+        location.search.split('=')[1] && searchedProducts
           ? `/dashboard/products?search=${location.search.split('=')[1]}`
           : '/dashboard/products'
       )

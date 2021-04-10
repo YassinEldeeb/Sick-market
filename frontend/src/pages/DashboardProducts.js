@@ -404,7 +404,11 @@ const DashboardProducts = () => {
       setCategory('')
     }
 
-    if (Object.size(searches) && !searches.search) {
+    if (
+      Object.size(searches) && !searches.search && lastLocation
+        ? lastLocation.pathname.split('/')[1] !== 'products'
+        : true
+    ) {
       const acutalSortType = (sortValue) => {
         switch (sortValue) {
           case 'Date':
@@ -456,10 +460,12 @@ const DashboardProducts = () => {
     ) {
       if (
         lastLocation
-          ? lastLocation.pathname.split('/')[3] !== 'edit'
+          ? lastLocation.pathname.split('/')[3] !== 'edit' &&
+            lastLocation.pathname.split('/')[1] !== 'products'
           : true && !searchedProducts
-      )
+      ) {
         dispatch(searchProducts(searches.search))
+      }
     }
   }, [location.search, location.pathname])
   const {
