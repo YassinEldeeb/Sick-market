@@ -70,6 +70,7 @@ const DashboardProducts = () => {
         ) {
           return
         }
+
         dispatch(productListAction())
       } else {
         if (
@@ -100,20 +101,25 @@ const DashboardProducts = () => {
     const container = document.querySelector(
       '.large-scrollable-content div:first-child'
     )
-    container.addEventListener(
-      'scroll',
-      throttle(() => {
-        setScrolled(container.scrollTop)
-      }, 100)
-    )
+    if (container) {
+      container.addEventListener(
+        'scroll',
+        throttle(() => {
+          setScrolled(container.scrollTop)
+        }, 100)
+      )
+    }
   }, [])
 
   useEffect(() => {
     const container = document.querySelector(
       '.large-scrollable-content div:first-child'
     )
-    if (location.pathname.split('/')[3]) container.style.overflowY = 'hidden'
-    else container.style.overflowY = 'scroll'
+
+    if (container) {
+      if (location.pathname.split('/')[3]) container.style.overflowY = 'hidden'
+      else container.style.overflowY = 'scroll'
+    }
   }, [location.pathname])
 
   useEffect(() => {
@@ -365,13 +371,15 @@ const DashboardProducts = () => {
     const container = document.querySelector(
       '.large-scrollable-content div:first-child'
     )
-    if (
-      deleteAsking ||
-      location.pathname.split('/')[3] === 'add' ||
-      location.pathname.split('/')[3] === 'edit'
-    )
-      container.classList.add('preventScrolling')
-    else container.classList.remove('preventScrolling')
+    if (container) {
+      if (
+        deleteAsking ||
+        location.pathname.split('/')[3] === 'add' ||
+        location.pathname.split('/')[3] === 'edit'
+      )
+        container.classList.add('preventScrolling')
+      else container.classList.remove('preventScrolling')
+    }
   }, [deleteAsking, location.pathname])
 
   const filterHandler = (e, reset) => {
@@ -447,10 +455,11 @@ const DashboardProducts = () => {
 
       const brandValue = searches.brand ? searches.brand : null
       const categoryValue = searches.category ? searches.category : null
-      if (!searches.search)
+      if (!searches.search && !loading && Object.size(searches)) {
         dispatch(
           productListAction(sortValue, sortType, brandValue, categoryValue)
         )
+      }
     }
   }, [location.search])
   useEffect(() => {
