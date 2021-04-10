@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation, Link } from 'react-router-dom'
 import { parseISO, format } from 'date-fns'
-import { useLastLocation } from 'react-router-last-location'
 import { motion, AnimatePresence } from 'framer-motion'
 import { popup2, popupLeft, hide5 } from '../animations'
 import Loader from '../components/loader'
@@ -222,6 +221,9 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       }}
     >
       <AnimatePresence>
+        {location.pathname.split('/')[3] === 'edit' && error && (
+          <DashboardError error={error} />
+        )}
         {location.pathname.split('/')[3] === 'edit' && dashboardProduct && (
           <>
             <motion.img

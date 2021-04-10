@@ -65,7 +65,8 @@ const DashboardProducts = () => {
           (location.pathname === '/dashboard/products/add' &&
             lastLocation.pathname === '/dashboard/products/add') ||
           (lastLocation.pathname.split('/')[3] === 'edit' && products) ||
-          location.pathname.split('/')[3] === 'edit'
+          location.pathname.split('/')[3] === 'edit' ||
+          searches.search
         ) {
           return
         }
@@ -73,7 +74,8 @@ const DashboardProducts = () => {
       } else {
         if (
           location.pathname.split('/')[3] !== 'add' &&
-          location.pathname.split('/')[3] !== 'edit'
+          location.pathname.split('/')[3] !== 'edit' &&
+          !searches.search
         )
           dispatch(productListAction())
       }
@@ -445,9 +447,10 @@ const DashboardProducts = () => {
 
       const brandValue = searches.brand ? searches.brand : null
       const categoryValue = searches.category ? searches.category : null
-      dispatch(
-        productListAction(sortValue, sortType, brandValue, categoryValue)
-      )
+      if (!searches.search)
+        dispatch(
+          productListAction(sortValue, sortType, brandValue, categoryValue)
+        )
     }
   }, [location.search])
   useEffect(() => {
