@@ -13,11 +13,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useLastLocation } from 'react-router-last-location'
 import SmoothImg from '../components/smoothImgLoading'
 
-const ProductDashboard = ({ product, setClickedForDelete, actionsInfo }) => {
+const ProductDashboard = ({
+  product,
+  setClickedForDelete,
+  actionsInfo,
+  search,
+}) => {
   const location = useLocation()
-  const { products, error, loading, count } = useSelector(
-    (state) => state.productList
-  )
   const { loading: deleteLoading, success, asking, confirm } = useSelector(
     (state) => state.deleteProduct
   )
@@ -67,6 +69,7 @@ const ProductDashboard = ({ product, setClickedForDelete, actionsInfo }) => {
           width={'52px'}
           height={'41.5px'}
           loaderId='loaderImg'
+          contWidth={`max-content`}
           src={product.image}
           alt=''
         />
@@ -101,7 +104,11 @@ const ProductDashboard = ({ product, setClickedForDelete, actionsInfo }) => {
           className='ActionCont'
         >
           <Link
-            to={`/dashboard/products/edit/${product._id}`}
+            to={`${
+              search
+                ? `/dashboard/products/edit/${product._id}?search=${search}`
+                : `/dashboard/products/edit/${product._id}`
+            }`}
             className='actionOption'
           >
             <img className='gearImg' src={pen} alt='' />

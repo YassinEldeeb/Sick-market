@@ -1,11 +1,11 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import Rating from "../components/Rating"
-import QtySelector from "../components/QtySelector"
-import { removeAction } from "../actions/cart"
-import { useSelector, useDispatch } from "react-redux"
-import { Link } from "react-router-dom"
-import SmoothImg from "./smoothImgLoading"
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import Rating from '../components/Rating'
+import QtySelector from '../components/QtySelector'
+import { removeAction } from '../actions/cart'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
+import SmoothImg from './smoothImgLoading'
 
 const CartProduct = ({ product, cartCount, setCartCount }) => {
   const dispatch = useDispatch()
@@ -13,18 +13,19 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
   const { cartItems } = useSelector((state) => state.cart)
 
   function truncate(str) {
-    return str.length > 30 ? str.substr(0, 30 - 1) + "..." : str
+    return str.length > 30 ? str.substr(0, 30 - 1) + '...' : str
   }
   return (
     <StyledProduct>
       <Link
         className='imgLink'
         to={`/products/${product._id}?redirect=cart`}
-        onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
+        onClick={() => dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })}
       >
         <SmoothImg
-          width={"100%"}
-          height={"100%"}
+          contWidth={'10vw'}
+          width={'100%'}
+          height={'100%'}
           className='productImg'
           src={product.image}
           alt='product'
@@ -37,7 +38,7 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
         <Link
           className='descLink'
           to={`/products/${product._id}?redirect=cart`}
-          onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
+          onClick={() => dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })}
         >
           {truncate(product.name)}
         </Link>

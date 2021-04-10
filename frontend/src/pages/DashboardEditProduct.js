@@ -17,10 +17,12 @@ import { DashboardProductDetailAction } from '../actions/products'
 import info from '../img/info.svg'
 import { throttle } from 'underscore'
 import xSign from '../img/smallX.svg'
+import qs from 'qs'
 
 const DashboardEditProduct = ({ scrolled, setScrolled }) => {
   const dispatch = useDispatch()
   const location = useLocation()
+  const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
   const history = useHistory()
   const { dashboardProduct, error: editError } = useSelector(
     (state) => state.product
@@ -81,25 +83,11 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
 
   const [formData, setFormData] = useState(new FormData())
 
-  const addProductHandler = (e) => {
-    e.preventDefault()
-    const dataObj = {
-      name,
-      price,
-      brand,
-      countInStock: stock,
-      category,
-      description,
-      qtyPerUser,
-    }
-    for (const e in dataObj) {
-      formData.append(e, dataObj[e])
-    }
-
-    dispatch(editProduct(formData))
-  }
   const { editLoading, error, editSuccess } = useSelector(
     (state) => state.product
+  )
+  const { products: searchedProducts } = useSelector(
+    (state) => state.productSearch
   )
 
   useEffect(() => {
@@ -137,7 +125,11 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       setCompletedCrop(null)
       setAddedImage(null)
 
-      history.push('/dashboard/products')
+      history.push(
+        location.search.split('=')[1]
+          ? `/dashboard/products?search=${location.search.split('=')[1]}`
+          : '/dashboard/products'
+      )
     }
   }, [editSuccess])
 
@@ -177,7 +169,12 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
         dashboardProduct &&
         dashboardProduct._id !== Number(location.pathname.split('/')[4]))
     )
-      dispatch(DashboardProductDetailAction(location.pathname.split('/')[4]))
+      dispatch(
+        DashboardProductDetailAction(
+          location.pathname.split('/')[4],
+          searches.search
+        )
+      )
   }, [location.pathname])
 
   const editProductHandler = (e) => {
@@ -195,7 +192,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       formData.append(e, dataObj[e])
     }
     const id = location.pathname.split('/')[4]
-    dispatch(editProduct(id, formData, dataObj))
+    dispatch(editProduct(id, formData, searches.search))
   }
 
   const returnHandler = () => {
@@ -205,8 +202,13 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       width: '80',
     })
     setCompletedCrop(null)
-    history.push('/dashboard/products')
+    history.push(
+      location.search.split('=')[1] && searchedProducts
+        ? `/dashboard/products?search=${location.search.split('=')[1]}`
+        : '/dashboard/products'
+    )
   }
+
   return (
     <StyledUserAction
       id={`${location.pathname.split('/')[3] === 'edit' ? 'active' : ''}`}
@@ -268,7 +270,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
 
                   <h1 className='title'>Edit Product</h1>
 
-                  <form onSubmit={addProductHandler}>
+                  <form onSubmit={(e) => editProductHandler(e)}>
                     <Input label='Name' value={name} setValue={setName} />
                     <Input
                       label='Price'

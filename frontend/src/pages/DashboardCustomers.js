@@ -22,6 +22,7 @@ import ConfirmPopup from '../components/confirmPopup'
 import arrow from '../img/sort.svg'
 import { v4 as uuid } from 'uuid'
 import { useRef } from 'react'
+import qs from 'qs'
 
 const DashboardCustomers = () => {
   const filterStoredValue = localStorage.getItem('filterUsers')
@@ -127,7 +128,13 @@ const DashboardCustomers = () => {
     }
   }
   const condition = () => {
-    if (loading && !error && !searchUser && !location.pathname.split('/')[3]) {
+    if (
+      loading &&
+      !users &&
+      !error &&
+      !searchUser &&
+      !location.pathname.split('/')[3]
+    ) {
       return true
     } else if (
       searchLoading &&
@@ -218,13 +225,25 @@ const DashboardCustomers = () => {
     if (!searchedUsers) {
       if (success) {
         setTimeout(() => {
-          if (!infiniteLoading && !end && !loading && inView) {
+          if (
+            !infiniteLoading &&
+            !end &&
+            !loading &&
+            inView &&
+            !searches.search
+          ) {
             dispatch(infiniteScrollUsersAction(skip, filterValue))
             setSkip(skip + 1)
           }
         }, 500)
       } else {
-        if (!infiniteLoading && !end && !loading && inView) {
+        if (
+          !infiniteLoading &&
+          !end &&
+          !loading &&
+          inView &&
+          !searches.search
+        ) {
           dispatch(infiniteScrollUsersAction(skip, filterValue))
           setSkip(skip + 1)
         }
@@ -236,13 +255,25 @@ const DashboardCustomers = () => {
     if (searchedUsers) {
       if (success2) {
         setTimeout(() => {
-          if (!infiniteLoading2 && !end2 && !searchLoading && inView2) {
+          if (
+            !infiniteLoading2 &&
+            !end2 &&
+            !searchLoading &&
+            inView2 &&
+            searches.search
+          ) {
             dispatch(infiniteScrollSearchUsersAction(searchUser, skip2))
             setSkip2(skip2 + 1)
           }
         }, 500)
       } else {
-        if (!infiniteLoading2 && !end2 && !searchLoading && inView2) {
+        if (
+          !infiniteLoading2 &&
+          !end2 &&
+          !searchLoading &&
+          inView2 &&
+          searches.search
+        ) {
           dispatch(infiniteScrollSearchUsersAction(searchUser, skip2))
           setSkip2(skip2 + 1)
         }
@@ -295,6 +326,14 @@ const DashboardCustomers = () => {
   }
   const sortRef = useRef(null)
   useOutsideAlerter(sortRef, () => setOpenFilter(false))
+
+  const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
+
+  useEffect(() => {
+    if (location.pathname === '/dashboard/customers' && !searches.search) {
+      setSearchValue('')
+    }
+  }, [location.search, location.pathname])
 
   return (
     <StyledOrders>
@@ -403,24 +442,43 @@ const DashboardCustomers = () => {
                 <p className='sorry'>Sorry nothing found!</p>
               )}
 
-              <motion.div
-                variants={hide}
-                initial='hidden'
-                animate='show'
-                exit='exit'
-              >
-                {(lastSearch &&
-                  location.pathname.split('/')[3] &&
-                  searchedUsers) ||
-                (searchUser && searchedUsers) ||
-                (location.pathname.split('/')[3] && searchedUsers)
-                  ? searchedUsers.map((each) => (
-                      <UserDashboard key={each._id} user={each} />
-                    ))
-                  : users.map((each) => (
-                      <UserDashboard keyId={each._id} user={each} />
-                    ))}
-              </motion.div>
+              {(searches.search && searchedUsers) ||
+              (lastLocation &&
+                searchedUsers &&
+                lastLocation.search.split('=')[1] &&
+                location.pathname.split('/')[3]) ? (
+                <motion.div
+                  variants={hide}
+                  initial='hidden'
+                  animate='show'
+                  exit='exit'
+                >
+                  {searchedUsers.map((each) => (
+                    <UserDashboard key={each._id} user={each} />
+                  ))}
+                </motion.div>
+              ) : (
+                ''
+              )}
+              {(users &&
+                !searches.search &&
+                (lastLocation ? !lastLocation.search.split('=')[1] : true)) ||
+              (users &&
+                !searches.search &&
+                location.pathname === '/dashboard/customers') ? (
+                <motion.div
+                  variants={hide}
+                  initial='hidden'
+                  animate='show'
+                  exit='exit'
+                >
+                  {users.map((each) => (
+                    <UserDashboard keyId={each._id} user={each} />
+                  ))}
+                </motion.div>
+              ) : (
+                ''
+              )}
 
               {!end2 && searchedUsers && searchedUsers.length > 0 ? (
                 <Loader

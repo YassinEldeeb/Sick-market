@@ -59,6 +59,7 @@ const Product = ({
 
         {type !== 'preview' && (
           <SmoothImg
+            contHeight={'calc((200px + 5vw) / 1.254901960784314)'}
             width={'640px'}
             height={'510px'}
             src={data.image}

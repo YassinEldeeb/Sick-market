@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler'
 import Product from '../models/productModel.js'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
-import path, { dirname, join } from 'path'
+import path, { join } from 'path'
 import multer from 'multer'
 import sharp from 'sharp'
 
@@ -237,15 +237,16 @@ const searchProductsSuggesstions = asyncHandler(async (req, res) => {
     .limit(10)
   res.send(products)
 })
+
 const searchProducts = asyncHandler(async (req, res) => {
-  const regex = new RegExp(`^(${req.query.find}).+$`, 'i')
+  const regex = new RegExp(`^${req.query.find}`, 'i')
   const products = await Product.find({ name: regex })
     .sort({
       updated_at: -1,
     })
     .sort({ created_at: -1 })
     .limit(10)
-  res.send(products)
+  res.send({ products, count: products.length })
 })
 
 export {

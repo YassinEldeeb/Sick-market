@@ -1,24 +1,25 @@
-import { createStore, combineReducers, applyMiddleware } from "redux"
-import thunk from "redux-thunk"
-import { composeWithDevTools } from "redux-devtools-extension"
-import productListReducer from "./reducers/productList"
-import productDetailReducer from "./reducers/productDetail"
-import cartReducer from "./reducers/cart"
-import userReducer from "./reducers/user"
-import createOrderReducer from "./reducers/order"
-import buyNowProduct from "./reducers/buyNowProduct"
-import getOrderReducer from "./reducers/orderDetail"
-import orderPayReducer from "./reducers/orderPay"
-import getAllOrdersReducer from "./reducers/myOrders"
-import getDashboardUsers from "./reducers/dashboardUsers"
-import searchDashboardUsers from "./reducers/searchUsers"
-import userActions from "./reducers/userActions"
-import deleteUser from "./reducers/deleteUser"
-import canOrder from "./reducers/canOrder"
-import canReview from "./reducers/canReview"
-import editRank from "./reducers/editRank"
-import deleteProduct from "./reducers/deleteProduct"
-import dotenv from "dotenv"
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+import { composeWithDevTools } from 'redux-devtools-extension'
+import productListReducer from './reducers/productList'
+import productDetailReducer from './reducers/productDetail'
+import cartReducer from './reducers/cart'
+import userReducer from './reducers/user'
+import createOrderReducer from './reducers/order'
+import buyNowProduct from './reducers/buyNowProduct'
+import getOrderReducer from './reducers/orderDetail'
+import orderPayReducer from './reducers/orderPay'
+import getAllOrdersReducer from './reducers/myOrders'
+import getDashboardUsers from './reducers/dashboardUsers'
+import searchDashboardUsers from './reducers/searchUsers'
+import userActions from './reducers/userActions'
+import deleteUser from './reducers/deleteUser'
+import canOrder from './reducers/canOrder'
+import canReview from './reducers/canReview'
+import editRank from './reducers/editRank'
+import deleteProduct from './reducers/deleteProduct'
+import productSearchReducer from './reducers/searchProduct'
+import dotenv from 'dotenv'
 
 dotenv.config()
 const reducers = combineReducers({
@@ -39,14 +40,15 @@ const reducers = combineReducers({
   canReview,
   editRank,
   deleteProduct,
+  productSearch: productSearchReducer,
 })
 let initialState
 
-const savedUserInfo = JSON.parse(localStorage.getItem("sickUserInfo"))
-const savedCart = JSON.parse(localStorage.getItem("sickCartProducts"))
-const savedAddress = JSON.parse(localStorage.getItem("sickAddress"))
-const savedPaymentMethod = JSON.parse(localStorage.getItem("sickPaymentMethod"))
-const sickDiscount = JSON.parse(localStorage.getItem("sickDiscount"))
+const savedUserInfo = JSON.parse(localStorage.getItem('sickUserInfo'))
+const savedCart = JSON.parse(localStorage.getItem('sickCartProducts'))
+const savedAddress = JSON.parse(localStorage.getItem('sickAddress'))
+const savedPaymentMethod = JSON.parse(localStorage.getItem('sickPaymentMethod'))
+const sickDiscount = JSON.parse(localStorage.getItem('sickDiscount'))
 
 const pricesArr = savedCart
   ? savedCart.map((each) => each.price * each.qty)
@@ -64,7 +66,7 @@ initialState = {
       ? savedPaymentMethod
         ? 20 > totalPrice || totalPrice > 17000
           ? savedPaymentMethod
-          : "PayPal or Credit & Debit Cards"
+          : 'PayPal or Credit & Debit Cards'
         : {}
       : savedPaymentMethod
       ? savedPaymentMethod
@@ -77,7 +79,7 @@ initialState = {
 const middleware = [thunk]
 
 let store
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== 'production') {
   store = createStore(
     reducers,
     initialState,

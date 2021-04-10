@@ -7,15 +7,19 @@ const SmoothImg = ({
   providedClassName,
   width,
   height,
-  imgTransition = 200,
+  imgTransition = 100,
   loadingAnimation = 2000,
   imgId,
   loaderId,
+  contWidth = '100%',
+  contHeight = '100%',
 }) => {
   const [loaded, setLoaded] = useState(false)
 
   return (
     <StyledImg
+      contWidth={contWidth}
+      contHeight={contHeight}
       imgTransition={imgTransition}
       loadingAnimation={loadingAnimation}
       className={`${providedClassName ? providedClassName : ''}`}
@@ -40,13 +44,13 @@ const SmoothImg = ({
 const StyledImg = styled.div`
   position: relative;
   display: flex;
-  height: 100%;
+  min-height: ${(props) => props.contHeight};
+  width: ${(props) => props.contWidth};
   img {
     max-height: 100%;
     opacity: 0;
     pointer-events: none;
-    transition: ${(props) => props.imgTransition / 1000}s ease
-      ${(props) => props.imgTransition / 6000}s;
+    transition: ${(props) => props.imgTransition / 1000}s ease;
     z-index: 1;
     border-radius: 7px;
     position: relative;
@@ -57,7 +61,7 @@ const StyledImg = styled.div`
   }
   .lazyImgLoader {
     z-index: 1;
-    transition: ${(props) => props.imgTransition / 1000}s ease;
+    transition: 0.1s ease;
     max-height: 100%;
     max-width: 100%;
     background: linear-gradient(to right, #aeaeae40, #d2d2d2);

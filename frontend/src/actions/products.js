@@ -80,7 +80,7 @@ export const productDetailAction = (id) => async (dispatch) => {
     })
   }
 }
-export const DashboardProductDetailAction = (id) => async (
+export const DashboardProductDetailAction = (id, search) => async (
   dispatch,
   getState
 ) => {
@@ -89,6 +89,7 @@ export const DashboardProductDetailAction = (id) => async (
 
     const state = getState((state) => state.productList)
     const productList = state.productList
+    const searchedProducts = state.productSearch
 
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
@@ -97,14 +98,23 @@ export const DashboardProductDetailAction = (id) => async (
     const condition = () => {
       if (productList.products) {
         return true
+      } else if (searchedProducts.products) {
+        return true
       } else {
         return false
       }
     }
     if (condition()) {
-      targetProduct = productList.products.find(
-        (each) => each._id.toString() === id.toString()
-      )
+      if (!search) {
+        targetProduct = productList.products.find(
+          (each) => each._id.toString() === id.toString()
+        )
+      }
+      if (search) {
+        targetProduct = searchedProducts.products.find(
+          (each) => each._id.toString() === id.toString()
+        )
+      }
     }
     let payloadData
     if (!targetProduct) {

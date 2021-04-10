@@ -1,24 +1,24 @@
-import React, { useEffect, useRef, useState } from "react"
-import styled from "styled-components"
-import { parseISO, format } from "date-fns"
-import gear from "../img/gear.svg"
-import ReactTooltip from "react-tooltip"
-import { motion } from "framer-motion"
-import { popup } from "../animations"
-import { Link, useLocation } from "react-router-dom"
-import reactStringReplace from "react-string-replace"
-import Loader from "../components/loader"
-import { useSelector } from "react-redux"
-import SmoothImg from "../components/smoothImgLoading"
+import React, { useEffect, useRef, useState } from 'react'
+import styled from 'styled-components'
+import { parseISO, format } from 'date-fns'
+import gear from '../img/gear.svg'
+import ReactTooltip from 'react-tooltip'
+import { motion } from 'framer-motion'
+import { popup } from '../animations'
+import { Link, useLocation } from 'react-router-dom'
+import reactStringReplace from 'react-string-replace'
+import Loader from '../components/loader'
+import { useSelector } from 'react-redux'
+import SmoothImg from '../components/smoothImgLoading'
 
 const UserDashboard = ({ user }) => {
   const location = useLocation()
   const [equal] = useState(
-    location.search.split("=")[1] ? location.search.split("=")[1] : false
+    location.search.split('=')[1] ? location.search.split('=')[1] : false
   )
 
   const imgSrcCondition = () => {
-    if (user.profilePicLink && user.profilePicLink !== "cleared") {
+    if (user.profilePicLink && user.profilePicLink !== 'cleared') {
       return user.profilePicLink
     } else {
       return `/api/users/profilePic/${user._id}`
@@ -48,12 +48,13 @@ const UserDashboard = ({ user }) => {
     <StyledUser variants={popup}>
       <ReactTooltip effect='solid' delayHide={100} delayShow={100} />
       <div className='id'>
-        <p data-tip={"#" + user._id}>#{user._id.substr(user._id.length - 4)}</p>
+        <p data-tip={'#' + user._id}>#{user._id.substr(user._id.length - 4)}</p>
       </div>
       <div className='name'>
         <SmoothImg
-          width={"100%"}
-          height={"100%"}
+          contWidth={`max-content`}
+          width={'100%'}
+          height={'100%'}
           loaderId='loaderImg'
           providedClassName='pic'
           src={imgSrcCondition()}
@@ -65,8 +66,8 @@ const UserDashboard = ({ user }) => {
         <p data-tip={user.email}>{emailValue}</p>
       </div>
       <div className='joinedIn'>
-        <p data-tip={format(parseISO(user.joinedIn), "yyyy-MM-dd")}>
-          {format(parseISO(user.joinedIn), "yyyy-MM-dd")}
+        <p data-tip={format(parseISO(user.joinedIn), 'yyyy-MM-dd')}>
+          {format(parseISO(user.joinedIn), 'yyyy-MM-dd')}
         </p>
       </div>
       <div className='gearCont'>

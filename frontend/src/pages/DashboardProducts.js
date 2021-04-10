@@ -27,6 +27,7 @@ import info from '../img/info.svg'
 import add from '../img/addIcon.svg'
 import { useRef } from 'react'
 import qs from 'qs'
+import searchProducts from '../actions/searchProduct'
 
 const DashboardProducts = () => {
   Object.size = function (obj) {
@@ -80,10 +81,15 @@ const DashboardProducts = () => {
   }, [dispatch, lastLocation])
 
   const searchHandler = (e) => {
+    e.preventDefault()
     //?Search Products
+    if (searchValue.length) history.push(`?search=${searchValue}`)
   }
+
   const returnHandler = () => {
     //?Clear search and redirect
+    setSearchValue('')
+    history.push('/dashboard/products')
   }
 
   const [scrolled, setScrolled] = useState(0)
@@ -128,7 +134,6 @@ const DashboardProducts = () => {
       //   })
     }
   }, [])
-  const [searchValue, setSearchValue] = useState('')
 
   const animCondition = () => {
     if (lastLocation) {
@@ -153,7 +158,7 @@ const DashboardProducts = () => {
 
   useEffect(() => {
     if (confirm) {
-      dispatch(deleteProduct(clickedForDelete._id))
+      dispatch(deleteProduct(clickedForDelete._id, searches.search))
     }
   }, [confirm])
 
@@ -371,17 +376,21 @@ const DashboardProducts = () => {
     if (e) {
       e.preventDefault()
     }
+    if (
+      (sortValue !== 'Date' && sortType !== 'Newest') ||
+      !brand.length ||
+      !category.length
+    ) {
+      let baseURL = `?${sortValue}=${sortType.toLowerCase()}`
 
-    let baseURL = `?${sortValue}=${sortType.toLowerCase()}`
-
-    if (reset !== 'all') {
-      if (brand && reset !== 'brand') baseURL += `&brand=${brand}`
-      if (category && reset !== 'category') baseURL += `&category=${category}`
-    } else {
-      baseURL = '/dashboard/products'
+      if (reset !== 'all') {
+        if (brand && reset !== 'brand') baseURL += `&brand=${brand}`
+        if (category && reset !== 'category') baseURL += `&category=${category}`
+      } else {
+        baseURL = '/dashboard/products'
+      }
+      history.push(baseURL)
     }
-    history.push(baseURL)
-
     setOpenFilter(false)
   }
   function capitalizeFirstLetter(string) {
@@ -395,7 +404,7 @@ const DashboardProducts = () => {
       setCategory('')
     }
 
-    if (Object.size(searches)) {
+    if (Object.size(searches) && !searches.search) {
       const acutalSortType = (sortValue) => {
         switch (sortValue) {
           case 'Date':
@@ -437,6 +446,36 @@ const DashboardProducts = () => {
       )
     }
   }, [location.search])
+  useEffect(() => {
+    if (
+      (searches.search && location.pathname.split('/')[3] !== 'edit') ||
+      (lastLocation &&
+        lastLocation.pathname.split('/')[3] === 'edit' &&
+        !searchedProducts &&
+        searches.search)
+    ) {
+      if (
+        lastLocation
+          ? lastLocation.pathname.split('/')[3] !== 'edit'
+          : true && !searchedProducts
+      )
+        dispatch(searchProducts(searches.search))
+    }
+  }, [location.search, location.pathname])
+  const {
+    products: searchedProducts,
+    count: searchedCount,
+    loading: searchLoading,
+  } = useSelector((state) => state.productSearch)
+
+  const [searchValue, setSearchValue] = useState(
+    searches.search ? searches.search : ''
+  )
+  useEffect(() => {
+    if (location.pathname === '/dashboard/products' && !searches.search) {
+      setSearchValue('')
+    }
+  }, [location.search, location.pathname])
 
   return (
     <StyledOrders>
@@ -453,9 +492,9 @@ const DashboardProducts = () => {
         type='deleteProduct'
         action={`Delete "${clickedForDelete.name}"`}
       />
-      {loading && !filtering && <Loader />}
+      {((loading && !filtering) || (searchLoading && !filtering)) && <Loader />}
       {error && <DashboardError error={error} />}
-      {(!loading || filtering) && (
+      {(!loading || filtering || !searchLoading) && (
         <>
           {(products && lastLocation
             ? lastLocation.pathname.split('/')[1] === 'products'
@@ -466,194 +505,236 @@ const DashboardProducts = () => {
           (products && lastCondition2()) ||
           ((location.pathname.split('/')[3] === 'add' || condition4()) &&
             products) ||
-          filtering ? (
+          filtering ||
+          searchedProducts ? (
             <div
               id={`${location.pathname.split('/')[3] === 'add' ? 'blur' : ''}`}
               className='cont'
             >
-              <div className='head'>
-                <div className='title'>
-                  <h1>Products</h1>
-                  <p>{count} Products Found</p>
-                </div>
-                <button
-                  onClick={() => history.push('/dashboard/products/add')}
-                  className='addProduct'
-                >
-                  <img src={add} /> New Product
-                </button>
-              </div>
-              <div className='search' onSubmit={searchHandler}>
-                <form
-                  onSubmit={filterHandler}
-                  ref={filterRef}
-                  onClick={(e) => {
-                    if (e.target.classList.contains('filter')) {
-                      setOpenFilter(!openFilter)
-                      setOpenType(false)
-                      setOpenValue(false)
-                    }
-                  }}
-                  className={`filter ${openFilter ? 'activeFilter' : ''}`}
-                >
-                  <p className='filterTitle'>Fitler</p>
-                  <svg
-                    width='14'
-                    height='14'
-                    viewBox='0 0 14 14'
-                    fill='none'
-                    xmlns='http://www.w3.org/2000/svg'
-                  >
-                    <g clip-path='url(#clip0)'>
-                      <path
-                        d='M5.33335 6.61553C5.48026 6.77541 5.56092 6.98426 5.56092 7.20031V13.5667C5.56092 13.9498 6.02327 14.1443 6.29694 13.8749L8.07289 11.8397C8.31055 11.5545 8.44162 11.4133 8.44162 11.131V7.20175C8.44162 6.9857 8.52372 6.77685 8.6692 6.61695L13.7651 1.08746C14.1468 0.672643 13.853 0 13.2884 0H0.714129C0.149512 0 -0.145759 0.671203 0.237374 1.08746L5.33335 6.61553Z'
-                        fill='white'
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id='clip0'>
-                        <rect width='14' height='14' fill='white' />
-                      </clipPath>
-                    </defs>
-                  </svg>
-                  <AnimatePresence>
-                    {openFilter && (
-                      <motion.div
-                        variants={popupLeft}
-                        animate='show'
-                        initial='hidden'
-                        exit='exit'
-                        className='filterDropDown'
+              {((!loading && !searches.search) ||
+                (!searchLoading && searches.search) ||
+                filtering) && (
+                <>
+                  <div className='head'>
+                    <div className='title'>
+                      <h1>Products</h1>
+                      <p>
+                        {!searches.search
+                          ? count
+                          : searches.search
+                          ? searchedCount
+                          : ''}{' '}
+                        Products Found
+                      </p>
+                    </div>
+                    {!searches.search && (
+                      <button
+                        onClick={() => history.push('/dashboard/products/add')}
+                        className='addProduct'
                       >
-                        <div className='sort'>
-                          <p>
-                            <span className='sortText'>Sort</span>
-                            <img src={sort} />
-                          </p>
-                          <div className='sortDiv'>
-                            <div
-                              ref={typeRef}
-                              onClick={() => {
-                                setOpenType(!openType)
-                              }}
-                              className='sortValue'
-                            >
-                              <p>{sortValue}</p>
-                              <img src={arrow} />
-                              {openType && (
-                                <div className='sortValueDropDown selectDropDown'>
-                                  {sortValues.map((e) => (
-                                    <h3
-                                      className={`${
-                                        sortValue === e ? 'active' : ''
-                                      }`}
-                                      onClick={(e) => {
-                                        setSortValue(e.target.innerText)
-                                        setChangedValue(true)
-                                      }}
-                                    >
-                                      {e}
-                                    </h3>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                            <img src={connect} />
-                            <div
-                              ref={valueRef}
-                              onClick={() => {
-                                setOpenValue(!openValue)
-                              }}
-                              className='sortType'
-                            >
-                              <p>{sortType}</p>
-                              <img src={arrow} />
-                              {openValue && (
-                                <div className='sortTypeDropDown selectDropDown'>
-                                  {sortValueTypes.map((e) => (
-                                    <h3
-                                      className={`${
-                                        sortType === e ? 'active' : ''
-                                      }`}
-                                      onClick={(e) => {
-                                        setSortType(e.target.innerText)
-                                      }}
-                                    >
-                                      {e}
-                                    </h3>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className='brand'>
-                          <p>Brand</p>
-                          <div className='inputDiv'>
-                            <Input value={brand} setValue={setBrand} />
-                            {searches.brand && (
-                              <img
-                                onClick={() => {
-                                  filterHandler(null, 'brand')
-                                }}
-                                className='clearFilter'
-                                src={smallX}
-                              />
-                            )}
-                          </div>
-                        </div>
-                        <div className='category'>
-                          <p>Category</p>
-                          <div className='inputDiv'>
-                            <Input value={category} setValue={setCategory} />
-                            {searches.category && (
-                              <img
-                                onClick={() => {
-                                  filterHandler(null, 'category')
-                                }}
-                                className='clearFilter'
-                                src={smallX}
-                              />
-                            )}
-                          </div>
-                        </div>
-                        <div className='btnDiv'>
-                          {Object.size(searches) > 0 && (
-                            <button
-                              onClick={() => filterHandler(null, 'all')}
-                              type='button'
-                              className='resetBtnSubmit'
-                            >
-                              Reset All
-                            </button>
-                          )}
-                          <button type='submit' className='filterBtnSubmit'>
-                            Filter & Sort
-                          </button>
-                        </div>
-                      </motion.div>
+                        <img src={add} /> New Product
+                      </button>
                     )}
-                  </AnimatePresence>
-                </form>
-                <form className='searchContainer'>
-                  <div className='inputCont'>
-                    <input
-                      value={searchValue}
-                      onChange={(e) => setSearchValue(e.target.value)}
-                      placeholder='Search'
-                      type='text'
-                    />
-                    {/* {searchUser && (
-                  <img onClick={returnHandler} src={smallX} alt='' />
-                )} */}
                   </div>
-                  <button type='submit'>
-                    <img src={search} />
-                  </button>
-                </form>
-              </div>
-
-              {(products && products.length > 0) || filtering ? (
+                  <div className='search' onSubmit={searchHandler}>
+                    {searches.search && <div></div>}
+                    {!searches.search && (
+                      <div
+                        ref={filterRef}
+                        onClick={(e) => {
+                          if (e.target.classList.contains('filter')) {
+                            setOpenFilter(!openFilter)
+                            setOpenType(false)
+                            setOpenValue(false)
+                          }
+                        }}
+                        className={`filter ${openFilter ? 'activeFilter' : ''}`}
+                      >
+                        <p className='filterTitle'>Fitler</p>
+                        <svg
+                          width='14'
+                          height='14'
+                          viewBox='0 0 14 14'
+                          fill='none'
+                          xmlns='http://www.w3.org/2000/svg'
+                        >
+                          <g clip-path='url(#clip0)'>
+                            <path
+                              d='M5.33335 6.61553C5.48026 6.77541 5.56092 6.98426 5.56092 7.20031V13.5667C5.56092 13.9498 6.02327 14.1443 6.29694 13.8749L8.07289 11.8397C8.31055 11.5545 8.44162 11.4133 8.44162 11.131V7.20175C8.44162 6.9857 8.52372 6.77685 8.6692 6.61695L13.7651 1.08746C14.1468 0.672643 13.853 0 13.2884 0H0.714129C0.149512 0 -0.145759 0.671203 0.237374 1.08746L5.33335 6.61553Z'
+                              fill='white'
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id='clip0'>
+                              <rect width='14' height='14' fill='white' />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                        <AnimatePresence>
+                          {openFilter && (
+                            <motion.div
+                              variants={popupLeft}
+                              animate='show'
+                              initial='hidden'
+                              exit='exit'
+                              className='filterDropDown'
+                            >
+                              <div className='sort'>
+                                <p>
+                                  <span className='sortText'>Sort</span>
+                                  <img src={sort} />
+                                </p>
+                                <div className='sortDiv'>
+                                  <div
+                                    ref={typeRef}
+                                    onClick={() => {
+                                      setOpenType(!openType)
+                                    }}
+                                    className='sortValue'
+                                  >
+                                    <p>{sortValue}</p>
+                                    <img src={arrow} />
+                                    {openType && (
+                                      <div className='sortValueDropDown selectDropDown'>
+                                        {sortValues.map((e) => (
+                                          <h3
+                                            className={`${
+                                              sortValue === e ? 'active' : ''
+                                            }`}
+                                            onClick={(e) => {
+                                              setSortValue(e.target.innerText)
+                                              setChangedValue(true)
+                                            }}
+                                          >
+                                            {e}
+                                          </h3>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <img src={connect} />
+                                  <div
+                                    ref={valueRef}
+                                    onClick={() => {
+                                      setOpenValue(!openValue)
+                                    }}
+                                    className='sortType'
+                                  >
+                                    <p>{sortType}</p>
+                                    <img src={arrow} />
+                                    {openValue && (
+                                      <div className='sortTypeDropDown selectDropDown'>
+                                        {sortValueTypes.map((e) => (
+                                          <h3
+                                            className={`${
+                                              sortType === e ? 'active' : ''
+                                            }`}
+                                            onClick={(e) => {
+                                              setSortType(e.target.innerText)
+                                            }}
+                                          >
+                                            {e}
+                                          </h3>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className='brand'>
+                                <p>Brand</p>
+                                <div className='inputDiv'>
+                                  <Input value={brand} setValue={setBrand} />
+                                  {searches.brand && (
+                                    <img
+                                      onClick={() => {
+                                        filterHandler(null, 'brand')
+                                      }}
+                                      className='clearFilter'
+                                      src={smallX}
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                              <div className='category'>
+                                <p>Category</p>
+                                <div className='inputDiv'>
+                                  <Input
+                                    value={category}
+                                    setValue={setCategory}
+                                  />
+                                  {searches.category && (
+                                    <img
+                                      onClick={() => {
+                                        filterHandler(null, 'category')
+                                      }}
+                                      className='clearFilter'
+                                      src={smallX}
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                              <div className='btnDiv'>
+                                {Object.size(searches) > 0 &&
+                                  (Object.keys(searches)[0] !== 'Date' ||
+                                    searches[Object.keys(searches)[0]]
+                                      .charAt(0)
+                                      .toUpperCase() +
+                                      searches[Object.keys(searches)[0]].slice(
+                                        1
+                                      ) !==
+                                      'Newest' ||
+                                    searches.brand ||
+                                    searches.category) && (
+                                    <button
+                                      onClick={() => filterHandler(null, 'all')}
+                                      type='button'
+                                      className='resetBtnSubmit'
+                                    >
+                                      Reset All
+                                    </button>
+                                  )}
+                                <button
+                                  type='button'
+                                  onClick={() => filterHandler()}
+                                  className='filterBtnSubmit'
+                                >
+                                  Filter & Sort
+                                </button>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    )}
+                    <form className='searchContainer'>
+                      <div className='inputCont'>
+                        <input
+                          value={searchValue}
+                          onChange={(e) => setSearchValue(e.target.value)}
+                          placeholder='Search'
+                          type='text'
+                        />
+                        {searches.search && searchedProducts && (
+                          <img onClick={returnHandler} src={smallX} alt='' />
+                        )}
+                      </div>
+                      <button type='submit'>
+                        <img src={search} />
+                      </button>
+                    </form>
+                  </div>
+                </>
+              )}
+              {(!loading &&
+                products &&
+                products.length > 0 &&
+                !searches.search) ||
+              (!searchLoading &&
+                searches.search &&
+                searchedProducts &&
+                searchedProducts.length > 0) ||
+              filtering ? (
                 <div className='headers'>
                   <div className='id'>
                     <p>Id</p>
@@ -688,7 +769,15 @@ const DashboardProducts = () => {
                     </p>
                   </div>
                 </div>
-              ) : !filtering ? (
+              ) : !filtering &&
+                products &&
+                products.length === 0 &&
+                !searches.search ? (
+                <p className='center'>No products was found!</p>
+              ) : !filtering &&
+                searchedProducts &&
+                searchedProducts.length === 0 &&
+                searches.search ? (
                 <p className='center'>No products was found!</p>
               ) : (
                 ''
@@ -696,7 +785,7 @@ const DashboardProducts = () => {
               {filtering && <Loader providedClassName='filterLoading' />}
               {!filtering && (
                 <>
-                  {products && (
+                  {!searches.search && products ? (
                     <motion.div
                       variants={animCondition()}
                       initial='hidden'
@@ -713,6 +802,29 @@ const DashboardProducts = () => {
                         />
                       ))}
                     </motion.div>
+                  ) : (
+                    ''
+                  )}
+                  {searches.search && searchedProducts ? (
+                    <motion.div
+                      variants={animCondition()}
+                      initial='hidden'
+                      animate='show'
+                      exit='exit'
+                    >
+                      {searchedProducts.map((each) => (
+                        <ProductDashboard
+                          search={searches.search}
+                          actionsInfo={actionsInfo}
+                          setClickedForDelete={setClickedForDelete}
+                          clickedForDelete={clickedForDelete}
+                          key={each._id}
+                          product={each}
+                        />
+                      ))}
+                    </motion.div>
+                  ) : (
+                    ''
                   )}
                 </>
               )}
