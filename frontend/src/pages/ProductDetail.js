@@ -229,8 +229,11 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   )
 }
 const StyledDetail = styled.div`
-  .smoothImgDetails {
-    min-height: calc(16vw * 1.254901960784314);
+  .lazyImgLoader {
+    width: 640px !important;
+    height: 510px !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
   }
   .removingSomePadding .quantity {
     margin-bottom: calc(0.65rem + 0.15vw) !important;
