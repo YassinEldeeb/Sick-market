@@ -45,7 +45,7 @@ export const userLogoutAllAction = () => async (dispatch, getState) => {
     try {
       await axios.post('api/users/logoutAll', null, config)
 
-      socket.emit('LogoutAllUsers')
+      socket.emit('LogoutAllUsers', userInfo.user._id)
 
       dispatch({
         type: 'USER_LOGOUT_ALL',

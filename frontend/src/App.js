@@ -47,7 +47,7 @@ const App = () => {
   )
   document.body.style.overflow = activeMenu ? 'hidden' : 'auto'
   const dispatch = useDispatch()
-  const { loading, validToken, token, logoutLoading } = useSelector(
+  const { loading, validToken, token, logoutLoading, user } = useSelector(
     (state) => state.userInfo
   )
 
@@ -56,11 +56,23 @@ const App = () => {
       dispatch(checkToken(token))
     }
   }, [dispatch, token, loading, validToken])
+
+  const [joined, setJoined] = useState(false)
   useEffect(() => {
-    socket.on('logoutMe', () => {
-      console.log('Logout me!')
-      dispatch(userLogoutAction())
-    })
+    if (user._id && !joined) {
+      socket.emit('userSignedIn', user._id)
+      setJoined(true)
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (user._id) {
+      console.log('ADD Listener')
+      socket.on('logoutMe', () => {
+        console.log('Logout me!')
+        dispatch(userLogoutAction())
+      })
+    }
   }, [dispatch])
 
   return (
