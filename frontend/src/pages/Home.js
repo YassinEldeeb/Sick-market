@@ -1,5 +1,6 @@
-import React, { useEffect } from "react"
-import ProductList from "../components/ProductList"
+import React, { useEffect } from 'react'
+import Meta from '../components/Meta'
+import ProductList from '../components/ProductList'
 
 const Home = ({ scrolled, setScrolled }) => {
   useEffect(() => {
@@ -10,6 +11,7 @@ const Home = ({ scrolled, setScrolled }) => {
   }, [scrolled])
   return (
     <>
+      <Meta />
       <ProductList setScrolled={setScrolled} />
     </>
   )

@@ -13,6 +13,7 @@ import { buyNowAction } from '../actions/buyNow'
 import { useLastLocation } from 'react-router-last-location'
 import SmoothImg from '../components/smoothImgLoading'
 import { useRef } from 'react'
+import Meta from '../components/Meta'
 
 const ProductDetail = ({ cartCount, setCartCount }) => {
   const lastLocation = useLastLocation()
@@ -80,133 +81,142 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
           }
         />
       ) : product ? (
-        <div className='details'>
-          <div className='productImg'>
-            <SmoothImg
-              width={'640px'}
-              height={'510px'}
-              src={product.image}
-              alt='product'
-            />
-            <div className='bottomInfo'>
-              <h3>
-                {product.price}
-                <span className='currency'>EGP</span>
-              </h3>
+        <>
+          <Meta
+            ogImage={product.image}
+            ogTitle={product.name}
+            ogDescription={product.description}
+            title={product.name}
+            description={product.description}
+          />
+          <div className='details'>
+            <div className='productImg'>
+              <SmoothImg
+                width={'640px'}
+                height={'510px'}
+                src={product.image}
+                alt='product'
+              />
+              <div className='bottomInfo'>
+                <h3>
+                  {product.price}
+                  <span className='currency'>EGP</span>
+                </h3>
 
-              <div className='selectMobile'>
-                <h1>
-                  {product.countInStock !== 0 ? 'In Stock' : 'Out Of Stock'}
-                </h1>
-                {product.countInStock !== 0 && (
-                  <QtySelector
-                    cartCount={cartCount}
-                    setCartCount={setCartCount}
-                    qty={qty}
-                    setQty={setQty}
-                    product={product}
-                    cartItems={cartItems}
-                  />
-                )}
+                <div className='selectMobile'>
+                  <h1>
+                    {product.countInStock !== 0 ? 'In Stock' : 'Out Of Stock'}
+                  </h1>
+                  {product.countInStock !== 0 && (
+                    <QtySelector
+                      cartCount={cartCount}
+                      setCartCount={setCartCount}
+                      qty={qty}
+                      setQty={setQty}
+                      product={product}
+                      cartItems={cartItems}
+                    />
+                  )}
+                </div>
               </div>
+              {product.countInStock !== 0 && (
+                <>
+                  <div
+                    className='add mobile-btn'
+                    onClick={addToCart}
+                    style={{
+                      background: `${matched ? '#474f57 ' : '#0084a0'}`,
+                    }}
+                  >
+                    <h1>{matched ? 'Remove' : 'Add to Cart'}</h1>
+                  </div>
+                  <div className='buy mobile-btn' onClick={buyNowHandler}>
+                    <h1>{isBuyNow ? 'Buying Process' : 'Buy Now'}</h1>
+                  </div>
+                  {product.countInStock <= 6 && (
+                    <span class='onlyStock mobile'>
+                      Only {product.countInStock} left in stock!
+                    </span>
+                  )}
+                </>
+              )}
             </div>
-            {product.countInStock !== 0 && (
-              <>
-                <div
-                  className='add mobile-btn'
-                  onClick={addToCart}
-                  style={{
-                    background: `${matched ? '#474f57 ' : '#0084a0'}`,
-                  }}
+            <div className='description'>
+              <div className='mobile'>
+                <p className='brand'>Brand: {product.brand}</p>
+                <Rating
+                  ratingValue={product.rating}
+                  numOfReviews={product.numReviews}
+                />
+              </div>
+              <h4>{product.name}</h4>
+              <div className='mobile2'>
+                <p className='category'>Category: {product.category}</p>
+                <Link
+                  to={`/product-description/${location.pathname.split('/')[2]}`}
                 >
-                  <h1>{matched ? 'Remove' : 'Add to Cart'}</h1>
-                </div>
-                <div className='buy mobile-btn' onClick={buyNowHandler}>
-                  <h1>{isBuyNow ? 'Buying Process' : 'Buy Now'}</h1>
-                </div>
-                {product.countInStock <= 6 && (
-                  <span class='onlyStock mobile'>
-                    Only {product.countInStock} left in stock!
-                  </span>
-                )}
-              </>
-            )}
-          </div>
-          <div className='description'>
-            <div className='mobile'>
-              <p className='brand'>Brand: {product.brand}</p>
+                  description
+                </Link>
+              </div>
               <Rating
                 ratingValue={product.rating}
                 numOfReviews={product.numReviews}
               />
+              <h3>{product.description}</h3>
             </div>
-            <h4>{product.name}</h4>
-            <div className='mobile2'>
-              <p className='category'>Category: {product.category}</p>
-              <Link
-                to={`/product-description/${location.pathname.split('/')[2]}`}
-              >
-                description
-              </Link>
+            <div
+              className={`table ${
+                product.countInStock <= 3 ? 'removingSomePadding' : ''
+              }`}
+            >
+              <div className='price'>
+                <h1>Price:</h1>
+                <h3>
+                  {product.price}
+                  <span className='currency'>EGP</span>
+                </h3>
+              </div>
+              <div className='status'>
+                <h1>Status:</h1>
+                <h3>
+                  {product.countInStock === 0 ? 'Out Of Stock' : 'In Stock'}
+                </h3>
+              </div>
+              {product.countInStock !== 0 && (
+                <>
+                  <div className='quantity'>
+                    <h1>Qty:</h1>
+                    <QtySelector
+                      cartCount={cartCount}
+                      setCartCount={setCartCount}
+                      qty={qty}
+                      setQty={setQty}
+                      product={product}
+                      cartItems={cartItems}
+                    />
+                  </div>
+                  {product.countInStock <= 6 && (
+                    <li class='onlyStock'>
+                      Only {product.countInStock} left in stock!
+                    </li>
+                  )}
+                  <div
+                    className='add'
+                    onClick={addToCart}
+                    style={{
+                      background: `${matched ? '#474f57 ' : '#0084a0'}`,
+                    }}
+                  >
+                    <h1>{matched ? 'Remove' : 'Add to Cart'}</h1>
+                  </div>
+                  <div className='buy' onClick={buyNowHandler}>
+                    <h1>{isBuyNow ? 'Buying Process' : 'Buy Now'}</h1>
+                  </div>
+                </>
+              )}
             </div>
-            <Rating
-              ratingValue={product.rating}
-              numOfReviews={product.numReviews}
-            />
-            <h3>{product.description}</h3>
           </div>
-          <div
-            className={`table ${
-              product.countInStock <= 3 ? 'removingSomePadding' : ''
-            }`}
-          >
-            <div className='price'>
-              <h1>Price:</h1>
-              <h3>
-                {product.price}
-                <span className='currency'>EGP</span>
-              </h3>
-            </div>
-            <div className='status'>
-              <h1>Status:</h1>
-              <h3>
-                {product.countInStock === 0 ? 'Out Of Stock' : 'In Stock'}
-              </h3>
-            </div>
-            {product.countInStock !== 0 && (
-              <>
-                <div className='quantity'>
-                  <h1>Qty:</h1>
-                  <QtySelector
-                    cartCount={cartCount}
-                    setCartCount={setCartCount}
-                    qty={qty}
-                    setQty={setQty}
-                    product={product}
-                    cartItems={cartItems}
-                  />
-                </div>
-                {product.countInStock <= 6 && (
-                  <li class='onlyStock'>
-                    Only {product.countInStock} left in stock!
-                  </li>
-                )}
-                <div
-                  className='add'
-                  onClick={addToCart}
-                  style={{
-                    background: `${matched ? '#474f57 ' : '#0084a0'}`,
-                  }}
-                >
-                  <h1>{matched ? 'Remove' : 'Add to Cart'}</h1>
-                </div>
-                <div className='buy' onClick={buyNowHandler}>
-                  <h1>{isBuyNow ? 'Buying Process' : 'Buy Now'}</h1>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+        </>
       ) : (
         ''
       )}

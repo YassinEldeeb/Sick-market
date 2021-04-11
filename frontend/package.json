@@ -30,6 +30,7 @@
     "react-drop-zone": "^4.3.2",
     "react-filepond": "^7.1.0",
     "react-google-login": "^5.2.2",
+    "react-helmet": "^6.1.0",
     "react-image-crop": "^8.6.6",
     "react-intersection-observer": "^8.31.0",
     "react-lottie": "^1.2.3",
