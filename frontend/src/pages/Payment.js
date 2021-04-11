@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react"
-import styled from "styled-components"
-import CheckoutSteps from "../components/CheckoutSteps"
-import trueSVG from "../img/true.svg"
-import falseSVG from "../img/false.svg"
-import { userSavePayment, savePromoCode } from "../actions/savePaymentMethod"
-import { useDispatch, useSelector } from "react-redux"
-import { useHistory, useLocation } from "react-router-dom"
-import addCouponAction from "../actions/addCouponCode"
-import Loader from "../components/loader"
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import CheckoutSteps from '../components/CheckoutSteps'
+import trueSVG from '../img/true.svg'
+import falseSVG from '../img/false.svg'
+import { userSavePayment, savePromoCode } from '../actions/savePaymentMethod'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory, useLocation } from 'react-router-dom'
+import addCouponAction from '../actions/addCouponCode'
+import Loader from '../components/loader'
 
 const Payment = () => {
   const location = useLocation()
-  const isBuyNow = location.search.split("=")[1] === "buyNow"
+  const isBuyNow = location.search.split('=')[1] === 'buyNow'
 
   const {
     paymentMethod,
@@ -39,8 +39,8 @@ const Payment = () => {
     paymentMethod
       ? paymentMethod.length
         ? paymentMethod
-        : "PayPal or Credit & Debit Cards"
-      : "PayPal or Credit & Debit Cards"
+        : 'PayPal or Credit & Debit Cards'
+      : 'PayPal or Credit & Debit Cards'
   )
   const dispatch = useDispatch()
   const history = useHistory()
@@ -49,15 +49,15 @@ const Payment = () => {
     dispatch(
       userSavePayment(
         totalPrice < 20 || totalPrice > 17000
-          ? "PayPal or Credit & Debit Cards"
+          ? 'PayPal or Credit & Debit Cards'
           : method
       )
     )
     const pushedLink = () => {
-      if (location.search.split("=")[1] === "buyNow") {
-        return "/placeOrder?order=buyNow"
+      if (location.search.split('=')[1] === 'buyNow') {
+        return '/placeOrder?order=buyNow'
       } else {
-        return "/placeOrder"
+        return '/placeOrder'
       }
     }
     history.push(pushedLink())
@@ -65,29 +65,29 @@ const Payment = () => {
 
   useEffect(() => {
     if (!cartItems.length && !product.name) {
-      history.push("/cart")
+      history.push('/cart')
     }
   }, [cartItems])
 
   useEffect(() => {
     const pushedLink = () => {
-      if (location.search.split("=")[1] === "buyNow") {
-        return "/login?redirect=payment"
+      if (location.search.split('=')[1] === 'buyNow') {
+        return '/login?redirect=payment'
       } else {
-        return "/login?redirect=payment?order=buyNow"
+        return '/login?redirect=payment?order=buyNow'
       }
     }
-    if (location.pathname.split("/")[1] === "payment" && !user.name) {
+    if (location.pathname.split('/')[1] === 'payment' && !user.name) {
       history.push(pushedLink())
     }
   }, [history, location, user])
 
   useEffect(() => {
     const pushedLink = () => {
-      if (location.search.split("=")[1] === "buyNow") {
-        return "/shipping?order=buyNow"
+      if (location.search.split('=')[1] === 'buyNow') {
+        return '/shipping?order=buyNow'
       } else {
-        return "/shipping"
+        return '/shipping'
       }
     }
     if (!address.city) {
@@ -97,7 +97,7 @@ const Payment = () => {
 
   const [couponInput, setCouponInput] = useState(discount ? true : false)
   const [discount2, setDiscount2] = useState(false)
-  const [code, setCode] = useState(discount ? discount.code.code : "")
+  const [code, setCode] = useState(discount ? discount.code.code : '')
 
   const applyCodeHandler = (e) => {
     e.preventDefault()
@@ -106,7 +106,7 @@ const Payment = () => {
   useEffect(() => {
     if (discount) {
       dispatch(savePromoCode(discount))
-      setDiscount2(discount.code.amount + "% OFF")
+      setDiscount2(discount.code.amount + '% OFF')
     }
   }, [discount])
 
@@ -126,22 +126,22 @@ const Payment = () => {
               <input type='radio' id='credit' />
               <label
                 className={`${
-                  method === "PayPal or Credit & Debit Cards" ? "active" : ""
+                  method === 'PayPal or Credit & Debit Cards' ? 'active' : ''
                 }`}
                 htmlFor='credit'
-                onClick={() => setMethod("PayPal or Credit & Debit Cards")}
+                onClick={() => setMethod('PayPal or Credit & Debit Cards')}
               >
                 PayPal or Credit & Debit Cards
               </label>
               <input type='radio' id='delivery' />
               <label
-                className={`${method === "Cash on Delivery" ? "active" : ""} ${
-                  totalPrice < 20 || totalPrice > 17000 ? "disabled" : ""
+                className={`${method === 'Cash on Delivery' ? 'active' : ''} ${
+                  totalPrice < 20 || totalPrice > 17000 ? 'disabled' : ''
                 }`}
                 htmlFor='Cash on Delivery'
                 onClick={() => {
                   if (!totalPrice < 20 || totalPrice > 17000)
-                    setMethod("Cash on Delivery")
+                    setMethod('Cash on Delivery')
                 }}
               >
                 Cash on Delivery
@@ -172,14 +172,14 @@ const Payment = () => {
                 <button
                   type='submit'
                   className={`Indication ${
-                    errorCoupon && !loadingCoupon ? "error" : ""
+                    errorCoupon && !loadingCoupon ? 'error' : ''
                   } ${
-                    (!errorCoupon && !discount) || loadingCoupon ? "idle" : ""
+                    (!errorCoupon && !discount) || loadingCoupon ? 'idle' : ''
                   }`}
                 >
                   {loadingCoupon && <Loader />}
                 </button>
-                <div className={`inputError ${!errorCoupon ? "ok" : ""}`}>
+                <div className={`inputError ${!errorCoupon ? 'ok' : ''}`}>
                   <span>{discount2}</span>
                 </div>
               </form>
@@ -318,7 +318,7 @@ const StyledPayment = styled.div`
         margin-bottom: unset;
       }
       &::before {
-        content: "";
+        content: '';
         display: block;
         width: 24px;
         height: 24px;
@@ -359,6 +359,9 @@ const StyledPayment = styled.div`
     margin-bottom: 1.2rem;
   }
   @media screen and (max-width: 1050px) {
+    .explaningWhy {
+      transform: translateX(-2%) !important;
+    }
     h1 {
       font-size: calc(1.74rem + 1vw);
     }
@@ -378,7 +381,7 @@ const StyledPayment = styled.div`
         font-size: calc(0.7rem + 1vw);
 
         &::before {
-          content: "";
+          content: '';
           width: 18px;
           height: 18px;
           box-shadow: inset 0px 0px 0px 1.5px #343a40;
