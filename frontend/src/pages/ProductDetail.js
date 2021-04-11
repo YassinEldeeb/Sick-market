@@ -88,6 +88,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
             ogDescription={product.description}
             title={product.name}
             description={product.description}
+            url={`https://sick-market.herokuapp.com/products/${product._id}`}
           />
           <div className='details'>
             <div className='productImg'>
