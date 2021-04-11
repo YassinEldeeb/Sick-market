@@ -24,6 +24,7 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
       >
         <SmoothImg
           contWidth={'10vw'}
+          contWidthMobile={'20vw'}
           width={'100%'}
           height={'100%'}
           className='productImg'

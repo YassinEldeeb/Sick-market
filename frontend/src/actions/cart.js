@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from 'axios'
 
 export const cartAction = (id, qty) => async (dispatch, getState) => {
   const state = getState().product.product
@@ -14,7 +14,7 @@ export const cartAction = (id, qty) => async (dispatch, getState) => {
   const exist = getState().cart.cartItems.find((product) => product._id === id)
   if (!exist) {
     dispatch({
-      type: "ADD_ITEM_TO_CART",
+      type: 'ADD_ITEM_TO_CART',
       payload: {
         name: product.name,
         qty,
@@ -25,11 +25,12 @@ export const cartAction = (id, qty) => async (dispatch, getState) => {
         numReviews: product.numReviews,
         countInStock: product.countInStock,
         brand: product.brand,
+        qtyPerUser: product.qtyPerUser,
       },
     })
   }
   const { cartItems } = getState().cart
-  localStorage.setItem("sickCartProducts", JSON.stringify(cartItems))
+  localStorage.setItem('sickCartProducts', JSON.stringify(cartItems))
 }
 export const updateQtyAction = (match, qty) => async (dispatch, getState) => {
   const { cartItems } = getState().cart
@@ -40,16 +41,16 @@ export const updateQtyAction = (match, qty) => async (dispatch, getState) => {
       return each
     })
 
-    dispatch({ type: "UPDATE_ITEM_QTY", payload: updatedArr })
-    localStorage.setItem("sickCartProducts", JSON.stringify(updatedArr))
+    dispatch({ type: 'UPDATE_ITEM_QTY', payload: updatedArr })
+    localStorage.setItem('sickCartProducts', JSON.stringify(updatedArr))
   }
 }
 export const removeAction = (match) => async (dispatch, getState) => {
   const { cartItems } = getState().cart
   const updatedCart = cartItems.filter((each) => each._id !== match._id)
   dispatch({
-    type: "REMOVE_ITEM",
+    type: 'REMOVE_ITEM',
     payload: updatedCart,
   })
-  localStorage.setItem("sickCartProducts", JSON.stringify(updatedCart))
+  localStorage.setItem('sickCartProducts', JSON.stringify(updatedCart))
 }

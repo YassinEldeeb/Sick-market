@@ -1,8 +1,9 @@
-import asyncHandler from "express-async-handler"
-import Order from "../models/orderModel.js"
-import Coupon from "../models/couponModel.js"
-import { orderPlaced } from "../emails/account.js"
-import { format } from "date-fns"
+import asyncHandler from 'express-async-handler'
+import Order from '../models/orderModel.js'
+import Coupon from '../models/couponModel.js'
+import { orderPlaced } from '../emails/account.js'
+import { format } from 'date-fns'
+import Product from '../models/productModel.js'
 
 const addOrderItems = asyncHandler(async (req, res) => {
   const {
@@ -16,17 +17,24 @@ const addOrderItems = asyncHandler(async (req, res) => {
     couponDiscount,
     code,
   } = req.body
-  if (req.user.status !== "Verified") {
+  if (req.user.status !== 'Verified') {
     throw new Error("Email isn't verified")
   }
   if (!orderItems || !orderItems.length) {
     res.status(400)
-    throw new Error("Cart is empty")
+    throw new Error('Cart is empty')
   }
   if (!req.user.canOrder) {
     res.status(405)
-    throw new Error("You are prohibited from ordering by Admins")
+    throw new Error('You are prohibited from ordering by Admins')
   }
+  orderItems.forEach(async (e) => {
+    const product = await Product.findById(e.product)
+    product.countInStock = product.countInStock - e.qty
+    product.paidStock = product.paidStock + e.qty
+    product.paidAmount = product.paidAmount + e.qty * e.price
+    await product.save()
+  })
   const order = new Order({
     user: req.user._id,
     orderItems,
@@ -50,7 +58,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       }
     } else {
       res.status(400)
-      throw new Error("Invalid Coupon Code")
+      throw new Error('Invalid Coupon Code')
     }
   }
 
@@ -62,25 +70,25 @@ const addOrderItems = asyncHandler(async (req, res) => {
 const getOrderById = asyncHandler(async (req, res) => {
   if (!req.params.id) {
     res.status(400)
-    throw new Error("Id is required to fetch Order")
+    throw new Error('Id is required to fetch Order')
   }
   const order = await Order.findById(req.params.id).populate(
-    "user",
-    "email name"
+    'user',
+    'email name'
   )
 
   if (!order) {
     res.status(404)
 
-    throw new Error("Order not Found!")
+    throw new Error('Order not Found!')
   }
   if (
     order.user._id.toString() !== req.user._id.toString() &&
-    req.user.rank === "user"
+    req.user.rank === 'user'
   ) {
     res.status(404)
 
-    throw new Error("Order not Found!")
+    throw new Error('Order not Found!')
   }
 
   res.send({ order })
@@ -90,20 +98,20 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   if (!req.params.id) {
     res.status(400)
 
-    throw new Error("Id is required to fetch Order")
+    throw new Error('Id is required to fetch Order')
   }
   const order = await Order.findById(req.params.id)
 
   if (!order) {
     res.status(404)
-    throw new Error("Order not Found!")
+    throw new Error('Order not Found!')
   }
   if (
     order.user._id.toString() !== req.user._id.toString() &&
-    req.user.rank === "user"
+    req.user.rank === 'user'
   ) {
     res.status(404)
-    throw new Error("Order not Found!")
+    throw new Error('Order not Found!')
   }
   order.paymentResult = {
     orderID: req.body.orderID,
@@ -111,7 +119,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     facilitatorAccessToken: req.body.facilitatorAccessToken,
   }
   order.isPaid = true
-  const date = format(Date.now(), "yyyy-MM-dd / hh:mm a")
+  const date = format(Date.now(), 'yyyy-MM-dd / hh:mm a')
 
   order.paidAt = date
 
@@ -128,7 +136,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
   const user = req.user
   await user
     .populate({
-      path: "orders",
+      path: 'orders',
       options: {
         limit: parseInt(req.query.limit),
         skip: parseInt(req.query.skip),

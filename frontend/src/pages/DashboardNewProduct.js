@@ -101,11 +101,12 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
       const firstChild = document.querySelector(
         '.card-large-scrollable-content div:first-child'
       )
-      firstChild.scroll({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      })
+      if (firstChild)
+        firstChild.scroll({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        })
     }
   }, [newError])
 

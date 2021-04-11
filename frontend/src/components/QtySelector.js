@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react"
-import arrow from "../img/gobackArrow.svg"
-import styled from "styled-components"
-import { useDispatch } from "react-redux"
-import { updateQtyAction } from "../actions/cart"
+import React, { useState, useEffect } from 'react'
+import arrow from '../img/gobackArrow.svg'
+import styled from 'styled-components'
+import { useDispatch } from 'react-redux'
+import { updateQtyAction } from '../actions/cart'
+import { throttle } from 'underscore'
 
 const QtySelector = ({
   product,
@@ -18,14 +19,14 @@ const QtySelector = ({
   const dispatch = useDispatch()
 
   const [toggle, setToggle] = useState(false)
-  document.body.addEventListener("click", (e) => {
+  document.body.addEventListener('click', (e) => {
     e.stopPropagation()
     if (
-      !e.target.classList.contains("selectValue") &&
-      !e.target.classList.contains("select") &&
-      !e.target.classList.contains("arrowImg") &&
-      !e.target.classList.contains("drop-menu") &&
-      !e.target.classList.contains("option")
+      !e.target.classList.contains('selectValue') &&
+      !e.target.classList.contains('select') &&
+      !e.target.classList.contains('arrowImg') &&
+      !e.target.classList.contains('drop-menu') &&
+      !e.target.classList.contains('option')
     ) {
       if (toggle) {
         setToggle(false)
@@ -37,28 +38,32 @@ const QtySelector = ({
   let dropmenuArr
   const dropmenu = () => {
     dropmenuArr = []
-    for (let i = 1; i < product.countInStock + 1; i++) {
-      dropmenuArr.push(
-        <p
-          className={`option ${chosenQtyValue === i ? "active" : ""}`}
-          key={`selectOption${dropmenuArr.length}`}
-          onClick={(e) => {
-            setQty(e.target.innerText)
-            setChosenQtyValue(Number(e.target.innerText))
+    for (let i = 1; i < product.qtyPerUser + 1; i++) {
+      if (product.countInStock >= i) {
+        dropmenuArr.push(
+          <p
+            className={`option ${chosenQtyValue === i ? 'active' : ''}`}
+            key={`selectOption${dropmenuArr.length}`}
+            onClick={(e) => {
+              setQty(e.target.innerText)
+              setChosenQtyValue(Number(e.target.innerText))
 
-            if (match) {
-              const chosenQty = Number(e.target.innerText)
-              if (chosenQty <= match.qty) {
-                setCartCount(cartCount - (match.qty - chosenQty))
-              } else {
-                setCartCount(cartCount + (chosenQty - match.qty))
+              if (match) {
+                const chosenQty = Number(e.target.innerText)
+                if (chosenQty <= match.qty) {
+                  setCartCount(cartCount - (match.qty - chosenQty))
+                } else {
+                  setCartCount(cartCount + (chosenQty - match.qty))
+                }
               }
-            }
-          }}
-        >
-          {i}
-        </p>
-      )
+            }}
+          >
+            {i}
+          </p>
+        )
+      } else {
+        break
+      }
     }
     return dropmenuArr
   }
@@ -75,7 +80,7 @@ const QtySelector = ({
       <div className='select' onClick={() => setToggle(!toggle)}>
         <h1 className='selectValue'>{qty}</h1>
         <img className='arrowImg' src={arrow} alt='arrow' />
-        <div className={`drop-menu ${toggle ? "active" : ""}`}>
+        <div className={`drop-menu ${toggle ? 'active' : ''}`}>
           {dropmenu()}
         </div>
       </div>

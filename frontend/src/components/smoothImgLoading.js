@@ -13,11 +13,13 @@ const SmoothImg = ({
   loaderId,
   contWidth = '100%',
   contHeight = '100%',
+  contWidthMobile = '100%',
 }) => {
   const [loaded, setLoaded] = useState(false)
 
   return (
     <StyledImg
+      contWidthMobile={contWidthMobile}
       contWidth={contWidth}
       contHeight={contHeight}
       imgTransition={imgTransition}
@@ -46,6 +48,9 @@ const StyledImg = styled.div`
   display: flex;
   min-height: ${(props) => props.contHeight};
   width: ${(props) => props.contWidth};
+  @media screen and (max-width: 1050px) {
+    width: ${(props) => props.contWidthMobile};
+  }
   img {
     max-height: 100%;
     opacity: 0;

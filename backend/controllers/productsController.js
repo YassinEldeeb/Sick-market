@@ -115,7 +115,7 @@ const addProduct = asyncHandler(async (req, res) => {
   ) {
     res.status(400)
     throw new Error(
-      'name, brand, category, description, price, countInStock, qtyPerUser and Image are Required'
+      'name, brand, category, description, price, countInStock and qtyPerUser are Required'
     )
   }
 
@@ -221,6 +221,8 @@ const updateProduct = asyncHandler(async (req, res) => {
   product.countInStock = countInStock ? countInStock : product.countInStock
   product.qtyPerUser = qtyPerUser ? qtyPerUser : product.qtyPerUser
   product.image = finalImage
+
+  product.lastUpdated = new Date()
 
   await product.save()
 

@@ -1,27 +1,28 @@
-import React, { useState, useEffect } from "react"
-import { useLocation, Link, useHistory } from "react-router-dom"
-import Goback from "../components/Goback"
-import Rating from "../components/Rating"
-import styled from "styled-components"
-import { useSelector, useDispatch } from "react-redux"
-import { productDetailAction } from "../actions/products"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import { cartAction, removeAction } from "../actions/cart"
-import QtySelector from "../components/QtySelector"
-import { buyNowAction } from "../actions/buyNow"
-import { useLastLocation } from "react-router-last-location"
-import SmoothImg from "../components/smoothImgLoading"
+import React, { useState, useEffect } from 'react'
+import { useLocation, Link, useHistory } from 'react-router-dom'
+import Goback from '../components/Goback'
+import Rating from '../components/Rating'
+import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux'
+import { productDetailAction } from '../actions/products'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import { cartAction, removeAction } from '../actions/cart'
+import QtySelector from '../components/QtySelector'
+import { buyNowAction } from '../actions/buyNow'
+import { useLastLocation } from 'react-router-last-location'
+import SmoothImg from '../components/smoothImgLoading'
+import { useRef } from 'react'
 
 const ProductDetail = ({ cartCount, setCartCount }) => {
   const lastLocation = useLastLocation()
 
   const location = useLocation()
-  const isBuyNow = location.search.split("=")[1] === "buyNow"
-  const id = location.pathname.split("/")[2]
+  const isBuyNow = location.search.split('=')[1] === 'buyNow'
+  const id = location.pathname.split('/')[2]
 
-  const savedCart = localStorage.getItem("sickCartProducts")
-    ? JSON.parse(localStorage.getItem("sickCartProducts"))
+  const savedCart = localStorage.getItem('sickCartProducts')
+    ? JSON.parse(localStorage.getItem('sickCartProducts'))
     : []
   let matched = savedCart
     ? savedCart.find((each) => each._id === id)
@@ -37,7 +38,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   useEffect(() => {
     if (
       lastLocation
-        ? lastLocation.pathname.split("/")[1] !== "product-description"
+        ? lastLocation.pathname.split('/')[1] !== 'product-description'
         : true
     ) {
       dispatch(productDetailAction(id))
@@ -47,7 +48,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   const buyNowHandler = () => {
     if (!isBuyNow) {
       dispatch(buyNowAction(qty))
-      history.push("/shipping?order=buyNow")
+      history.push('/shipping?order=buyNow')
     }
   }
   const addToCart = () => {
@@ -71,10 +72,10 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
         <Message
           type='error'
           msg={
-            error.includes("timed out")
-              ? "Network Error"
-              : error.includes("mongo")
-              ? "Server Error"
+            error.includes('timed out')
+              ? 'Network Error'
+              : error.includes('mongo')
+              ? 'Server Error'
               : error
           }
         />
@@ -82,8 +83,8 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
         <div className='details'>
           <div className='productImg'>
             <SmoothImg
-              width={"640px"}
-              height={"510px"}
+              width={'640px'}
+              height={'510px'}
               src={product.image}
               alt='product'
             />
@@ -95,7 +96,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
 
               <div className='selectMobile'>
                 <h1>
-                  {product.countInStock !== 0 ? "In Stock" : "Out Of Stock"}
+                  {product.countInStock !== 0 ? 'In Stock' : 'Out Of Stock'}
                 </h1>
                 {product.countInStock !== 0 && (
                   <QtySelector
@@ -115,14 +116,19 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                   className='add mobile-btn'
                   onClick={addToCart}
                   style={{
-                    background: `${matched ? "#474f57 " : "#0084a0"}`,
+                    background: `${matched ? '#474f57 ' : '#0084a0'}`,
                   }}
                 >
-                  <h1>{matched ? "Remove" : "Add to Cart"}</h1>
+                  <h1>{matched ? 'Remove' : 'Add to Cart'}</h1>
                 </div>
                 <div className='buy mobile-btn' onClick={buyNowHandler}>
-                  <h1>{isBuyNow ? "Buying Process" : "Buy Now"}</h1>
+                  <h1>{isBuyNow ? 'Buying Process' : 'Buy Now'}</h1>
                 </div>
+                {product.countInStock <= 3 && (
+                  <p class='onlyStock mobile'>
+                    Only {product.countInStock} left in stock!
+                  </p>
+                )}
               </>
             )}
           </div>
@@ -138,7 +144,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
             <div className='mobile2'>
               <p className='category'>Category: {product.category}</p>
               <Link
-                to={`/product-description/${location.pathname.split("/")[2]}`}
+                to={`/product-description/${location.pathname.split('/')[2]}`}
               >
                 description
               </Link>
@@ -160,7 +166,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
             <div className='status'>
               <h1>Status:</h1>
               <h3>
-                {product.countInStock === 0 ? "Out Of Stock" : "In Stock"}
+                {product.countInStock === 0 ? 'Out Of Stock' : 'In Stock'}
               </h3>
             </div>
             {product.countInStock !== 0 && (
@@ -181,25 +187,39 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                   className='add'
                   onClick={addToCart}
                   style={{
-                    background: `${matched ? "#474f57 " : "#0084a0"}`,
+                    background: `${matched ? '#474f57 ' : '#0084a0'}`,
                   }}
                 >
-                  <h1>{matched ? "Remove" : "Add to Cart"}</h1>
+                  <h1>{matched ? 'Remove' : 'Add to Cart'}</h1>
                 </div>
                 <div className='buy' onClick={buyNowHandler}>
-                  <h1>{isBuyNow ? "Buying Process" : "Buy Now"}</h1>
+                  <h1>{isBuyNow ? 'Buying Process' : 'Buy Now'}</h1>
                 </div>
+                {product.countInStock <= 3 && (
+                  <p class='onlyStock'>
+                    Only {product.countInStock} left in stock!
+                  </p>
+                )}
               </>
             )}
           </div>
         </div>
       ) : (
-        ""
+        ''
       )}
     </StyledDetail>
   )
 }
 const StyledDetail = styled.div`
+  .mobile {
+    display: none;
+  }
+  .onlyStock {
+    padding-top: calc(0.5rem + 0.15vw);
+    color: #ec5840;
+    font-weight: 500;
+    font-size: calc(0.7rem + 0.3vw);
+  }
   .currency {
     font-size: calc(0.2rem + 1vw);
     margin-left: 0.15rem;
@@ -368,6 +388,15 @@ const StyledDetail = styled.div`
     }
   }
   @media screen and (max-width: 1050px) {
+    .mobile {
+      display: block;
+    }
+    .onlyStock {
+      padding-top: calc(0.5rem + 0.15vw);
+      color: #ec5840;
+      font-weight: 500;
+      font-size: calc(0.85rem + 0.3vw);
+    }
     .currency {
       font-size: calc(0.7rem + 1vw);
       margin-left: 0.15rem;

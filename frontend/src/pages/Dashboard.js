@@ -97,10 +97,12 @@ const Dashboard = ({ pageContent }) => {
     ) {
       dashboardUsers.loading = true
 
-      document.querySelector('.content div:first-child').scroll({
-        top: 0,
-        left: 0,
-      })
+      const content = document.querySelector('.content div:first-child')
+      if (content)
+        content.scroll({
+          top: 0,
+          left: 0,
+        })
     } else if (lastLocation ? lastLocation.pathname.split('/')[3] : false) {
       userActions.loading = true
     }
@@ -110,10 +112,11 @@ const Dashboard = ({ pageContent }) => {
     const dashboardTabs = document.querySelector(
       '.dashboardTabs div:first-child'
     )
-    dashboardTabs.scroll({
-      top: 0,
-      left: 0,
-    })
+    if (dashboardTabs)
+      dashboardTabs.scroll({
+        top: 0,
+        left: 0,
+      })
   }, [])
 
   useEffect(() => {
@@ -140,7 +143,7 @@ const Dashboard = ({ pageContent }) => {
       const firstChild = document.querySelector(
         '.large-scrollable-content div:first-child'
       )
-      firstChild.style.overflowY = 'hidden !important'
+      if (firstChild) firstChild.style.overflowY = 'hidden !important'
     }
   }, [location.pathname])
   return (
