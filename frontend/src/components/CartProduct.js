@@ -162,7 +162,8 @@ const StyledProduct = styled.div`
       }
     }
     .desc {
-      padding: 0 calc(1rem + 0.3vw);
+      padding-right: 0;
+      padding-left: calc(0.7rem + 0.2vw);
       p {
         font-size: calc(0.6rem + 0.4vw);
       }
