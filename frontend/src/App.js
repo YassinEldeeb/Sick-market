@@ -57,23 +57,25 @@ const App = () => {
     }
   }, [dispatch, token, loading, validToken])
 
-  const [joined, setJoined] = useState(false)
-  useEffect(() => {
-    if (user._id && !joined) {
-      socket.emit('userSignedIn', user._id)
-      setJoined(true)
-    }
-  }, [user])
-
+  const [room, setRoom] = useState(null)
   useEffect(() => {
     if (user._id) {
-      console.log('ADD Listener')
+      socket.emit('userSignedIn', user._id)
+      setRoom(`user:${user._id}`)
+      console.log('ROOM', `user:${user._id}`)
+    }
+  }, [user._id])
+
+  const [register, setRegister] = useState(false)
+  useEffect(() => {
+    if (!register) {
       socket.on('logoutMe', () => {
         console.log('Logout me!')
         dispatch(userLogoutAction())
       })
+      setRegister(true)
     }
-  }, [dispatch])
+  }, [])
 
   return (
     <div className='App' id={`${logoutLoading ? 'logoutLoading' : ''}`}>

@@ -507,6 +507,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 const logoutAllUsers = asyncHandler(async (req, res) => {
   req.user.tokens = []
   await req.user.save()
+  req.app.get('socketService').emiter('logoutMe', null, `user:${req.user._id}`)
+
   res.send()
 })
 //Logging out all users

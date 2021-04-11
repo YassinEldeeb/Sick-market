@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import Logo from "./Logo"
-import Search from "./Search"
-import Cart from "./Cart"
-import Profile from "./Profile"
-import BurgerMenu from "./BurgerMenu"
-import { useLocation, Link, useHistory } from "react-router-dom"
-import { useSelector, useDispatch } from "react-redux"
-import PopupMessage from "./PopupMessage"
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import Logo from './Logo'
+import Search from './Search'
+import Cart from './Cart'
+import Profile from './Profile'
+import BurgerMenu from './BurgerMenu'
+import { useLocation, Link, useHistory } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import PopupMessage from './PopupMessage'
 
 const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   const { user } = useSelector((state) => state.userInfo)
@@ -17,7 +17,7 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
 
   const dispatch = useDispatch()
   useEffect(() => {
-    if (location.pathname.split("/")[1]) {
+    if (location.pathname.split('/')[1]) {
       window.scroll({
         top: 0,
         left: 0,
@@ -29,41 +29,41 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   }, [location.pathname, setActiveMenu])
 
   const [warning, setWarning] = useState(
-    localStorage.getItem("showWarning") ? false : true
+    localStorage.getItem('showWarning') ? false : true
   )
-  const search = location.search.split("=")[1]
-  const redirect = search ? search : "/"
+  const search = location.search.split('=')[1]
+  const redirect = search ? search : '/'
   useEffect(() => {
-    if (location.pathname.split("/")[1] === "account" && !user.name) {
-      history.push(`/login?redirect=${location.pathname.replace("/", "")}`)
+    if (location.pathname.split('/')[1] === 'account' && !user.name) {
+      history.push(`/login?redirect=${location.pathname.replace('/', '')}`)
     } else if (
-      location.pathname === "/account" ||
-      location.pathname === "/account/"
+      location.pathname === '/account' ||
+      location.pathname === '/account/'
     ) {
-      history.push("/account/edit-profile")
+      history.push('/account/edit-profile')
     }
   }, [location.pathname, activeMenu, setActiveMenu, history, user])
 
   useEffect(() => {
     dispatch({
-      type: "CLEAR_ERRORS",
+      type: 'CLEAR_ERRORS',
     })
   }, [location.pathname, dispatch])
 
   return (
     <>
-      {status !== "Verified" &&
+      {status !== 'Verified' &&
         user.name &&
         warning &&
-        location.pathname.split("/")[1] !== "verify" &&
-        location.pathname.split("/")[1] !== "changeEmail" && (
+        location.pathname.split('/')[1] !== 'verify' &&
+        location.pathname.split('/')[1] !== 'changeEmail' && (
           <PopupMessage
             setWarning={setWarning}
             desc={
               <p>
                 Your Email isn't verified!, You can't order anything unless you
-                go to{" "}
-                <Link to={`/verify?redirect=${redirect.replace("/", "")}`}>
+                go to{' '}
+                <Link to={`/verify?redirect=${redirect.replace('/', '')}`}>
                   Verify your Email.
                 </Link>
               </p>
@@ -71,7 +71,7 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
             title='Alert'
           />
         )}
-      {location.pathname.split("/")[1].toLowerCase() !== "dashboard" && (
+      {location.pathname.split('/')[1].toLowerCase() !== 'dashboard' && (
         <Header>
           <div className='actualNav'>
             <BurgerMenu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
