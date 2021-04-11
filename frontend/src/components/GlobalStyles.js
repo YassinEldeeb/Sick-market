@@ -36,7 +36,9 @@ img{
     display:flex;
     flex-direction:column;
 }
-
+#logoutLoading{
+  overflow-y:hidden !important; 
+}
     .starsRating {
       position: relative;
       margin: 0.2rem 0;

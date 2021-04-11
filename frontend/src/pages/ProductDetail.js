@@ -124,10 +124,10 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 <div className='buy mobile-btn' onClick={buyNowHandler}>
                   <h1>{isBuyNow ? 'Buying Process' : 'Buy Now'}</h1>
                 </div>
-                {product.countInStock <= 3 && (
-                  <p class='onlyStock mobile'>
+                {product.countInStock <= 6 && (
+                  <span class='onlyStock mobile'>
                     Only {product.countInStock} left in stock!
-                  </p>
+                  </span>
                 )}
               </>
             )}
@@ -155,7 +155,11 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
             />
             <h3>{product.description}</h3>
           </div>
-          <div className='table'>
+          <div
+            className={`table ${
+              product.countInStock <= 3 ? 'removingSomePadding' : ''
+            }`}
+          >
             <div className='price'>
               <h1>Price:</h1>
               <h3>
@@ -182,7 +186,11 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                     cartItems={cartItems}
                   />
                 </div>
-
+                {product.countInStock <= 6 && (
+                  <li class='onlyStock'>
+                    Only {product.countInStock} left in stock!
+                  </li>
+                )}
                 <div
                   className='add'
                   onClick={addToCart}
@@ -195,11 +203,6 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 <div className='buy' onClick={buyNowHandler}>
                   <h1>{isBuyNow ? 'Buying Process' : 'Buy Now'}</h1>
                 </div>
-                {product.countInStock <= 3 && (
-                  <p class='onlyStock'>
-                    Only {product.countInStock} left in stock!
-                  </p>
-                )}
               </>
             )}
           </div>
@@ -211,14 +214,21 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   )
 }
 const StyledDetail = styled.div`
+  .removingSomePadding .quantity {
+    margin-bottom: calc(0.65rem + 0.15vw) !important;
+  }
   .mobile {
     display: none;
   }
+  .table {
+    position: relative;
+  }
   .onlyStock {
-    padding-top: calc(0.5rem + 0.15vw);
+    padding-bottom: calc(0.5rem + 0.15vw);
     color: #ec5840;
     font-weight: 500;
     font-size: calc(0.7rem + 0.3vw);
+    list-style-position: inside;
   }
   .currency {
     font-size: calc(0.2rem + 1vw);

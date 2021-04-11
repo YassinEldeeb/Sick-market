@@ -1,32 +1,32 @@
-import asyncHandler from "express-async-handler"
-import User from "../models/userModel.js"
-import sharp from "sharp"
-import fs from "fs"
-import validator from "validator"
+import asyncHandler from 'express-async-handler'
+import User from '../models/userModel.js'
+import sharp from 'sharp'
+import fs from 'fs'
+import validator from 'validator'
 import {
   sendVerificationEmail,
   sendResetPasswordEmail,
-} from "../emails/account.js"
-import SecretCode from "../models/secretCode.js"
-import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
+} from '../emails/account.js'
+import SecretCode from '../models/secretCode.js'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 //Update USER Rank - /api/users/rank @Admin
 const updateUserRank = asyncHandler(async (req, res) => {
   if (!req.params.id) {
     res.status(400)
-    throw new Error("Id is Requierd")
+    throw new Error('Id is Requierd')
   }
 
   if (!req.body.rank) {
     res.status(400)
-    throw new Error("Rank is Requierd")
+    throw new Error('Rank is Requierd')
   }
 
   const user = await User.findById(req.params.id)
 
   if (!user) {
-    throw new Error("User not Found!")
+    throw new Error('User not Found!')
   }
   user.rank = req.body.rank.toLowerCase()
   await user.save()
@@ -52,12 +52,12 @@ const updateUserRank = asyncHandler(async (req, res) => {
 const canOrderUser = asyncHandler(async (req, res) => {
   if (!req.params.id) {
     res.status(400)
-    throw new Error("Id is Requierd")
+    throw new Error('Id is Requierd')
   }
 
   const user = await User.findById(req.params.id)
   if (!user) {
-    throw new Error("User not Found!")
+    throw new Error('User not Found!')
   }
   user.canOrder = req.body.canOrder
   await user.save()
@@ -82,12 +82,12 @@ const canOrderUser = asyncHandler(async (req, res) => {
 const canReviewUser = asyncHandler(async (req, res) => {
   if (!req.params.id) {
     res.status(400)
-    throw new Error("Id is Requierd")
+    throw new Error('Id is Requierd')
   }
 
   const user = await User.findById(req.params.id)
   if (!user) {
-    throw new Error("User not Found!")
+    throw new Error('User not Found!')
   }
   user.canReview = req.body.canReview
   await user.save()
@@ -113,7 +113,7 @@ const canReviewUser = asyncHandler(async (req, res) => {
 const deleteUser = asyncHandler(async (req, res) => {
   if (!req.params.id) {
     res.status(400)
-    throw new Error("Id is Requierd")
+    throw new Error('Id is Requierd')
   }
 
   const user = await User.findById(req.params.id)
@@ -122,20 +122,20 @@ const deleteUser = asyncHandler(async (req, res) => {
     await user.delete()
   } else {
     res.status(404)
-    throw new Erorr("User not found!")
+    throw new Erorr('User not found!')
   }
 
-  res.send({ message: "User deleted" })
+  res.send({ message: 'User deleted' })
 })
 
 //GET USER - /api/users/:id @Admin
 const getUserById = asyncHandler(async (req, res) => {
   if (!req.params.id) {
     res.status(400)
-    throw new Error("Id is Requierd")
+    throw new Error('Id is Requierd')
   }
 
-  const user = await User.findOne({ _id: req.params.id, rank: "user" })
+  const user = await User.findOne({ _id: req.params.id, rank: 'user' })
 
   if (user) {
     const usersCopy = {
@@ -155,7 +155,7 @@ const getUserById = asyncHandler(async (req, res) => {
     res.send(usersCopy)
   } else {
     res.status(404)
-    throw new Error("User not Found")
+    throw new Error('User not Found')
   }
 })
 
@@ -163,17 +163,17 @@ const getUserById = asyncHandler(async (req, res) => {
 const searchUsers = asyncHandler(async (req, res) => {
   if (!req.body.search) {
     res.status(400)
-    throw new Error("Search Field is Requierd")
+    throw new Error('Search Field is Requierd')
   }
   const users = await User.search(
     req.body.search,
     async function (err, output) {
-      const inspect = require("util").inspect
+      const inspect = require('util').inspect
       await inspect(output, { depth: null })
     }
   )
 
-  let filteredUsers = users.filter((user) => user.rank === "user")
+  let filteredUsers = users.filter((user) => user.rank === 'user')
 
   const count = filteredUsers.length
 
@@ -202,19 +202,19 @@ const searchUsers = asyncHandler(async (req, res) => {
 
 //GET all USERS - /api/users @Admin
 const getAllUsers = asyncHandler(async (req, res) => {
-  let sortValue = "createdAt"
-  if (req.query.sort === "topPaid") {
-    sortValue = "totalPaidOrders"
+  let sortValue = 'createdAt'
+  if (req.query.sort === 'topPaid') {
+    sortValue = 'totalPaidOrders'
   }
 
   const users = await User.find({
-    rank: "user",
+    rank: 'user',
   })
     .sort({ [sortValue]: -1 })
     .limit(parseInt(req.query.limit ? req.query.limit : 0))
     .skip(parseInt(req.query.skip ? req.query.skip : 0))
 
-  const count = await User.countDocuments({ rank: "user" })
+  const count = await User.countDocuments({ rank: 'user' })
   const usersCopy = users.map((e) => {
     return {
       joinedIn: e.createdAt,
@@ -238,7 +238,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 const getUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body
   if (!email || !password) {
-    throw new Error("Email & Password are Required")
+    throw new Error('Email & Password are Required')
   } else {
     const user = await User.findByCredentials(
       email.toLowerCase().trim(),
@@ -258,13 +258,13 @@ const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, profilePicLink, status } = req.body
 
   const editedEmail = email ? email.toLowerCase() : null
-  if (typeof name === "number") {
+  if (typeof name === 'number') {
     res.status(400)
-    throw new Error("Name must be alphabetical letters!")
+    throw new Error('Name must be alphabetical letters!')
   }
   if (!name || !editedEmail || !password) {
     res.status(400)
-    throw new Error("name, Email and Password are Required")
+    throw new Error('name, Email and Password are Required')
   } else {
     if (!validator.isEmail(editedEmail)) {
       res.status(400)
@@ -273,21 +273,21 @@ const registerUser = asyncHandler(async (req, res) => {
     const userExists = await User.findOne({ email: editedEmail })
     if (userExists) {
       res.status(400)
-      throw new Error("User already exists, Login below")
+      throw new Error('User already exists, Login below')
     }
     const user = new User({
       name,
       email: editedEmail,
       password,
       profilePicLink: profilePicLink ? profilePicLink : null,
-      status: status ? status : "pending",
+      status: status ? status : 'pending',
     })
     const token = user.generateToken()
     user.tokens.unshift({ token })
     await user.save()
 
     res.status(201).send({ user, token })
-    req.app.get("socketService").emiter("NewUser")
+    req.app.get('socketService').emiter('NewUser')
   }
 })
 
@@ -303,7 +303,7 @@ const continueWithGoogle = asyncHandler(async (req, res) => {
       email,
       password: googlePassword,
       profilePicLink,
-      status: "Verified",
+      status: 'Verified',
       availablePic: true,
     })
     const token = newUser.generateToken()
@@ -315,7 +315,7 @@ const continueWithGoogle = asyncHandler(async (req, res) => {
       const user = await User.findByCredentials(
         email,
         googlePassword,
-        "googleSignin"
+        'googleSignin'
       )
       if (user) {
         res.send(user)
@@ -324,7 +324,7 @@ const continueWithGoogle = asyncHandler(async (req, res) => {
       }
     } else {
       res.status(400)
-      throw new Error("googleSignture is Required")
+      throw new Error('googleSignture is Required')
     }
   }
 })
@@ -346,7 +346,7 @@ const getProfile = asyncHandler(async (req, res) => {
 const updateProfile = asyncHandler(async (req, res) => {
   if (!req.body.password && !req.user.profilePicLink) {
     res.status(401)
-    throw new Error("Password is required to Change Profile Info")
+    throw new Error('Password is required to Change Profile Info')
   }
   const editedEmail = req.body.email
     ? req.body.email.toLowerCase()
@@ -356,16 +356,16 @@ const updateProfile = asyncHandler(async (req, res) => {
     const existingEmail = await User.findOne({ email: editedEmail })
     if (existingEmail && editedEmail !== req.user.email) {
       res.status(400)
-      throw new Error("User with this email Exists!")
+      throw new Error('User with this email Exists!')
     }
   }
-  const updates = Object.keys(req.body).filter((e) => e !== "password")
-  const allowedUpdates = ["name", "email", "newPassword"]
+  const updates = Object.keys(req.body).filter((e) => e !== 'password')
+  const allowedUpdates = ['name', 'email', 'newPassword']
   let invalidUpdates = []
 
-  if (typeof req.body.name === "number") {
+  if (typeof req.body.name === 'number') {
     res.status(400)
-    throw new Error("Name must be alphabetical letters!")
+    throw new Error('Name must be alphabetical letters!')
   }
   if (
     !req.user.profilePicLink &&
@@ -384,12 +384,12 @@ const updateProfile = asyncHandler(async (req, res) => {
 
     if (!validUpdates) {
       res.status(400)
-      throw new Error(`Unable to update ${invalidUpdates.join(" ,")}`)
+      throw new Error(`Unable to update ${invalidUpdates.join(' ,')}`)
     }
     const lastPassword = req.user.password
 
     if (req.body.email && req.user.email !== req.body.email) {
-      req.user.status = "pending"
+      req.user.status = 'pending'
     }
     //Valid updates
     updates.forEach((update) => (req.user[update] = req.body[update]))
@@ -419,7 +419,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     delete userObj.password
     res.send(userObj)
   } else if (req.user.profilePicLink) {
-    const allowedUpdates = ["name"]
+    const allowedUpdates = ['name']
     let invalidUpdates = []
 
     updates.forEach((update) => {
@@ -435,10 +435,10 @@ const updateProfile = asyncHandler(async (req, res) => {
 
     if (!validUpdates) {
       res.status(400)
-      throw new Error(`Unable to update ${invalidUpdates.join(" ,")}`)
+      throw new Error(`Unable to update ${invalidUpdates.join(' ,')}`)
     }
     if (req.body.email && req.user.email !== req.body.email) {
-      req.user.status = "pending"
+      req.user.status = 'pending'
     }
     //Valid updates
     updates.forEach((update) => (req.user[update] = req.body[update]))
@@ -448,7 +448,7 @@ const updateProfile = asyncHandler(async (req, res) => {
     res.send(req.user)
   } else {
     res.status(401)
-    throw new Error("Incorrect Password")
+    throw new Error('Incorrect Password')
   }
 })
 
@@ -461,7 +461,7 @@ const uploadProfilePic = asyncHandler(async (req, res) => {
 
   req.user.availablePic = true
   if (req.user.profilePicLink) {
-    req.user.profilePicLink = "cleared"
+    req.user.profilePicLink = 'cleared'
   }
   req.user.profilePic = buffer
   await req.user.save()
@@ -472,7 +472,7 @@ const deleteProfilePic = asyncHandler(async (req, res) => {
   req.user.profilePic = null
   req.user.availablePic = false
   if (req.user.profilePicLink) {
-    req.user.profilePicLink = "cleared"
+    req.user.profilePicLink = 'cleared'
   }
   await req.user.save()
   res.send()
@@ -483,13 +483,13 @@ const serveProfilePic = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
 
   if (!user || !user.profilePic) {
-    fs.readFile("./backend/images/defaultAvatar.png", (err, data) => {
-      res.set("Content-Type", "image/png")
+    fs.readFile('./backend/images/defaultAvatar.png', (err, data) => {
+      res.set('Content-Type', 'image/png')
       res.send(data)
     })
     return
   }
-  res.set("Content-Type", "image/png")
+  res.set('Content-Type', 'image/png')
 
   res.send(user.profilePic)
 })
@@ -511,7 +511,7 @@ const logoutAllUsers = asyncHandler(async (req, res) => {
 })
 //Logging out all users
 const checkToken = asyncHandler(async (req, res) => {
-  res.status(200).send({ message: "The Token is stil Valid" })
+  res.status(200).send({ message: 'The Token is stil Valid' })
 })
 
 //Get Security Code
@@ -524,21 +524,21 @@ const getSecurityCode = asyncHandler(async (req, res) => {
 
     if (passedCode === code) {
       await SecretCode.deleteOne({ email: req.user.email })
-      req.user.status = "Verified"
+      req.user.status = 'Verified'
       await req.user.save()
-      res.status(200).send({ Status: "Verified" })
+      res.status(200).send({ Status: 'Verified' })
     } else {
       res.status(404)
-      throw new Error("Invalid Code")
+      throw new Error('Invalid Code')
     }
   } else {
     res.status(404)
-    throw new Error("Invalid Code")
+    throw new Error('Invalid Code')
   }
 })
 
 const getNewSecurityCode = asyncHandler(async (req, res) => {
-  if (req.user.status === "pending") {
+  if (req.user.status === 'pending') {
     let randomCode = Math.floor(1000 + Math.random() * 9000)
 
     const secretCode = await SecretCode.findOne({ email: req.user.email })
@@ -553,10 +553,10 @@ const getNewSecurityCode = asyncHandler(async (req, res) => {
 
     await secretC.save()
     sendVerificationEmail(req.user.email, req.user.name)
-    res.status(201).send({ message: "Code Succesfully Sent!" })
+    res.status(201).send({ message: 'Code Succesfully Sent!' })
   } else {
     res.status(400)
-    throw new Error("Email already Verified")
+    throw new Error('Email already Verified')
   }
 })
 
@@ -565,14 +565,14 @@ const getResetLink = asyncHandler(async (req, res) => {
 
   if (!email) {
     res.status(400)
-    throw new Error("Email is required to reset Password")
+    throw new Error('Email is required to reset Password')
   }
   if (validator.isEmail(email)) {
     const user = await User.findOne({ email })
     if (!user) {
       res.status(404)
-      throw new Error("No user with this email")
-    } else if (user.profilePicLink || user.profilePicLink === "cleared") {
+      throw new Error('No user with this email')
+    } else if (user.profilePicLink || user.profilePicLink === 'cleared') {
       res.status(404)
       throw new Error("Google Accounts can't forgot their Password")
     }
@@ -582,14 +582,14 @@ const getResetLink = asyncHandler(async (req, res) => {
     res.send({ message: `Reset Password Link sent to ${user.email}` })
   } else {
     res.status(400)
-    throw new Error("Not a valid Email")
+    throw new Error('Not a valid Email')
   }
 })
 
 const resetPassword = asyncHandler(async (req, res) => {
   const { password } = req.body
   const passedToken = req.headers.authorization
-  const token = passedToken ? passedToken.split(" ")[1] : null
+  const token = passedToken ? passedToken.split(' ')[1] : null
 
   if (token) {
     try {
@@ -602,11 +602,11 @@ const resetPassword = asyncHandler(async (req, res) => {
       if (user) {
         if (!password) {
           res.status(404)
-          throw new Error("Password is required to reset it")
+          throw new Error('Password is required to reset it')
         }
         if (!user.validResetPassword) {
           res.status(400)
-          throw new Error("Link Expired")
+          throw new Error('Link Expired')
         }
         user.tokens = []
         user.password = password
@@ -615,7 +615,7 @@ const resetPassword = asyncHandler(async (req, res) => {
         res.send(user)
       } else {
         res.status(401)
-        throw new Error("Unauthorized, Invalid Token")
+        throw new Error('Unauthorized, Invalid Token')
       }
     } catch (err) {
       console.log(err)
@@ -623,7 +623,7 @@ const resetPassword = asyncHandler(async (req, res) => {
       throw new Error(err.message)
     }
   } else {
-    throw new Error("Unauthorized, No Token")
+    throw new Error('Unauthorized, No Token')
   }
 })
 

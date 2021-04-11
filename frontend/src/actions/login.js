@@ -1,32 +1,32 @@
-import axios from "axios"
+import axios from 'axios'
 
 const userLoginAction = (email, password) => async (dispatch) => {
   try {
-    dispatch({ type: "USER_LOGIN_REQUEST" })
+    dispatch({ type: 'USER_LOGIN_REQUEST' })
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
     const config = {
       headers: {
-        Content_Type: "application/json",
+        Content_Type: 'application/json',
       },
       cancelToken: source.token,
     }
     const { data } = await axios.post(
-      "/api/users/login",
+      '/api/users/login',
       { email, password },
       config
     )
-    dispatch({ type: "USER_LOGIN_SUCCESS", payload: data })
-    localStorage.setItem("sickUserInfo", JSON.stringify(data))
+    dispatch({ type: 'USER_LOGIN_SUCCESS', payload: data })
+    if (data) localStorage.setItem('sickUserInfo', JSON.stringify(data))
   } catch (error) {
     dispatch({
-      type: "USER_LOGIN_FAIL",
+      type: 'USER_LOGIN_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
     })
-    localStorage.removeItem("sickUserInfo")
+    localStorage.removeItem('sickUserInfo')
   }
 }
 

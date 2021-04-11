@@ -1,10 +1,12 @@
-import { Server } from "socket.io"
+import { Server } from 'socket.io'
 
 class SocketService {
   constructor(server) {
     this.io = new Server(server)
-    this.io.on("connection", (socket) => {
-      console.log("user connected")
+    this.io.on('connection', (socket) => {
+      socket.on('LogoutAllUsers', () => {
+        socket.broadcast.emit('logoutMe')
+      })
     })
   }
 

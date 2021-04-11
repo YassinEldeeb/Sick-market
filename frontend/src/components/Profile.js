@@ -57,6 +57,7 @@ const Profile = () => {
           <div className='profilePic'>
             <div className='profilePicImg'>
               <SmoothImg
+                imgId='profileIMG'
                 loaderId={'profileLoading'}
                 width={'100%'}
                 height={'100%'}
@@ -85,6 +86,11 @@ const Profile = () => {
             <div className='account'>
               <Link to='/account/edit-profile'>Account</Link>
             </div>
+            {userInfo.user.rank === 'admin' && (
+              <div className='account'>
+                <Link to='/dashboard'>Dashboard</Link>
+              </div>
+            )}
             <div
               className='logout'
               onClick={() => dispatch(userLogoutAction())}
@@ -109,6 +115,11 @@ const Profile = () => {
   )
 }
 const StyledProfile = styled.div`
+  #profileIMG {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+  }
   .profilePicImg {
     height: 100%;
   }

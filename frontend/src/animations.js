@@ -50,6 +50,17 @@ export const hide = {
     transition: { staggerChildren: 0.08 },
   },
 }
+export const showSmoothly = {
+  hidden: {
+    opacity: 0,
+    transition: { duration: 0.15 },
+  },
+  show: {
+    opacity: 1,
+    transition: { duration: 0.15 },
+  },
+  exit: { opacity: 0, transition: { duration: 0.1 } },
+}
 export const hide5 = {
   hidden: {
     opacity: 0,

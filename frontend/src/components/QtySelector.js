@@ -114,7 +114,8 @@ const StyledSelect = styled.div`
       display: none;
       background: #ffff;
       width: 120%;
-      max-height: 180px;
+      max-height: 140px;
+      height: max-content !important;
       overflow-y: auto;
       border-radius: 5px;
       border-top-left-radius: 3px;
@@ -174,7 +175,8 @@ const StyledSelect = styled.div`
         display: none;
         background: #ffff;
         width: 120%;
-        height: 140px;
+        max-height: 140px;
+        height: max-content !important;
         overflow-y: auto;
         border-radius: 5px;
         border-bottom-left-radius: 0;

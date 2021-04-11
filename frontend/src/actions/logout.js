@@ -1,4 +1,5 @@
-import axios from "axios"
+import axios from 'axios'
+import socket from '../clientSocket/socket'
 
 export const userLogoutAction = () => async (dispatch, getState) => {
   const userInfo = getState().userInfo
@@ -7,14 +8,25 @@ export const userLogoutAction = () => async (dispatch, getState) => {
     const source = cancelToken.source()
     const config = {
       headers: {
-        Content_Type: "application/json",
+        Content_Type: 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
       cancelToken: source.token,
     }
-    await axios.post("/api/users/logout", null, config)
+    dispatch({ type: 'USER_LOGOUT_REQUEST' })
+    try {
+      await axios.post('/api/users/logout', null, config)
+    } catch (error) {
+      dispatch({
+        type: 'USER_LOGOUT_FAIL',
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
     dispatch({
-      type: "USER_LOGOUT",
+      type: 'USER_LOGOUT',
     })
   }
 }
@@ -24,13 +36,28 @@ export const userLogoutAllAction = () => async (dispatch, getState) => {
   if (userInfo.token) {
     const config = {
       headers: {
-        Content_Type: "application/json",
+        Content_Type: 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     }
-    await axios.post("api/users/logoutAll", null, config)
-    dispatch({
-      type: "USER_LOGOUT_ALL",
-    })
+    dispatch({ type: 'USER_LOGOUT_REQUEST' })
+
+    try {
+      await axios.post('api/users/logoutAll', null, config)
+
+      socket.emit('LogoutAllUsers')
+
+      dispatch({
+        type: 'USER_LOGOUT_ALL',
+      })
+    } catch (error) {
+      dispatch({
+        type: 'USER_LOGOUT_FAIL',
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
   }
 }

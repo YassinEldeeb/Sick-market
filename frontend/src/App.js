@@ -10,6 +10,10 @@ import JustComponentForApp from './components/justComponentForApp'
 import EditProfile from './pages/edit-profile'
 import ChangePassword from './pages/changePassword'
 import MyOrders from './pages/MyOrders'
+import socket from './clientSocket/socket'
+import { userLogoutAction } from './actions/logout'
+import LoggingOut from './components/loggingYouOut'
+import { AnimatePresence } from 'framer-motion'
 const Home = lazy(() => import('./pages/Home'))
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const Description = lazy(() => import('./pages/Description'))
@@ -43,16 +47,24 @@ const App = () => {
   )
   document.body.style.overflow = activeMenu ? 'hidden' : 'auto'
   const dispatch = useDispatch()
-  const { loading, validToken, token } = useSelector((state) => state.userInfo)
+  const { loading, validToken, token, logoutLoading } = useSelector(
+    (state) => state.userInfo
+  )
 
   useEffect(() => {
     if (token && !loading && !validToken) {
       dispatch(checkToken(token))
     }
   }, [dispatch, token, loading, validToken])
+  useEffect(() => {
+    socket.on('logoutMe', () => {
+      console.log('Logout me!')
+      dispatch(userLogoutAction())
+    })
+  }, [dispatch])
 
   return (
-    <div className='App'>
+    <div className='App' id={`${logoutLoading ? 'logoutLoading' : ''}`}>
       <BrowserRouter>
         <LastLocationProvider>
           <Global />
@@ -61,6 +73,7 @@ const App = () => {
             activeMenu={activeMenu}
             setActiveMenu={setActiveMenu}
           />
+          <AnimatePresence>{logoutLoading && <LoggingOut />}</AnimatePresence>
           <JustComponentForApp />
           <Suspense fallback={<p className='loadingText'>Loading...</p>}>
             <Switch>
