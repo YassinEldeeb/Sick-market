@@ -8,6 +8,7 @@ const Meta = ({
   ogDescription = 'The best E-commerce on the entire planet, Cause I built it!',
   ogImage = '/public/facicon4.png',
   url = `https://sick-market.herokuapp.com`,
+  product,
 }) => {
   return (
     <Helmet>
@@ -20,6 +21,7 @@ const Meta = ({
       <meta property='twitter:title' content={ogTitle} />
       <meta property='twitter:description' content={ogDescription} />
       <meta property='twitter:image' content={ogImage} />
+      {product && <meta property='og:type' content='product' />}
     </Helmet>
   )
 }
