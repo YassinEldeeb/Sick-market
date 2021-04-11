@@ -82,15 +82,6 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
         />
       ) : product ? (
         <>
-          <Meta
-            ogImage={product.image}
-            ogTitle={product.name}
-            ogDescription={product.description}
-            title={product.name}
-            description={product.description}
-            url={`https://sick-market.herokuapp.com/products/${product._id}`}
-            product={true}
-          />
           <div className='details'>
             <div className='productImg'>
               <SmoothImg
@@ -221,6 +212,17 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
         </>
       ) : (
         ''
+      )}
+      {product && (
+        <Meta
+          ogImage={product.image}
+          ogTitle={product.name}
+          ogDescription={product.description}
+          title={product.name}
+          description={product.description}
+          url={`https://sick-market.herokuapp.com/products/${product._id}`}
+          product={true}
+        />
       )}
     </StyledDetail>
   )
