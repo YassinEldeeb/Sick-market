@@ -215,7 +215,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
       )}
       {product && (
         <Meta
-          ogImage={product.image}
+          ogImage={`https://sick-market.herokuapp.com${product.image}`}
           ogTitle={product.name}
           ogDescription={product.description}
           title={product.name}
