@@ -85,6 +85,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
           <div className='details'>
             <div className='productImg'>
               <SmoothImg
+                providedClassName='smoothImgDetails'
                 width={'640px'}
                 height={'510px'}
                 src={product.image}
@@ -228,6 +229,9 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   )
 }
 const StyledDetail = styled.div`
+  .smoothImgDetails {
+    min-height: calc(16vw * 1.254901960784314);
+  }
   .removingSomePadding .quantity {
     margin-bottom: calc(0.65rem + 0.15vw) !important;
   }
@@ -412,6 +416,9 @@ const StyledDetail = styled.div`
     }
   }
   @media screen and (max-width: 1050px) {
+    .smoothImgDetails {
+      min-height: calc(90vw * 0.796875);
+    }
     .mobile {
       display: block;
     }
