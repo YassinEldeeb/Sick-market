@@ -21,6 +21,7 @@ const Meta = ({
       <meta property='twitter:title' content={ogTitle} />
       <meta property='twitter:description' content={ogDescription} />
       <meta property='twitter:image' content={ogImage} />
+      <meta name='twitter:card' content='summary_large_image' />
       {product && <meta property='og:type' content='product' />}
     </Helmet>
   )
