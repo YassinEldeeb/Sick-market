@@ -14,7 +14,6 @@ import smallX from '../img/smallX.svg'
 import DashboardUserAction from './DashboardUserAction'
 import { useLastLocation } from 'react-router-last-location'
 import { throttle } from 'underscore'
-import socket from '../clientSocket/socket'
 import { useInView } from 'react-intersection-observer'
 import infiniteScrollUsersAction from '../actions/infiniteScrollUsers'
 import infiniteScrollSearchUsersAction from '../actions/infiniteScrollSearchedUsers'
@@ -206,17 +205,6 @@ const DashboardCustomers = () => {
     popups.forEach((e) => (e.style.top = `${scrolled}px`))
     cardCont.style.top = `${scrolled}px`
   }, [scrolled])
-
-  const { user: userInfo } = useSelector((state) => state.userInfo)
-  useEffect(() => {
-    if (userInfo.rank === 'admin') {
-      socket.on('NewUser', () => {
-        dispatch({
-          type: 'NEW_DASHBOARD_USERS',
-        })
-      })
-    }
-  }, [])
 
   const [element, inView] = useInView()
   const [element2, inView2] = useInView()

@@ -2,33 +2,32 @@ const initialState = { loading: false }
 
 const deleteProduct = (state = initialState, action) => {
   switch (action.type) {
-    case "DELETE_PRODUCT_REQUEST":
+    case 'DELETE_PRODUCT_REQUEST':
       return { success: false, loading: true }
-    case "DELETE_PRODUCT_SUCCESS":
-      localStorage.removeItem("NewUsers")
+    case 'DELETE_PRODUCT_SUCCESS':
       return {
         success: true,
         loading: false,
       }
-    case "DELETE_PRODUCT_FAIL":
+    case 'DELETE_PRODUCT_FAIL':
       return {
         error: action.payload,
         success: false,
         loading: true,
       }
-    case "CONFIRM_DELETE_PRODUCT_REQUEST":
+    case 'CONFIRM_DELETE_PRODUCT_REQUEST':
       return {
         ...state,
         asking: true,
         confirm: null,
       }
-    case "CONFIRM_DELETE_PRODUCT_SUCCESS":
+    case 'CONFIRM_DELETE_PRODUCT_SUCCESS':
       return {
         ...state,
         asking: false,
         confirm: true,
       }
-    case "CONFIRM_DELETE_PRODUCT_CANCEL":
+    case 'CONFIRM_DELETE_PRODUCT_CANCEL':
       return {
         ...state,
         asking: false,

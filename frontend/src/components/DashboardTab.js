@@ -1,22 +1,26 @@
-import React from "react"
-import styled from "styled-components"
-import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
+import React from 'react'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const DashboardTab = ({ text, icon, active, providedClassName }) => {
   const { newUsers } = useSelector((state) => state.dashboardUsers)
+  const { newProducts } = useSelector((state) => state.productList)
 
   return (
     <Tab
-      to={providedClassName ? "/" : `/dashboard/${text.toLowerCase()}`}
-      className={`${active ? "active" : ""} ${
-        providedClassName ? providedClassName : ""
+      to={providedClassName ? '/' : `/dashboard/${text.toLowerCase()}`}
+      className={`${active ? 'active' : ''} ${
+        providedClassName ? providedClassName : ''
       }`}
     >
       <img src={icon} alt='icon' />
       <h4>{text}</h4>
-      {text === "Customers" && newUsers > 0 && (
+      {text === 'Customers' && newUsers > 0 && (
         <h6 className='counter'>{newUsers}</h6>
+      )}
+      {text === 'Products' && newProducts > 0 && (
+        <h6 className='counter'>{newProducts}</h6>
       )}
     </Tab>
   )

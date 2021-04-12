@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { useLocation, useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useLastLocation } from 'react-router-last-location'
 import { v4 as uuid } from 'uuid'
 import statistics from '../img/statistics.svg'
@@ -20,8 +20,10 @@ import home from '../img/home.svg'
 import DashboardTab from '../components/DashboardTab'
 import DashboardCustomers from './DashboardCustomers'
 import DashboardProducts from './DashboardProducts'
+import socket from '../clientSocket/socket'
 
 const Dashboard = ({ pageContent }) => {
+  const dispatch = useDispatch()
   const lastLocation = useLastLocation()
 
   const main = [
@@ -146,6 +148,20 @@ const Dashboard = ({ pageContent }) => {
       if (firstChild) firstChild.style.overflowY = 'hidden !important'
     }
   }, [location.pathname])
+
+  useEffect(() => {
+    socket.on('NewUser', () => {
+      dispatch({
+        type: 'NEW_DASHBOARD_USERS',
+      })
+    })
+    socket.on('ProductAdded', () => {
+      dispatch({
+        type: 'NEW_DASHBOARD_PRODUCT',
+      })
+    })
+  }, [])
+
   return (
     <StyledDashboard>
       <div className='sidebar'>

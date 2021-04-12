@@ -16,6 +16,9 @@ class SocketService {
         const roomId = `Admins`
         socket.join(roomId)
       })
+      socket.on('ProductCreated', () => {
+        socket.broadcast.to('Admins').emit('ProductAdded')
+      })
       socket.on('disconnect', () => {
         console.log('User has Disconnected 😟')
       })

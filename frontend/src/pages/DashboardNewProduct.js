@@ -14,6 +14,7 @@ import DashboardError from '../components/DashboardError'
 import CropImg from '../components/CropImg'
 import { throttle } from 'underscore'
 import xSign from '../img/smallX.svg'
+import socket from '../clientSocket/socket'
 
 const DashboardNewProduct = ({ scrolled, setScrolled }) => {
   const lastLocation = useLastLocation()
@@ -125,6 +126,7 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
       setImage(null)
 
       history.push('/dashboard/products')
+      socket.emit('ProductCreated')
     }
   }, [success])
 
