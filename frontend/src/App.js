@@ -57,12 +57,12 @@ const App = () => {
     }
   }, [dispatch, token, loading, validToken])
 
-  const [room, setRoom] = useState(null)
   useEffect(() => {
     if (user._id) {
       socket.emit('userSignedIn', user._id)
-      setRoom(`user:${user._id}`)
-      console.log('ROOM', `user:${user._id}`)
+      if (user.rank === 'admin') {
+        socket.emit('adminJoined')
+      }
     }
   }, [user._id])
 
@@ -76,7 +76,6 @@ const App = () => {
       setRegister(true)
     }
   }, [])
-
   return (
     <div className='App' id={`${logoutLoading ? 'logoutLoading' : ''}`}>
       <BrowserRouter>

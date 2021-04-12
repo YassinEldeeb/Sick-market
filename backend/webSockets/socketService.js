@@ -1,6 +1,5 @@
 import { Server } from 'socket.io'
 
-const rooms = []
 class SocketService {
   constructor(server) {
     this.io = new Server(server)
@@ -12,6 +11,10 @@ class SocketService {
           socket.join(roomId)
           console.log('RoomID:', roomId)
         }
+      })
+      socket.on('adminJoined', () => {
+        const roomId = `Admins`
+        socket.join(roomId)
       })
       socket.on('disconnect', () => {
         console.log('User has Disconnected 😟')
