@@ -12,7 +12,7 @@ const __dirname = path.resolve()
 const getProducts = asyncHandler(async (req, res) => {
   let sort = {}
   if (req.query.createdAt) {
-    sort = { updatedAt: req.query.createdAt === 'newest' ? -1 : 1 }
+    sort = { createdAt: req.query.createdAt === 'newest' ? -1 : 1 }
   } else if (req.query.price) {
     sort = {
       price: req.query.price === 'highest' ? -1 : 1,
