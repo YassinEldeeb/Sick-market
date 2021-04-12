@@ -35,6 +35,18 @@ const productListReducer = (state = initialState, action) => {
       return { ...state, filtering: true }
     case 'SORTING_PRODUCTS_SUCCESS':
       return { ...state, filtering: false }
+    case 'UPDATE_PRODUCT_STOCK':
+      if (state.products) {
+        const products = state.products.map((e) => {
+          if (e._id === action.payload.id) {
+            e.countInStock = e.countInStock - action.payload.newStock
+          }
+          return e
+        })
+        return { ...state, products }
+      } else {
+        return state
+      }
     default:
       return state
   }

@@ -353,13 +353,15 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
                                   'yyyy-MM-dd / hh:mm a'
                                 )}
                               </motion.li>
-                              <motion.li layout>
-                                Last updated:{' '}
-                                {format(
-                                  parseISO(dashboardProduct.lastUpdated),
-                                  'yyyy-MM-dd / hh:mm a'
-                                )}
-                              </motion.li>
+                              {dashboardProduct.lastUpdated && (
+                                <motion.li layout>
+                                  Last updated:{' '}
+                                  {format(
+                                    parseISO(dashboardProduct.lastUpdated),
+                                    'yyyy-MM-dd / hh:mm a'
+                                  )}
+                                </motion.li>
+                              )}
                             </motion.ul>
                           </motion.div>
                         )}

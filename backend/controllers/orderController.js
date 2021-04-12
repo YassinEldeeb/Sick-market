@@ -4,6 +4,7 @@ import Coupon from '../models/couponModel.js'
 import { orderPlaced } from '../emails/account.js'
 import { format } from 'date-fns'
 import Product from '../models/productModel.js'
+import User from '../models/userModel.js'
 
 const addOrderItems = asyncHandler(async (req, res) => {
   const {
@@ -61,8 +62,13 @@ const addOrderItems = asyncHandler(async (req, res) => {
       throw new Error('Invalid Coupon Code')
     }
   }
+  const user = await User.findById(order.user)
 
-  await orderPlaced(order, order.user.email)
+  orderPlaced(order, user.email)
+  const newStock = order.orderItems.map((e) => {
+    return { _id: e.product, countInStock: e.qty }
+  })
+  req.app.get('socketService').emiter('StockChanged', newStock, 'Admins')
 
   await res.status(201).send(order)
 })

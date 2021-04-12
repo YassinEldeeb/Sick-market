@@ -495,6 +495,38 @@ const DashboardProducts = () => {
     }
   }, [location.search, location.pathname])
 
+  const [data, setData] = useState(null)
+  useEffect(() => {
+    socket.on('StockChanged', (data) => {
+      setData(data)
+    })
+  }, [])
+  useEffect(() => {
+    if (data) {
+      if (!searches.search) {
+        data.forEach((e) =>
+          dispatch({
+            type: 'UPDATE_PRODUCT_STOCK',
+            payload: {
+              id: e._id,
+              newStock: e.countInStock,
+            },
+          })
+        )
+      } else if (searchedProducts) {
+        data.forEach((e) =>
+          dispatch({
+            type: 'UPDATE_SEARCH_PRODUCT_STOCK',
+            payload: {
+              id: e._id,
+              newStock: e.countInStock,
+            },
+          })
+        )
+      }
+    }
+  }, [data])
+
   return (
     <StyledOrders>
       <DashboardNewProduct
@@ -812,6 +844,7 @@ const DashboardProducts = () => {
                     >
                       {products.map((each) => (
                         <ProductDashboard
+                          data={data}
                           actionsInfo={actionsInfo}
                           setClickedForDelete={setClickedForDelete}
                           clickedForDelete={clickedForDelete}
@@ -832,6 +865,7 @@ const DashboardProducts = () => {
                     >
                       {searchedProducts.map((each) => (
                         <ProductDashboard
+                          data={data}
                           search={searches.search}
                           actionsInfo={actionsInfo}
                           setClickedForDelete={setClickedForDelete}

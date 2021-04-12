@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { parseISO, format } from 'date-fns'
 import pen from '../img/pen.svg'
 import trash from '../img/trash.svg'
 import eye from '../img/eyeSee.svg'
 import ReactTooltip from 'react-tooltip'
-import { motion } from 'framer-motion'
-import { popup } from '../animations'
+import { motion, AnimatePresence, StaggeredMotion } from 'framer-motion'
+import { popup, realtimeStockCounter } from '../animations'
 import { Link, useLocation } from 'react-router-dom'
 import Loader from '../components/loader'
 import { useSelector, useDispatch } from 'react-redux'
@@ -18,6 +18,7 @@ const ProductDashboard = ({
   setClickedForDelete,
   actionsInfo,
   search,
+  data,
 }) => {
   const location = useLocation()
   const { loading: deleteLoading, success, asking, confirm } = useSelector(
@@ -42,6 +43,18 @@ const ProductDashboard = ({
     }
   }
   const [clicked, setClicked] = useState(false)
+  const [changed, setChanged] = useState(0)
+
+  useEffect(() => {
+    if (data) {
+      const newStock = data.find((e) => {
+        console.log(e._id, product._id)
+        return e._id === product._id
+      })
+
+      if (newStock) setChanged(changed + newStock.countInStock)
+    }
+  }, [data])
 
   return (
     <StyledUser variants={animCondition()}>
@@ -93,9 +106,25 @@ const ProductDashboard = ({
         </p>
       </div>
       <div className='Stock'>
-        <p data-for='product-card-tooltip' data-tip={product.countInStock}>
-          {product.countInStock}
-        </p>
+        <div className='stockCont'>
+          <p data-for='product-card-tooltip' data-tip={product.countInStock}>
+            {product.countInStock}
+          </p>
+          <AnimatePresence>
+            {changed && (
+              <motion.span
+                key={changed}
+                variants={realtimeStockCounter}
+                animate='show'
+                initial='hidden'
+                exit='exit'
+                className='change'
+              >
+                -{changed}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
       <div className='Actions'>
         <div
@@ -154,6 +183,18 @@ const ProductDashboard = ({
 }
 
 const StyledUser = styled(motion.div)`
+  .stockCont {
+    position: relative;
+  }
+  .change {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(100%, -30%);
+    font-size: calc(0.65rem + 0.3vw);
+    color: #25da8e;
+    font-weight: 500;
+  }
   #deleting {
     cursor: not-allowed !important;
   }

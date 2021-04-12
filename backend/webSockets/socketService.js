@@ -27,8 +27,8 @@ class SocketService {
       if (body) this.io.emit(event, body)
       else this.io.emit(event)
     } else {
-      console.log('Rooms:', this.io.sockets.adapter.rooms)
-      this.io.to(room).emit(event)
+      if (body) this.io.to(room).emit(event, body)
+      else this.io.to(room).emit(event)
     }
   }
 }

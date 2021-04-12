@@ -14,6 +14,10 @@ import socket from './clientSocket/socket'
 import { userLogoutAction } from './actions/logout'
 import LoggingOut from './components/loggingYouOut'
 import { AnimatePresence } from 'framer-motion'
+import Shipping from './pages/Shipping'
+import Payment from './pages/Payment'
+import PlaceOrder from './pages/PlaceOrder'
+
 const Home = lazy(() => import('./pages/Home'))
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const Description = lazy(() => import('./pages/Description'))
@@ -24,9 +28,7 @@ const Verify = lazy(() => import('./pages/Verify'))
 const ChangeEmail = lazy(() => import('./pages/changeEmail'))
 
 const NotFound = lazy(() => import('./pages/notFound'))
-const Shipping = lazy(() => import('./pages/Shipping'))
-const Payment = lazy(() => import('./pages/Payment'))
-const PlaceOrder = lazy(() => import('./pages/PlaceOrder'))
+
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
 const ResetPassword = lazy(() => import('./pages/ResetPassword'))
 const OrderDetails = lazy(() => import('./pages/orderDetails'))

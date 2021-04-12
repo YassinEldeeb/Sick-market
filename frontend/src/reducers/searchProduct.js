@@ -13,6 +13,18 @@ const productSearchReducer = (state = initialState, action) => {
       }
     case 'PRODUCT_SEARCH_FAIL':
       return { ...state, error: action.payload, loading: false }
+    case 'UPDATE_SEARCH_PRODUCT_STOCK':
+      if (state.products) {
+        const products = state.products.map((e) => {
+          if (e._id === action.payload.id) {
+            e.countInStock = e.countInStock - action.payload.newStock
+          }
+          return e
+        })
+        return { ...state, products }
+      } else {
+        return state
+      }
     default:
       return state
   }

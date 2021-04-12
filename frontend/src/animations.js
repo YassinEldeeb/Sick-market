@@ -1,3 +1,22 @@
+export const realtimeStockCounter = {
+  hidden: {
+    opacity: 0,
+    y: '-20%',
+    x: '100%',
+  },
+  show: {
+    opacity: 1,
+    y: '-30%',
+    x: '100%',
+    transition: { duration: 0.5 },
+  },
+  exit: {
+    opacity: 0,
+    y: '-20%',
+    x: '100%',
+    transition: { duration: 0.3 },
+  },
+}
 export const popup = {
   hidden: {
     opacity: 0,
