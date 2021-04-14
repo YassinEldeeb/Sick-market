@@ -1,19 +1,19 @@
-import React, { useState, useRef, useEffect } from "react"
-import { useSelector, useDispatch } from "react-redux"
-import SlideBar from "../components/slidebar"
-import FilePondUpload from "../components/filePondUpload"
-import styled from "styled-components"
-import xSign from "../img/xSign.svg"
-import closedEye from "../img/closedEye.svg"
-import eye from "../img/eye.svg"
-import userProfileAction from "../actions/getProfile"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import userUpdateAction from "../actions/update"
-import deleteProfilePicAction from "../actions/deleteProfilePic"
-import { useLocation, useHistory } from "react-router-dom"
-import PopupMessage from "../components/PopupMessage"
-import { Link } from "react-router-dom"
+import React, { useState, useRef, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import SlideBar from '../components/slidebar'
+import FilePondUpload from '../components/filePondUpload'
+import styled from 'styled-components'
+import xSign from '../img/xSign.svg'
+import closedEye from '../img/closedEye.svg'
+import eye from '../img/eye.svg'
+import userProfileAction from '../actions/getProfile'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import userUpdateAction from '../actions/update'
+import deleteProfilePicAction from '../actions/deleteProfilePic'
+import { useLocation, useHistory } from 'react-router-dom'
+import PopupMessage from '../components/PopupMessage'
+import { Link } from 'react-router-dom'
 
 const EditProfile = () => {
   const inputRef = useRef(null)
@@ -28,26 +28,26 @@ const EditProfile = () => {
     success,
   } = useSelector((state) => state.userInfo)
   const userInfo = useSelector((state) => state.userInfo)
-  const [emailValue, setEmailValue] = useState("")
-  const [nameValue, setNameValue] = useState("")
-  const [passwordValue, setPasswordValue] = useState("")
+  const [emailValue, setEmailValue] = useState('')
+  const [nameValue, setNameValue] = useState('')
+  const [passwordValue, setPasswordValue] = useState('')
   const [show, setShow] = useState(false)
 
-  function truncate(str = "") {
-    return str.length > 15 ? str.substr(0, 15 - 1) + ".." : str
+  function truncate(str = '') {
+    return str.length > 15 ? str.substr(0, 15 - 1) + '..' : str
   }
 
   const location = useLocation()
   const history = useHistory()
 
   const dispatch = useDispatch()
-  const [error, setError] = useState("")
+  const [error, setError] = useState('')
 
   useEffect(() => {
     if (token) {
       dispatch(userProfileAction())
     } else {
-      history.push("/login")
+      history.push('/login')
     }
   }, [dispatch, history])
 
@@ -62,7 +62,7 @@ const EditProfile = () => {
     setError(null)
     setWarning(true)
     if (!isNaN(nameValue)) {
-      setError("Name must be alphabetical letters!")
+      setError('Name must be alphabetical letters!')
     } else {
       dispatch(
         userUpdateAction(
@@ -76,10 +76,10 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (updateError || updated || error) {
-      document.querySelector(".content").scroll({
+      document.querySelector('.content').scroll({
         top: 0,
         left: 0,
-        behavior: `${updated ? "smooth" : "auto"}`,
+        behavior: `${updated ? 'smooth' : 'auto'}`,
       })
     }
   }, [updateError, updated, error])
@@ -90,7 +90,7 @@ const EditProfile = () => {
   const imgSrcCondition = () => {
     if (
       userInfo.user.profilePicLink &&
-      userInfo.user.profilePicLink !== "cleared"
+      userInfo.user.profilePicLink !== 'cleared'
     ) {
       return userInfo.user.profilePicLink
     } else {
@@ -101,11 +101,11 @@ const EditProfile = () => {
   }
   useEffect(() => {
     if (!deleteProfilePicLoading) {
-      const img1 = document.querySelector(".profilePic img")
+      const img1 = document.querySelector('#profileIMG')
       if (img1) {
         img1.src = imgSrcCondition()
       }
-      const img2 = document.querySelector(".profile-mobile-pic img")
+      const img2 = document.querySelector('.profile-mobile-pic img')
       if (img2) {
         img2.src = imgSrcCondition()
       }
@@ -123,7 +123,7 @@ const EditProfile = () => {
   return (
     <StyledEdit
       onClick={(e) => {
-        if (e.target.classList.contains("slider-shadow") && slider2)
+        if (e.target.classList.contains('slider-shadow') && slider2)
           setSlider2(false)
       }}
     >
@@ -142,10 +142,10 @@ const EditProfile = () => {
 
       <div className='slider-Burger' onClick={() => setSlider2(!slider2)}>
         <span
-          className={`first-slider-burger ${slider2 ? "active" : ""}`}
+          className={`first-slider-burger ${slider2 ? 'active' : ''}`}
         ></span>
         <span
-          className={`third-slider-burger ${slider2 ? "active" : ""}`}
+          className={`third-slider-burger ${slider2 ? 'active' : ''}`}
         ></span>
       </div>
       <div className='content'>
@@ -161,8 +161,8 @@ const EditProfile = () => {
                   <button
                     onClick={removePictureHandler}
                     style={{
-                      background: `${deleteProfilePicLoading ? "#ff5555" : ""}`,
-                      color: `${deleteProfilePicLoading ? "white" : ""}`,
+                      background: `${deleteProfilePicLoading ? '#ff5555' : ''}`,
+                      color: `${deleteProfilePicLoading ? 'white' : ''}`,
                     }}
                   >
                     Default Avatar {deleteProfilePicLoading && <Loader />}
@@ -186,8 +186,8 @@ const EditProfile = () => {
                   onChange={(e) => setNameValue(e.target.value)}
                 />
                 <img
-                  onClick={() => setNameValue("")}
-                  style={{ display: `${nameValue.length ? "block" : "none"}` }}
+                  onClick={() => setNameValue('')}
+                  style={{ display: `${nameValue.length ? 'block' : 'none'}` }}
                   className='xSign1'
                   src={xSign}
                   alt='X icon'
@@ -198,7 +198,7 @@ const EditProfile = () => {
                   <div className='email'>
                     <label htmlFor='email'>Email Address</label>
                     <input
-                      onChange={() => "s"}
+                      onChange={() => 's'}
                       value={emailValue}
                       id='email'
                       type='text'
@@ -219,20 +219,20 @@ const EditProfile = () => {
                       onChange={(e) => setEmailValue(e.target.value)}
                     />
                     <img
-                      onClick={() => setEmailValue("")}
+                      onClick={() => setEmailValue('')}
                       style={{
-                        display: `${emailValue.length ? "block" : "none"}`,
+                        display: `${emailValue.length ? 'block' : 'none'}`,
                       }}
                       className='xSign2'
                       src={xSign}
                       alt='X icon'
                     />
                   </div>
-                  {user.status !== "Verified" && (
+                  {user.status !== 'Verified' && (
                     <div className='notVerified'>
                       <p>
                         Your Email isn't verified!, You can't order anything
-                        unless you go to{" "}
+                        unless you go to{' '}
                         <Link to={`/verify?redirect=/account/edit-profile`}>
                           Verify your Email.
                         </Link>
@@ -248,11 +248,11 @@ const EditProfile = () => {
                     ref={inputRef}
                     value={passwordValue}
                     id='password'
-                    type={`${show ? "text" : "password"}`}
+                    type={`${show ? 'text' : 'password'}`}
                     onChange={(e) => setPasswordValue(e.target.value)}
                   />
                   <img
-                    style={{ display: `${show ? "none" : "block"}` }}
+                    style={{ display: `${show ? 'none' : 'block'}` }}
                     className='eye eye1'
                     src={closedEye}
                     alt='closedEye'
@@ -266,7 +266,7 @@ const EditProfile = () => {
                     }}
                   />
                   <img
-                    style={{ display: `${!show ? "none" : "block"}` }}
+                    style={{ display: `${!show ? 'none' : 'block'}` }}
                     className='eye eye2'
                     src={eye}
                     alt='eye'
@@ -289,8 +289,8 @@ const EditProfile = () => {
       <div
         className='slider-shadow'
         style={{
-          pointerEvents: `${slider2 ? "all" : "none"}`,
-          background: `${slider2 ? "rgba(0, 0, 0, 0.2)" : "unset"}`,
+          pointerEvents: `${slider2 ? 'all' : 'none'}`,
+          background: `${slider2 ? 'rgba(0, 0, 0, 0.2)' : 'unset'}`,
         }}
       ></div>
     </StyledEdit>

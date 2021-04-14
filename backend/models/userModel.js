@@ -1,9 +1,9 @@
-import mongoose from "mongoose"
-import bcrypt from "bcryptjs"
-import validator from "validator"
-import jwt from "jsonwebtoken"
-import dotenv from "dotenv"
-import textSearch from "mongoose-partial-full-search"
+import mongoose from 'mongoose'
+import bcrypt from 'bcryptjs'
+import validator from 'validator'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+import textSearch from 'mongoose-partial-full-search'
 dotenv.config()
 
 const userSchema = mongoose.Schema(
@@ -15,6 +15,9 @@ const userSchema = mongoose.Schema(
       searchable: true,
     },
     profilePic: {
+      type: Buffer,
+    },
+    profilePicPreview: {
       type: Buffer,
     },
     availablePic: {
@@ -46,7 +49,7 @@ const userSchema = mongoose.Schema(
       trim: true,
       minlength: 8,
       validate(value) {
-        if (value.toLowerCase().includes("password")) {
+        if (value.toLowerCase().includes('password')) {
           throw new Error(
             "Password can't contain any sort of 'password' keyword"
           )
@@ -56,12 +59,12 @@ const userSchema = mongoose.Schema(
     rank: {
       type: String,
       required: true,
-      default: "user",
+      default: 'user',
       trim: true,
     },
     status: {
       type: String,
-      default: "pending",
+      default: 'pending',
     },
     validResetPassword: {
       type: Boolean,
@@ -84,10 +87,10 @@ const userSchema = mongoose.Schema(
   { timestamps: true }
 )
 
-userSchema.virtual("orders", {
-  ref: "Order",
-  localField: "_id",
-  foreignField: "user",
+userSchema.virtual('orders', {
+  ref: 'Order',
+  localField: '_id',
+  foreignField: 'user',
 })
 
 userSchema.methods.toJSON = function () {
@@ -104,7 +107,7 @@ userSchema.methods.toJSON = function () {
 
 userSchema.methods.generateToken = function () {
   const token = jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: "30 days",
+    expiresIn: '30 days',
   })
   return token
 }
@@ -114,7 +117,7 @@ userSchema.statics.findByCredentials = async function (email, password, type) {
     const user = await User.findOne({ email })
 
     if (!user) {
-      throw new Error("Incorrect Email or Password")
+      throw new Error('Incorrect Email or Password')
     }
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = user.generateToken()
@@ -123,12 +126,12 @@ userSchema.statics.findByCredentials = async function (email, password, type) {
       return { user, token: user.tokens[0].token }
     } else {
       if (password !== user.password && user.profilePicLink) {
-        throw new Error("Try Logging in with Google")
+        throw new Error('Try Logging in with Google')
       } else if (password !== user.password && !user.profilePicLink) {
         if (type) {
-          throw new Error("Email already Exists, Login below")
+          throw new Error('Email already Exists, Login below')
         } else {
-          throw new Error("Incorrect Email or Password")
+          throw new Error('Incorrect Email or Password')
         }
       }
     }
@@ -137,19 +140,19 @@ userSchema.statics.findByCredentials = async function (email, password, type) {
   }
 }
 
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
   const user = this
 
-  if (user.isModified("password")) {
+  if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, 8)
   }
   next()
 })
 
 userSchema.plugin(textSearch)
-userSchema.index({ name: "text" })
-userSchema.index({ email: "text" })
+userSchema.index({ name: 'text' })
+userSchema.index({ email: 'text' })
 
-const User = mongoose.model("User", userSchema)
+const User = mongoose.model('User', userSchema)
 
 export default User

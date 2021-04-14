@@ -184,7 +184,22 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
               exit='exit'
               className='card'
             >
-              <Scrollbars className='card-large-scrollable-content'>
+              <Scrollbars
+                renderTrackHorizontal={(props) => (
+                  <div {...props} className='track-horizontal-newView' />
+                )}
+                renderTrackVertical={(props) => (
+                  <div {...props} className='track-vertical-newView' />
+                )}
+                renderThumbHorizontal={(props) => (
+                  <div {...props} className='thumb-horizontal-newView' />
+                )}
+                renderThumbVertical={(props) => (
+                  <div {...props} className='thumb-vertical-newView' />
+                )}
+                renderView={(props) => <div {...props} className='newView' />}
+                className='card-large-scrollable-content'
+              >
                 <AnimatePresence>
                   {location.pathname.split('/')[4] === 'image' && (
                     <CropImg
@@ -275,6 +290,59 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  .newView {
+    height: 100% !important;
+    overflow: auto !important;
+    position: absolute;
+    inset: 0px;
+    margin-bottom: -20px !important;
+    margin-right: -8px !important;
+    display: grid;
+    place-items: center;
+    padding: calc(2.4rem + 1vw);
+    padding-bottom: 0rem;
+    border-radius: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+  }
+  .thumb-horizontal-newView {
+    position: relative;
+    display: block;
+    height: 100%;
+    cursor: pointer;
+    border-radius: inherit;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 0px;
+  }
+  .track-horizontal-newView {
+    position: absolute;
+    height: 6px;
+    right: 2px;
+    bottom: 2px;
+    left: 2px;
+    border-radius: 3px;
+  }
+
+  .track-vertical-newView {
+    position: absolute;
+    width: 6px;
+    right: 2px;
+    bottom: 2px;
+    top: 2px;
+    border-radius: 3px;
+  }
+  .thumb-vertical-newView {
+    position: relative;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    border-radius: inherit;
+    background-color: rgba(0, 0, 0, 0.2);
+    height: 135px;
+    transform: translateY(0px);
+  }
   .CloseModel {
     position: absolute;
     right: 3%;
@@ -339,21 +407,6 @@ const StyledUserAction = styled(motion.div)`
     &:hover {
       background: #505295;
     }
-  }
-  .addMoreMargin2 {
-    margin-bottom: -20px !important;
-    margin-right: -8px !important;
-    display: grid;
-    place-items: center;
-    padding: calc(2.4rem + 1vw);
-    padding-bottom: 0rem;
-    height: 100%;
-    border-radius: 20px;
-    overflow: auto !important;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: row;
   }
 
   .createSection {

@@ -34,6 +34,7 @@ const Product = ({
       }
     }
   }
+
   return (
     <StyledProduct className={`${providedClassName ? providedClassName : ''}`}>
       <Link
@@ -59,11 +60,15 @@ const Product = ({
 
         {type !== 'preview' && (
           <SmoothImg
-            contHeight={'calc((200px + 5vw) / 1.254901960784314)'}
+            contHeight={'calc(((200px + 5vw) - (0.5rem + 0.4vw))* 0.796875)'}
+            contHeightS={'calc(((90vw - (0.8rem + 0.4vw) * 2)) * 0.796875)'}
             width={'640px'}
             height={'510px'}
+            preLoaderId='preLoader'
+            loaderId='preloader2'
             src={data.image}
             alt='product'
+            tiny={data.tinyImage}
           />
         )}
       </Link>
@@ -87,6 +92,17 @@ const Product = ({
   )
 }
 const StyledProduct = styled.div`
+  #preLoader,
+  #preloader2 {
+    width: 640px;
+  }
+  #preloader2 {
+    height: auto !important;
+  }
+  #preLoader {
+    height: 100% !important;
+    width: 100% !important;
+  }
   .canvasPreview {
     width: 100% !important;
     height: unset !important;

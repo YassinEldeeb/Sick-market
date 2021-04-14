@@ -1,8 +1,7 @@
-import React from "react"
-import styled from "styled-components"
-import { Link } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import SmoothImg from "./smoothImgLoading"
+import React from 'react'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 const PlaceOrderItem = ({ img, productName, qty, price, id, isBuyNow }) => {
   const dispatch = useDispatch()
@@ -11,15 +10,15 @@ const PlaceOrderItem = ({ img, productName, qty, price, id, isBuyNow }) => {
     <StyledItem>
       <div className='firstDiv'>
         <Link
-          onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
-          to={`/products/${id}${isBuyNow ? "?order=buyNow" : ""}`}
+          onClick={() => dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })}
+          to={`/products/${id}${isBuyNow ? '?order=buyNow' : ''}`}
         >
           <img src={img} alt='product' />
         </Link>
         <h1>
           <Link
-            onClick={() => dispatch({ type: "PRODUCT_DETAIL_REQUEST" })}
-            to={`/products/${id}${isBuyNow ? "?order=buyNow" : ""}`}
+            onClick={() => dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })}
+            to={`/products/${id}${isBuyNow ? '?order=buyNow' : ''}`}
           >
             {productName}
           </Link>

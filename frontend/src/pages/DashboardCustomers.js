@@ -178,24 +178,21 @@ const DashboardCustomers = () => {
   const [scrolled, setScrolled] = useState(0)
 
   useEffect(() => {
-    const container = document.querySelector(
-      '.large-scrollable-content div:first-child'
-    )
-    container.addEventListener(
-      'scroll',
-      throttle(() => {
-        setScrolled(container.scrollTop)
-      }, 100)
-    )
+    const container = document.querySelector('.view')
+    if (container)
+      container.addEventListener(
+        'scroll',
+        throttle(() => {
+          setScrolled(container.scrollTop)
+        }, 100)
+      )
   }, [])
 
   useEffect(() => {
-    const container = document.querySelector(
-      '.large-scrollable-content div:first-child'
-    )
-    if (location.pathname.split('/')[3])
+    const container = document.querySelector('.view')
+    if (location.pathname.split('/')[3] && container)
       container.classList.add('preventScrolling')
-    else container.classList.remove('preventScrolling')
+    else if (container) container.classList.remove('preventScrolling')
   }, [location.pathname])
 
   useEffect(() => {

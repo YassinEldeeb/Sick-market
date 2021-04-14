@@ -458,18 +458,24 @@ const uploadProfilePic = asyncHandler(async (req, res) => {
     .resize({ width: 250, height: 250 })
     .png()
     .toBuffer()
+  const bufferTiny = await sharp(req.file.buffer)
+    .resize({ width: 20, height: 20 })
+    .png()
+    .toBuffer()
 
   req.user.availablePic = true
   if (req.user.profilePicLink) {
     req.user.profilePicLink = 'cleared'
   }
   req.user.profilePic = buffer
+  req.user.profilePicPreview = bufferTiny
   await req.user.save()
   res.send()
 })
 // DELETE Delete avatar - /api/users/me/profilePic
 const deleteProfilePic = asyncHandler(async (req, res) => {
   req.user.profilePic = null
+  req.user.profilePicPreview = null
   req.user.availablePic = false
   if (req.user.profilePicLink) {
     req.user.profilePicLink = 'cleared'
@@ -492,6 +498,22 @@ const serveProfilePic = asyncHandler(async (req, res) => {
   res.set('Content-Type', 'image/png')
 
   res.send(user.profilePic)
+})
+
+// GET get Tiny Avatar - /api/users/profilePic/:id
+const serveTinyProfilePic = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id)
+
+  if (!user || !user.profilePic) {
+    fs.readFile('./backend/images/defaultAvatarTiny.png', (err, data) => {
+      res.set('Content-Type', 'image/png')
+      res.send(data)
+    })
+    return
+  }
+  res.set('Content-Type', 'image/png')
+
+  res.send(user.profilePicPreview)
 })
 
 // POST Logout user - /api/users/logout
@@ -652,4 +674,5 @@ export {
   canReviewUser,
   canOrderUser,
   updateUserRank,
+  serveTinyProfilePic,
 }

@@ -19,6 +19,7 @@ import canReview from './reducers/canReview'
 import editRank from './reducers/editRank'
 import deleteProduct from './reducers/deleteProduct'
 import productSearchReducer from './reducers/searchProduct'
+import loadedImagesReducer from './reducers/loadedImages'
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -41,6 +42,7 @@ const reducers = combineReducers({
   editRank,
   deleteProduct,
   productSearch: productSearchReducer,
+  loadedImages: loadedImagesReducer,
 })
 let initialState
 

@@ -17,8 +17,8 @@ import { AnimatePresence } from 'framer-motion'
 import Shipping from './pages/Shipping'
 import Payment from './pages/Payment'
 import PlaceOrder from './pages/PlaceOrder'
+import Home from './pages/Home'
 
-const Home = lazy(() => import('./pages/Home'))
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const Description = lazy(() => import('./pages/Description'))
 const Cart = lazy(() => import('./pages/Cart'))
@@ -78,6 +78,7 @@ const App = () => {
       setRegister(true)
     }
   }, [])
+
   return (
     <div className='App' id={`${logoutLoading ? 'logoutLoading' : ''}`}>
       <BrowserRouter>

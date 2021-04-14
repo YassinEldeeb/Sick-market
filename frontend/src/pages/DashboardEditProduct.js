@@ -31,12 +31,8 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
   const [scrollableContent, setScrollableContent] = useState(null)
 
   useEffect(() => {
-    const firstChild = document.querySelector(
-      '.card-big-large-scrollable-content div:first-child'
-    )
-    const thirdChild = document.querySelectorAll(
-      '.card-big-large-scrollable-content div:last-child'
-    )
+    const firstChild = document.querySelector('.editView')
+    const scrollbarThumb = document.querySelector('.track-vertical-editView')
     if (firstChild) {
       setScrollableContent(firstChild)
       if (
@@ -47,17 +43,16 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       } else {
         firstChild.classList.remove('disableScrolling')
       }
-      firstChild.classList.add('addMoreMargin2')
       setLoaded(false)
     }
     if (
-      thirdChild[thirdChild.length - 2] &&
+      scrollbarThumb &&
       location.pathname.split('/')[3] === 'edit' &&
       location.pathname.split('/')[5] === 'image'
     ) {
-      thirdChild[thirdChild.length - 2].style.display = 'none'
-    } else if (thirdChild[thirdChild.length - 2]) {
-      thirdChild[thirdChild.length - 2].style.display = 'block'
+      scrollbarThumb.style.display = 'none'
+    } else if (scrollbarThumb) {
+      scrollbarThumb.style.display = 'block'
     }
   }, [location.pathname, loaded])
 
@@ -243,6 +238,19 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
               className='card'
             >
               <Scrollbars
+                renderTrackHorizontal={(props) => (
+                  <div {...props} className='track-horizontal-editView' />
+                )}
+                renderTrackVertical={(props) => (
+                  <div {...props} className='track-vertical-editView' />
+                )}
+                renderThumbHorizontal={(props) => (
+                  <div {...props} className='thumb-horizontal-editView' />
+                )}
+                renderThumbVertical={(props) => (
+                  <div {...props} className='thumb-vertical-editView' />
+                )}
+                renderView={(props) => <div {...props} className='editView' />}
                 onLoad={() => setLoaded(true)}
                 className='card-big-large-scrollable-content'
               >
@@ -398,6 +406,59 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  .editView {
+    height: 100% !important;
+    overflow: auto !important;
+    position: absolute;
+    inset: 0px;
+    margin-bottom: -20px !important;
+    margin-right: -8px !important;
+    display: grid;
+    place-items: center;
+    padding: calc(2.4rem + 1vw);
+    padding-bottom: 0rem;
+    border-radius: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+  }
+  .thumb-horizontal-editView {
+    position: relative;
+    display: block;
+    height: 100%;
+    cursor: pointer;
+    border-radius: inherit;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 0px;
+  }
+  .track-horizontal-editView {
+    position: absolute;
+    height: 6px;
+    right: 2px;
+    bottom: 2px;
+    left: 2px;
+    border-radius: 3px;
+  }
+
+  .track-vertical-editView {
+    position: absolute;
+    width: 6px;
+    right: 2px;
+    bottom: 2px;
+    top: 2px;
+    border-radius: 3px;
+  }
+  .thumb-vertical-editView {
+    position: relative;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    border-radius: inherit;
+    background-color: rgba(0, 0, 0, 0.2);
+    height: 135px;
+    transform: translateY(0px);
+  }
   .CloseModel {
     position: absolute;
     right: 3%;
@@ -544,21 +605,7 @@ const StyledUserAction = styled(motion.div)`
       background: #505295;
     }
   }
-  .addMoreMargin2 {
-    margin-bottom: -20px !important;
-    margin-right: -8px !important;
-    display: grid;
-    place-items: center;
-    padding: calc(2.4rem + 1vw);
-    padding-bottom: 0rem;
-    height: 100%;
-    border-radius: 20px;
-    overflow: auto !important;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: row;
-  }
+
   .createSection {
     display: flex;
     justify-content: flex-start;

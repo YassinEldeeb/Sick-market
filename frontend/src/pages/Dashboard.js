@@ -64,18 +64,8 @@ const Dashboard = ({ pageContent }) => {
   const history = useHistory()
 
   useEffect(() => {
-    const firstChild = document.querySelector(
-      '.large-scrollable-content div:first-child'
-    )
-    const firstChild2 = document.querySelector(
-      '.scrollable.dashboardTabs div:first-child'
-    )
-    if (firstChild && !firstChild.classList.contains('addMoreMargin')) {
-      firstChild.classList.add('addMoreMargin')
-    }
-    if (firstChild2 && !firstChild2.classList.contains('addMoreMargin')) {
-      firstChild2.classList.add('addMoreMargin')
-    }
+    const firstChild = document.querySelector('.view')
+
     if (!location.pathname.split('/')[3]) {
       if (!lastLocation || !lastLocation.pathname.split('/')[3])
         firstChild.scroll({
@@ -99,7 +89,7 @@ const Dashboard = ({ pageContent }) => {
     ) {
       dashboardUsers.loading = true
 
-      const content = document.querySelector('.content div:first-child')
+      const content = document.querySelector('.view')
       if (content)
         content.scroll({
           top: 0,
@@ -111,9 +101,7 @@ const Dashboard = ({ pageContent }) => {
   }, [location.pathname, lastLocation])
 
   useEffect(() => {
-    const dashboardTabs = document.querySelector(
-      '.dashboardTabs div:first-child'
-    )
+    const dashboardTabs = document.querySelector('.view2')
     if (dashboardTabs)
       dashboardTabs.scroll({
         top: 0,
@@ -142,9 +130,7 @@ const Dashboard = ({ pageContent }) => {
     }
 
     if (location.pathname.split('/')[3] === 'add') {
-      const firstChild = document.querySelector(
-        '.large-scrollable-content div:first-child'
-      )
+      const firstChild = document.querySelector('.view')
       if (firstChild) firstChild.style.overflowY = 'hidden !important'
     }
   }, [location.pathname])
@@ -165,7 +151,10 @@ const Dashboard = ({ pageContent }) => {
   return (
     <StyledDashboard>
       <div className='sidebar'>
-        <Scrollbars className='scrollable dashboardTabs'>
+        <Scrollbars
+          renderView={(props) => <div {...props} className='view2' />}
+          className='scrollable dashboardTabs'
+        >
           <DashboardTab
             providedClassName='backHome'
             text={'Home'}
@@ -192,6 +181,19 @@ const Dashboard = ({ pageContent }) => {
         </Scrollbars>
       </div>
       <Scrollbars
+        renderTrackHorizontal={(props) => (
+          <div {...props} className='track-horizontal' />
+        )}
+        renderTrackVertical={(props) => (
+          <div {...props} className='track-vertical' />
+        )}
+        renderThumbHorizontal={(props) => (
+          <div {...props} className='thumb-horizontal' />
+        )}
+        renderThumbVertical={(props) => (
+          <div {...props} className='thumb-vertical' />
+        )}
+        renderView={(props) => <div {...props} className='view' />}
         className='content large-scrollable-content'
         marginWidth='-20px'
         marginHeight='-20px'
@@ -203,9 +205,50 @@ const Dashboard = ({ pageContent }) => {
 }
 
 const StyledDashboard = styled.div`
-  .addMoreMargin {
+  .view,
+  .view2 {
     height: 100% !important;
     overflow: auto !important;
+    position: absolute;
+    inset: 0px;
+    margin-right: -8px;
+    margin-bottom: -8px;
+  }
+  .thumb-horizontal {
+    position: relative;
+    display: block;
+    height: 100%;
+    cursor: pointer;
+    border-radius: inherit;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 0px;
+  }
+  .track-horizontal {
+    position: absolute;
+    height: 6px;
+    right: 2px;
+    bottom: 2px;
+    left: 2px;
+    border-radius: 3px;
+  }
+
+  .track-vertical {
+    position: absolute;
+    width: 6px;
+    right: 2px;
+    bottom: 2px;
+    top: 2px;
+    border-radius: 3px;
+  }
+  .thumb-vertical {
+    position: relative;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    border-radius: inherit;
+    background-color: rgba(0, 0, 0, 0.2);
+    height: 135px;
+    transform: translateY(0px);
   }
   .preventScrolling {
     overflow-y: hidden !important;

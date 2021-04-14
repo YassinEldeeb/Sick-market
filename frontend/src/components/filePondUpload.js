@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
-import { FilePond, registerPlugin } from "react-filepond"
-import "filepond/dist/filepond.min.css"
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation"
-import FilePondPluginImagePreview from "filepond-plugin-image-preview"
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-import FilePondPluginImageCrop from "filepond-plugin-image-crop"
+import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { FilePond, registerPlugin } from 'react-filepond'
+import 'filepond/dist/filepond.min.css'
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size'
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
+import FilePondPluginImageCrop from 'filepond-plugin-image-crop'
 
 registerPlugin(
   FilePondPluginFileValidateSize,
@@ -25,7 +25,7 @@ const FilePondUpload = () => {
   const filesState = () => {
     if (user) {
       if (user.availablePic) {
-        if (user.profilePicLink && user.profilePicLink !== "cleared") {
+        if (user.profilePicLink && user.profilePicLink !== 'cleared') {
           return [{ source: `${user.profilePicLink}` }]
         } else {
           return [{ source: `/api/users/profilePic/${user._id}` }]
@@ -110,11 +110,11 @@ const FilePondUpload = () => {
                   options
                 ) => {
                   const formData = new FormData()
-                  formData.append("profilePic", file)
+                  formData.append('profilePic', file)
 
                   const request = new XMLHttpRequest()
-                  request.open("POST", "/api/users/me/profilePic")
-                  request.setRequestHeader("Authorization", `Bearer ${token}`)
+                  request.open('POST', '/api/users/me/profilePic')
+                  request.setRequestHeader('Authorization', `Bearer ${token}`)
                   request.upload.onprogress = (e) => {
                     progress(e.lengthComputable, e.loaded, e.total)
                   }
@@ -124,7 +124,7 @@ const FilePondUpload = () => {
                       load(request.responseText)
                     } else {
                       // Can call the error method if something is wrong, should exit after
-                      error("oh no")
+                      error('oh no')
                     }
                   }
                   request.send(formData)
@@ -143,16 +143,16 @@ const FilePondUpload = () => {
         }
         onprocessfile={() => {
           dispatch({
-            type: "PROFILE_PIC_UPLOADED",
+            type: 'PROFILE_PIC_UPLOADED',
           })
 
-          document.querySelector(".profilePic img").src =
-            user.profilePicLink && user.profilePicLink !== "cleared"
+          document.querySelector('#profileIMG').src =
+            user.profilePicLink && user.profilePicLink !== 'cleared'
               ? user.profilePicLink
               : `/api/users/profilePic/${user._id}?` + new Date().getTime()
 
-          document.querySelector(".profile-mobile-pic img").src =
-            user.profilePicLink && user.profilePicLink !== "cleared"
+          document.querySelector('.profile-mobile-pic img').src =
+            user.profilePicLink && user.profilePicLink !== 'cleared'
               ? user.profilePicLink
               : `/api/users/profilePic/${user._id}?` + new Date().getTime()
         }}

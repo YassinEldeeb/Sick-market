@@ -90,6 +90,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 height={'510px'}
                 src={product.image}
                 alt='product'
+                tiny={product.tinyImage}
               />
               <div className='bottomInfo'>
                 <h3>
@@ -229,9 +230,10 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   )
 }
 const StyledDetail = styled.div`
-  .lazyImgLoader {
+  .lazyImgLoader,
+  .lazyImgLoaderDiv {
     width: 640px !important;
-    height: 510px !important;
+    height: auto !important;
     min-width: 100% !important;
     min-height: 100% !important;
   }

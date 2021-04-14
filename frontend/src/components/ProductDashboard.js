@@ -79,12 +79,14 @@ const ProductDashboard = ({
       </div>
       <div className='name'>
         <SmoothImg
+          providedClassName='imgCont'
           width={'52px'}
           height={'41.5px'}
           loaderId='loaderImg'
           contWidth={`max-content`}
           src={product.image}
           alt=''
+          tiny={product.tinyImage}
         />
         <p data-for='product-card-tooltip' data-tip={product.name}>
           {product.name}
@@ -183,6 +185,9 @@ const ProductDashboard = ({
 }
 
 const StyledUser = styled(motion.div)`
+  .imgCont {
+    min-width: 52px !important;
+  }
   .stockCont {
     position: relative;
   }

@@ -1,7 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import Product from '../models/productModel.js'
 import fs from 'fs'
-import { fileURLToPath } from 'url'
 import path, { join } from 'path'
 import multer from 'multer'
 import sharp from 'sharp'
@@ -28,6 +27,10 @@ const getProducts = asyncHandler(async (req, res) => {
   } else if (req.query.topSoldStocks) {
     sort = {
       paidStock: req.query.topSoldStocks === 'highest' ? -1 : 1,
+    }
+  } else if (req.query.stock) {
+    sort = {
+      countInStock: req.query.stock === 'highest' ? -1 : 1,
     }
   }
 
@@ -63,9 +66,11 @@ const deleteProduct = asyncHandler(async (req, res) => {
   if (product) {
     if (
       product.image !== '/uploads/no.jpg' &&
-      fs.existsSync(join(__dirname, product.image))
+      fs.existsSync(join(__dirname, product.image)) &&
+      fs.existsSync(join(__dirname, product.tinyImage))
     ) {
       fs.unlinkSync(join(__dirname, product.image))
+      fs.unlinkSync(join(__dirname, product.tinyImage))
       console.log('Image is Removed')
     }
 
@@ -120,6 +125,7 @@ const addProduct = asyncHandler(async (req, res) => {
   }
 
   let image
+  let tinyImage
   if (req.file) {
     fs.access('uploads/', (err) => {
       if (err) {
@@ -132,12 +138,18 @@ const addProduct = asyncHandler(async (req, res) => {
       '-' +
       Date.now() +
       path.extname(req.file.originalname).toLowerCase()
+
     image = `/uploads/${fileName}`
+    tinyImage = `/uploads/Tiny-${fileName}`
     await sharp(req.file.buffer)
       .resize({ width: 640, height: 510 })
       .toFile('uploads/' + fileName)
+    await sharp(req.file.buffer)
+      .resize({ width: 30, height: 24 })
+      .toFile('uploads/' + `Tiny-${fileName}`)
   } else {
     image = '/uploads/no.jpg'
+    tinyImage = '/uploads/tinyNo.jpg'
   }
   const newProduct = new Product({
     name,
@@ -149,6 +161,7 @@ const addProduct = asyncHandler(async (req, res) => {
     qtyPerUser,
     image,
     user: req.user._id,
+    tinyImage,
   })
   await newProduct.save()
   const newPopulatedProduct = await Product.findOne(newProduct._id).populate(
@@ -176,6 +189,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   } = req.body
 
   let finalImage
+  let tinyImage
   if (req.file) {
     fs.access('uploads/', (err) => {
       if (err) {
@@ -188,19 +202,26 @@ const updateProduct = asyncHandler(async (req, res) => {
       '-' +
       Date.now() +
       path.extname(req.file.originalname).toLowerCase()
+
     finalImage = `/uploads/${fileName}`
+    tinyImage = `/uploads/Tiny-${fileName}`
     if (
       product.image !== '/uploads/no.jpg' &&
       fs.existsSync(join(__dirname, product.image))
     ) {
       fs.unlinkSync(join(__dirname, product.image))
+      fs.unlinkSync(join(__dirname, product.tinyImage))
       console.log('Image is Removed')
     }
     await sharp(req.file.buffer)
       .resize({ width: 640, height: 510 })
       .toFile('uploads/' + fileName)
+    await sharp(req.file.buffer)
+      .resize({ width: 30, height: 24 })
+      .toFile('uploads/' + `Tiny-${fileName}`)
   } else {
     finalImage = product.image
+    finalImage = product.tinyImage
   }
   if (image === 'no') {
     if (
@@ -208,6 +229,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       fs.existsSync(join(__dirname, product.image))
     ) {
       fs.unlinkSync(join(__dirname, product.image))
+      fs.unlinkSync(join(__dirname, product.tinyImage))
       console.log('Image is Removed')
       finalImage = '/uploads/no.jpg'
     }
@@ -221,6 +243,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   product.countInStock = countInStock ? countInStock : product.countInStock
   product.qtyPerUser = qtyPerUser ? qtyPerUser : product.qtyPerUser
   product.image = finalImage
+  product.tinyImage = tinyImage
 
   product.lastUpdated = new Date()
 

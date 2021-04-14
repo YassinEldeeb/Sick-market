@@ -28,6 +28,7 @@ import add from '../img/addIcon.svg'
 import { useRef } from 'react'
 import qs from 'qs'
 import searchProducts from '../actions/searchProduct'
+import ReactCustomScrollbars from 'react-custom-scrollbars'
 
 const DashboardProducts = () => {
   Object.size = function (obj) {
@@ -98,9 +99,7 @@ const DashboardProducts = () => {
   const [scrolled, setScrolled] = useState(0)
 
   useEffect(() => {
-    const container = document.querySelector(
-      '.large-scrollable-content div:first-child'
-    )
+    const container = document.querySelector('.view')
     if (container) {
       container.addEventListener(
         'scroll',
@@ -112,9 +111,7 @@ const DashboardProducts = () => {
   }, [])
 
   useEffect(() => {
-    const container = document.querySelector(
-      '.large-scrollable-content div:first-child'
-    )
+    const container = document.querySelector('.view')
 
     if (container) {
       if (location.pathname.split('/')[3]) container.style.overflowY = 'hidden'
@@ -216,6 +213,7 @@ const DashboardProducts = () => {
     'Rating',
     'Selling by qty',
     'Selling by value',
+    'Stock',
   ])
   const [sortValueTypes, setSortValueTypes] = useState(['Newest', 'Oldest'])
 
@@ -259,7 +257,6 @@ const DashboardProducts = () => {
     switch (sortValue) {
       case 'Date':
         setSortValueTypes(['Newest', 'Oldest'])
-
         setSortType(
           sortTypeFromSearch && !changedValue ? sortTypeFromSearch : 'Newest'
         )
@@ -283,6 +280,12 @@ const DashboardProducts = () => {
         )
         break
       case 'Selling by value':
+        setSortValueTypes(['Highest', 'Lowest'])
+        setSortType(
+          sortTypeFromSearch && !changedValue ? sortTypeFromSearch : 'Highest'
+        )
+        break
+      case 'Stock':
         setSortValueTypes(['Highest', 'Lowest'])
         setSortType(
           sortTypeFromSearch && !changedValue ? sortTypeFromSearch : 'Highest'
@@ -368,9 +371,7 @@ const DashboardProducts = () => {
     actionsInfoStorage !== null ? JSON.parse(actionsInfoStorage) : true
   )
   useEffect(() => {
-    const container = document.querySelector(
-      '.large-scrollable-content div:first-child'
-    )
+    const container = document.querySelector('.view')
     if (container) {
       if (
         deleteAsking ||
@@ -391,7 +392,7 @@ const DashboardProducts = () => {
       !brand.length ||
       !category.length
     ) {
-      let baseURL = `?${sortValue}=${sortType.toLowerCase()}`
+      let baseURL = `?${sortValue}=${sortType}`
 
       if (reset !== 'all') {
         if (brand && reset !== 'brand') baseURL += `&brand=${brand}`
@@ -431,6 +432,8 @@ const DashboardProducts = () => {
             return 'topSoldStocks'
           case 'Selling by value':
             return 'topSelling'
+          case 'Stock':
+            return 'stock'
         }
       }
 
@@ -457,7 +460,12 @@ const DashboardProducts = () => {
       const categoryValue = searches.category ? searches.category : null
       if (!searches.search && !loading && Object.size(searches)) {
         dispatch(
-          productListAction(sortValue, sortType, brandValue, categoryValue)
+          productListAction(
+            sortValue,
+            sortType.toLowerCase(),
+            brandValue,
+            categoryValue
+          )
         )
       }
     }
@@ -646,19 +654,21 @@ const DashboardProducts = () => {
                                     <img src={arrow} />
                                     {openType && (
                                       <div className='sortValueDropDown selectDropDown'>
-                                        {sortValues.map((e) => (
-                                          <h3
-                                            className={`${
-                                              sortValue === e ? 'active' : ''
-                                            }`}
-                                            onClick={(e) => {
-                                              setSortValue(e.target.innerText)
-                                              setChangedValue(true)
-                                            }}
-                                          >
-                                            {e}
-                                          </h3>
-                                        ))}
+                                        <ReactCustomScrollbars>
+                                          {sortValues.map((e) => (
+                                            <h3
+                                              className={`${
+                                                sortValue === e ? 'active' : ''
+                                              }`}
+                                              onClick={(e) => {
+                                                setSortValue(e.target.innerText)
+                                                setChangedValue(true)
+                                              }}
+                                            >
+                                              {e}
+                                            </h3>
+                                          ))}
+                                        </ReactCustomScrollbars>
                                       </div>
                                     )}
                                   </div>
@@ -984,19 +994,27 @@ const StyledOrders = styled(motion.div)`
     position: relative;
 
     .selectDropDown {
+      display: grid;
       z-index: 1;
       position: absolute;
       left: 0;
       bottom: 0;
       width: max-content;
-      height: max-content;
+      height: 28vh;
+      min-height: 6rem;
+      max-height: max-content;
       transform: translate(0, 105%);
       background: #4b4d8b;
       box-shadow: rgba(29, 32, 62, 0.42) 0px 2px 10px;
       border-radius: 7px;
       overflow: hidden;
+      overflow-y: auto;
       padding: 0.3rem;
       cursor: auto;
+      width: 100%;
+      div:first-child {
+        align-self: stretch;
+      }
       h3 {
         padding: 0.4rem 0.6rem;
         font-weight: 400;

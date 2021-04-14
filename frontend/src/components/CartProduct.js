@@ -23,6 +23,7 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
         onClick={() => dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })}
       >
         <SmoothImg
+          tiny={product.tinyImage}
           contWidth={'10vw'}
           contWidthMobile={'20vw'}
           width={'100%'}

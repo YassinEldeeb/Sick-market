@@ -1,12 +1,12 @@
-import React, { useEffect } from "react"
-import Product from "../components/Product"
-import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux"
-import { productListAction } from "../actions/products"
-import Loader from "../components/loader"
-import Message from "../components/message"
+import React, { useEffect } from 'react'
+import Product from '../components/Product'
+import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import { productListAction } from '../actions/products'
+import Loader from '../components/loader'
+import Message from '../components/message'
 
-const ProductList = ({ setScrolled }) => {
+const ProductList = ({ setScrolled, loadedImages, setLoadedImages }) => {
   const dispatch = useDispatch()
 
   const { products, error, loading } = useSelector((state) => state.productList)
@@ -14,7 +14,6 @@ const ProductList = ({ setScrolled }) => {
   useEffect(() => {
     if (!products) dispatch(productListAction())
   }, [dispatch])
-
   return (
     <StyledList>
       <h1 className='title'>Latest Products</h1>
@@ -29,16 +28,16 @@ const ProductList = ({ setScrolled }) => {
       ) : error ? (
         <Message
           msg={
-            error.includes("timed out")
-              ? "Network Error"
-              : error.includes("mongo")
-              ? "Server Error"
+            error.includes('timed out')
+              ? 'Network Error'
+              : error.includes('mongo')
+              ? 'Server Error'
               : error
           }
           type='error'
         />
       ) : (
-        ""
+        ''
       )}
     </StyledList>
   )

@@ -1,5 +1,5 @@
-import express from "express"
-import multer from "multer"
+import express from 'express'
+import multer from 'multer'
 import {
   getUser,
   getProfile,
@@ -23,8 +23,9 @@ import {
   canReviewUser,
   canOrderUser,
   updateUserRank,
-} from "../controllers/usersController.js"
-import { protect, admin } from "../middleware/authMiddleware.js"
+  serveTinyProfilePic,
+} from '../controllers/usersController.js'
+import { protect, admin } from '../middleware/authMiddleware.js'
 
 const userRouter = express.Router()
 const upload = multer({
@@ -33,47 +34,48 @@ const upload = multer({
   },
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-      return cb(new Error("Please provide an image"))
+      return cb(new Error('Please provide an image'))
     }
     cb(undefined, true)
   },
 })
 
-userRouter.post("/", registerUser)
-userRouter.get("/", protect, admin, getAllUsers)
-userRouter.post("/search", protect, admin, searchUsers)
-userRouter.post("/login", getUser)
-userRouter.post("/googleOauth", continueWithGoogle)
-userRouter.get("/profile", protect, getProfile)
-userRouter.patch("/profile", protect, updateProfile)
+userRouter.post('/', registerUser)
+userRouter.get('/', protect, admin, getAllUsers)
+userRouter.post('/search', protect, admin, searchUsers)
+userRouter.post('/login', getUser)
+userRouter.post('/googleOauth', continueWithGoogle)
+userRouter.get('/profile', protect, getProfile)
+userRouter.patch('/profile', protect, updateProfile)
 
 userRouter.post(
-  "/me/profilePic",
+  '/me/profilePic',
   protect,
-  upload.single("profilePic"),
+  upload.single('profilePic'),
   uploadProfilePic
 )
-userRouter.get("/profilePic/:id", serveProfilePic)
-userRouter.delete("/me/profilePic", protect, deleteProfilePic)
+userRouter.get('/profilePic/:id', serveProfilePic)
+userRouter.get('/profilePic/tiny/:id', serveTinyProfilePic)
+userRouter.delete('/me/profilePic', protect, deleteProfilePic)
 
-userRouter.post("/logout", protect, logoutUser)
+userRouter.post('/logout', protect, logoutUser)
 
-userRouter.post("/logoutAll", protect, logoutAllUsers)
+userRouter.post('/logoutAll', protect, logoutAllUsers)
 
-userRouter.post("/checkToken", protect, checkToken)
+userRouter.post('/checkToken', protect, checkToken)
 
-userRouter.post("/getSecurityCode", protect, getSecurityCode)
+userRouter.post('/getSecurityCode', protect, getSecurityCode)
 
-userRouter.get("/getNewSecurityCode", protect, getNewSecurityCode)
+userRouter.get('/getNewSecurityCode', protect, getNewSecurityCode)
 
-userRouter.post("/resetPasswordEmail", getResetLink)
+userRouter.post('/resetPasswordEmail', getResetLink)
 
-userRouter.post("/resetPassword", resetPassword)
+userRouter.post('/resetPassword', resetPassword)
 
-userRouter.get("/:id", protect, admin, getUserById)
-userRouter.delete("/:id", protect, admin, deleteUser)
-userRouter.post("/canReview/:id", protect, admin, canReviewUser)
-userRouter.post("/canOrder/:id", protect, admin, canOrderUser)
-userRouter.post("/:id/rank", protect, admin, updateUserRank)
+userRouter.get('/:id', protect, admin, getUserById)
+userRouter.delete('/:id', protect, admin, deleteUser)
+userRouter.post('/canReview/:id', protect, admin, canReviewUser)
+userRouter.post('/canOrder/:id', protect, admin, canOrderUser)
+userRouter.post('/:id/rank', protect, admin, updateUserRank)
 
 export default userRouter

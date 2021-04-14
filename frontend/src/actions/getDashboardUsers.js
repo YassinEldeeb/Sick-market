@@ -1,9 +1,6 @@
 import axios from 'axios'
 
-const getDashboardUsersAction = (filterValue, sorted) => async (
-  dispatch,
-  getState
-) => {
+const getDashboardUsersAction = (filterValue) => async (dispatch, getState) => {
   try {
     dispatch({
       type: 'GET_DASHBOARD_USERS_REQUEST',

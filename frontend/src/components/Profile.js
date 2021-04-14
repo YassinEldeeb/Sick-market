@@ -63,6 +63,7 @@ const Profile = () => {
                 height={'100%'}
                 src={imgSrcCondition()}
                 alt=''
+                tiny={`/api/users/profilePic/tiny/${userInfo.user._id}`}
               />
             </div>
             {userInfo.user.rank && userInfo.user.rank !== 'user' && (
