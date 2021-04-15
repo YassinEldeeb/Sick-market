@@ -11,7 +11,7 @@ const Home = ({ scrolled, setScrolled }) => {
   }, [scrolled])
   return (
     <>
-      <Meta />
+      <Meta title='Welcome to Sick Market' ogTitle='Welcome to Sick Market' />
       <ProductList setScrolled={setScrolled} />
     </>
   )

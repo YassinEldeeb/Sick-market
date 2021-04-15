@@ -11,14 +11,12 @@ import smallX from '../img/smallX.svg'
 import { useLastLocation } from 'react-router-last-location'
 import { throttle } from 'underscore'
 import socket from '../clientSocket/socket'
-import { useInView } from 'react-intersection-observer'
 import ConfirmPopup from '../components/confirmPopup'
 import ProductDashboard from '../components/ProductDashboard'
 import { useDispatch, useSelector } from 'react-redux'
 import deleteProduct from '../actions/deleteProduct'
 import DashboardNewProduct from './DashboardNewProduct'
 import DashboardEditProduct from './DashboardEditProduct'
-import filter from '../img/filter.svg'
 import sort from '../img/sort.svg'
 import connect from '../img/connect.svg'
 import Input from '../components/DashboardInput'
@@ -29,6 +27,10 @@ import { useRef } from 'react'
 import qs from 'qs'
 import searchProducts from '../actions/searchProduct'
 import ReactCustomScrollbars from 'react-custom-scrollbars'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import infiniteScrollProducts from '../actions/infiniteScrollProducts'
+import infiniteScrollProductsSearched from '../actions/infiniteScrollSearchedProducts'
+import { useInView } from 'react-intersection-observer'
 
 const DashboardProducts = () => {
   Object.size = function (obj) {
@@ -126,19 +128,6 @@ const DashboardProducts = () => {
     popups.forEach((e) => (e.style.top = `${scrolled}px`))
     cardCont.forEach((e) => (e.style.top = `${scrolled}px`))
   }, [scrolled])
-
-  const { user: userInfo } = useSelector((state) => state.userInfo)
-
-  useEffect(() => {
-    if (userInfo.rank === 'admin') {
-      //?Stock update Realtime
-      //   socket.on("NewUser", () => {
-      //     dispatch({
-      //       type: "NEW_DASHBOARD_USERS",
-      //     })
-      //   })
-    }
-  }, [])
 
   const animCondition = () => {
     if (lastLocation) {
@@ -400,6 +389,7 @@ const DashboardProducts = () => {
       } else {
         baseURL = '/dashboard/products'
       }
+      setSkip(1)
       history.push(baseURL)
     }
     setOpenFilter(false)
@@ -485,6 +475,7 @@ const DashboardProducts = () => {
           : true && !searchedProducts
       ) {
         dispatch(searchProducts(searches.search))
+        setSkip2(1)
       }
     }
   }, [location.search, location.pathname])
@@ -535,6 +526,49 @@ const DashboardProducts = () => {
     }
   }, [data])
 
+  const [loaderElement, inView] = useInView()
+
+  const infiniteScrollingMoreData = () => {
+    const acutalSortType = (sortValue) => {
+      switch (sortValue) {
+        case 'Date':
+          return 'createdAt'
+        case 'Price':
+          return 'price'
+        case 'Rating':
+          return 'topRated'
+        case 'Selling by qty':
+          return 'topSoldStocks'
+        case 'Selling by value':
+          return 'topSelling'
+        case 'Stock':
+          return 'stock'
+      }
+    }
+    if (!searches.search && products) {
+      dispatch(
+        infiniteScrollProducts(
+          skip,
+          acutalSortType(sortValue),
+          sortType.toLowerCase()
+        )
+      )
+      setSkip(skip + 1)
+    }
+  }
+  const infiniteScrollingMoreDataSearched = () => {
+    if (searches.search && searchedProducts) {
+      dispatch(infiniteScrollProductsSearched(skip2, searches.search))
+      setSkip2(skip2 + 1)
+    }
+  }
+  useEffect(() => {
+    if (inView && !searches.search) {
+      infiniteScrollingMoreData()
+    } else if (inView && searches.search) {
+      infiniteScrollingMoreDataSearched()
+    }
+  }, [inView])
   return (
     <StyledOrders>
       <DashboardNewProduct
@@ -654,21 +688,19 @@ const DashboardProducts = () => {
                                     <img src={arrow} />
                                     {openType && (
                                       <div className='sortValueDropDown selectDropDown'>
-                                        <ReactCustomScrollbars>
-                                          {sortValues.map((e) => (
-                                            <h3
-                                              className={`${
-                                                sortValue === e ? 'active' : ''
-                                              }`}
-                                              onClick={(e) => {
-                                                setSortValue(e.target.innerText)
-                                                setChangedValue(true)
-                                              }}
-                                            >
-                                              {e}
-                                            </h3>
-                                          ))}
-                                        </ReactCustomScrollbars>
+                                        {sortValues.map((e) => (
+                                          <h3
+                                            className={`${
+                                              sortValue === e ? 'active' : ''
+                                            }`}
+                                            onClick={(e) => {
+                                              setSortValue(e.target.innerText)
+                                              setChangedValue(true)
+                                            }}
+                                          >
+                                            {e}
+                                          </h3>
+                                        ))}
                                       </div>
                                     )}
                                   </div>
@@ -852,16 +884,30 @@ const DashboardProducts = () => {
                       animate='show'
                       exit='exit'
                     >
-                      {products.map((each) => (
-                        <ProductDashboard
-                          data={data}
-                          actionsInfo={actionsInfo}
-                          setClickedForDelete={setClickedForDelete}
-                          clickedForDelete={clickedForDelete}
-                          key={each._id}
-                          product={each}
-                        />
-                      ))}
+                      <InfiniteScroll
+                        next={infiniteScrollingMoreData}
+                        hasMore={products.length < count ? true : false}
+                        loader={<Loader providedClassName='infiniteLoader' />}
+                        dataLength={products.length}
+                        endMessage={
+                          products !== 0 && (
+                            <p className='end'>Yay! You have seen it all</p>
+                          )
+                        }
+                        scrollableTarget='view'
+                        children={products}
+                      >
+                        {products.map((each) => (
+                          <ProductDashboard
+                            data={data}
+                            actionsInfo={actionsInfo}
+                            setClickedForDelete={setClickedForDelete}
+                            clickedForDelete={clickedForDelete}
+                            key={each._id}
+                            product={each}
+                          />
+                        ))}
+                      </InfiniteScroll>
                     </motion.div>
                   ) : (
                     ''
@@ -873,17 +919,31 @@ const DashboardProducts = () => {
                       animate='show'
                       exit='exit'
                     >
-                      {searchedProducts.map((each) => (
-                        <ProductDashboard
-                          data={data}
-                          search={searches.search}
-                          actionsInfo={actionsInfo}
-                          setClickedForDelete={setClickedForDelete}
-                          clickedForDelete={clickedForDelete}
-                          key={each._id}
-                          product={each}
-                        />
-                      ))}
+                      <InfiniteScroll
+                        next={infiniteScrollingMoreDataSearched}
+                        hasMore={
+                          searchedProducts.length < searchedCount ? true : false
+                        }
+                        loader={<Loader providedClassName='infiniteLoader' />}
+                        dataLength={searchedProducts.length}
+                        endMessage={
+                          <p className='end'>Yay! You have seen it all</p>
+                        }
+                        scrollableTarget='view'
+                        children={searchedProducts}
+                      >
+                        {searchedProducts.map((each) => (
+                          <ProductDashboard
+                            data={data}
+                            search={searches.search}
+                            actionsInfo={actionsInfo}
+                            setClickedForDelete={setClickedForDelete}
+                            clickedForDelete={clickedForDelete}
+                            key={each._id}
+                            product={each}
+                          />
+                        ))}
+                      </InfiniteScroll>
                     </motion.div>
                   ) : (
                     ''
@@ -894,6 +954,15 @@ const DashboardProducts = () => {
           ) : (
             ''
           )}
+          {products &&
+            scrolled === 0 &&
+            products.length < count &&
+            ((!loading && !searches.search) ||
+              (!searchLoading && searches.search)) && (
+              <div ref={loaderElement}>
+                <Loader providedClassName='infiniteLoader' />
+              </div>
+            )}
         </>
       )}
     </StyledOrders>
@@ -1000,9 +1069,8 @@ const StyledOrders = styled(motion.div)`
       left: 0;
       bottom: 0;
       width: max-content;
+
       height: 28vh;
-      min-height: 6rem;
-      max-height: max-content;
       transform: translate(0, 105%);
       background: #4b4d8b;
       box-shadow: rgba(29, 32, 62, 0.42) 0px 2px 10px;

@@ -165,23 +165,15 @@ const searchUsers = asyncHandler(async (req, res) => {
     res.status(400)
     throw new Error('Search Field is Requierd')
   }
-  const users = await User.search(
-    req.body.search,
-    async function (err, output) {
-      const inspect = require('util').inspect
-      await inspect(output, { depth: null })
-    }
-  )
+  const regex = new RegExp(req.body.search, 'g')
+  const users = await User.find({
+    $or: [{ name: regex }, { email: regex }],
+    rank: 'user',
+  })
+    .limit(parseInt(req.query.limit ? req.query.limit : 0))
+    .skip(parseInt(req.query.skip ? req.query.skip : 0))
 
-  let filteredUsers = users.filter((user) => user.rank === 'user')
-
-  const count = filteredUsers.length
-
-  filteredUsers = filteredUsers.slice(req.query.skip ? req.query.skip : 0)
-
-  filteredUsers.slice(0, req.query.limit ? req.query.limit : 0)
-
-  const usersCopy = filteredUsers.map((e) => {
+  const usersCopy = users.map((e) => {
     return {
       joinedIn: e.createdAt,
       availablePic: e.availablePic,
@@ -195,6 +187,12 @@ const searchUsers = asyncHandler(async (req, res) => {
       canReview: e.canReview,
       canOrder: e.canOrder,
     }
+  })
+  const count = await User.countDocuments({
+    $or: [
+      { name: regex, rank: 'user' },
+      { email: regex, rank: 'user' },
+    ],
   })
 
   res.send({ users: usersCopy, count })

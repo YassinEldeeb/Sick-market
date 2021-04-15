@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-const searchProducts = (search) => async (dispatch) => {
+const infiniteScrollProducts = (skip, search) => async (dispatch) => {
   try {
     dispatch({
-      type: 'PRODUCT_SEARCH_REQUEST',
+      type: 'INFINITE_SEARCHED_PRODUCTS_REQUEST',
     })
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
@@ -11,16 +11,17 @@ const searchProducts = (search) => async (dispatch) => {
       cancelToken: source.token,
     }
     const { data } = await axios.get(
-      `/api/products/search?find=${search}&limit=${10}`,
+      `/api/products/search?find=${search}&skip=${skip * 10}&limit=${10}`,
       config
     )
+
     dispatch({
-      type: 'PRODUCT_SEARCH_SUCCESS',
-      payload: data,
+      type: 'INFINITE_SEARCHED_PRODUCTS_SUCCESS',
+      payload: data.products,
     })
   } catch (error) {
     dispatch({
-      type: 'PRODUCT_SEARCH_FAIL',
+      type: 'INFINITE_SEARCHED_PRODUCTS_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -28,4 +29,4 @@ const searchProducts = (search) => async (dispatch) => {
     })
   }
 }
-export default searchProducts
+export default infiniteScrollProducts

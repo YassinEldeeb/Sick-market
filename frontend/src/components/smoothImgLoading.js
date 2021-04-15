@@ -32,7 +32,9 @@ const SmoothImg = ({
 
   const [loadedTiny, setLoadedTiny] = useState(false)
   const [loaded, setLoaded] = useState(false)
-  const [element, inView] = useInView({ triggerOnce: true })
+  const [element, inView] = useInView({
+    triggerOnce: true,
+  })
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -56,6 +58,7 @@ const SmoothImg = ({
         className={`lazyImgLoaderDiv ${loadedTiny ? 'hide' : ''}`}
         id={`${preLoaderId ? preLoaderId : ''}`}
       ></div>
+
       <img
         src={tiny}
         style={{ width, height }}
@@ -71,25 +74,30 @@ const SmoothImg = ({
         <img
           id={`${imgId ? imgId : ''}`}
           className={`actualImg ${loaded ? 'show' : ''} ${
-            loadedImages.find((e) => e.img === src) ? 'removeTransition' : ''
+            loadedImages.find((e) => e.img === src) &&
+            loadedImages.find((e) => e.img === src).transitioned === true
+              ? 'removeTransition'
+              : ''
           }`}
           onLoad={() => {
             setLoaded(true)
             if (!loadedImages.find((e) => e.img === src))
               setLoadedImages({ img: src })
           }}
-          onTransitionEnd={() => {
+          onAnimationEnd={() => {
             const newImages = loadedImages.map((e) => {
-              if (e.src === src) {
-                return { img: e.src, transitioned: true }
-              }
+              if (e.img === src) {
+                return { img: e.img, transitioned: true }
+              } else return e
             })
-            if (!loadedImages.find((e) => e.img === src))
+            if (
+              loadedImages.find((e) => e.img === src) &&
+              !loadedImages.find((e) => e.img === src).transitioned
+            )
               setLoadedImages(newImages, true)
           }}
           src={src}
           alt={alt}
-          style={{ opacity: loaded ? 1 : 0 }}
           onError={(e) => (e.target.src = '/uploads/no.jpg')}
         />
       )}
@@ -118,17 +126,24 @@ const StyledImg = styled.div`
     z-index: 1;
     border-radius: 7px;
     position: relative;
-    transition: ${(props) => props.imgTransition / 1000}s ease;
   }
   .removeTransition {
-    transition: unset !important;
-  }
-  .transitionOn {
+    animation: show 0s forwards;
+    pointer-events: all;
   }
   .show {
+    animation: show ${(props) => props.imgTransition / 1000}s forwards;
     pointer-events: all;
   }
 
+  @keyframes show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
   .actualImg {
     position: absolute;
     top: 0;
@@ -137,7 +152,6 @@ const StyledImg = styled.div`
   .lazyImgLoader,
   .lazyImgLoaderDiv {
     z-index: 1;
-    transition: 0.1s ease;
     max-height: 100%;
     max-width: 100%;
     position: absolute;
@@ -146,15 +160,18 @@ const StyledImg = styled.div`
     border-radius: 7px;
     opacity: 1;
     filter: blur(8px);
+    transition: 0s;
 
     &.hide {
-      opacity: 0;
+      opacity: 0 !important;
       pointer-events: none;
       animation: unset;
       filter: unset;
     }
   }
   .lazyImgLoaderDiv {
+    width: 100%;
+    height: 100%;
     filter: unset;
     background: linear-gradient(to right, #aeaeae40, #d2d2d2);
     animation: animate ${(props) => props.loadingAnimation / 1000}s infinite
@@ -166,6 +183,10 @@ const StyledImg = styled.div`
   .lazyImgLoader {
     position: static;
     height: auto;
+  }
+  .removeTransition {
+    animation: unset !important;
+    opacity: 1;
   }
   @keyframes animate {
     from {

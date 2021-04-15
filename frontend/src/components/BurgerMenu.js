@@ -1,18 +1,19 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import flag from "../img/flag.svg"
-import dollar from "../img/dolar.svg"
-import lang from "../img/lang.svg"
-import { Link } from "react-router-dom"
-import { useSelector, useDispatch } from "react-redux"
-import { userLogoutAction, userLogoutAllAction } from "../actions/logout"
-import falseSVG from "../img/false.svg"
-import trueSVG from "../img/true.svg"
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import flag from '../img/flag.svg'
+import dollar from '../img/dolar.svg'
+import lang from '../img/lang.svg'
+import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { userLogoutAction, userLogoutAllAction } from '../actions/logout'
+import falseSVG from '../img/false.svg'
+import trueSVG from '../img/true.svg'
+import SmoothImg from '../components/smoothImgLoading'
 
 const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
   const dispatch = useDispatch()
-  function truncate(str = "") {
-    return str.length > 13 ? str.substr(0, 13 - 1) + ".." : str
+  function truncate(str = '') {
+    return str.length > 13 ? str.substr(0, 13 - 1) + '..' : str
   }
   const userInfo = useSelector((state) => state.userInfo)
   const [check, setCheck] = useState(false)
@@ -21,7 +22,7 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
   const imgSrcCondition = () => {
     if (
       userInfo.user.profilePicLink &&
-      userInfo.user.profilePicLink !== "cleared"
+      userInfo.user.profilePicLink !== 'cleared'
     ) {
       return userInfo.user.profilePicLink
     } else {
@@ -31,9 +32,9 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
   return (
     <StyledMenu
       bg={bgIdentify()}
-      className={`allBoxModel ${activeMenu ? "active" : ""}`}
+      className={`allBoxModel ${activeMenu ? 'active' : ''}`}
       onClick={(e) => {
-        if (e.target.classList.contains("allBoxModel") && activeMenu)
+        if (e.target.classList.contains('allBoxModel') && activeMenu)
           setActiveMenu(!activeMenu)
       }}
     >
@@ -42,11 +43,15 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
           {userInfo.user.name && (
             <div className='profile-mobile'>
               <div className='profile-mobile-pic'>
-                <img src={imgSrcCondition()} alt='' />
+                <SmoothImg
+                  tiny={`/api/users/profilePic/tiny/${userInfo.user._id}`}
+                  src={imgSrcCondition()}
+                  alt=''
+                />
               </div>
               <div className='profile-desc-mobile'>
                 <h1>{truncate(userInfo.user.name)}</h1>
-                {userInfo.user.rank !== "user" && (
+                {userInfo.user.rank !== 'user' && (
                   <div className='rank-mobile'>
                     <h1>{userInfo.user.rank}</h1>
                   </div>
@@ -133,9 +138,12 @@ const StyledMenu = styled.div`
       margin-bottom: calc(1rem + 0.5vh);
       margin-top: 0.2vh;
       display: flex;
+
       .profile-mobile-pic {
         width: 66px;
         height: 66px;
+        overflow: hidden;
+        border-radius: 50%;
         img {
           border-radius: 50%;
           height: 100%;
@@ -243,7 +251,7 @@ const StyledMenu = styled.div`
           margin-left: 0.2rem;
           position: relative;
           ::after {
-            content: "";
+            content: '';
             background: url(${(props) => props.bg});
             transform: translate(100%, -30%);
             position: absolute;

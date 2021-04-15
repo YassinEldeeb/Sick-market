@@ -193,7 +193,7 @@ const Dashboard = ({ pageContent }) => {
         renderThumbVertical={(props) => (
           <div {...props} className='thumb-vertical' />
         )}
-        renderView={(props) => <div {...props} className='view' />}
+        renderView={(props) => <div {...props} className='view' id='view' />}
         className='content large-scrollable-content'
         marginWidth='-20px'
         marginHeight='-20px'

@@ -60,6 +60,28 @@ const productListReducer = (state = initialState, action) => {
         ...state,
         newProducts: (state.newProducts += 1),
       }
+    case 'INFINITE_PRODUCTS_REQUEST':
+      return {
+        ...state,
+        infiniteLoading: true,
+      }
+    case 'INFINITE_PRODUCTS_SUCCESS':
+      let value
+      if (state.products) {
+        value = [...state.products, ...action.payload]
+      } else {
+        value = [...action.payload]
+      }
+      return {
+        ...state,
+        products: value,
+        infiniteLoading: false,
+      }
+    case 'INFINITE_PRODUCTS_FAIL':
+      return {
+        infiniteLoading: false,
+        error: action.payload,
+      }
     default:
       return state
   }

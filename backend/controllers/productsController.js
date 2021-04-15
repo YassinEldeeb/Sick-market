@@ -44,6 +44,8 @@ const getProducts = asyncHandler(async (req, res) => {
   const products = await Product.find(findObj)
     .sort(sort)
     .populate('user', 'name')
+    .limit(parseInt(req.query.limit ? req.query.limit : 0))
+    .skip(parseInt(req.query.skip ? req.query.skip : 0))
   const productsCount = await Product.countDocuments({})
 
   res.send({ products, count: productsCount })
@@ -266,12 +268,12 @@ const searchProductsSuggesstions = asyncHandler(async (req, res) => {
 const searchProducts = asyncHandler(async (req, res) => {
   const regex = new RegExp(`^${req.query.find}`, 'i')
   const products = await Product.find({ name: regex })
-    .sort({
-      updated_at: -1,
-    })
     .sort({ created_at: -1 })
-    .limit(10)
-  res.send({ products, count: products.length })
+    .limit(parseInt(req.query.limit ? req.query.limit : 0))
+    .skip(parseInt(req.query.skip ? req.query.skip : 0))
+  const count = await Product.countDocuments({ name: regex })
+
+  res.send({ products, count })
 })
 
 export {

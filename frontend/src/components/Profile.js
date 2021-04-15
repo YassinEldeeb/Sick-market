@@ -123,6 +123,8 @@ const StyledProfile = styled.div`
   }
   .profilePicImg {
     height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
   }
   #profileLoading {
     border-radius: 50%;

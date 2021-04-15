@@ -25,6 +25,28 @@ const productSearchReducer = (state = initialState, action) => {
       } else {
         return state
       }
+    case 'INFINITE_SEARCHED_PRODUCTS_REQUEST':
+      return {
+        ...state,
+        infiniteLoading: true,
+      }
+    case 'INFINITE_SEARCHED_PRODUCTS_SUCCESS':
+      let value
+      if (state.products) {
+        value = [...state.products, ...action.payload]
+      } else {
+        value = [...action.payload]
+      }
+      return {
+        ...state,
+        products: value,
+        infiniteLoading: false,
+      }
+    case 'INFINITE_SEARCHED_PRODUCTS_FAIL':
+      return {
+        infiniteLoading: false,
+        error: action.payload,
+      }
     default:
       return state
   }

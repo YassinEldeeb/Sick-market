@@ -8,8 +8,8 @@ export const productListAction = (type, value, brand, category) => async (
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
 
-    let BaseUrl = '/api/products?'
-    let BasicURL = '/api/products?createdAt=newest'
+    let BaseUrl = '/api/products?limit=10&'
+    let BasicURL = '/api/products?createdAt=newest&limit=10'
 
     if (type) {
       const valueFN = () => {
