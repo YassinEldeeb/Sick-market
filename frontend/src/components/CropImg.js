@@ -28,7 +28,6 @@ const CropImg = ({
     setCrop({
       aspect: 64 / 51,
       unit: '%',
-      width: '80',
     })
     setCompletedCrop(null)
     setImage(null)

@@ -55,19 +55,21 @@ const ProductDashboard = ({
       if (newStock) setChanged(changed + newStock.countInStock)
     }
   }, [data])
-
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [])
   return (
     <StyledUser variants={animCondition()}>
       <ReactTooltip
         id='product-card-tooltip'
         effect='solid'
         delayHide={100}
-        delayShow={100}
+        delayShow={400}
       />
       {actionsInfo && (
         <ReactTooltip
           delayHide={100}
-          delayShow={700}
+          delayShow={400}
           effect='solid'
           id='action-info-tooltip'
         />

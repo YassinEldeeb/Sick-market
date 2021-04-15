@@ -44,11 +44,21 @@ const UserDashboard = ({ user }) => {
     }
   }, [actionLoading])
 
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [])
   return (
     <StyledUser variants={popup}>
-      <ReactTooltip effect='solid' delayHide={100} delayShow={100} />
+      <ReactTooltip
+        id='user-tooltip'
+        effect='solid'
+        delayHide={100}
+        delayShow={400}
+      />
       <div className='id'>
-        <p data-tip={'#' + user._id}>#{user._id.substr(user._id.length - 4)}</p>
+        <p data-for='user-tooltip' data-tip={'#' + user._id}>
+          #{user._id.substr(user._id.length - 4)}
+        </p>
       </div>
       <div className='name'>
         <SmoothImg
@@ -61,13 +71,20 @@ const UserDashboard = ({ user }) => {
           src={imgSrcCondition()}
           alt=''
         />
-        <p data-tip={user.name}>{nameValue}</p>
+        <p data-for='user-tooltip' data-tip={user.name}>
+          {nameValue}
+        </p>
       </div>
       <div className='email'>
-        <p data-tip={user.email}>{emailValue}</p>
+        <p data-for='user-tooltip' data-tip={user.email}>
+          {emailValue}
+        </p>
       </div>
       <div className='joinedIn'>
-        <p data-tip={format(parseISO(user.joinedIn), 'yyyy-MM-dd')}>
+        <p
+          data-for='user-tooltip'
+          data-tip={format(parseISO(user.joinedIn), 'yyyy-MM-dd')}
+        >
           {format(parseISO(user.joinedIn), 'yyyy-MM-dd')}
         </p>
       </div>

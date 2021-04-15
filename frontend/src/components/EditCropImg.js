@@ -33,7 +33,6 @@ const EditCropImg = ({
     setCrop({
       aspect: 64 / 51,
       unit: '%',
-      width: '80',
     })
     setImage(null)
     setCompletedCrop(null)

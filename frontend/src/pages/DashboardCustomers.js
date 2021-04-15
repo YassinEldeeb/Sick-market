@@ -21,7 +21,7 @@ import arrow from '../img/sort.svg'
 import { v4 as uuid } from 'uuid'
 import { useRef } from 'react'
 import qs from 'qs'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import { useInView } from 'react-intersection-observer'
 
 const DashboardCustomers = () => {
   const filterStoredValue = localStorage.getItem('filterUsers')
@@ -87,10 +87,12 @@ const DashboardCustomers = () => {
     if (!searchUser && !location.pathname.split('/')[3]) {
       if (!users || lastLocationValue) {
         dispatch(getDashboardUsersAction(filterValue))
+        setSkip(1)
       }
     } else if (lastLocationValue && !location.pathname.split('/')[3]) {
       if (searchUser || !searchedUsers) {
         dispatch(SearchDashboardCustomers(searchUser))
+        setSkip2(1)
       }
     }
   }, [dispatch, searchUser, lastLocation])
@@ -265,6 +267,15 @@ const DashboardCustomers = () => {
       setSearchValue('')
     }
   }, [location.search, location.pathname])
+  const [element, inView] = useInView()
+
+  useEffect(() => {
+    if (inView && !loading && !searches.search) {
+      infiniteScrollingMoreData()
+    } else if (inView && !searchLoading && searches.search) {
+      infiniteScrollingMoreDataSearched()
+    }
+  }, [inView])
 
   return (
     <StyledOrders>
@@ -384,24 +395,9 @@ const DashboardCustomers = () => {
                   animate='show'
                   exit='exit'
                 >
-                  <InfiniteScroll
-                    next={infiniteScrollingMoreDataSearched}
-                    hasMore={
-                      searchedUsers.length < searchedCount ? true : false
-                    }
-                    loader={<Loader providedClassName='infiniteLoader' />}
-                    dataLength={searchedUsers.length}
-                    endMessage={
-                      searchedCount !== 0 && (
-                        <p className='end'>Yay! You have seen it all</p>
-                      )
-                    }
-                    scrollableTarget='view'
-                  >
-                    {searchedUsers.map((each) => (
-                      <UserDashboard key={each._id} user={each} />
-                    ))}
-                  </InfiniteScroll>
+                  {searchedUsers.map((each) => (
+                    <UserDashboard key={each._id} user={each} />
+                  ))}
                 </motion.div>
               ) : (
                 ''
@@ -418,27 +414,25 @@ const DashboardCustomers = () => {
                   animate='show'
                   exit='exit'
                 >
-                  <InfiniteScroll
-                    next={infiniteScrollingMoreData}
-                    hasMore={users.length < count ? true : false}
-                    loader={<Loader providedClassName='infiniteLoader' />}
-                    dataLength={users.length}
-                    endMessage={
-                      count !== 0 && (
-                        <p className='end'>Yay! You have seen it all</p>
-                      )
-                    }
-                    scrollableTarget='view'
-                  >
-                    {users.map((each) => (
-                      <UserDashboard keyId={each._id} user={each} />
-                    ))}
-                  </InfiniteScroll>
+                  {users.map((each) => (
+                    <UserDashboard keyId={each._id} user={each} />
+                  ))}
                 </motion.div>
               ) : (
                 ''
               )}
             </div>
+          )}
+          {(users && users.length < count && !searches.search) ||
+          (searchedUsers &&
+            searchedUsers.length < searchedCount &&
+            searches.search) ? (
+            <Loader providedClassName='infiniteLoader' refElement={element} />
+          ) : (
+            ((searchedCount !== 0 && searches.search) ||
+              (count !== 0 && !searches.search)) && (
+              <p className='end'>Yay! You have seen it all</p>
+            )
           )}
         </>
       ) : (

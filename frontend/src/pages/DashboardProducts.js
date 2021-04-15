@@ -75,13 +75,16 @@ const DashboardProducts = () => {
         }
 
         dispatch(productListAction())
+        setSkip(1)
       } else {
         if (
           location.pathname.split('/')[3] !== 'add' &&
           location.pathname.split('/')[3] !== 'edit' &&
           !searches.search
-        )
+        ) {
           dispatch(productListAction())
+          setSkip(1)
+        }
       }
     }
   }, [dispatch, lastLocation])
@@ -526,7 +529,7 @@ const DashboardProducts = () => {
     }
   }, [data])
 
-  const [loaderElement, inView] = useInView()
+  const [element, inView] = useInView()
 
   const infiniteScrollingMoreData = () => {
     const acutalSortType = (sortValue) => {
@@ -884,30 +887,16 @@ const DashboardProducts = () => {
                       animate='show'
                       exit='exit'
                     >
-                      <InfiniteScroll
-                        next={infiniteScrollingMoreData}
-                        hasMore={products.length < count ? true : false}
-                        loader={<Loader providedClassName='infiniteLoader' />}
-                        dataLength={products.length}
-                        endMessage={
-                          products !== 0 && (
-                            <p className='end'>Yay! You have seen it all</p>
-                          )
-                        }
-                        scrollableTarget='view'
-                        children={products}
-                      >
-                        {products.map((each) => (
-                          <ProductDashboard
-                            data={data}
-                            actionsInfo={actionsInfo}
-                            setClickedForDelete={setClickedForDelete}
-                            clickedForDelete={clickedForDelete}
-                            key={each._id}
-                            product={each}
-                          />
-                        ))}
-                      </InfiniteScroll>
+                      {products.map((each) => (
+                        <ProductDashboard
+                          data={data}
+                          actionsInfo={actionsInfo}
+                          setClickedForDelete={setClickedForDelete}
+                          clickedForDelete={clickedForDelete}
+                          key={each._id}
+                          product={each}
+                        />
+                      ))}
                     </motion.div>
                   ) : (
                     ''
@@ -919,31 +908,17 @@ const DashboardProducts = () => {
                       animate='show'
                       exit='exit'
                     >
-                      <InfiniteScroll
-                        next={infiniteScrollingMoreDataSearched}
-                        hasMore={
-                          searchedProducts.length < searchedCount ? true : false
-                        }
-                        loader={<Loader providedClassName='infiniteLoader' />}
-                        dataLength={searchedProducts.length}
-                        endMessage={
-                          <p className='end'>Yay! You have seen it all</p>
-                        }
-                        scrollableTarget='view'
-                        children={searchedProducts}
-                      >
-                        {searchedProducts.map((each) => (
-                          <ProductDashboard
-                            data={data}
-                            search={searches.search}
-                            actionsInfo={actionsInfo}
-                            setClickedForDelete={setClickedForDelete}
-                            clickedForDelete={clickedForDelete}
-                            key={each._id}
-                            product={each}
-                          />
-                        ))}
-                      </InfiniteScroll>
+                      {searchedProducts.map((each) => (
+                        <ProductDashboard
+                          data={data}
+                          search={searches.search}
+                          actionsInfo={actionsInfo}
+                          setClickedForDelete={setClickedForDelete}
+                          clickedForDelete={clickedForDelete}
+                          key={each._id}
+                          product={each}
+                        />
+                      ))}
                     </motion.div>
                   ) : (
                     ''
@@ -954,15 +929,20 @@ const DashboardProducts = () => {
           ) : (
             ''
           )}
-          {products &&
-            scrolled === 0 &&
-            products.length < count &&
-            ((!loading && !searches.search) ||
-              (!searchLoading && searches.search)) && (
-              <div ref={loaderElement}>
-                <Loader providedClassName='infiniteLoader' />
-              </div>
-            )}
+          {(products && products.length < count && !searches.search) ||
+          (searchedProducts &&
+            searchedProducts.length < searchedCount &&
+            searches.search) ? (
+            <Loader providedClassName='infiniteLoader' refElement={element} />
+          ) : (
+            !loading &&
+            !searchLoading &&
+            (products || searchedProducts) &&
+            ((searchedCount !== 0 && searches.search) ||
+              (count !== 0 && !searches.search)) && (
+              <p className='end'>Yay! You have seen it all</p>
+            )
+          )}
         </>
       )}
     </StyledOrders>

@@ -165,7 +165,7 @@ const searchUsers = asyncHandler(async (req, res) => {
     res.status(400)
     throw new Error('Search Field is Requierd')
   }
-  const regex = new RegExp(req.body.search, 'g')
+  const regex = new RegExp(req.body.search, 'i')
   const users = await User.find({
     $or: [{ name: regex }, { email: regex }],
     rank: 'user',
