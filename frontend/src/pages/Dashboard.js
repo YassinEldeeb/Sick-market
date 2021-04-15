@@ -20,10 +20,8 @@ import home from '../img/home.svg'
 import DashboardTab from '../components/DashboardTab'
 import DashboardCustomers from './DashboardCustomers'
 import DashboardProducts from './DashboardProducts'
-import socket from '../clientSocket/socket'
 
 const Dashboard = ({ pageContent }) => {
-  const dispatch = useDispatch()
   const lastLocation = useLastLocation()
 
   const main = [
@@ -134,21 +132,6 @@ const Dashboard = ({ pageContent }) => {
       if (firstChild) firstChild.style.overflowY = 'hidden !important'
     }
   }, [location.pathname])
-
-  useEffect(() => {
-    socket.on('NewUser', () => {
-      dispatch({
-        type: 'NEW_DASHBOARD_USERS',
-      })
-    })
-    socket.on('ProductAdded', (id) => {
-      if (user._id !== id) {
-        dispatch({
-          type: 'NEW_DASHBOARD_PRODUCT',
-        })
-      }
-    })
-  }, [])
 
   return (
     <StyledDashboard>

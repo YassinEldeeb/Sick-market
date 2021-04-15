@@ -16,12 +16,13 @@ class SocketService {
         const roomId = `Admins`
         socket.join(roomId)
       })
+
       socket.on('disconnect', () => {
         console.log('User has Disconnected 😟')
+        socket.removeAllListeners()
       })
     })
   }
-
   emiter(event, body, room) {
     if (!room) {
       if (body) this.io.emit(event, body)

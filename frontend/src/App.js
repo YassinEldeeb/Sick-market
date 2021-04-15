@@ -69,6 +69,7 @@ const App = () => {
   }, [user._id])
 
   const [register, setRegister] = useState(false)
+  const [register2, setRegister2] = useState(false)
   useEffect(() => {
     if (!register) {
       socket.on('logoutMe', () => {
@@ -76,6 +77,22 @@ const App = () => {
         dispatch(userLogoutAction())
       })
       setRegister(true)
+    }
+    if (!register2) {
+      socket.on('NewUser', () => {
+        dispatch({
+          type: 'NEW_DASHBOARD_USERS',
+        })
+      })
+      socket.on('ProductAdded', (id) => {
+        if (user._id !== id) {
+          console.log(`Fired! ${id}`)
+          dispatch({
+            type: 'NEW_DASHBOARD_PRODUCT',
+          })
+        }
+      })
+      setRegister2(true)
     }
   }, [])
 

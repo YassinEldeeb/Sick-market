@@ -569,9 +569,9 @@ const DashboardProducts = () => {
     }
   }
   useEffect(() => {
-    if (inView && !searches.search) {
+    if (inView && !searches.search && !loading) {
       infiniteScrollingMoreData()
-    } else if (inView && searches.search) {
+    } else if (inView && searches.search && !searchLoading) {
       infiniteScrollingMoreDataSearched()
     }
   }, [inView])
