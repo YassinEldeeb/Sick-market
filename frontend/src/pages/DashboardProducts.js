@@ -26,8 +26,7 @@ import add from '../img/addIcon.svg'
 import { useRef } from 'react'
 import qs from 'qs'
 import searchProducts from '../actions/searchProduct'
-import ReactCustomScrollbars from 'react-custom-scrollbars'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import { Scrollbars } from 'react-custom-scrollbars'
 import infiniteScrollProducts from '../actions/infiniteScrollProducts'
 import infiniteScrollProductsSearched from '../actions/infiniteScrollSearchedProducts'
 import { useInView } from 'react-intersection-observer'
@@ -401,65 +400,67 @@ const DashboardProducts = () => {
     if (string) return string.charAt(0).toUpperCase() + string.slice(1)
   }
   useEffect(() => {
-    if (!Object.size(searches)) {
-      setSortValue('Date')
-      setSortType('Newest')
-      setBrand('')
-      setCategory('')
-    }
-
-    if (
-      Object.size(searches) && !searches.search && lastLocation
-        ? lastLocation.pathname.split('/')[1] !== 'products'
-        : true
-    ) {
-      const acutalSortType = (sortValue) => {
-        switch (sortValue) {
-          case 'Date':
-            return 'createdAt'
-          case 'Price':
-            return 'price'
-          case 'Rating':
-            return 'topRated'
-          case 'Selling by qty':
-            return 'topSoldStocks'
-          case 'Selling by value':
-            return 'topSelling'
-          case 'Stock':
-            return 'stock'
-        }
+    if (location.pathname.split('/')[3] !== 'edit') {
+      if (!Object.size(searches)) {
+        setSortValue('Date')
+        setSortType('Newest')
+        setBrand('')
+        setCategory('')
       }
 
-      const sortValue = Object.keys(searches)[0]
-        ? acutalSortType(Object.keys(searches)[0])
-        : null
+      if (
+        Object.size(searches) && !searches.search && lastLocation
+          ? lastLocation.pathname.split('/')[1] !== 'products'
+          : true
+      ) {
+        const acutalSortType = (sortValue) => {
+          switch (sortValue) {
+            case 'Date':
+              return 'createdAt'
+            case 'Price':
+              return 'price'
+            case 'Rating':
+              return 'topRated'
+            case 'Selling by qty':
+              return 'topSoldStocks'
+            case 'Selling by value':
+              return 'topSelling'
+            case 'Stock':
+              return 'stock'
+          }
+        }
 
-      setSortValue(
-        Object.keys(searches)[0]
-          ? capitalizeFirstLetter(Object.keys(searches)[0])
-          : 'Date'
-      )
-      const sortType = searches[Object.keys(searches)[0]]
-        ? searches[Object.keys(searches)[0]]
-        : null
+        const sortValue = Object.keys(searches)[0]
+          ? acutalSortType(Object.keys(searches)[0])
+          : null
 
-      setSortType(
-        searches[Object.keys(searches)[0]]
-          ? capitalizeFirstLetter(searches[Object.keys(searches)[0]])
-          : 'Newest'
-      )
-
-      const brandValue = searches.brand ? searches.brand : null
-      const categoryValue = searches.category ? searches.category : null
-      if (!searches.search && !loading && Object.size(searches)) {
-        dispatch(
-          productListAction(
-            sortValue,
-            sortType.toLowerCase(),
-            brandValue,
-            categoryValue
-          )
+        setSortValue(
+          Object.keys(searches)[0]
+            ? capitalizeFirstLetter(Object.keys(searches)[0])
+            : 'Date'
         )
+        const sortType = searches[Object.keys(searches)[0]]
+          ? searches[Object.keys(searches)[0]]
+          : null
+
+        setSortType(
+          searches[Object.keys(searches)[0]]
+            ? capitalizeFirstLetter(searches[Object.keys(searches)[0]])
+            : 'Newest'
+        )
+
+        const brandValue = searches.brand ? searches.brand : null
+        const categoryValue = searches.category ? searches.category : null
+        if (!searches.search && !loading && Object.size(searches)) {
+          dispatch(
+            productListAction(
+              sortValue,
+              sortType.toLowerCase(),
+              brandValue,
+              categoryValue
+            )
+          )
+        }
       }
     }
   }, [location.search])
@@ -553,7 +554,9 @@ const DashboardProducts = () => {
         infiniteScrollProducts(
           skip,
           acutalSortType(sortValue),
-          sortType.toLowerCase()
+          sortType.toLowerCase(),
+          searches.brand ? searches.brand : '',
+          searches.category ? searches.category : ''
         )
       )
       setSkip(skip + 1)
@@ -572,6 +575,7 @@ const DashboardProducts = () => {
       infiniteScrollingMoreDataSearched()
     }
   }, [inView])
+
   return (
     <StyledOrders>
       <DashboardNewProduct
@@ -616,10 +620,22 @@ const DashboardProducts = () => {
                       <p>
                         {!searches.search
                           ? count
+                            ? count
+                            : '..'
                           : searches.search
                           ? searchedCount
+                            ? searchedCount
+                            : '..'
                           : ''}{' '}
-                        Products Found
+                        Products Found{' '}
+                        {`${
+                          searches.brand || searches.category
+                            ? `(filtered)`
+                            : ''
+                        }`}
+                        {`${
+                          searches.search || searches.search ? `(search)` : ''
+                        }`}
                       </p>
                     </div>
                     {!searches.search && (
@@ -690,20 +706,22 @@ const DashboardProducts = () => {
                                     <p>{sortValue}</p>
                                     <img src={arrow} />
                                     {openType && (
-                                      <div className='sortValueDropDown selectDropDown'>
-                                        {sortValues.map((e) => (
-                                          <h3
-                                            className={`${
-                                              sortValue === e ? 'active' : ''
-                                            }`}
-                                            onClick={(e) => {
-                                              setSortValue(e.target.innerText)
-                                              setChangedValue(true)
-                                            }}
-                                          >
-                                            {e}
-                                          </h3>
-                                        ))}
+                                      <div className='sortValueDropDown selectDropDown first'>
+                                        <Scrollbars>
+                                          {sortValues.map((e) => (
+                                            <h3
+                                              className={`${
+                                                sortValue === e ? 'active' : ''
+                                              }`}
+                                              onClick={(e) => {
+                                                setSortValue(e.target.innerText)
+                                                setChangedValue(true)
+                                              }}
+                                            >
+                                              {e}
+                                            </h3>
+                                          ))}
+                                        </Scrollbars>
                                       </div>
                                     )}
                                   </div>
@@ -1048,9 +1066,6 @@ const StyledOrders = styled(motion.div)`
       position: absolute;
       left: 0;
       bottom: 0;
-      width: max-content;
-
-      height: 28vh;
       transform: translate(0, 105%);
       background: #4b4d8b;
       box-shadow: rgba(29, 32, 62, 0.42) 0px 2px 10px;
@@ -1059,9 +1074,21 @@ const StyledOrders = styled(motion.div)`
       overflow-y: auto;
       padding: 0.3rem;
       cursor: auto;
-      width: 100%;
+      width: max-content;
+      min-height: 4rem;
+
+      &.first {
+        min-height: 5.5rem;
+        width: 160%;
+
+        height: 24vh;
+        max-height: 200px;
+      }
       div:first-child {
         align-self: stretch;
+      }
+      &.first h3 {
+        margin-right: 12px;
       }
       h3 {
         padding: 0.4rem 0.6rem;
@@ -1073,6 +1100,7 @@ const StyledOrders = styled(motion.div)`
         border-radius: 5px;
         margin-bottom: 0.15rem;
         cursor: pointer;
+
         &:last-child {
           margin-bottom: 0;
         }

@@ -96,8 +96,8 @@ const CropImg = ({
     }
   })
 
-  const confirmHandler = () => {
-    if (imageType && previewCanvasRef.current) {
+  const confirmHandler = (e) => {
+    if (imageType && previewCanvasRef.current && completedCrop.width) {
       previewCanvasRef.current.toBlob((blob) => {
         const type = () => {
           switch (imageType) {
@@ -113,7 +113,9 @@ const CropImg = ({
         formData.append('upload', blob, `image.${type()}`)
       })
     }
-    history.push('/dashboard/products/add')
+    if (!e.target.classList.contains('disabled')) {
+      history.push('/dashboard/products/add')
+    }
   }
 
   return (
@@ -196,7 +198,9 @@ const CropImg = ({
         </button>
         <button
           onClick={confirmHandler}
-          className='confirm'
+          className={`confirm ${
+            completedCrop && !completedCrop.width ? 'disabled' : ''
+          }`}
           id={`${completedCrop ? '' : 'notActive'}`}
         >
           Confirm
@@ -207,6 +211,14 @@ const CropImg = ({
 }
 
 const StyledCart = styled(motion.div)`
+  .disabled {
+    transition: 0.3s ease;
+    filter: grayscale(1);
+    cursor: not-allowed !important;
+    &:hover {
+      background: #1faf73 !important;
+    }
+  }
   #notActive {
     pointer-events: none;
     opacity: 0;

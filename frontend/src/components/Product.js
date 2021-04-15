@@ -44,7 +44,7 @@ const Product = ({
           if (type !== 'preview') dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })
         }}
       >
-        {completedCrop && type === 'preview' ? (
+        {completedCrop && completedCrop.width && type === 'preview' ? (
           <canvas className='canvasPreview' ref={previewCanvasRef} />
         ) : type === 'preview' ? (
           <>

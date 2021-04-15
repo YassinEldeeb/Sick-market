@@ -141,10 +141,12 @@ const Dashboard = ({ pageContent }) => {
         type: 'NEW_DASHBOARD_USERS',
       })
     })
-    socket.on('ProductAdded', () => {
-      dispatch({
-        type: 'NEW_DASHBOARD_PRODUCT',
-      })
+    socket.on('ProductAdded', (id) => {
+      if (user._id !== id) {
+        dispatch({
+          type: 'NEW_DASHBOARD_PRODUCT',
+        })
+      }
     })
   }, [])
 

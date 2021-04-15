@@ -36,9 +36,7 @@ img{
     display:flex;
     flex-direction:column;
 }
-*{
-  touch-action: none
-}
+
 #logoutLoading{
   overflow-y:hidden !important; 
 }

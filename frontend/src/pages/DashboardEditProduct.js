@@ -114,7 +114,6 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       setCrop({
         aspect: 64 / 51,
         unit: '%',
-        width: '80',
       })
       setCompletedCrop(null)
       setAddedImage(null)
@@ -146,7 +145,6 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
   const [crop, setCrop] = useState({
     aspect: 64 / 51,
     unit: '%',
-    width: '80',
   })
   const [image, setImage] = useState('/uploads/no.jpg')
   const [noImage, setNoImage] = useState(false)
@@ -161,14 +159,20 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       (location.pathname.split('/')[3] === 'edit' && !dashboardProduct) ||
       (location.pathname.split('/')[3] === 'edit' &&
         dashboardProduct &&
-        dashboardProduct._id !== Number(location.pathname.split('/')[4]))
-    )
+        location.pathname.split('/')[4] &&
+        dashboardProduct._id !== location.pathname.split('/')[4])
+    ) {
       dispatch(
         DashboardProductDetailAction(
           location.pathname.split('/')[4],
           searches.search
         )
       )
+    }
+    console.log(
+      dashboardProduct ? dashboardProduct._id : '',
+      location.pathname.split('/')[4]
+    )
   }, [location.pathname])
 
   const editProductHandler = (e) => {
@@ -190,19 +194,33 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
   }
 
   const returnHandler = () => {
+    setFormData(new FormData())
     setCrop({
       aspect: 64 / 51,
       unit: '%',
-      width: '80',
     })
     setCompletedCrop(null)
+    setAddedImage(null)
+    setImageType(null)
+    let baseURL = '/dashboard/products?'
+    if (searches[Object.keys(searches)[0]]) {
+      baseURL += `${Object.keys(searches)[0]}=${
+        searches[Object.keys(searches)[0]]
+      }&`
+    }
+    if (searches.brand) {
+      baseURL += `brand=${searches.brand}&`
+    }
+    if (searches.category) {
+      baseURL += `brand=${searches.category}&`
+    }
+
     history.push(
       location.search.split('=')[1] && searchedProducts
         ? `/dashboard/products?search=${location.search.split('=')[1]}`
-        : '/dashboard/products'
+        : baseURL
     )
   }
-
   return (
     <StyledUserAction
       id={`${location.pathname.split('/')[3] === 'edit' ? 'active' : ''}`}
@@ -344,8 +362,10 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
                             <motion.ul>
                               <motion.li layout>
                                 Stock value:{' '}
-                                {dashboardProduct.countInStock *
-                                  dashboardProduct.price}{' '}
+                                {(
+                                  dashboardProduct.countInStock *
+                                  dashboardProduct.price
+                                ).toFixed(2)}{' '}
                                 <span className='currency'>EGP</span>
                               </motion.li>
                               <motion.li layout>

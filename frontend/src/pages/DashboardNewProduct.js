@@ -25,12 +25,8 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
   const [scrollableContent, setScrollableContent] = useState(null)
 
   useEffect(() => {
-    const firstChild = document.querySelector(
-      '.card-large-scrollable-content div:first-child'
-    )
-    const thirdChild = document.querySelectorAll(
-      '.card-large-scrollable-content div:last-child'
-    )
+    const firstChild = document.querySelector('.newView')
+    const thirdChild = document.querySelectorAll('.track-vertical-newView')
 
     if (firstChild) {
       if (
@@ -99,9 +95,7 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
 
   useEffect(() => {
     if (newError) {
-      const firstChild = document.querySelector(
-        '.card-large-scrollable-content div:first-child'
-      )
+      const firstChild = document.querySelector('.newView')
       if (firstChild)
         firstChild.scroll({
           top: 0,
@@ -126,7 +120,6 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
       setImage(null)
 
       history.push('/dashboard/products')
-      socket.emit('ProductCreated')
     }
   }, [success])
 
@@ -136,16 +129,15 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
   const [crop, setCrop] = useState({
     aspect: 64 / 51,
     unit: '%',
-    width: '80',
   })
   const [image, setImage] = useState(null)
   const [imageType, setImageType] = useState(null)
 
   const returnHandler = () => {
+    setFormData(new FormData())
     setCrop({
       aspect: 64 / 51,
       unit: '%',
-      width: '80',
     })
     setCompletedCrop(null)
     setImage(null)

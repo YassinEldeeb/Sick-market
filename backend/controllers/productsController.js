@@ -46,7 +46,7 @@ const getProducts = asyncHandler(async (req, res) => {
     .populate('user', 'name')
     .limit(parseInt(req.query.limit ? req.query.limit : 0))
     .skip(parseInt(req.query.skip ? req.query.skip : 0))
-  const productsCount = await Product.countDocuments({})
+  const productsCount = await Product.countDocuments(findObj)
 
   res.send({ products, count: productsCount })
 })
@@ -170,11 +170,14 @@ const addProduct = asyncHandler(async (req, res) => {
     'user',
     'name'
   )
+  console.log('Fired!😀', req.user._id)
+  req.app.get('socketService').emiter('ProductAdded', req.user._id, 'Admins')
+
   res.status(201).send(newPopulatedProduct)
 })
 
 const updateProduct = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id)
+  const product = await Product.findById(req.params.id).populate('user', 'name')
 
   if (!product) {
     throw new Error('Product not Found')
@@ -223,7 +226,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       .toFile('uploads/' + `Tiny-${fileName}`)
   } else {
     finalImage = product.image
-    finalImage = product.tinyImage
+    tinyImage = product.tinyImage
   }
   if (image === 'no') {
     if (

@@ -1,8 +1,12 @@
 import axios from 'axios'
 
-const infiniteScrollProducts = (skip, filterType, filterValue) => async (
-  dispatch
-) => {
+const infiniteScrollProducts = (
+  skip,
+  filterType,
+  filterValue,
+  brand,
+  category
+) => async (dispatch) => {
   try {
     dispatch({
       type: 'INFINITE_PRODUCTS_REQUEST',
@@ -13,7 +17,9 @@ const infiniteScrollProducts = (skip, filterType, filterValue) => async (
       cancelToken: source.token,
     }
     const { data } = await axios.get(
-      `/api/products?limit=10&skip=${10 * skip}&${filterType}=${filterValue}`,
+      `/api/products?limit=10&skip=${
+        10 * skip
+      }&${filterType}=${filterValue}&brand=${brand}&category=${category}`,
       config
     )
 

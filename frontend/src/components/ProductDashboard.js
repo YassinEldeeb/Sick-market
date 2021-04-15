@@ -12,6 +12,7 @@ import Loader from '../components/loader'
 import { useSelector, useDispatch } from 'react-redux'
 import { useLastLocation } from 'react-router-last-location'
 import SmoothImg from '../components/smoothImgLoading'
+import qs from 'qs'
 
 const ProductDashboard = ({
   product,
@@ -21,6 +22,8 @@ const ProductDashboard = ({
   data,
 }) => {
   const location = useLocation()
+  const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
+
   const { loading: deleteLoading, success, asking, confirm } = useSelector(
     (state) => state.deleteProduct
   )
@@ -58,6 +61,23 @@ const ProductDashboard = ({
   useEffect(() => {
     ReactTooltip.rebuild()
   }, [])
+
+  const editURL = (id) => {
+    let baseURL = `/dashboard/products/edit/${id}?`
+    if (searches[Object.keys(searches)[0]]) {
+      baseURL += `${Object.keys(searches)[0]}=${
+        searches[Object.keys(searches)[0]]
+      }&`
+    }
+    if (searches.brand) {
+      baseURL += `brand=${searches.brand}&`
+    }
+    if (searches.category) {
+      baseURL += `category=${searches.category}&`
+    }
+
+    return baseURL
+  }
   return (
     <StyledUser variants={animCondition()}>
       <ReactTooltip
@@ -140,7 +160,7 @@ const ProductDashboard = ({
             to={`${
               search
                 ? `/dashboard/products/edit/${product._id}?search=${search}`
-                : `/dashboard/products/edit/${product._id}`
+                : editURL(product._id)
             }`}
             className='actionOption'
           >

@@ -35,6 +35,7 @@ const EditCropImg = ({
       unit: '%',
     })
     setImage(null)
+    console.log('Image!!!!:', image)
     setCompletedCrop(null)
     history.push(`/dashboard/products/edit/${location.pathname.split('/')[4]}`)
   }
@@ -44,6 +45,7 @@ const EditCropImg = ({
     setNoImage(false)
 
     const reader = new FileReader()
+
     reader.addEventListener('load', () => setImage(reader.result))
     reader.readAsDataURL(e)
   }
@@ -102,8 +104,8 @@ const EditCropImg = ({
     }
   })
 
-  const confirmHandler = () => {
-    if (imageType && previewCanvasRef.current) {
+  const confirmHandler = (e) => {
+    if (imageType && previewCanvasRef.current && completedCrop.width) {
       previewCanvasRef.current.toBlob(async (blob) => {
         const type = () => {
           switch (imageType) {
@@ -122,7 +124,11 @@ const EditCropImg = ({
       setImage(null)
       setNoImage(false)
     }
-    history.push(`/dashboard/products/edit/${location.pathname.split('/')[4]}`)
+    if (!e.target.classList.contains('disabled')) {
+      history.push(
+        `/dashboard/products/edit/${location.pathname.split('/')[4]}`
+      )
+    }
   }
 
   return (
@@ -208,7 +214,6 @@ const EditCropImg = ({
                 setCrop({
                   aspect: 64 / 51,
                   unit: '%',
-                  width: '80',
                 })
                 setImage(null)
                 setImageType(null)
@@ -226,7 +231,9 @@ const EditCropImg = ({
           </button>
           <button
             onClick={confirmHandler}
-            className={`confirm ${noImage ? 'previousImage' : ''}`}
+            className={`confirm ${noImage ? 'previousImage' : ''} ${
+              completedCrop && !completedCrop.width ? 'disabled' : ''
+            }`}
             id={`${completedCrop ? '' : 'notActive'}`}
           >
             {noImage ? 'Previous Img' : 'Confirm'}
@@ -238,6 +245,14 @@ const EditCropImg = ({
 }
 
 const StyledCart = styled(motion.div)`
+  .disabled {
+    transition: 0.3s ease;
+    filter: grayscale(1);
+    cursor: not-allowed !important;
+    &:hover {
+      background: #1faf73 !important;
+    }
+  }
   .previousImage {
     pointer-events: all !important;
     opacity: 1 !important;

@@ -62,6 +62,7 @@ const UserDashboard = ({ user }) => {
       </div>
       <div className='name'>
         <SmoothImg
+          providedClassName='profileImgContLazy'
           tiny={`/api/users/profilePic/tiny/${user._id}`}
           contWidth={`max-content`}
           width={'100%'}
@@ -107,14 +108,15 @@ const UserDashboard = ({ user }) => {
 
 const StyledUser = styled(motion.div)`
   .pic {
-    width: 50px;
     height: 50px;
     border-radius: 50%;
+    min-width: 50px !important;
   }
+
   #loaderImg {
     border-radius: 50%;
-    width: 52px !important;
-    height: 41.5px !important;
+    height: 50px !important;
+    width: 50px !important;
   }
   .providedLoader {
     #greybackground path {
