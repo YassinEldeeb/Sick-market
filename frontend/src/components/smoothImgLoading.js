@@ -54,10 +54,12 @@ const SmoothImg = ({
       loadingAnimation={loadingAnimation}
       className={`${providedClassName ? providedClassName : ''}`}
     >
-      <div
-        className={`lazyImgLoaderDiv ${loadedTiny ? 'hide' : ''}`}
-        id={`${preLoaderId ? preLoaderId : ''}`}
-      ></div>
+      {!loadedImages.find((e) => e.img === src) && (
+        <div
+          className={`lazyImgLoaderDiv ${loadedTiny ? 'hide' : ''}`}
+          id={`${preLoaderId ? preLoaderId : ''}`}
+        ></div>
+      )}
 
       <img
         src={tiny}
