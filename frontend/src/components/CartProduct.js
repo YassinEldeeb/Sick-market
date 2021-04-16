@@ -78,6 +78,9 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
   )
 }
 const StyledProduct = styled.div`
+  .ratingCount {
+    display: none !important;
+  }
   .imgLink,
   .descLink {
     display: flex;
@@ -140,6 +143,13 @@ const StyledProduct = styled.div`
     }
   }
   @media screen and (max-width: 1050px) {
+    .starsRating {
+      margin: 0 !important;
+      margin-top: 0.2rem !important;
+      .far {
+        font-size: calc(0.7rem + 0.3vw) !important;
+      }
+    }
     #productImg,
     #productImgLoader {
       max-width: 13vw;
