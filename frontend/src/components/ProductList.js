@@ -6,7 +6,7 @@ import { productListAction } from '../actions/products'
 import Loader from '../components/loader'
 import Message from '../components/message'
 
-const ProductList = ({ setScrolled, loadedImages, setLoadedImages }) => {
+const ProductList = ({ scrollPosition, setScrollPosition }) => {
   const dispatch = useDispatch()
 
   const { products, error, loading } = useSelector((state) => state.productList)
@@ -14,15 +14,28 @@ const ProductList = ({ setScrolled, loadedImages, setLoadedImages }) => {
   useEffect(() => {
     if (!products) dispatch(productListAction())
   }, [dispatch])
+  useEffect(() => {
+    window.scrollTo(0, scrollPosition)
+  }, [])
+  useEffect(() => {
+    console.log(scrollPosition)
+  }, [scrollPosition])
   return (
-    <StyledList>
+    <StyledList
+      className={`${scrollPosition !== window.pageYOffset ? 'hide' : ''}`}
+    >
       <h1 className='title'>Latest Products</h1>
       {loading ? (
         <Loader />
       ) : !error && products ? (
         <div className='productList'>
           {products.map((each) => (
-            <Product data={each} key={each._id} setScrolled={setScrolled} />
+            <Product
+              setScrollPosition={setScrollPosition}
+              trackScroll={true}
+              data={each}
+              key={each._id}
+            />
           ))}
         </div>
       ) : error ? (
@@ -43,6 +56,9 @@ const ProductList = ({ setScrolled, loadedImages, setLoadedImages }) => {
   )
 }
 const StyledList = styled.div`
+  &.hide {
+    opacity: 0;
+  }
   padding: calc(0.8rem + 1vw) 0;
   width: 90%;
   margin: 0 auto;

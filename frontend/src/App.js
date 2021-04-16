@@ -35,6 +35,7 @@ const OrderDetails = lazy(() => import('./pages/orderDetails'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 
 const App = () => {
+  const [scrollPosition, setScrollPosition] = useState(0)
   const savedCart = JSON.parse(localStorage.getItem('sickCartProducts'))
   const [activeMenu, setActiveMenu] = useState(false)
 
@@ -111,7 +112,10 @@ const App = () => {
           <Suspense fallback={<p className='loadingText'>Loading...</p>}>
             <Switch>
               <Route path='/' exact>
-                <Home />
+                <Home
+                  scrollPosition={scrollPosition}
+                  setScrollPosition={setScrollPosition}
+                />
               </Route>
               <Route path='/products/:id'>
                 <ProductDetail

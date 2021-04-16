@@ -14,6 +14,7 @@ const Product = ({
   previewCanvasRef,
   edit,
   noImage,
+  setScrollPosition,
 }) => {
   const location = useLocation()
   const dispatch = useDispatch()
@@ -41,6 +42,7 @@ const Product = ({
         className='previewImg'
         to={linkCondition()}
         onClick={() => {
+          if (setScrollPosition) setScrollPosition(window.pageYOffset)
           if (type !== 'preview') dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })
         }}
       >
@@ -77,6 +79,7 @@ const Product = ({
         <Link
           to={`${type !== 'preview' ? `/products/${data._id}` : '#'}`}
           onClick={() => {
+            if (setScrollPosition) setScrollPosition(window.pageYOffset)
             dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })
           }}
         >

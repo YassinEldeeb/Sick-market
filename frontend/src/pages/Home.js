@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Meta from '../components/Meta'
 import ProductList from '../components/ProductList'
 
-const Home = ({ scrolled, setScrolled }) => {
-  useEffect(() => {
-    window.scroll({
-      top: scrolled,
-      left: 0,
-    })
-  }, [scrolled])
+const Home = ({ scrollPosition, setScrollPosition }) => {
   return (
     <>
       <Meta title='Welcome to Sick Market' ogTitle='Welcome to Sick Market' />
-      <ProductList setScrolled={setScrolled} />
+      <ProductList
+        scrollPosition={scrollPosition}
+        setScrollPosition={setScrollPosition}
+      />
     </>
   )
 }
