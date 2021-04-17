@@ -146,7 +146,8 @@ const StyledProduct = styled.div`
     .starsRating {
       margin: 0 !important;
       margin-top: 0.2rem !important;
-      .far {
+      .far,
+      .fas {
         font-size: calc(0.7rem + 0.3vw) !important;
       }
     }
