@@ -11,6 +11,7 @@ import PopupMessage from './PopupMessage'
 
 const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
   const { user } = useSelector((state) => state.userInfo)
+  const orderDetails = useSelector((state) => state.orderDetails)
   const status = user.status
   const location = useLocation()
   const history = useHistory()
@@ -50,6 +51,16 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
     })
   }, [location.pathname, dispatch])
 
+  useEffect(() => {
+    if (
+      location.pathname.split('/')[1] !== 'orders' &&
+      location.pathname.split('/')[2]
+        ? !location.pathname.split('/')[2].length < 24
+        : true
+    ) {
+      orderDetails.orderLoading = true
+    }
+  }, [location.pathname])
   return (
     <>
       {status !== 'Verified' &&

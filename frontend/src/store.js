@@ -9,6 +9,7 @@ import createOrderReducer from './reducers/order'
 import buyNowProduct from './reducers/buyNowProduct'
 import getOrderReducer from './reducers/orderDetail'
 import orderPayReducer from './reducers/orderPay'
+import orderDeliverReducer from './reducers/orderDeliver'
 import getAllOrdersReducer from './reducers/myOrders'
 import getDashboardUsers from './reducers/dashboardUsers'
 import searchDashboardUsers from './reducers/searchUsers'
@@ -43,6 +44,7 @@ const reducers = combineReducers({
   deleteProduct,
   productSearch: productSearchReducer,
   loadedImages: loadedImagesReducer,
+  orderDeliver: orderDeliverReducer,
 })
 let initialState
 

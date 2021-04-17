@@ -138,6 +138,34 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   res.send({ order })
 })
 
+const updateOrderToDelivered = asyncHandler(async (req, res) => {
+  if (!req.params.id) {
+    res.status(400)
+
+    throw new Error('Id is required to fetch Order')
+  }
+  const order = await Order.findById(req.params.id)
+
+  if (!order) {
+    res.status(404)
+    throw new Error('Order not Found!')
+  }
+  if (
+    order.user._id.toString() !== req.user._id.toString() &&
+    req.user.rank === 'user'
+  ) {
+    res.status(404)
+    throw new Error('Order not Found!')
+  }
+  order.isDelivered = true
+  const date = format(Date.now(), 'yyyy-MM-dd / hh:mm a')
+
+  order.deliveredAt = date
+
+  await order.save()
+  res.send(date)
+})
+
 const getMyOrders = asyncHandler(async (req, res) => {
   const user = req.user
   await user
@@ -153,4 +181,10 @@ const getMyOrders = asyncHandler(async (req, res) => {
   res.send(user.orders)
 })
 
-export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders }
+export {
+  addOrderItems,
+  getOrderById,
+  updateOrderToPaid,
+  getMyOrders,
+  updateOrderToDelivered,
+}

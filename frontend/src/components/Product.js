@@ -98,13 +98,14 @@ const Product = ({
         >
           <h1>{truncate(data.name)}</h1>
         </Link>
+
+        <Rating ratingValue={data.rating} numOfReviews={data.numReviews} />
         {data.freeShipping && (
           <div className='freeShipping'>
             <img src={free} alt='' />
             <p>Free Shipping</p>
           </div>
         )}
-        <Rating ratingValue={data.rating} numOfReviews={data.numReviews} />
         <div className='priceSection'>
           <h4>
             {data.price}

@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import SmoothImg from './smoothImgLoading'
 
 const PlaceOrderItem = ({ img, productName, qty, price, id, isBuyNow }) => {
   const dispatch = useDispatch()
@@ -13,7 +14,13 @@ const PlaceOrderItem = ({ img, productName, qty, price, id, isBuyNow }) => {
           onClick={() => dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })}
           to={`/products/${id}${isBuyNow ? '?order=buyNow' : ''}`}
         >
-          <img src={img} alt='product' />
+          <SmoothImg
+            preLoaderId='preLoader'
+            loaderId='preloader2'
+            src={img}
+            alt='product'
+            tiny={`/api/products/${id}/tiny`}
+          />
         </Link>
         <h1>
           <Link

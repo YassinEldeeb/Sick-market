@@ -15,6 +15,7 @@ import animationData2 from '../lotties/41793-correct.json'
 import axios from 'axios'
 import { PayPalButton } from 'react-paypal-button-v2'
 import orderPayAction from '../actions/orderPay'
+import orderDeliverAction from '../actions/orderDeliver'
 
 const OrderDetails = () => {
   const orderThatIsPlaced = useSelector((state) => state.order)
@@ -56,6 +57,16 @@ const OrderDetails = () => {
   )
 
   const { orderPayLoading, success } = useSelector((state) => state.orderPay)
+  const { deliverSuccess, orderDeliverLoading, date } = useSelector(
+    (state) => state.orderDeliver
+  )
+
+  useEffect(() => {
+    if (deliverSuccess) {
+      order.deliveredAt = date
+      order.isDelivered = true
+    }
+  }, [deliverSuccess])
 
   const [sdkReady, setSdkReady] = useState(false)
 
@@ -85,15 +96,20 @@ const OrderDetails = () => {
   }, [])
 
   useEffect(() => {
-    if (
-      (!order.totalPrice && !orderLoading) ||
-      success ||
-      (order._id !== location.pathname.split('/')[2] && !orderLoading)
-    ) {
+    dispatch(getOrderAction(location.pathname.split('/')[2]))
+  }, [dispatch])
+  useEffect(() => {
+    if (success) {
       dispatch({ type: 'ORDER_PAY_RESET' })
       dispatch(getOrderAction(location.pathname.split('/')[2]))
     }
-  }, [location, dispatch, success, order])
+  }, [dispatch, success])
+
+  useEffect(() => {
+    if (deliverSuccess) {
+      dispatch({ type: 'ORDER_DELIVER_RESET' })
+    }
+  }, [deliverSuccess])
 
   useEffect(() => {
     const addPaypalScript = async () => {
@@ -133,6 +149,7 @@ const OrderDetails = () => {
     if (order._id && qrResult === order._id.toString()) {
       setShowScanner(false)
       setShowSVGAnimation(true)
+      dispatch(orderDeliverAction(location.pathname.split('/')[2]))
       setTimeout(() => {
         setShowSVGAnimation(null)
       }, 2300)
@@ -157,246 +174,266 @@ const OrderDetails = () => {
 
   return (
     <StyledPlaceOrder>
-      {showScanner && (
-        <div
-          className='qrCodeWrapper'
-          onClick={(e) => {
-            if (e.currentTarget.classList[0] === 'qrCodeWrapper')
-              setShowScanner(false)
-          }}
-        >
-          <QrReader
-            style={{ width: '100%' }}
-            delay={300}
-            onError={qrErrorHandler}
-            onScan={qrScanHandler}
-            className='qrCodeScanner'
-          />
-          <img
-            onClick={() => {
-              setShowScanner(false)
-              setShowSVGAnimation(null)
+      {order && (
+        <>
+          {showScanner && (
+            <div
+              className='qrCodeWrapper'
+              onClick={(e) => {
+                if (e.currentTarget.classList[0] === 'qrCodeWrapper')
+                  setShowScanner(false)
+              }}
+            >
+              <QrReader
+                style={{ width: '100%' }}
+                delay={300}
+                onError={qrErrorHandler}
+                onScan={qrScanHandler}
+                className='qrCodeScanner'
+              />
+              <img
+                onClick={() => {
+                  setShowScanner(false)
+                  setShowSVGAnimation(null)
+                }}
+                className='close'
+                src={closeImg}
+              />
+            </div>
+          )}
+          <div
+            className='content'
+            style={{
+              alignItems: `${error ? 'flex-start' : 'center'}`,
+              width: `${error ? '90%' : '85%'}`,
             }}
-            className='close'
-            src={closeImg}
-          />
-        </div>
-      )}
-      <div
-        className='content'
-        style={{
-          alignItems: `${error ? 'flex-start' : 'center'}`,
-          width: `${error ? '90%' : '85%'}`,
-        }}
-      >
-        {orderLoading && <Loader />}
-        {error && (
-          <Message
-            vibrating='true'
-            visiblity={error ? true : false}
-            msg={
-              error
-                ? error.includes('timed out')
-                  ? 'Network Error'
-                  : error.includes('mongo')
-                  ? 'Server Error'
-                  : error
-                : 'Ok'
-            }
-            hidden={error ? false : true}
-            type='error'
-          />
-        )}
-        {order.itemsPrice && (
-          <>
-            <h1 className='orderId'>
-              <Link to='/account/orders'>
-                #Order:<div className='line'></div>
-              </Link>
-              <span>{' ' + order._id}</span>
-            </h1>
-            <div className='actualContent'>
-              {showSVGAnimation === false && (
-                <div className='failureOrderScreen'>
-                  <Lottie
-                    options={defaultOptions}
-                    width={'50%'}
-                    height={'50%'}
-                  />
-                  <img
-                    onClick={() => {
-                      setShowSVGAnimation(null)
-                      setShowScanner(false)
-                    }}
-                    className='close'
-                    src={closeImg}
-                  />
-                </div>
-              )}
-              {showSVGAnimation && (
-                <div className='successOrderScreen'>
-                  <Lottie
-                    options={defaultOptions2}
-                    width={'50%'}
-                    height={'50%'}
-                  />
-                  <img
-                    onClick={() => {
-                      setShowSVGAnimation(null)
-                      setShowScanner(false)
-                    }}
-                    className='close'
-                    src={closeImg}
-                  />
-                </div>
-              )}
-              <div className='summary'>
-                <div className='shipping-section section'>
-                  <h1>Shipping :</h1>
-                  <p>Name: {order.user.name}</p>
-                  <p>Email: {order.user.email}</p>
-                  <p className='lastChild'>
-                    Address: {order.shippingAddress.address},{' '}
-                    {order.shippingAddress.city},{' '}
-                    {order.shippingAddress.governorate}, Egypt,{' '}
-                    {order.shippingAddress.phoneNumber}
-                  </p>
-                  <div className='flex'>
-                    {!order.isDelivered && (
-                      <Message type='error' msg='Not Delivered' />
-                    )}
-                    <img
-                      onClick={() => setShowScanner(true)}
-                      src={qrCodeImg}
-                      alt=''
-                    />
-                  </div>
-                </div>
-                <div className='payment-section section'>
-                  <h1>Payment Method :</h1>
-                  <p>Method: {order.paymentMethod}</p>
-                  {!order.isPaid && <Message type='error' msg='Not Paid' />}
-                  {order.isPaid && <Message msg={'Paid on ' + order.paidAt} />}
-                </div>
-                <div className='order-section section'>
-                  <h1>
-                    {order.orderItems.length === 1
-                      ? 'Order Item :'
-                      : 'Order Items :'}
-                  </h1>
-                  {order.orderItems.map((each) => (
-                    <PlaceOrderItem
-                      price={each.price}
-                      qty={each.qty}
-                      productName={truncate(each.name)}
-                      img={each.image}
-                      id={each.product}
-                      key={each._id}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div className='table'>
-                <h1 className='title'>Order Summary</h1>
-                <div className='row1 row'>
-                  <h1>Items :</h1>
-                  <p>
-                    {order.itemsPrice}
-                    <span className='currency'>EGP</span>
-                  </p>
-                </div>
-                <div className='row2 row'>
-                  <h1>Shipping :</h1>
-                  <p>
-                    {order.shippingPrice}
-                    <span className='currency'>EGP</span>
-                  </p>
-                </div>
-                <div className='row3 row'>
-                  <h1>Tax :</h1>
-                  <p>
-                    {toFixedFN(order.taxPrice)}
-                    <span className='currency'>EGP</span>
-                  </p>
-                </div>
-                {order.couponDiscount > 0 && (
-                  <div className='row5 row'>
-                    <h1>Discount :</h1>
-                    <p>
-                      -{order.couponDiscount}
-                      <span className='currency'>EGP</span>
-                    </p>
-                  </div>
-                )}
-                <div className='row4 row'>
-                  <h1>Total :</h1>
-                  <p
-                    className={`${order.couponDiscount > 0 ? 'discount' : ''}`}
-                  >
-                    {order.couponDiscount > 0 && (
-                      <h1 className='lastPrice'>
-                        {toFixedFN(
-                          Number(order.itemsPrice) +
-                            50 +
-                            (Number(order.itemsPrice) * 14) / 100
+          >
+            {orderLoading && <Loader />}
+            {error && (
+              <Message
+                vibrating='true'
+                visiblity={error ? true : false}
+                msg={
+                  error
+                    ? error.includes('timed out')
+                      ? 'Network Error'
+                      : error.includes('mongo')
+                      ? 'Server Error'
+                      : error
+                    : 'Ok'
+                }
+                hidden={error ? false : true}
+                type='error'
+              />
+            )}
+            {order.itemsPrice && (
+              <>
+                <h1 className='orderId'>
+                  <Link to='/account/orders'>
+                    #Order:<div className='line'></div>
+                  </Link>
+                  <span>{' ' + order._id}</span>
+                </h1>
+                <div className='actualContent'>
+                  {orderDeliverLoading && (
+                    <div className='LoadingOrderScreen'>
+                      <p>Updating Order</p>
+                      <Loader providedClassName='updateOrder' />
+                    </div>
+                  )}
+                  {showSVGAnimation === false && (
+                    <div className='failureOrderScreen'>
+                      <Lottie
+                        options={defaultOptions}
+                        width={'50%'}
+                        height={'50%'}
+                      />
+                      <img
+                        onClick={() => {
+                          setShowSVGAnimation(null)
+                          setShowScanner(false)
+                        }}
+                        className='close'
+                        src={closeImg}
+                      />
+                    </div>
+                  )}
+                  {showSVGAnimation && !orderDeliverLoading && (
+                    <div className='successOrderScreen'>
+                      <Lottie
+                        options={defaultOptions2}
+                        width={'50%'}
+                        height={'50%'}
+                      />
+                      <img
+                        onClick={() => {
+                          setShowSVGAnimation(null)
+                          setShowScanner(false)
+                        }}
+                        className='close'
+                        src={closeImg}
+                      />
+                    </div>
+                  )}
+                  <div className='summary'>
+                    <div className='shipping-section section'>
+                      <h1>Shipping :</h1>
+                      <p>Name: {order.user.name}</p>
+                      <p>Email: {order.user.email}</p>
+                      <p className='lastChild'>
+                        Address: {order.shippingAddress.address},{' '}
+                        {order.shippingAddress.city},{' '}
+                        {order.shippingAddress.governorate}, Egypt,{' '}
+                        {order.shippingAddress.phoneNumber}
+                      </p>
+                      <div className='flex'>
+                        {!order.isDelivered && (
+                          <Message type='error' msg='Not Delivered' />
                         )}
+                        {order.isDelivered && (
+                          <Message msg={'Delivered on ' + order.deliveredAt} />
+                        )}
+
+                        {!order.isDelivered && (
+                          <img
+                            onClick={() => setShowScanner(true)}
+                            src={qrCodeImg}
+                            alt=''
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <div className='payment-section section'>
+                      <h1>Payment Method :</h1>
+                      <p>Method: {order.paymentMethod}</p>
+                      {!order.isPaid && <Message type='error' msg='Not Paid' />}
+                      {order.isPaid && (
+                        <Message msg={'Paid on ' + order.paidAt} />
+                      )}
+                    </div>
+                    <div className='order-section section'>
+                      <h1>
+                        {order.orderItems.length === 1
+                          ? 'Order Item :'
+                          : 'Order Items :'}
                       </h1>
+                      {order.orderItems.map((each) => (
+                        <PlaceOrderItem
+                          price={each.price}
+                          qty={each.qty}
+                          productName={truncate(each.name)}
+                          img={each.image}
+                          id={each.product}
+                          key={each._id}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className='table'>
+                    <h1 className='title'>Order Summary</h1>
+                    <div className='row1 row'>
+                      <h1>Items :</h1>
+                      <p>
+                        {order.itemsPrice}
+                        <span className='currency'>EGP</span>
+                      </p>
+                    </div>
+                    <div className='row2 row'>
+                      <h1>Shipping :</h1>
+                      <p>
+                        {order.shippingPrice}
+                        <span className='currency'>EGP</span>
+                      </p>
+                    </div>
+                    <div className='row3 row'>
+                      <h1>Tax :</h1>
+                      <p>
+                        {toFixedFN(order.taxPrice)}
+                        <span className='currency'>EGP</span>
+                      </p>
+                    </div>
+                    {order.couponDiscount > 0 && (
+                      <div className='row5 row'>
+                        <h1>Discount :</h1>
+                        <p>
+                          -{order.couponDiscount}
+                          <span className='currency'>EGP</span>
+                        </p>
+                      </div>
                     )}
-                    {toFixedFN(
-                      Number(order.itemsPrice) +
-                        50 +
-                        (Number(order.itemsPrice) * 14) / 100 +
-                        -order.couponDiscount
-                    ) > 0
-                      ? toFixedFN(
+                    <div className='row4 row'>
+                      <h1>Total :</h1>
+                      <p
+                        className={`${
+                          order.couponDiscount > 0 ? 'discount' : ''
+                        }`}
+                      >
+                        {order.couponDiscount > 0 && (
+                          <h1 className='lastPrice'>
+                            {toFixedFN(
+                              Number(order.itemsPrice) +
+                                50 +
+                                (Number(order.itemsPrice) * 14) / 100
+                            )}
+                          </h1>
+                        )}
+                        {toFixedFN(
                           Number(order.itemsPrice) +
                             50 +
                             (Number(order.itemsPrice) * 14) / 100 +
                             -order.couponDiscount
-                        )
-                      : '+' +
-                        Math.abs(
-                          toFixedFN(
-                            Number(order.itemsPrice) +
-                              50 +
-                              (Number(order.itemsPrice) * 14) / 100 +
-                              -order.couponDiscount
-                          )
-                        )}
-                    <span
-                      className={`currency ${
-                        toFixedFN(
-                          Number(order.totalPrice) +
-                            50 +
-                            (Number(order.totalPrice) * 14) / 100
-                        ) === order.couponDiscount
-                          ? 'free'
-                          : ''
-                      }`}
-                    >
-                      EGP
-                    </span>
-                  </p>
-                </div>
-                {!order.isPaid &&
-                  order.paymentMethod !== 'Cash on Delivery' && (
-                    <div className='row row6'>
-                      {sdkReady && currency && !orderPayLoading ? (
-                        <PayPalButton
-                          amount={(order.totalPrice / currency).toFixed(2)}
-                          onApprove={successPaymentHandler}
-                        />
-                      ) : (
-                        <Loader />
-                      )}
+                        ) > 0
+                          ? toFixedFN(
+                              Number(order.itemsPrice) +
+                                50 +
+                                (Number(order.itemsPrice) * 14) / 100 +
+                                -order.couponDiscount
+                            )
+                          : '+' +
+                            Math.abs(
+                              toFixedFN(
+                                Number(order.itemsPrice) +
+                                  50 +
+                                  (Number(order.itemsPrice) * 14) / 100 +
+                                  -order.couponDiscount
+                              )
+                            )}
+                        <span
+                          className={`currency ${
+                            toFixedFN(
+                              Number(order.totalPrice) +
+                                50 +
+                                (Number(order.totalPrice) * 14) / 100
+                            ) === order.couponDiscount
+                              ? 'free'
+                              : ''
+                          }`}
+                        >
+                          EGP
+                        </span>
+                      </p>
                     </div>
-                  )}
-              </div>
-              <div className='lineSeperate'></div>
-            </div>
-          </>
-        )}
-      </div>
+                    {!order.isPaid &&
+                      order.paymentMethod !== 'Cash on Delivery' && (
+                        <div className='row row6'>
+                          {sdkReady && currency && !orderPayLoading ? (
+                            <PayPalButton
+                              amount={(order.totalPrice / currency).toFixed(2)}
+                              onApprove={successPaymentHandler}
+                            />
+                          ) : (
+                            <Loader />
+                          )}
+                        </div>
+                      )}
+                  </div>
+                  <div className='lineSeperate'></div>
+                </div>
+              </>
+            )}
+          </div>
+        </>
+      )}
     </StyledPlaceOrder>
   )
 }
@@ -415,7 +452,8 @@ const StyledPlaceOrder = styled.div`
     }
   }
   .failureOrderScreen,
-  .successOrderScreen {
+  .successOrderScreen,
+  .LoadingOrderScreen {
     position: fixed;
     top: 0;
     left: 0;
@@ -439,6 +477,21 @@ const StyledPlaceOrder = styled.div`
       &:hover {
         filter: brightness(1);
       }
+    }
+  }
+  .LoadingOrderScreen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    p {
+      font-size: calc(1.3rem + 0.3vw);
+      color: #343a40 !important;
+      margin-bottom: calc(0.5rem + 0.15vh);
+    }
+    #loader:first-child {
+      width: calc(2rem + 0.5vw);
+      height: calc(2rem + 0.5vw);
     }
   }
   .qrCodeWrapper {
