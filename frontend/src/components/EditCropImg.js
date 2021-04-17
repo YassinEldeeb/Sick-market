@@ -245,6 +245,8 @@ const EditCropImg = ({
 }
 
 const StyledCart = styled(motion.div)`
+  z-index: 2;
+
   .disabled {
     transition: 0.3s ease;
     filter: grayscale(1);

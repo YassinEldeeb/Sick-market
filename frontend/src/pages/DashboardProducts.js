@@ -565,7 +565,7 @@ const DashboardProducts = ({
           return 'stock'
       }
     }
-    if (!searches.search && products) {
+    if (!searches.search && products && !loading) {
       dispatch(
         infiniteScrollProducts(
           skip,
@@ -579,7 +579,7 @@ const DashboardProducts = ({
     }
   }
   const infiniteScrollingMoreDataSearched = () => {
-    if (searches.search && searchedProducts) {
+    if (searches.search && searchedProducts && !searchLoading) {
       dispatch(infiniteScrollProductsSearched(skip2, searches.search))
       setSkip2(skip2 + 1)
     }

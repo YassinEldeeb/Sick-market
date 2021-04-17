@@ -13,6 +13,8 @@ import { buyNowAction } from '../actions/buyNow'
 import { useLastLocation } from 'react-router-last-location'
 import SmoothImg from '../components/smoothImgLoading'
 import Meta from '../components/Meta'
+import free from '../img/free.svg'
+import discount from '../img/discount.svg'
 
 const ProductDetail = ({ cartCount, setCartCount }) => {
   const lastLocation = useLastLocation()
@@ -91,12 +93,31 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 alt='product'
                 tiny={`/api/products/${product._id}/tiny`}
               />
+              {product.oldPrice && (
+                <div className='discount'>
+                  <img src={discount} alt='' />
+                  <h6>
+                    {(
+                      ((product.oldPrice - product.price) / product.oldPrice) *
+                      100
+                    ).toFixed(0)}
+                    % off
+                  </h6>
+                </div>
+              )}
               <div className='bottomInfo'>
-                <h3>
-                  {product.price}
-                  <span className='currency'>EGP</span>
-                </h3>
-
+                <div className='priceList-mobile'>
+                  <h3>
+                    {product.price}
+                    <span className='currency'>EGP</span>
+                  </h3>
+                  {product.oldPrice && (
+                    <h3>
+                      {product.oldPrice}
+                      <span className='currency'>EGP</span>
+                    </h3>
+                  )}
+                </div>
                 <div className='selectMobile'>
                   <h1>
                     {product.countInStock !== 0 ? 'In Stock' : 'Out Of Stock'}
@@ -165,10 +186,19 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
             >
               <div className='price'>
                 <h1>Price:</h1>
-                <h3>
-                  {product.price}
-                  <span className='currency'>EGP</span>
-                </h3>
+                <div className='priceList'>
+                  {product.oldPrice && (
+                    <h3>
+                      {product.oldPrice}
+                      <span className='currency'>EGP</span>
+                    </h3>
+                  )}
+
+                  <h3>
+                    {product.price}
+                    <span className='currency'>EGP</span>
+                  </h3>
+                </div>
               </div>
               <div className='status'>
                 <h1>Status:</h1>
@@ -229,6 +259,46 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   )
 }
 const StyledDetail = styled.div`
+  .priceList {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    h3:first-child {
+      font-size: calc(0.2rem + 1vw);
+      margin-right: 0.4rem;
+      text-decoration: line-through;
+      filter: grayscale(0.7);
+      font-size: calc(0.15rem + 1vw) !important;
+      .currency {
+        font-size: calc(0.02rem + 1vw);
+      }
+    }
+  }
+  .discount {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #00b2d8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    padding: 0.4rem 0.65rem;
+    border-radius: 7px;
+    border-top-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+
+    img {
+      margin-right: 0.25rem;
+      width: 18px !important;
+      height: 18px !important;
+    }
+    h6 {
+      font-weight: 500;
+      font-size: calc(0.6rem + 0.5vw) !important;
+      color: white !important;
+    }
+  }
   .lazyImgLoader,
   .lazyImgLoaderDiv {
     width: 640px !important;
@@ -246,6 +316,7 @@ const StyledDetail = styled.div`
     position: relative;
   }
   .onlyStock {
+    list-style: none;
     padding-bottom: calc(0.5rem + 0.15vw);
     color: #ec5840;
     font-weight: 500;
@@ -299,6 +370,7 @@ const StyledDetail = styled.div`
       object-fit: cover;
       border-radius: 10px;
       max-width: 640px;
+      position: relative;
       img {
         border-radius: 10px;
         display: block;
@@ -420,6 +492,33 @@ const StyledDetail = styled.div`
     }
   }
   @media screen and (max-width: 1050px) {
+    .priceList-mobile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      h3:last-child {
+        position: relative;
+        transform: translate(0, 10%);
+        margin-left: 0.4rem;
+        text-decoration: line-through;
+        filter: grayscale(0.7);
+        font-size: calc(0.7rem + 1vw) !important;
+        .currency {
+          font-size: calc(0.45rem + 1vw) !important;
+        }
+      }
+    }
+    .discount {
+      padding: 0.4rem 0.65rem;
+
+      img {
+        width: 15px !important;
+        height: 15px !important;
+      }
+      h6 {
+        font-size: calc(0.7rem + 0.5vw) !important;
+      }
+    }
     .smoothImgDetails {
       min-height: calc(90vw * 0.796875);
     }
@@ -427,6 +526,7 @@ const StyledDetail = styled.div`
       display: block;
     }
     .onlyStock {
+      list-style: none;
       padding-top: calc(0.5rem + 0.15vw);
       color: #ec5840;
       font-weight: 500;

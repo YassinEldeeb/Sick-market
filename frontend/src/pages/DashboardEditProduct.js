@@ -17,8 +17,10 @@ import info from '../img/info.svg'
 import { throttle } from 'underscore'
 import xSign from '../img/smallX.svg'
 import qs from 'qs'
+import Switch from 'react-switch'
 
 const DashboardEditProduct = ({ scrolled, setScrolled }) => {
+  const [freeShipping, setFreeShipping] = useState(false)
   const dispatch = useDispatch()
   const location = useLocation()
   const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
@@ -69,6 +71,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
 
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
+  const [oldPrice, setOldPrice] = useState('')
   const [brand, setBrand] = useState('')
   const [stock, setStock] = useState('')
   const [category, setCategory] = useState('')
@@ -103,6 +106,8 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
     if (editSuccess) {
       setName('')
       setPrice('')
+      setOldPrice('')
+      setFreeShipping(false)
       setBrand('')
       setStock('')
       setCategory('')
@@ -125,6 +130,24 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       )
     }
   }, [editSuccess])
+  useEffect(() => {
+    if (location.pathname.split('/')[3] !== 'edit') {
+      if (dashboardProduct) {
+        setName(dashboardProduct.name)
+        setPrice(dashboardProduct.price)
+        setBrand(dashboardProduct.brand)
+        setStock(dashboardProduct.countInStock)
+        setCategory(dashboardProduct.category)
+        setDescription(dashboardProduct.description)
+        setQtyPerUser(dashboardProduct.qtyPerUser)
+        setImage(dashboardProduct.image)
+        setOldPrice(dashboardProduct.oldPrice ? dashboardProduct.oldPrice : '')
+        setFreeShipping(
+          dashboardProduct.freeShipping ? dashboardProduct.freeShipping : ''
+        )
+      }
+    }
+  }, [location.pathname])
 
   useEffect(() => {
     if (dashboardProduct) {
@@ -136,6 +159,10 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       setDescription(dashboardProduct.description)
       setQtyPerUser(dashboardProduct.qtyPerUser)
       setImage(dashboardProduct.image)
+      setOldPrice(dashboardProduct.oldPrice ? dashboardProduct.oldPrice : '')
+      setFreeShipping(
+        dashboardProduct.freeShipping ? dashboardProduct.freeShipping : ''
+      )
     }
   }, [dashboardProduct])
 
@@ -185,6 +212,8 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       category,
       description,
       qtyPerUser,
+      oldPrice,
+      freeShipping,
     }
     for (const e in dataObj) {
       formData.append(e, dataObj[e])
@@ -306,6 +335,13 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
                       setValue={setPrice}
                       type='number'
                     />
+                    <Input
+                      label='Old Price'
+                      value={oldPrice}
+                      setValue={setOldPrice}
+                      type='number'
+                      required={false}
+                    />
                     <Input label='Brand' value={brand} setValue={setBrand} />
                     <Input
                       label='Stock'
@@ -330,6 +366,17 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
                       setValue={setQtyPerUser}
                       type='number'
                     />
+                    <div className='switchCont'>
+                      <p>Free Shipping</p>
+                      <Switch
+                        offColor='#FF6969'
+                        onColor='#24CA84'
+                        checked={freeShipping}
+                        onChange={(e) => {
+                          setFreeShipping(e)
+                        }}
+                      />
+                    </div>
                     <motion.div className='buttonCont'>
                       <motion.button
                         onClick={(e) => editProductHandler(e)}
@@ -412,6 +459,8 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
                       category,
                       image,
                       numReviews: 0,
+                      oldPrice,
+                      freeShipping,
                     }}
                     edit={true}
                   />
@@ -426,6 +475,20 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  .switchCont {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    p {
+      font-size: calc(1rem + 0.3vw);
+      color: rgba(255, 255, 255, 0.8) !important;
+      margin-bottom: 0.25rem;
+    }
+  }
+  .react-switch-bg div svg {
+    display: none !important;
+  }
   .editView {
     height: 100% !important;
     overflow: auto !important;
@@ -616,7 +679,6 @@ const StyledUserAction = styled(motion.div)`
     font-weight: 500;
     cursor: pointer;
     transition: 0.2s ease;
-    margin-top: 0.5rem;
     margin-bottom: 2rem;
     display: flex;
     justify-content: center;

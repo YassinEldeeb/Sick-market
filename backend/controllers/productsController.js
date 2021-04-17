@@ -108,6 +108,8 @@ const addProduct = asyncHandler(async (req, res) => {
     price,
     countInStock,
     qtyPerUser,
+    oldPrice,
+    freeShipping,
   } = req.body
   if (
     !name ||
@@ -158,6 +160,8 @@ const addProduct = asyncHandler(async (req, res) => {
     qtyPerUser,
     image,
     user: req.user._id,
+    oldPrice,
+    freeShipping,
   })
   await newProduct.save()
   const newPopulatedProduct = await Product.findOne(newProduct._id).populate(
@@ -185,6 +189,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     countInStock,
     qtyPerUser,
     image,
+    oldPrice,
+    freeShipping,
   } = req.body
 
   let finalImage
@@ -229,6 +235,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     }
   }
 
+  product.freeShipping = freeShipping ? freeShipping : undefined
+  product.oldPrice = oldPrice ? oldPrice : undefined
   product.name = name ? name : product.name
   product.brand = brand ? brand : product.brand
   product.category = category ? category : product.category

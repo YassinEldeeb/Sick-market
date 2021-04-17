@@ -14,9 +14,10 @@ import DashboardError from '../components/DashboardError'
 import CropImg from '../components/CropImg'
 import { throttle } from 'underscore'
 import xSign from '../img/smallX.svg'
-import socket from '../clientSocket/socket'
+import Switch from 'react-switch'
 
 const DashboardNewProduct = ({ scrolled, setScrolled }) => {
+  const [freeShipping, setFreeShipping] = useState(false)
   const lastLocation = useLastLocation()
   const dispatch = useDispatch()
   const location = useLocation()
@@ -64,6 +65,7 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
 
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
+  const [oldPrice, setOldPrice] = useState('')
   const [brand, setBrand] = useState('')
   const [stock, setStock] = useState('')
   const [category, setCategory] = useState('')
@@ -221,6 +223,13 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
                       setValue={setPrice}
                       type='number'
                     />
+                    <Input
+                      label='Old Price'
+                      value={oldPrice}
+                      setValue={setOldPrice}
+                      type='number'
+                      required={false}
+                    />
                     <Input label='Brand' value={brand} setValue={setBrand} />
                     <Input
                       label='Stock'
@@ -245,6 +254,17 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
                       setValue={setQtyPerUser}
                       type='number'
                     />
+                    <div className='switchCont'>
+                      <p>Free Shipping</p>
+                      <Switch
+                        offColor='#FF6969'
+                        onColor='#24CA84'
+                        checked={freeShipping}
+                        onChange={(e) => {
+                          setFreeShipping(e)
+                        }}
+                      />
+                    </div>
                     <motion.div className='buttonCont'>
                       <motion.button className='create' type='submit'>
                         Create Product{newLoading && <Loader />}
@@ -269,6 +289,8 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
                       category,
                       image: '/uploads/no.jpg',
                       numReviews: 0,
+                      oldPrice,
+                      freeShipping,
                     }}
                   />
                 </div>
@@ -282,6 +304,20 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  .switchCont {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    p {
+      font-size: calc(1rem + 0.3vw);
+      color: rgba(255, 255, 255, 0.8) !important;
+      margin-bottom: 0.25rem;
+    }
+  }
+  .react-switch-bg div svg {
+    display: none !important;
+  }
   .newView {
     height: 100% !important;
     overflow: auto !important;
@@ -391,7 +427,6 @@ const StyledUserAction = styled(motion.div)`
     font-weight: 500;
     cursor: pointer;
     transition: 0.2s ease;
-    margin-top: 0.5rem;
     margin-bottom: 2rem;
     display: flex;
     justify-content: center;

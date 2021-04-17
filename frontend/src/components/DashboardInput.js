@@ -1,12 +1,35 @@
 import React from 'react'
 import styled from 'styled-components'
 import { v4 as uuid } from 'uuid'
+import ReactTooltip from 'react-tooltip'
 
-const Input = ({ value, setValue, label, type = 'text', input = true }) => {
+const Input = ({
+  value,
+  setValue,
+  label,
+  type = 'text',
+  input = true,
+  required = true,
+}) => {
   const randomId = uuid()
   return (
     <StyledInput>
-      {label && <label htmlFor={`dashboardInput${randomId}`}>{label}</label>}
+      <ReactTooltip
+        delayHide={100}
+        delayShow={400}
+        effect='solid'
+        id='required'
+      />
+      {label && (
+        <label htmlFor={`dashboardInput${randomId}`}>
+          {label}{' '}
+          {required && (
+            <span data-for='required' data-tip='Required' class='required'>
+              *
+            </span>
+          )}{' '}
+        </label>
+      )}
       {input ? (
         <input
           value={value}
@@ -28,6 +51,14 @@ const Input = ({ value, setValue, label, type = 'text', input = true }) => {
 }
 
 const StyledInput = styled.div`
+  .__react_component_tooltip {
+    background: #1e203e;
+    border-radius: 5px;
+    padding: 7px 16px !important;
+    &::after {
+      border-top-color: #1e203e !important;
+    }
+  }
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -36,6 +67,14 @@ const StyledInput = styled.div`
     font-size: calc(1rem + 0.3vw);
     color: rgba(255, 255, 255, 0.8);
     margin-bottom: 0.25rem;
+    position: relative;
+    .required {
+      position: absolute;
+      right: 0;
+      top: 0;
+      font-size: 16px;
+      transform: translate(110%, 10%);
+    }
   }
   input[type='number'] {
     -moz-appearance: textfield;

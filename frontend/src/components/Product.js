@@ -4,6 +4,8 @@ import { Link, useLocation } from 'react-router-dom'
 import Rating from './Rating'
 import { useDispatch } from 'react-redux'
 import add from '../img/add.svg'
+import free from '../img/free.svg'
+import discount from '../img/discount.svg'
 import SmoothImg from './smoothImgLoading'
 
 const Product = ({
@@ -46,6 +48,17 @@ const Product = ({
           if (type !== 'preview') dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })
         }}
       >
+        {data.oldPrice && (
+          <div className='discount'>
+            <img src={discount} alt='' />
+            <h6>
+              {(((data.oldPrice - data.price) / data.oldPrice) * 100).toFixed(
+                0
+              )}
+              % off
+            </h6>
+          </div>
+        )}
         {completedCrop && completedCrop.width && type === 'preview' ? (
           <canvas className='canvasPreview' ref={previewCanvasRef} />
         ) : type === 'preview' ? (
@@ -85,16 +98,45 @@ const Product = ({
         >
           <h1>{truncate(data.name)}</h1>
         </Link>
+        {data.freeShipping && (
+          <div className='freeShipping'>
+            <img src={free} alt='' />
+            <p>Free Shipping</p>
+          </div>
+        )}
         <Rating ratingValue={data.rating} numOfReviews={data.numReviews} />
-        <h4>
-          {data.price}
-          <span className='currency'>EGP</span>
-        </h4>
+        <div className='priceSection'>
+          <h4>
+            {data.price}
+            <span className='currency'>EGP</span>
+          </h4>
+          {data.oldPrice && (
+            <h4 className='oldPrice'>
+              {data.oldPrice}
+              <span className='currency'>EGP</span>
+            </h4>
+          )}
+        </div>
       </div>
     </StyledProduct>
   )
 }
 const StyledProduct = styled.div`
+  .priceSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .oldPrice {
+      margin-left: calc(1.4rem + 1vw);
+      text-decoration: line-through;
+      filter: grayscale(0.7);
+      font-size: calc(0.8rem + 0.4vw);
+      .currency {
+        font-size: calc(0.45rem + 0.4vw);
+        text-decoration: line-through;
+      }
+    }
+  }
   #preLoader,
   #preloader2 {
     width: 640px;
@@ -123,6 +165,31 @@ const StyledProduct = styled.div`
   background: white;
   box-shadow: rgba(0, 0, 0, 0.06) -3px 3px 5px;
   border: 1px solid rgba(227, 227, 227, 0.58);
+  .discount {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #00b2d8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    padding: 0.4rem 0.65rem;
+    border-radius: 7px;
+    border-top-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+
+    img {
+      margin-right: 0.25rem;
+      width: 18px !important;
+      height: 18px !important;
+    }
+    h6 {
+      font-weight: 500;
+      font-size: calc(0.6rem + 0.5vw) !important;
+      color: white !important;
+    }
+  }
   .product_description {
     flex: 1 1 auto;
     display: flex;
@@ -204,7 +271,40 @@ const StyledProduct = styled.div`
       background: rgba(255, 255, 255, 0.2);
     }
   }
+  .freeShipping {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+      color: #2196f3 !important;
+      font-size: calc(0.55rem + 0.5vw) !important;
+      font-weight: 500;
+    }
+    img {
+      margin-right: 0.2rem;
+      width: 17px;
+      height: 17px;
+    }
+  }
   @media screen and (max-width: 570px) {
+    .discount {
+      padding: 0.4rem 0.65rem;
+
+      img {
+        width: 15px !important;
+        height: 15px !important;
+      }
+      h6 {
+        font-size: calc(0.7rem + 0.5vw) !important;
+      }
+    }
+    .freeShipping {
+      padding-bottom: calc(0.1rem + 0.1vw);
+
+      p {
+        font-size: calc(0.7rem + 0.5vw) !important;
+      }
+    }
     a:first-child {
       margin: calc(0.8rem + 0.4vw);
       margin-bottom: 0;

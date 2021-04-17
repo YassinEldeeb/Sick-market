@@ -81,6 +81,12 @@ const productSchema = mongoose.Schema(
     lastUpdated: {
       type: Date,
     },
+    oldPrice: {
+      type: Number,
+    },
+    freeShipping: {
+      type: Boolean,
+    },
   },
   { timestamps: true }
 )
