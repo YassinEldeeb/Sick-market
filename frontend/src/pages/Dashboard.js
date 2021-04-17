@@ -21,6 +21,7 @@ import DashboardTab from '../components/DashboardTab'
 import DashboardCustomers from './DashboardCustomers'
 import DashboardProducts from './DashboardProducts'
 import { useRef } from 'react'
+import Meta from '../components/Meta'
 
 const Dashboard = ({
   pageContent,
@@ -198,6 +199,10 @@ const Dashboard = ({
       >
         {Content}
       </Scrollbars>
+      <Meta
+        ogTitle={'Dashboard - Sick Market'}
+        title={'Dashboard - Sick Market'}
+      />
     </StyledDashboard>
   )
 }

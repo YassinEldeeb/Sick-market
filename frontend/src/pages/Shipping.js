@@ -83,13 +83,11 @@ const Shipping = () => {
           addressValue !== address.address ||
           city !== address.city
         ) {
-          console.log(governorate, address.governorate)
-          console.log(address, address.address)
-          console.log(city, address.city)
           setForwardGeocoding(true)
           const { data } = await axios.get(
             `https://api.mapbox.com/geocoding/v5/mapbox.places/${addressValue}, ${city}, ${governorate}, Egypt.json?access_token=pk.eyJ1IjoieWFzc2luNzg5IiwiYSI6ImNraGNiZDc2cjBjcXoycm5nZDQzeWh5MGsifQ.vZNRBIwM6P8fwbZvoPgp1A`
           )
+
           const lon = data.features[0].center[0]
           const lat = data.features[0].center[1]
           setForwardGeocoding(false)
@@ -169,61 +167,137 @@ const Shipping = () => {
     }),
   }
 
-  const cleanGovernorate = (data) => {
-    if (data.toLowerCase().includes('sharqia')) {
+  const cleanGovernorate = (data, city) => {
+    if (
+      data.toLowerCase().includes('sharqia') ||
+      data.toLowerCase().includes('الشرقية')
+    ) {
       return 'Ash Sharqia'
-    } else if (data.toLowerCase().includes('north sinai')) {
-      return 'North Sinai'
-    } else if (data.toLowerCase().includes('gharbiyya')) {
-      return 'Gharbia'
-    } else if (data.toLowerCase().includes('dakahlia')) {
-      return 'Dakahlia'
-    } else if (data.toLowerCase().includes('alexandria')) {
-      return 'Alexandria'
-    } else if (data.toLowerCase().includes('asyut')) {
-      return 'Asyut'
-    } else if (data.toLowerCase().includes('assouan')) {
-      return 'Aswan'
-    } else if (data.toLowerCase().includes('assouan')) {
-      return 'Aswan'
-    } else if (data.toLowerCase().includes('beni suef')) {
-      return 'Beni Suef'
-    } else if (data.toLowerCase().includes('qalyubia')) {
-      return 'Qalyubia'
-    } else if (data.toLowerCase().includes('cairo')) {
-      return 'Cairo'
-    } else if (data.toLowerCase().includes('beheira')) {
-      return 'Beheira'
-    } else if (data.toLowerCase().includes('damietta')) {
-      return 'Damietta'
-    } else if (data.toLowerCase().includes('new valley')) {
-      return 'New Valley'
-    } else if (data.toLowerCase().includes('faiyum')) {
-      return 'Faiyum'
-    } else if (data.toLowerCase().includes('red sea')) {
-      return 'Red Sea'
-    } else if (data.toLowerCase().includes('ismailia')) {
-      return 'Ismailia'
-    } else if (data.toLowerCase().includes('kafr el-sheikh')) {
-      return 'Kafr El Sheikh'
-    } else if (data.toLowerCase().includes('luxor')) {
-      return 'Luxor'
-    } else if (data.toLowerCase().includes('matrouh')) {
-      return 'Matrouh'
-    } else if (data.toLowerCase().includes('minya')) {
-      return 'Minya'
-    } else if (data.toLowerCase().includes('port said')) {
-      return 'Port Said'
-    } else if (data.toLowerCase().includes('qena')) {
-      return 'Qena'
-    } else if (data.toLowerCase().includes('monufia')) {
-      return 'Menofia'
-    } else if (data.toLowerCase().includes('south sinai')) {
-      return 'South Sinai'
-    } else if (data.toLowerCase().includes('sohag')) {
-      return 'Sohag'
-    } else if (data.toLowerCase().includes('suez')) {
+    } else if (
+      data.toLowerCase().includes('suez') ||
+      city.toLowerCase().includes('السويس')
+    ) {
       return 'Suez'
+    } else if (
+      data.toLowerCase().includes('north sinai') ||
+      data.toLowerCase().includes('شمال سيناء')
+    ) {
+      return 'North Sinai'
+    } else if (
+      data.toLowerCase().includes('gharbiyya') ||
+      data.toLowerCase().includes('الغربية')
+    ) {
+      return 'Gharbia'
+    } else if (
+      data.toLowerCase().includes('dakahlia') ||
+      data.toLowerCase().includes('الدقهلية')
+    ) {
+      return 'Dakahlia'
+    } else if (
+      data.toLowerCase().includes('alexandria') ||
+      data.toLowerCase().includes('الإسكندرية')
+    ) {
+      return 'Alexandria'
+    } else if (
+      data.toLowerCase().includes('asyut') ||
+      data.toLowerCase().includes('أسيوط')
+    ) {
+      return 'Asyut'
+    } else if (
+      data.toLowerCase().includes('assouan') ||
+      data.toLowerCase().includes('أسوان')
+    ) {
+      return 'Aswan'
+    } else if (
+      data.toLowerCase().includes('beni suef') ||
+      data.toLowerCase().includes('بنى سويف')
+    ) {
+      return 'Beni Suef'
+    } else if (
+      data.toLowerCase().includes('qalyubia') ||
+      data.toLowerCase().includes('القليوبية')
+    ) {
+      return 'Qalyubia'
+    } else if (
+      data.toLowerCase().includes('cairo') ||
+      data.toLowerCase().includes('القاهرة')
+    ) {
+      return 'Cairo'
+    } else if (
+      data.toLowerCase().includes('beheira') ||
+      data.toLowerCase().includes('البحيرة')
+    ) {
+      return 'Beheira'
+    } else if (
+      data.toLowerCase().includes('damietta') ||
+      data.toLowerCase().includes('دمياط')
+    ) {
+      return 'Damietta'
+    } else if (
+      data.toLowerCase().includes('new valley') ||
+      data.toLowerCase().includes('الوادي الجديد')
+    ) {
+      return 'New Valley'
+    } else if (
+      data.toLowerCase().includes('faiyum') ||
+      data.toLowerCase().includes('الفيوم')
+    ) {
+      return 'Faiyum'
+    } else if (
+      data.toLowerCase().includes('red sea') ||
+      data.toLowerCase().includes('البحر الأحمر')
+    ) {
+      return 'Red Sea'
+    } else if (
+      data.toLowerCase().includes('ismailia') ||
+      data.toLowerCase().includes('الإسماعيلية')
+    ) {
+      return 'Ismailia'
+    } else if (
+      data.toLowerCase().includes('kafr el-sheikh') ||
+      data.toLowerCase().includes('كفر الشيخ')
+    ) {
+      return 'Kafr El Sheikh'
+    } else if (
+      data.toLowerCase().includes('luxor') ||
+      data.toLowerCase().includes('الأقصر')
+    ) {
+      return 'Luxor'
+    } else if (
+      data.toLowerCase().includes('matrouh') ||
+      data.toLowerCase().includes('مطروح')
+    ) {
+      return 'Matrouh'
+    } else if (
+      data.toLowerCase().includes('minya') ||
+      data.toLowerCase().includes('المنيا')
+    ) {
+      return 'Minya'
+    } else if (
+      data.toLowerCase().includes('port said') ||
+      data.toLowerCase().includes('بورسعيد')
+    ) {
+      return 'Port Said'
+    } else if (
+      data.toLowerCase().includes('qena') ||
+      data.toLowerCase().includes('قنا')
+    ) {
+      return 'Qena'
+    } else if (
+      data.toLowerCase().includes('monufia') ||
+      data.toLowerCase().includes('المنوفية')
+    ) {
+      return 'Menofia'
+    } else if (
+      data.toLowerCase().includes('south sinai') ||
+      data.toLowerCase().includes('جنوب سيناء')
+    ) {
+      return 'South Sinai'
+    } else if (
+      data.toLowerCase().includes('sohag') ||
+      data.toLowerCase().includes('سوهاج')
+    ) {
+      return 'Sohag'
     } else {
       return ''
     }
@@ -258,7 +332,8 @@ const Shipping = () => {
                       ? data.address.state
                       : data.address.town
                       ? data.address.town
-                      : ''
+                      : '',
+                    data.address.city
                   ) +
                   ', '
                 : ''
@@ -276,13 +351,22 @@ const Shipping = () => {
                     ? ' ' + data.address.neighbourhood + ','
                     : ''
                 }${data.address.suburb ? ' ' + data.address.suburb : ''}`,
-                city: `${data.address.city ? data.address.city : ''}`,
+                city: `${
+                  data.address.city
+                    ? data.address.city
+                    : data.address.town
+                    ? data.address.town
+                    : data.address.village
+                    ? data.address.village
+                    : ''
+                }`,
                 governorate: cleanGovernorate(
                   data.address.state
                     ? data.address.state
                     : data.address.town
                     ? data.address.town
-                    : ''
+                    : '',
+                  data.address.city
                 ),
                 phoneNumber: address.phoneNumber ? address.phoneNumber : null,
               },

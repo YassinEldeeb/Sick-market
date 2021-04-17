@@ -12,7 +12,6 @@ import QtySelector from '../components/QtySelector'
 import { buyNowAction } from '../actions/buyNow'
 import { useLastLocation } from 'react-router-last-location'
 import SmoothImg from '../components/smoothImgLoading'
-import { useRef } from 'react'
 import Meta from '../components/Meta'
 
 const ProductDetail = ({ cartCount, setCartCount }) => {
