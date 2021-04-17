@@ -18,10 +18,10 @@ import Shipping from './pages/Shipping'
 import Payment from './pages/Payment'
 import PlaceOrder from './pages/PlaceOrder'
 import Home from './pages/Home'
+import Cart from './pages/Cart'
+import ProductDetail from './pages/ProductDetail'
 
-const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const Description = lazy(() => import('./pages/Description'))
-const Cart = lazy(() => import('./pages/Cart'))
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
 const Verify = lazy(() => import('./pages/Verify'))
