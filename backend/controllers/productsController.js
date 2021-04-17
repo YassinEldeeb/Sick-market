@@ -68,11 +68,9 @@ const deleteProduct = asyncHandler(async (req, res) => {
   if (product) {
     if (
       product.image !== '/uploads/no.jpg' &&
-      fs.existsSync(join(__dirname, product.image)) &&
-      fs.existsSync(join(__dirname, product.tinyImage))
+      fs.existsSync(join(__dirname, product.image))
     ) {
       fs.unlinkSync(join(__dirname, product.image))
-      fs.unlinkSync(join(__dirname, product.tinyImage))
       console.log('Image is Removed')
     }
 
@@ -127,7 +125,6 @@ const addProduct = asyncHandler(async (req, res) => {
   }
 
   let image
-  let tinyImage
   if (req.file) {
     fs.access('uploads/', (err) => {
       if (err) {
@@ -142,7 +139,6 @@ const addProduct = asyncHandler(async (req, res) => {
       path.extname(req.file.originalname).toLowerCase()
 
     image = `/uploads/${fileName}`
-    tinyImage = `/uploads/Tiny-${fileName}`
     await sharp(req.file.buffer)
       .resize({ width: 640, height: 510 })
       .toFile('uploads/' + fileName)
@@ -151,7 +147,6 @@ const addProduct = asyncHandler(async (req, res) => {
       .toFile('uploads/' + `Tiny-${fileName}`)
   } else {
     image = '/uploads/no.jpg'
-    tinyImage = '/uploads/tinyNo.jpg'
   }
   const newProduct = new Product({
     name,
@@ -163,7 +158,6 @@ const addProduct = asyncHandler(async (req, res) => {
     qtyPerUser,
     image,
     user: req.user._id,
-    tinyImage,
   })
   await newProduct.save()
   const newPopulatedProduct = await Product.findOne(newProduct._id).populate(
@@ -194,7 +188,6 @@ const updateProduct = asyncHandler(async (req, res) => {
   } = req.body
 
   let finalImage
-  let tinyImage
   if (req.file) {
     fs.access('uploads/', (err) => {
       if (err) {
@@ -209,13 +202,11 @@ const updateProduct = asyncHandler(async (req, res) => {
       path.extname(req.file.originalname).toLowerCase()
 
     finalImage = `/uploads/${fileName}`
-    tinyImage = `/uploads/Tiny-${fileName}`
     if (
       product.image !== '/uploads/no.jpg' &&
       fs.existsSync(join(__dirname, product.image))
     ) {
       fs.unlinkSync(join(__dirname, product.image))
-      fs.unlinkSync(join(__dirname, product.tinyImage))
       console.log('Image is Removed')
     }
     await sharp(req.file.buffer)
@@ -226,7 +217,6 @@ const updateProduct = asyncHandler(async (req, res) => {
       .toFile('uploads/' + `Tiny-${fileName}`)
   } else {
     finalImage = product.image
-    tinyImage = product.tinyImage
   }
   if (image === 'no') {
     if (
@@ -234,7 +224,6 @@ const updateProduct = asyncHandler(async (req, res) => {
       fs.existsSync(join(__dirname, product.image))
     ) {
       fs.unlinkSync(join(__dirname, product.image))
-      fs.unlinkSync(join(__dirname, product.tinyImage))
       console.log('Image is Removed')
       finalImage = '/uploads/no.jpg'
     }
@@ -248,13 +237,48 @@ const updateProduct = asyncHandler(async (req, res) => {
   product.countInStock = countInStock ? countInStock : product.countInStock
   product.qtyPerUser = qtyPerUser ? qtyPerUser : product.qtyPerUser
   product.image = finalImage
-  product.tinyImage = tinyImage
 
   product.lastUpdated = new Date()
 
   await product.save()
 
   res.send(product)
+})
+
+const resizeProductImage = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id)
+
+  if (!product) {
+    throw new Error('Product not Found')
+  }
+  if (!req.query.w || !req.query.h) {
+    throw new Error('Width & Height must be specified')
+  }
+
+  if (req.query.w && req.query.h) {
+    const image = await sharp('.' + product.image)
+      .resize({ width: Number(req.query.w), height: Number(req.query.h) })
+      .png()
+      .toBuffer()
+    res.set('Content-Type', 'image/png')
+    res.send(image)
+  } else {
+    res.send({ image: product.image })
+  }
+})
+const getTinyProductImage = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id)
+
+  if (!product) {
+    throw new Error('Product not Found')
+  }
+
+  const tiny = await sharp('.' + product.image)
+    .resize({ width: 20, height: 16 })
+    .png()
+    .toBuffer()
+  res.set('Content-Type', 'image/png')
+  res.send(tiny)
 })
 
 const searchProductsSuggesstions = asyncHandler(async (req, res) => {
@@ -288,4 +312,6 @@ export {
   upload,
   searchProductsSuggesstions,
   searchProducts,
+  getTinyProductImage,
+  resizeProductImage,
 }

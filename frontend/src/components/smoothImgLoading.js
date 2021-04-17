@@ -161,20 +161,20 @@ const StyledImg = styled.div`
     left: 0;
     border-radius: 7px;
     opacity: 1;
-    filter: blur(8px);
+    filter: blur(7px);
     transition: 0s;
 
     &.hide {
       opacity: 0 !important;
       pointer-events: none;
       animation: unset;
-      filter: unset;
+      filter: unset !important;
     }
   }
   .lazyImgLoaderDiv {
     width: 100%;
     height: 100%;
-    filter: unset;
+    filter: unset !important;
     background: linear-gradient(to right, #aeaeae40, #d2d2d2);
     animation: animate ${(props) => props.loadingAnimation / 1000}s infinite
       alternate-reverse;

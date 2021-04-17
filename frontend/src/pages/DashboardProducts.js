@@ -31,7 +31,23 @@ import infiniteScrollProducts from '../actions/infiniteScrollProducts'
 import infiniteScrollProductsSearched from '../actions/infiniteScrollSearchedProducts'
 import { useInView } from 'react-intersection-observer'
 
-const DashboardProducts = () => {
+const DashboardProducts = ({
+  setDashboardScrollPosition,
+  dashboardScrollPosition,
+  scrollRef,
+}) => {
+  useEffect(() => {
+    if (scrollRef.current) {
+      const view = document.querySelector('.view')
+
+      if (view)
+        view.scroll({
+          left: 0,
+          top: dashboardScrollPosition,
+          behavior: 'smooth',
+        })
+    }
+  }, [scrollRef.current])
   Object.size = function (obj) {
     var size = 0,
       key
@@ -577,7 +593,7 @@ const DashboardProducts = () => {
   }, [inView])
 
   return (
-    <StyledOrders>
+    <StyledDashboardProducts>
       <DashboardNewProduct
         scrolled={cardScrolled}
         setScrolled={setCardScrolled}
@@ -907,6 +923,9 @@ const DashboardProducts = () => {
                     >
                       {products.map((each) => (
                         <ProductDashboard
+                          setDashboardScrollPosition={
+                            setDashboardScrollPosition
+                          }
                           data={data}
                           actionsInfo={actionsInfo}
                           setClickedForDelete={setClickedForDelete}
@@ -928,6 +947,9 @@ const DashboardProducts = () => {
                     >
                       {searchedProducts.map((each) => (
                         <ProductDashboard
+                          setDashboardScrollPosition={
+                            setDashboardScrollPosition
+                          }
                           data={data}
                           search={searches.search}
                           actionsInfo={actionsInfo}
@@ -963,11 +985,14 @@ const DashboardProducts = () => {
           )}
         </>
       )}
-    </StyledOrders>
+    </StyledDashboardProducts>
   )
 }
 
-const StyledOrders = styled(motion.div)`
+const StyledDashboardProducts = styled(motion.div)`
+  &.hide {
+    opacity: 0 !important;
+  }
   .inputDiv {
     position: relative;
   }

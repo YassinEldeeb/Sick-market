@@ -78,7 +78,14 @@ const Shipping = () => {
       } Egypt ${', ' + phoneNumber}`
 
       const latitudeAndLongValue = async () => {
-        if (!latitude && !longitude) {
+        if (
+          governorate !== address.governorate ||
+          addressValue !== address.address ||
+          city !== address.city
+        ) {
+          console.log(governorate, address.governorate)
+          console.log(address, address.address)
+          console.log(city, address.city)
           setForwardGeocoding(true)
           const { data } = await axios.get(
             `https://api.mapbox.com/geocoding/v5/mapbox.places/${addressValue}, ${city}, ${governorate}, Egypt.json?access_token=pk.eyJ1IjoieWFzc2luNzg5IiwiYSI6ImNraGNiZDc2cjBjcXoycm5nZDQzeWh5MGsifQ.vZNRBIwM6P8fwbZvoPgp1A`

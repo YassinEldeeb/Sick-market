@@ -70,7 +70,7 @@ const Product = ({
             loaderId='preloader2'
             src={data.image}
             alt='product'
-            tiny={data.tinyImage}
+            tiny={`/api/products/${data._id}/tiny`}
           />
         )}
       </Link>

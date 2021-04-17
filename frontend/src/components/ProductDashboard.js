@@ -5,7 +5,7 @@ import pen from '../img/pen.svg'
 import trash from '../img/trash.svg'
 import eye from '../img/eyeSee.svg'
 import ReactTooltip from 'react-tooltip'
-import { motion, AnimatePresence, StaggeredMotion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { popup, realtimeStockCounter } from '../animations'
 import { Link, useLocation } from 'react-router-dom'
 import Loader from '../components/loader'
@@ -20,6 +20,7 @@ const ProductDashboard = ({
   actionsInfo,
   search,
   data,
+  setDashboardScrollPosition,
 }) => {
   const location = useLocation()
   const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
@@ -106,9 +107,9 @@ const ProductDashboard = ({
           height={'41.5px'}
           loaderId='loaderImg'
           contWidth={`max-content`}
-          src={product.image}
+          src={`/api/products/${product._id}/image?w=80&h=64`}
           alt=''
-          tiny={product.tinyImage}
+          tiny={`/api/products/${product._id}/tiny`}
         />
         <p data-for='product-card-tooltip' data-tip={product.name}>
           {product.name}
@@ -172,7 +173,16 @@ const ProductDashboard = ({
           data-for='action-info-tooltip'
           className='ActionCont'
         >
-          <Link to={`/products/${product._id}`} className='actionOption'>
+          <Link
+            onClick={() => {
+              const view = document.querySelector('.view')
+              if (setDashboardScrollPosition && view) {
+                setDashboardScrollPosition(view.scrollTop)
+              }
+            }}
+            to={`/products/${product._id}`}
+            className='actionOption'
+          >
             <img className='gearImg' src={eye} alt='' />
           </Link>
         </div>
@@ -207,6 +217,12 @@ const ProductDashboard = ({
 }
 
 const StyledUser = styled(motion.div)`
+  #loaderImg {
+    filter: blur(2px);
+  }
+  &.hide {
+    opacity: 0;
+  }
   .imgCont {
     min-width: 52px !important;
   }

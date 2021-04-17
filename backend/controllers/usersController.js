@@ -501,7 +501,10 @@ const serveProfilePic = asyncHandler(async (req, res) => {
 // GET get Tiny Avatar - /api/users/profilePic/:id
 const serveTinyProfilePic = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
-
+  const tiny = await sharp(user.profilePic)
+    .resize({ width: 20, height: 20 })
+    .png()
+    .toBuffer()
   if (!user || !user.profilePic) {
     fs.readFile('./backend/images/defaultAvatarTiny.png', (err, data) => {
       res.set('Content-Type', 'image/png')
@@ -511,7 +514,7 @@ const serveTinyProfilePic = asyncHandler(async (req, res) => {
   }
   res.set('Content-Type', 'image/png')
 
-  res.send(user.profilePicPreview)
+  res.send(tiny)
 })
 
 // POST Logout user - /api/users/logout

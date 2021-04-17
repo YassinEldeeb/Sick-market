@@ -1,4 +1,4 @@
-import express from "express"
+import express from 'express'
 import {
   getProducts,
   getProduct,
@@ -8,22 +8,26 @@ import {
   upload,
   searchProductsSuggesstions,
   searchProducts,
-} from "../controllers/productsController.js"
-import { protect, admin } from "../middleware/authMiddleware.js"
+  getTinyProductImage,
+  resizeProductImage,
+} from '../controllers/productsController.js'
+import { protect, admin } from '../middleware/authMiddleware.js'
 
 const productRouter = express.Router()
 
-productRouter.get("/", getProducts)
-productRouter.get("/suggest", searchProductsSuggesstions)
-productRouter.get("/search", searchProducts)
-productRouter.get("/:id", getProduct)
-productRouter.delete("/:id", protect, admin, deleteProduct)
-productRouter.post("/", protect, admin, upload.single("upload"), addProduct)
+productRouter.get('/', getProducts)
+productRouter.get('/suggest', searchProductsSuggesstions)
+productRouter.get('/search', searchProducts)
+productRouter.get('/:id', getProduct)
+productRouter.delete('/:id', protect, admin, deleteProduct)
+productRouter.post('/', protect, admin, upload.single('upload'), addProduct)
+productRouter.get('/:id/tiny', getTinyProductImage)
+productRouter.get('/:id/image', resizeProductImage)
 productRouter.patch(
-  "/:id",
+  '/:id',
   protect,
   admin,
-  upload.single("upload"),
+  upload.single('upload'),
   updateProduct
 )
 

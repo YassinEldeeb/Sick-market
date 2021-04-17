@@ -90,7 +90,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 height={'510px'}
                 src={product.image}
                 alt='product'
-                tiny={product.tinyImage}
+                tiny={`/api/products/${product._id}/tiny`}
               />
               <div className='bottomInfo'>
                 <h3>

@@ -429,8 +429,14 @@ const DashboardCustomers = () => {
             searches.search) ? (
             <Loader providedClassName='infiniteLoader' refElement={element} />
           ) : (
-            ((searchedCount !== 0 && searches.search) ||
-              (count !== 0 && !searches.search)) && (
+            ((searchedUsers &&
+              searchedCount !== 0 &&
+              searches.search &&
+              searchedUsers.length === searchedCount) ||
+              (users &&
+                count !== 0 &&
+                !searches.search &&
+                users.length === count)) && (
               <p className='end'>Yay! You have seen it all</p>
             )
           )}

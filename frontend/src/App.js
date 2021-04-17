@@ -36,6 +36,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'))
 
 const App = () => {
   const [scrollPosition, setScrollPosition] = useState(0)
+  const [dashboardScrollPosition, setDashboardScrollPosition] = useState(0)
   const savedCart = JSON.parse(localStorage.getItem('sickCartProducts'))
   const [activeMenu, setActiveMenu] = useState(false)
 
@@ -184,7 +185,11 @@ const App = () => {
                 <Dashboard pageContent={'geomap'} />
               </Route>
               <Route path='/dashboard/products'>
-                <Dashboard pageContent={'products'} />
+                <Dashboard
+                  dashboardScrollPosition={dashboardScrollPosition}
+                  setDashboardScrollPosition={setDashboardScrollPosition}
+                  pageContent={'products'}
+                />
               </Route>
               <Route path='/dashboard/discounts'>
                 <Dashboard pageContent={'discounts'} />

@@ -20,8 +20,14 @@ import home from '../img/home.svg'
 import DashboardTab from '../components/DashboardTab'
 import DashboardCustomers from './DashboardCustomers'
 import DashboardProducts from './DashboardProducts'
+import { useRef } from 'react'
 
-const Dashboard = ({ pageContent }) => {
+const Dashboard = ({
+  pageContent,
+  setDashboardScrollPosition,
+  dashboardScrollPosition,
+}) => {
+  const scrollRef = useRef(null)
   const lastLocation = useLastLocation()
 
   const main = [
@@ -47,7 +53,13 @@ const Dashboard = ({ pageContent }) => {
         Content = <DashboardCustomers />
         break
       case 'products':
-        Content = <DashboardProducts />
+        Content = (
+          <DashboardProducts
+            scrollRef={scrollRef}
+            dashboardScrollPosition={dashboardScrollPosition}
+            setDashboardScrollPosition={setDashboardScrollPosition}
+          />
+        )
         break
     }
   }
@@ -166,6 +178,7 @@ const Dashboard = ({ pageContent }) => {
         </Scrollbars>
       </div>
       <Scrollbars
+        ref={scrollRef}
         renderTrackHorizontal={(props) => (
           <div {...props} className='track-horizontal' />
         )}
