@@ -84,6 +84,8 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
       category,
       description,
       qtyPerUser,
+      freeShipping,
+      oldPrice,
     }
     for (const e in dataObj) {
       formData.append(e, dataObj[e])

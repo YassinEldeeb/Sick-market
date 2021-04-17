@@ -177,6 +177,12 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 ratingValue={product.rating}
                 numOfReviews={product.numReviews}
               />
+              {product.freeShipping && (
+                <div className='freeShipping'>
+                  <img src={free} alt='' />
+                  <p>Free Shipping</p>
+                </div>
+              )}
               <h3>{product.description}</h3>
             </div>
             <div
@@ -259,11 +265,27 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
   )
 }
 const StyledDetail = styled.div`
+  .freeShipping {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+      color: #2196f3 !important;
+      font-size: calc(0.55rem + 0.5vw) !important;
+      font-weight: 500;
+    }
+    img {
+      margin-right: 0.2rem;
+      width: 17px;
+      height: 17px;
+    }
+  }
   .priceList {
     display: flex;
     align-items: center;
     justify-content: center;
     h3:first-child {
+      padding-left: 0.6rem;
       font-size: calc(0.2rem + 1vw);
       margin-right: 0.4rem;
       text-decoration: line-through;
