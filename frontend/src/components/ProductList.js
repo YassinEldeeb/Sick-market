@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Product from '../components/Product'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,16 +14,15 @@ const ProductList = ({ scrollPosition, setScrollPosition }) => {
   useEffect(() => {
     if (!products) dispatch(productListAction())
   }, [dispatch])
+
+  const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
     window.scrollTo(0, scrollPosition)
+    setScrolled(true)
   }, [])
-  useEffect(() => {
-    console.log(scrollPosition)
-  }, [scrollPosition])
+
   return (
-    <StyledList
-      className={`${scrollPosition !== window.pageYOffset ? 'hide' : ''}`}
-    >
+    <StyledList className={`${!scrolled ? 'hide' : ''}`}>
       <h1 className='title'>Latest Products</h1>
       {loading ? (
         <Loader />

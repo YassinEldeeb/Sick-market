@@ -27,6 +27,7 @@ export const cartAction = (id, qty) => async (dispatch, getState) => {
         brand: product.brand,
         qtyPerUser: product.qtyPerUser,
         tinyImage: product.tinyImage,
+        freeShipping: product.freeShipping,
       },
     })
   }

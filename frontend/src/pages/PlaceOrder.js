@@ -1,19 +1,20 @@
-import React, { useEffect } from "react"
-import styled from "styled-components"
-import { useLocation, useHistory } from "react-router-dom"
-import { useSelector, useDispatch } from "react-redux"
-import CheckoutSteps from "../components/CheckoutSteps"
-import PlaceOrderItem from "../components/PlaceOrderItem"
-import createOrderAction from "../actions/createOrder"
-import Message from "../components/message"
-import Loader from "../components/loader"
+import React, { useEffect } from 'react'
+import styled from 'styled-components'
+import { useLocation, useHistory } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import CheckoutSteps from '../components/CheckoutSteps'
+import PlaceOrderItem from '../components/PlaceOrderItem'
+import createOrderAction from '../actions/createOrder'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import { useState } from 'react'
 
 const PlaceOrder = ({ setCartCount }) => {
   const dispatch = useDispatch()
   const { product } = useSelector((state) => state.buyNowProduct)
 
   function truncate(str) {
-    return str.length > 30 ? str.substr(0, 30 - 1) + ".." : str
+    return str.length > 30 ? str.substr(0, 30 - 1) + '..' : str
   }
   const { address, cartItems, paymentMethod, discount } = useSelector(
     (state) => state.cart
@@ -24,18 +25,18 @@ const PlaceOrder = ({ setCartCount }) => {
   const history = useHistory()
   const location = useLocation()
 
-  const isBuyNow = location.search.split("=")[1] === "buyNow"
+  const isBuyNow = location.search.split('=')[1] === 'buyNow'
 
   useEffect(() => {
     const pushedLink = () => {
-      if (location.search.split("=")[1] === "buyNow") {
-        return "/login?redirect=placeOrder?order=buyNow"
+      if (location.search.split('=')[1] === 'buyNow') {
+        return '/login?redirect=placeOrder?order=buyNow'
       } else {
-        return "/login?redirect=placeOrder"
+        return '/login?redirect=placeOrder'
       }
     }
     if (
-      location.pathname.split("/")[1].toLocaleLowerCase() === "placeorder" &&
+      location.pathname.split('/')[1].toLocaleLowerCase() === 'placeorder' &&
       !user.name
     ) {
       history.push(pushedLink())
@@ -63,14 +64,18 @@ const PlaceOrder = ({ setCartCount }) => {
       return 0
     }
   }
+
+  const [allFreeShipping] = useState(cartItems.every((e) => e.freeShipping))
+  const [shippingValue] = useState(allFreeShipping ? 0 : 50)
+
   cart.taxes = toFixedFN((Number(totalPrice) * 14) / 100)
   cart.totalPrice = Number(totalPrice)
-  cart.shipping = toFixedFN(50)
+  cart.shipping = toFixedFN(shippingValue)
   cart.itemsPrice = totalPrice
   cart.totalPrice = Math.abs(
     toFixedFN(
       Number(totalPrice) +
-        50 +
+        shippingValue +
         (Number(totalPrice) * 14) / 100 -
         discountValue()
     )
@@ -85,7 +90,7 @@ const PlaceOrder = ({ setCartCount }) => {
   )
   useEffect(() => {
     if (orderPlaced) {
-      localStorage.removeItem("sickDiscount")
+      localStorage.removeItem('sickDiscount')
       history.push(`/orders/${order._id}`)
     }
   }, [orderPlaced, history])
@@ -96,7 +101,7 @@ const PlaceOrder = ({ setCartCount }) => {
       !address.display_address ||
       (!cart.cartItems.length && orderPlaced === false)
     ) {
-      history.push("/cart")
+      history.push('/cart')
     }
   }, [cartItems, address.display_address])
 
@@ -110,14 +115,14 @@ const PlaceOrder = ({ setCartCount }) => {
             visiblity={error ? true : false}
             msg={
               error
-                ? error.includes("timed out")
-                  ? "Network Error"
-                  : error.includes("mongo")
-                  ? "Server Error"
+                ? error.includes('timed out')
+                  ? 'Network Error'
+                  : error.includes('mongo')
+                  ? 'Server Error'
                   : error.includes("Email isn't verified")
-                  ? "returnTheThing"
+                  ? 'returnTheThing'
                   : error
-                : "Ok"
+                : 'Ok'
             }
             hidden={error ? false : true}
             type='error'
@@ -133,8 +138,8 @@ const PlaceOrder = ({ setCartCount }) => {
           <div className='order-section section'>
             <h1>
               {isBuyNow || cartItems.length === 1
-                ? "Order Item :"
-                : "Order Items :"}
+                ? 'Order Item :'
+                : 'Order Items :'}
             </h1>
             {!isBuyNow ? (
               cartItems.map((each) => (
@@ -170,8 +175,8 @@ const PlaceOrder = ({ setCartCount }) => {
           <div className='row2 row'>
             <h1>Shipping :</h1>
             <p>
-              {toFixedFN(50)}
-              <span className='currency'>EGP</span>
+              {!allFreeShipping ? toFixedFN(50) : 'FREE'}
+              {!allFreeShipping && <span className='currency'>EGP</span>}
             </p>
           </div>
           <div className='row3 row'>
@@ -192,35 +197,39 @@ const PlaceOrder = ({ setCartCount }) => {
           )}
           <div className='row4 row'>
             <h1>Total :</h1>
-            <p className={`${discount ? "discount" : ""}`}>
+            <p className={`${discount ? 'discount' : ''}`}>
               {discount && (
                 <h1 className='lastPrice'>
                   {toFixedFN(
-                    Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100
+                    Number(totalPrice) +
+                      shippingValue +
+                      (Number(totalPrice) * 14) / 100
                   )}
                 </h1>
               )}
               {toFixedFN(
-                Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100
+                Number(totalPrice) +
+                  shippingValue +
+                  (Number(totalPrice) * 14) / 100
               ) === discountValue()
-                ? "Free"
+                ? 'Free'
                 : toFixedFN(
                     Number(totalPrice) +
-                      50 +
+                      shippingValue +
                       (Number(totalPrice) * 14) / 100 +
                       -discountValue()
                   ) > 0
                 ? toFixedFN(
                     Number(totalPrice) +
-                      50 +
+                      shippingValue +
                       (Number(totalPrice) * 14) / 100 +
                       -discountValue()
                   )
-                : "+" +
+                : '+' +
                   Math.abs(
                     toFixedFN(
                       Number(totalPrice) +
-                        50 +
+                        shippingValue +
                         (Number(totalPrice) * 14) / 100 +
                         -discountValue()
                     )
@@ -228,10 +237,12 @@ const PlaceOrder = ({ setCartCount }) => {
               <span
                 className={`currency ${
                   toFixedFN(
-                    Number(totalPrice) + 50 + (Number(totalPrice) * 14) / 100
+                    Number(totalPrice) +
+                      shippingValue +
+                      (Number(totalPrice) * 14) / 100
                   ) === discountValue()
-                    ? "free"
-                    : ""
+                    ? 'free'
+                    : ''
                 }`}
               >
                 EGP

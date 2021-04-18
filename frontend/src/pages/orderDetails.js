@@ -105,9 +105,14 @@ const OrderDetails = () => {
     }
   }, [dispatch, success])
 
+  const [showSuccess, setShowSuccess] = useState(false)
   useEffect(() => {
     if (deliverSuccess) {
       dispatch({ type: 'ORDER_DELIVER_RESET' })
+      setShowSuccess(true)
+      setTimeout(() => {
+        setShowSVGAnimation(null)
+      }, 2300)
     }
   }, [deliverSuccess])
 
@@ -146,22 +151,12 @@ const OrderDetails = () => {
   }
   const [showSVGAnimation, setShowSVGAnimation] = useState(null)
 
-  const [timesUp, setTimesUp] = useState(true)
-
-  useEffect(() => {
-    if (!orderDeliverLoading) setTimesUp(false)
-  }, [orderDeliverLoading])
-
   useEffect(() => {
     if (order._id && qrResult === order._id.toString()) {
       setShowScanner(false)
       setShowSVGAnimation(true)
 
       dispatch(orderDeliverAction(location.pathname.split('/')[2]))
-      setTimeout(() => {
-        setShowSVGAnimation(null)
-        setTimesUp(true)
-      }, 2300)
     } else if (qrResult.length === 24) {
       setShowScanner(false)
       setShowSVGAnimation(false)
@@ -267,7 +262,7 @@ const OrderDetails = () => {
                       />
                     </div>
                   )}
-                  {showSVGAnimation && !timesUp && (
+                  {showSVGAnimation && showSuccess && (
                     <div className='successOrderScreen'>
                       <Lottie
                         options={defaultOptions2}
