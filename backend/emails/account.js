@@ -84,7 +84,6 @@ const orderPlaced = async (order, email) => {
       refreshToken: process.env.OAUTH_REFRESH_TOKEN,
     },
   })
-  console.log('Email', email)
   let mailOptions = {
     from: 'yassineldeeb94@gmail.com',
     to: email,

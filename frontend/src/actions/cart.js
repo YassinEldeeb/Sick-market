@@ -34,7 +34,10 @@ export const cartAction = (id, qty) => async (dispatch, getState) => {
   const { cartItems } = getState().cart
   localStorage.setItem('sickCartProducts', JSON.stringify(cartItems))
 }
-export const updateQtyAction = (match, qty) => async (dispatch, getState) => {
+export const updateQtyAction = (match, qty, updateCart) => async (
+  dispatch,
+  getState
+) => {
   const { cartItems } = getState().cart
   const matchedWithTheCart = cartItems.find((each) => each._id === match._id)
   if (matchedWithTheCart.qty !== qty) {

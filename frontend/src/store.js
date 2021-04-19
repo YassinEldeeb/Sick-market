@@ -75,6 +75,11 @@ initialState = {
       : savedPaymentMethod
       ? savedPaymentMethod
       : null,
+    loadingCheck: true,
+    check: {
+      soldOut: [],
+      removed: [],
+    },
     discount: sickDiscount ? sickDiscount : null,
   },
   userInfo: savedUserInfo ? savedUserInfo : { user: {} },

@@ -10,6 +10,7 @@ import {
 import SecretCode from '../models/secretCode.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import axios from 'axios'
 
 //Update USER Rank - /api/users/rank @Admin
 const updateUserRank = asyncHandler(async (req, res) => {
@@ -486,7 +487,7 @@ const deleteProfilePic = asyncHandler(async (req, res) => {
 const serveProfilePic = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
 
-  if (!user || !user.profilePic) {
+  if (!user || (!user.profilePic && !user.profilePicLink)) {
     fs.readFile('./backend/images/defaultAvatar.png', (err, data) => {
       res.set('Content-Type', 'image/png')
       res.send(data)
@@ -495,17 +496,20 @@ const serveProfilePic = asyncHandler(async (req, res) => {
   }
   res.set('Content-Type', 'image/png')
 
-  res.send(user.profilePic)
+  let input
+  if (user.profilePicLink) {
+    input = (
+      await axios({ url: user.profilePicLink, responseType: 'arraybuffer' })
+    ).data
+  }
+  res.send(input ? input : user.profilePic)
 })
 
 // GET get Tiny Avatar - /api/users/profilePic/:id
 const serveTinyProfilePic = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
-  const tiny = await sharp(user.profilePic)
-    .resize({ width: 20, height: 20 })
-    .png()
-    .toBuffer()
-  if (!user || !user.profilePic) {
+
+  if (!user || (!user.profilePic && !user.profilePicLink)) {
     fs.readFile('./backend/images/defaultAvatarTiny.png', (err, data) => {
       res.set('Content-Type', 'image/png')
       res.send(data)
@@ -514,6 +518,17 @@ const serveTinyProfilePic = asyncHandler(async (req, res) => {
   }
   res.set('Content-Type', 'image/png')
 
+  let input
+  if (user.profilePicLink) {
+    input = (
+      await axios({ url: user.profilePicLink, responseType: 'arraybuffer' })
+    ).data
+  }
+
+  const tiny = await sharp(input ? input : user.profilePic)
+    .resize({ width: 20, height: 20 })
+    .png()
+    .toBuffer()
   res.send(tiny)
 })
 

@@ -51,6 +51,35 @@ const getProducts = asyncHandler(async (req, res) => {
   res.send({ products, count: productsCount })
 })
 
+const checkProducts = asyncHandler(async (req, res) => {
+  const { products } = req.body
+  const soldOut = []
+  const removed = []
+  const productsArr = []
+  if (!products) {
+    throw new Error('Products array must be specified')
+  }
+
+  for (let i = 0; i < products.length + 1; i++) {
+    const e = products[i]
+    if (e) {
+      const product = await Product.findById(e)
+
+      if (product && product.countInStock === 0) {
+        soldOut.push(e)
+      }
+      if (product) {
+        productsArr.push(product)
+      }
+    }
+    if (i === products.length) {
+      productsArr.sort((a, b) => b.countInStock - a.countInStock)
+
+      res.send({ soldOut, removed, products: productsArr })
+    }
+  }
+})
+
 //Get Product - /api/products/:id @Public
 const getProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id).populate('user', 'name')
@@ -322,4 +351,5 @@ export {
   searchProducts,
   getTinyProductImage,
   resizeProductImage,
+  checkProducts,
 }

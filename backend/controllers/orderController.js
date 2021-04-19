@@ -18,6 +18,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     couponDiscount,
     code,
   } = req.body
+
   if (req.user.status !== 'Verified') {
     throw new Error("Email isn't verified")
   }
@@ -29,13 +30,38 @@ const addOrderItems = asyncHandler(async (req, res) => {
     res.status(405)
     throw new Error('You are prohibited from ordering by Admins')
   }
-  orderItems.forEach(async (e) => {
-    const product = await Product.findById(e.product)
-    product.countInStock = product.countInStock - e.qty
-    product.paidStock = product.paidStock + e.qty
-    product.paidAmount = product.paidAmount + e.qty * e.price
-    await product.save()
-  })
+  const productsProblems = []
+  const products = []
+
+  for (let i = 0; i < orderItems.length + 1; i++) {
+    const e = orderItems[i]
+    if (e) {
+      const product = await Product.findById(e.product)
+      products.push(product)
+      if (!product) {
+        productsProblems.push({ id: e.product, error: 'removed' })
+      } else if (product.countInStock === 0) {
+        productsProblems.push({ id: product._id, error: 'soldOut' })
+      }
+    } else if (i === orderItems.length) {
+      if (productsProblems.length) {
+        res.status(400)
+        throw new Error(
+          JSON.stringify({ type: 'confirm', error: productsProblems })
+        )
+      }
+      orderItems.forEach(async (e, i) => {
+        const product = products[i]
+        if (product) {
+          product.countInStock = product.countInStock - e.qty
+          product.paidStock = product.paidStock + e.qty
+          product.paidAmount = product.paidAmount + e.qty * e.price
+          await product.save()
+        }
+      })
+    }
+  }
+
   const order = new Order({
     user: req.user._id,
     orderItems,

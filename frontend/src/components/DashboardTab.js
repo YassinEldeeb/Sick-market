@@ -1,30 +1,44 @@
-import React from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
-const DashboardTab = ({ text, icon, active, providedClassName }) => {
-  const { newUsers } = useSelector((state) => state.dashboardUsers)
-  const { newProducts } = useSelector((state) => state.productList)
+const DashboardTab = memo(
+  ({ text, icon, providedClassName }) => {
+    const location = useLocation()
+    const { newUsers } = useSelector((state) => state.dashboardUsers)
+    const { newProducts } = useSelector((state) => state.productList)
+    const page = location.pathname.split('/')[2]
 
-  return (
-    <Tab
-      to={providedClassName ? '/' : `/dashboard/${text.toLowerCase()}`}
-      className={`${active ? 'active' : ''} ${
-        providedClassName ? providedClassName : ''
-      }`}
-    >
-      <img src={icon} alt='icon' />
-      <h4>{text}</h4>
-      {text === 'Customers' && newUsers > 0 && (
-        <h6 className='counter'>{newUsers}</h6>
-      )}
-      {text === 'Products' && newProducts > 0 && (
-        <h6 className='counter'>{newProducts}</h6>
-      )}
-    </Tab>
-  )
-}
+    useEffect(() => {
+      console.log('Tab is Rendered!')
+    }, [])
+    return (
+      <Tab
+        to={providedClassName ? '/' : `/dashboard/${text.toLowerCase()}`}
+        className={`${page === text.toLowerCase() ? 'active' : ''} ${
+          providedClassName ? providedClassName : ''
+        }`}
+      >
+        <img src={icon} alt='icon' />
+        <h4>{text}</h4>
+        {text === 'Customers' && newUsers > 0 && (
+          <h6 className='counter'>{newUsers}</h6>
+        )}
+        {text === 'Products' && newProducts > 0 && (
+          <h6 className='counter'>{newProducts}</h6>
+        )}
+      </Tab>
+    )
+  },
+  (pre, next) => {
+    if (pre.text !== next.text) {
+      return true
+    }
+    return false
+  }
+)
 
 const Tab = styled(Link)`
   .counter {

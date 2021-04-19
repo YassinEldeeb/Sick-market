@@ -11,7 +11,8 @@ const createOrderReducer = (state = initialState, action) => {
       }
     case 'CREATE_ORDER_FAIL':
       return {
-        error: action.payload,
+        errorConfirm: action.payload.confirm,
+        error: action.payload.error,
         orderLoading: false,
         orderPlaced: false,
       }

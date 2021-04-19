@@ -36,11 +36,17 @@ const Dashboard = lazy(() => import('./pages/Dashboard'))
 
 const App = () => {
   const [scrollPosition, setScrollPosition] = useState(0)
-  const [dashboardScrollPosition, setDashboardScrollPosition] = useState(0)
   const savedCart = JSON.parse(localStorage.getItem('sickCartProducts'))
   const [activeMenu, setActiveMenu] = useState(false)
 
-  const qtyArr = savedCart ? savedCart.map((each) => each.qty) : []
+  const qtyArr = savedCart
+    ? savedCart
+        .filter((e) => {
+          if (!e.removed) return e
+        })
+        .map((each) => each.qty)
+    : []
+
   let initialCartValue = undefined
   if (savedCart && qtyArr.length !== 0) {
     initialCartValue = qtyArr.reduce((acc, product) => acc + product)
@@ -164,7 +170,7 @@ const App = () => {
                 <Payment />
               </Route>
               <Route path='/placeOrder'>
-                <PlaceOrder setCartCount={setCartCount} />
+                <PlaceOrder cartCount={cartCount} setCartCount={setCartCount} />
               </Route>
               <Route path='/orders/:id'>
                 <OrderDetails />
@@ -172,43 +178,10 @@ const App = () => {
 
               <Route path='/account'></Route>
 
-              <Route path='/dashboard/orders'>
-                <Dashboard pageContent={'orders'} />
-              </Route>
-              <Route path='/dashboard/statistics'>
-                <Dashboard pageContent={'statistics'} />
-              </Route>
-              <Route path='/dashboard/categories'>
-                <Dashboard pageContent={'categories'} />
-              </Route>
-              <Route path='/dashboard/geomap'>
-                <Dashboard pageContent={'geomap'} />
-              </Route>
-              <Route path='/dashboard/products'>
-                <Dashboard
-                  dashboardScrollPosition={dashboardScrollPosition}
-                  setDashboardScrollPosition={setDashboardScrollPosition}
-                  pageContent={'products'}
-                />
-              </Route>
-              <Route path='/dashboard/discounts'>
-                <Dashboard pageContent={'discounts'} />
-              </Route>
-              <Route path='/dashboard/employees'>
-                <Dashboard pageContent={'employees'} />
-              </Route>
-              <Route path='/dashboard/customers'>
-                <Dashboard pageContent={'customers'} />
-              </Route>
-              <Route path='/dashboard/chat'>
-                <Dashboard pageContent={'chat'} />
-              </Route>
-              <Route path='/dashboard/emails'>
-                <Dashboard pageContent={'emails'} />
-              </Route>
               <Route path='/dashboard'>
-                <Dashboard pageContent={''} />
+                <Dashboard />
               </Route>
+
               <Route>
                 <NotFound />
               </Route>

@@ -107,7 +107,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
               )}
               <div className='bottomInfo'>
                 <div className='priceList-mobile'>
-                  <h3>
+                  <h3 className='oldPrice'>
                     {product.price}
                     <span className='currency'>EGP</span>
                   </h3>
@@ -194,7 +194,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 <h1>Price:</h1>
                 <div className='priceList'>
                   {product.oldPrice && (
-                    <h3>
+                    <h3 className='oldPrice'>
                       {product.oldPrice}
                       <span className='currency'>EGP</span>
                     </h3>
@@ -264,6 +264,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
     </StyledDetail>
   )
 }
+
 const StyledDetail = styled.div`
   .freeShipping {
     display: flex;
@@ -284,7 +285,7 @@ const StyledDetail = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    h3:first-child {
+    .oldPrice {
       padding-left: 0.6rem;
       font-size: calc(0.2rem + 1vw);
       margin-right: 0.4rem;
@@ -518,7 +519,7 @@ const StyledDetail = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      h3:last-child {
+      .oldPrice {
         position: relative;
         transform: translate(0, 10%);
         margin-left: 0.4rem;

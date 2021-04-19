@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 const categoriesSchema = mongoose.Schema(
   {
@@ -13,17 +13,6 @@ const categoriesSchema = mongoose.Schema(
   { timestamps: true }
 )
 
-const Category = mongoose.model("Category", categoriesSchema)
+const Category = mongoose.model('Category', categoriesSchema)
 
-const run = async () => {
-  try {
-    const data = new Category({
-      category: "Electronics",
-    })
-    await data.save()
-  } catch (err) {
-    console.log(err)
-  }
-}
-run()
 export default Category

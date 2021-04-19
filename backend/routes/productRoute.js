@@ -10,6 +10,7 @@ import {
   searchProducts,
   getTinyProductImage,
   resizeProductImage,
+  checkProducts,
 } from '../controllers/productsController.js'
 import { protect, admin } from '../middleware/authMiddleware.js'
 
@@ -17,6 +18,7 @@ const productRouter = express.Router()
 
 productRouter.get('/', getProducts)
 productRouter.get('/suggest', searchProductsSuggesstions)
+productRouter.post('/check', checkProducts)
 productRouter.get('/search', searchProducts)
 productRouter.get('/:id', getProduct)
 productRouter.delete('/:id', protect, admin, deleteProduct)

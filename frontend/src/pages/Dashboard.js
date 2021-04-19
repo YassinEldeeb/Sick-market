@@ -1,8 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Scrollbars } from 'react-custom-scrollbars'
-import { useLocation, useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import {
+  useLocation,
+  useHistory,
+  Switch,
+  Route,
+  BrowserRouter,
+} from 'react-router-dom'
+
+import { useSelector } from 'react-redux'
 import { useLastLocation } from 'react-router-last-location'
 import { v4 as uuid } from 'uuid'
 import statistics from '../img/statistics.svg'
@@ -23,62 +30,39 @@ import DashboardProducts from './DashboardProducts'
 import { useRef } from 'react'
 import Meta from '../components/Meta'
 
-const Dashboard = ({
-  pageContent,
-  setDashboardScrollPosition,
-  dashboardScrollPosition,
-}) => {
+const main = [
+  { text: 'Statistics', i: statistics },
+  { text: 'Orders', i: orders },
+  { text: 'Categories', i: categories },
+  { text: 'GeoMap', i: GeoMap },
+  { text: 'Products', i: Products },
+  { text: 'Discounts', i: discounts },
+  { text: 'Employees', i: employees },
+  { text: 'Customers', i: customers },
+]
+
+const communicate = [
+  { text: 'Notify', i: chat },
+  { text: 'Emails', i: emails },
+]
+
+const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
   const scrollRef = useRef(null)
   const lastLocation = useLastLocation()
-
-  const main = [
-    { text: 'Statistics', i: statistics },
-    { text: 'Orders', i: orders },
-    { text: 'Categories', i: categories },
-    { text: 'GeoMap', i: GeoMap },
-    { text: 'Products', i: Products },
-    { text: 'Discounts', i: discounts },
-    { text: 'Employees', i: employees },
-    { text: 'Customers', i: customers },
-  ]
-  main.forEach((e) => (e.active = e.text.toLowerCase() === pageContent))
-  const communicate = [
-    { text: 'Notify', i: chat },
-    { text: 'Emails', i: emails },
-  ]
-
-  let Content
-  const pageSort = () => {
-    switch (pageContent) {
-      case 'customers':
-        Content = <DashboardCustomers />
-        break
-      case 'products':
-        Content = (
-          <DashboardProducts
-            scrollRef={scrollRef}
-            dashboardScrollPosition={dashboardScrollPosition}
-            setDashboardScrollPosition={setDashboardScrollPosition}
-          />
-        )
-        break
-    }
-  }
-  pageSort()
+  const location = useLocation()
 
   const dashboardUsers = useSelector((state) => state.dashboardUsers)
   const userActions = useSelector((state) => state.userActions)
   const { user } = useSelector((state) => state.userInfo)
   const productList = useSelector((state) => state.productList)
 
-  const location = useLocation()
   const history = useHistory()
 
   useEffect(() => {
     const firstChild = document.querySelector('.view')
 
     if (!location.pathname.split('/')[3]) {
-      if (!lastLocation || !lastLocation.pathname.split('/')[3])
+      if ((!lastLocation || !lastLocation.pathname.split('/')[3]) && firstChild)
         firstChild.scroll({
           top: 0,
         })
@@ -160,21 +144,11 @@ const Dashboard = ({
           />
           <p>Main</p>
           {main.map((e) => (
-            <DashboardTab
-              key={uuid()}
-              text={e.text}
-              icon={e.i}
-              active={e.active ? e.active : false}
-            />
+            <DashboardTab text={e.text} icon={e.i} />
           ))}
           <p className='last'>Communicate</p>
           {communicate.map((e) => (
-            <DashboardTab
-              key={uuid()}
-              text={e.text}
-              icon={e.i}
-              active={e.active ? e.active : false}
-            />
+            <DashboardTab text={e.text} icon={e.i} />
           ))}
         </Scrollbars>
       </div>
@@ -197,7 +171,18 @@ const Dashboard = ({
         marginWidth='-20px'
         marginHeight='-20px'
       >
-        {Content}
+        <Switch>
+          <Route path='/dashboard/customers'>
+            <DashboardCustomers />
+          </Route>
+          <Route path='/dashboard/products'>
+            <DashboardProducts
+              scrollRef={scrollRef}
+              dashboardScrollPosition={dashboardScrollPosition}
+              setDashboardScrollPosition={setDashboardScrollPosition}
+            />
+          </Route>
+        </Switch>
       </Scrollbars>
       <Meta
         ogTitle={'Dashboard - Sick Market'}

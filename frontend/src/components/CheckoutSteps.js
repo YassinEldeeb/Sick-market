@@ -1,54 +1,54 @@
-import React from "react"
-import styled from "styled-components"
-import { Link } from "react-router-dom"
+import React from 'react'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 const CheckoutSteps = ({ step1, step2, step3, step4, current }) => {
   return (
     <StyledSteps>
       <div className='journeyLine'>
         <div
-          className={`circle circle1 ${step1 ? "active" : ""} ${
-            current === "step1" ? "current" : ""
+          className={`circle circle1 ${step1 ? 'active' : ''} ${
+            current === 'step1' ? 'current' : ''
           }`}
         >
           <h1>
             <Link to='/login'>Sign In</Link>
           </h1>
         </div>
-        <div className={`line ${step2 ? "active" : ""}`}></div>
+        <div className={`line ${step2 ? 'active' : ''}`}></div>
         <Link
           id='RouterNavLink'
           to='/shipping'
-          className={`circle circle2 ${step2 ? "active" : ""} ${
-            current === "step2" ? "current" : ""
+          className={`circle circle2 ${step2 ? 'active' : ''} ${
+            current === 'step2' ? 'current' : ''
           }`}
         >
           <h1>
             <Link to='/shipping'>Shipping</Link>
           </h1>
         </Link>
-        <div className={`line ${step3 ? "active" : ""}`}></div>
+        <div className={`line ${step3 ? 'active' : ''}`}></div>
         <Link
           id='RouterNavLink'
           to='/payment'
-          className={`circle circle3 ${step3 ? "active" : ""} ${
-            current === "step3" ? "current" : ""
+          className={`circle circle3 ${step3 ? 'active' : ''} ${
+            current === 'step3' ? 'current' : ''
           }`}
         >
           <h1>
             <Link to='/payment'>Payment</Link>
           </h1>
         </Link>
-        <div className={`line ${step4 ? "active" : ""}`}></div>
+        <div className={`line ${step4 ? 'active' : ''}`}></div>
         <Link
           id='RouterNavLink'
-          to='/place-order'
-          className={`circle circle4 ${step4 ? "active" : ""}  ${
-            current === "step4" ? "current" : ""
+          to='/placeOrder'
+          className={`circle circle4 ${step4 ? 'active' : ''}  ${
+            current === 'step4' ? 'current' : ''
           }`}
         >
           <h1>
-            <Link to='/place-order'>Place Order</Link>
+            <Link to='/placeOrder'>Place Order</Link>
           </h1>
         </Link>
       </div>

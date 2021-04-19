@@ -54,12 +54,12 @@ const SmoothImg = ({
       loadingAnimation={loadingAnimation}
       className={`${providedClassName ? providedClassName : ''}`}
     >
-      {!loadedImages.find((e) => e.img === src) && (
-        <div
-          className={`lazyImgLoaderDiv ${loadedTiny ? 'hide' : ''}`}
-          id={`${preLoaderId ? preLoaderId : ''}`}
-        ></div>
-      )}
+      {/* {!loadedImages.find((e) => e.img === src) && ( */}
+      <div
+        className={`lazyImgLoaderDiv ${loadedTiny ? 'hide' : ''}`}
+        id={`${preLoaderId ? preLoaderId : ''}`}
+      ></div>
+      {/* )} */}
 
       <img
         src={tiny}
@@ -120,6 +120,9 @@ const StyledImg = styled.div`
   }
   @media screen and (max-width: 1050px) {
     width: ${(props) => props.contWidthMobile};
+  }
+  img {
+    object-fit: cover;
   }
   .actualImg {
     max-height: 100%;

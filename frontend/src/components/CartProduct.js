@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Rating from '../components/Rating'
 import QtySelector from '../components/QtySelector'
@@ -6,8 +6,9 @@ import { removeAction } from '../actions/cart'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import SmoothImg from './smoothImgLoading'
+import notAllowed from '../img/notAllowed.svg'
 
-const CartProduct = ({ product, cartCount, setCartCount }) => {
+const CartProduct = ({ product, cartCount, setCartCount, check }) => {
   const dispatch = useDispatch()
   const [qty, setQty] = useState(product.qty)
   const { cartItems } = useSelector((state) => state.cart)
@@ -15,8 +16,20 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
   function truncate(str) {
     return str.length > 30 ? str.substr(0, 30 - 1) + '...' : str
   }
+  const [soldOut, setSoldOut] = useState(null)
+  const [removed, setRemoved] = useState(null)
+
+  useEffect(() => {
+    if (check) {
+      setRemoved(check.removed.find((e) => e === product._id))
+      setSoldOut(check.soldOut.find((e) => e === product._id))
+    }
+  }, [check])
+
   return (
     <StyledProduct>
+      {removed && <div className='wrapper'> </div>}
+      {soldOut && <div className='wrapper2'> </div>}
       <Link
         className='imgLink'
         to={`/products/${product._id}?redirect=cart`}
@@ -27,7 +40,7 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
           contWidth={'10vw'}
           contWidthMobile={'20vw'}
           width={'100%'}
-          height={'100%'}
+          height={'120%'}
           className='productImg'
           src={product.image}
           alt='product'
@@ -50,12 +63,20 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
         />
       </div>
       <div className='priceQtyAndRemove'>
-        <h1>
-          {product.price}
-          <span className='currency'>EGP</span>
-        </h1>
+        {!removed && !soldOut ? (
+          <h1>
+            {product.price}
+            <span className='currency'>EGP</span>
+          </h1>
+        ) : (
+          <div className='removed'>
+            <img src={notAllowed} />
+            <h1>{removed ? 'Not Available' : soldOut ? 'Sold Out' : ''}</h1>
+          </div>
+        )}
         <div className='removeAndQty'>
           <QtySelector
+            className={removed || soldOut ? 'qtySelect' : null}
             qty={qty}
             setQty={setQty}
             product={product}
@@ -78,11 +99,58 @@ const CartProduct = ({ product, cartCount, setCartCount }) => {
   )
 }
 const StyledProduct = styled.div`
+  .wrapper,
+  .wrapper2 {
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.3);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .wrapper2 {
+    pointer-events: none;
+  }
+
+  position: relative;
+
+  .qtySelect {
+    pointer-events: none;
+    opacity: 0;
+  }
+  .imgLink {
+    height: calc(10vw * 0.796875) !important;
+  }
+  .removed {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    h1 {
+      pointer-events: none;
+      font-size: calc(0.7rem + 0.3vw) !important;
+      color: white !important;
+      font-weight: 500 !important;
+      user-select: none;
+    }
+
+    padding: 0.55rem 0.75rem;
+    background: #ff6969;
+    border-radius: 5px;
+    img {
+      width: 18px;
+      height: 18px;
+      margin-right: 0.25rem;
+      pointer-events: none;
+      user-select: none;
+    }
+  }
   .ratingCount {
     display: none !important;
   }
   .imgLink,
   .descLink {
+    width: max-content;
     display: flex;
   }
   padding: 0.5rem 0;
@@ -142,7 +210,23 @@ const StyledProduct = styled.div`
       transform: translate(-17%, -100%);
     }
   }
+
   @media screen and (max-width: 1050px) {
+    .imgLink {
+      height: calc(20vw * 0.796875) !important;
+    }
+    .removed {
+      padding: 0.25rem 0.3rem;
+      border-radius: 4px;
+      h1 {
+        font-size: calc(0.4rem + 0.3vw) !important;
+      }
+      img {
+        width: 8px;
+        height: 8px;
+        margin-right: 0.15rem;
+      }
+    }
     .starsRating {
       margin: 0 !important;
       margin-top: 0.2rem !important;
@@ -207,6 +291,9 @@ const StyledProduct = styled.div`
     .removeBtn {
       margin-left: 0.7rem;
     }
+  }
+  .priceQtyAndRemove {
+    z-index: 2 !important;
   }
   @media screen and (max-width: 550px) {
     #productImg,

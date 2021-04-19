@@ -1,80 +1,157 @@
-import React from "react"
-import styled from "styled-components"
-import Message from "../components/message"
-import Goback from "../components/Goback"
-import { useSelector } from "react-redux"
-import CartProduct from "../components/CartProduct"
-import { Link } from "react-router-dom"
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import Message from '../components/message'
+import Goback from '../components/Goback'
+import { useSelector, useDispatch } from 'react-redux'
+import CartProduct from '../components/CartProduct'
+import { Link, useLocation } from 'react-router-dom'
+import checkProduct from '../actions/checkProducts'
+import { useEffect } from 'react'
+import Loader from '../components/loader'
 
 const Cart = ({ cartCount, setCartCount }) => {
-  const { cartItems } = useSelector((state) => state.cart)
-  const { user } = useSelector((state) => state.userInfo)
-  const pricesArr = cartItems.map((each) => each.price * each.qty)
-  const qtyArr = cartItems.map((each) => each.qty)
+  const dispatch = useDispatch()
 
-  const redirect = user.name ? "/shipping" : "/login?redirect=shipping"
+  const {
+    cartItems,
+    check,
+    loadingCheck,
+    checkError,
+    checkProductsSuccess,
+  } = useSelector((state) => state.cart)
+  const { user } = useSelector((state) => state.userInfo)
+  const pricesArr = cartItems.map((each) => {
+    if (!each.removed) return each.price * each.qty
+    else return 0
+  })
+  const qtyArr = cartItems.map((each) => {
+    if (!each.removed) return each.qty
+    else return 0
+  })
+
+  const redirect = user.name ? '/shipping' : '/login?redirect=shipping'
+
+  const [removedProducts, setRemovedProducts] = useState([])
+
+  useEffect(() => {
+    if (check) {
+      const removed = []
+      const sold = []
+      cartItems.forEach((product) => {
+        removed.push(...check.removed.filter((e) => e === product._id))
+        sold.push(...check.soldOut.filter((e) => e === product._id))
+      })
+      setRemovedProducts([...removed, ...sold])
+    }
+  }, [check])
+
+  useEffect(() => {
+    dispatch(checkProduct(user.token))
+  }, [])
+
+  useEffect(() => {
+    if (checkProductsSuccess)
+      setCartCount(qtyArr.reduce((acc, item) => acc + item))
+  }, [checkProductsSuccess])
   return (
     <StyledCart>
       <Goback />
       <h1 className='title'>Shopping Cart</h1>
-      {cartItems.length !== 0 && (
+      {loadingCheck && <Loader />}
+      {checkError && <Message msg={checkError} type='error' />}
+      {!loadingCheck && !checkError ? (
         <>
-          <div className='subtotal-mobile'>
-            <h3>
-              Subtotal ({qtyArr.reduce((acc, item) => acc + item)} items):
-            </h3>
-            <h4>
-              {pricesArr.reduce((acc, price) => acc + price).toFixed(2)}
-              <span className='currency'>EGP</span>
-            </h4>
-          </div>
-          <Link to={redirect} className='proceed-btn-mobile'>
-            <h3>Proceed to checkout</h3>
-          </Link>
-          <div className='line'></div>
-        </>
-      )}
-      <div className='cart-container'>
-        <div
-          className='products'
-          style={{ flexGrow: `${cartItems.length ? 3 : "unset"}` }}
-        >
-          {cartItems.length ? (
-            cartItems.map((product) => (
-              <CartProduct
-                product={product}
-                key={product._id}
-                cartCount={cartCount}
-                setCartCount={setCartCount}
-              />
-            ))
-          ) : (
-            <Message msg='Your cart is empty' />
-          )}
-        </div>
-        {cartItems.length !== 0 && (
-          <div className='table-total'>
-            <div className='container'>
-              <div className='subtotal'>
+          {cartItems.length > 0 && (
+            <>
+              <div className='subtotal-mobile'>
                 <h3>
-                  Subtotal ({qtyArr.reduce((acc, item) => acc + item)} items)
+                  Subtotal ({qtyArr.reduce((acc, item) => acc + item)} items):
                 </h3>
                 <h4>
                   {pricesArr.reduce((acc, price) => acc + price).toFixed(2)}
                   <span className='currency'>EGP</span>
                 </h4>
               </div>
-              <Link to={redirect} className='proceed-btn'>
+              <Link
+                id={`${
+                  cartItems.length - removedProducts.length <= 0
+                    ? 'disabled'
+                    : ''
+                }`}
+                to={redirect}
+                className='proceed-btn-mobile'
+              >
                 <h3>Proceed to checkout</h3>
               </Link>
+              <div className='line'></div>
+            </>
+          )}
+          <div className='cart-container'>
+            <div
+              className='products'
+              style={{ flexGrow: `${cartItems.length ? 3 : 'unset'}` }}
+            >
+              {cartItems.length ? (
+                cartItems.map((product) => (
+                  <CartProduct
+                    check={check}
+                    product={product}
+                    key={product._id}
+                    cartCount={cartCount}
+                    setCartCount={setCartCount}
+                  />
+                ))
+              ) : (
+                <Message msg='Your cart is empty' />
+              )}
             </div>
+            {cartItems.length !== 0 && (
+              <div className='table-total'>
+                <div className='container'>
+                  <div className='subtotal'>
+                    <h3>
+                      Subtotal ({qtyArr.reduce((acc, item) => acc + item)}{' '}
+                      items)
+                    </h3>
+                    <h4>
+                      {pricesArr.reduce((acc, price) => acc + price).toFixed(2)}
+                      <span className='currency'>EGP</span>
+                    </h4>
+                  </div>
+                  <Link
+                    id={`${
+                      cartItems.length - removedProducts.length <= 0
+                        ? 'disabled'
+                        : ''
+                    }`}
+                    to={redirect}
+                    className='proceed-btn'
+                  >
+                    <h3>Proceed to checkout</h3>
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        ''
+      )}
     </StyledCart>
   )
 }
 const StyledCart = styled.div`
+  #disabled {
+    pointer-events: none !important;
+    filter: grayscale(1);
+  }
+  .providedLoader {
+    align-self: center;
+    padding-top: 0.5rem;
+  }
+  .message {
+    margin-top: 0.5rem;
+  }
   width: 90%;
   margin: 0 auto;
   display: flex;

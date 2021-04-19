@@ -1,19 +1,61 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import SmoothImg from './smoothImgLoading'
+import notAllowed from '../img/notAllowed.svg'
+import close from '../img/close.svg'
+import { removeAction } from '../actions/cart'
 
-const PlaceOrderItem = ({ img, productName, qty, price, id, isBuyNow }) => {
+const PlaceOrderItem = ({
+  img,
+  productName,
+  qty,
+  price,
+  id,
+  isBuyNow,
+  soldOut,
+  removed,
+  setCartCount,
+  cartCount,
+}) => {
+  const cart = useSelector((state) => state.cart)
+
+  useEffect(() => {
+    if (removed || soldOut) {
+      const productInCart = cart.cartItems.find((e) => e._id === id)
+
+      productInCart.removed2 = true
+    }
+  }, [removed, soldOut])
+
   const dispatch = useDispatch()
 
   return (
     <StyledItem>
+      {(soldOut || removed) && (
+        <div
+          onClick={() => {
+            dispatch(removeAction({ _id: id }))
+            setCartCount(Number(cartCount) - Number(qty))
+          }}
+          className='removeIt'
+        >
+          <img src={close} alt='' />
+        </div>
+      )}
       <div className='firstDiv'>
         <Link
+          className='imgLink'
           onClick={() => dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })}
           to={`/products/${id}${isBuyNow ? '?order=buyNow' : ''}`}
         >
+          {(soldOut || removed) && (
+            <div className={`removed ${removed || soldOut ? '' : 'hide'}`}>
+              <p>{removed ? 'Removed' : soldOut ? 'SoldOut' : ''}</p>
+              <img src={notAllowed} />
+            </div>
+          )}
           <SmoothImg
             preLoaderId='preLoader'
             loaderId='preloader2'
@@ -55,9 +97,32 @@ const StyledItem = styled.div`
   padding: 0.5rem 0;
   border-bottom: 1px solid rgba(0, 0, 0, 12.5%);
   width: 95%;
+  position: relative;
+  .removeIt {
+    display: flex;
+    position: absolute;
+    right: 0%;
+    top: 3%;
+    opacity: 0.7;
+    transition: 0.2s ease;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.6;
+    }
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
   &:last-child {
     border-bottom: unset;
   }
+  .imgLink {
+    min-width: 5vw;
+    height: calc(5vw * 0.796875);
+    position: relative;
+  }
+
   .firstDiv a {
     display: flex;
   }
@@ -66,7 +131,6 @@ const StyledItem = styled.div`
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: max-content;
     img {
       width: 5vw;
       max-width: 100%;
@@ -102,7 +166,40 @@ const StyledItem = styled.div`
       width: max-content;
     }
   }
+  .removed {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 63, 63, 0.5);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    flex-direction: column;
+    transition: 0.3s ease;
+    &.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    p {
+      color: white !important;
+      font-size: 0.72rem !important;
+      padding-bottom: 0rem !important;
+      font-weight: 500 !important;
+    }
+    img {
+      width: 17px !important;
+      height: 17px !important;
+    }
+  }
   @media screen and (max-width: 1050px) {
+    .imgLink {
+      min-width: calc(3vw + 3rem) !important;
+      height: calc((3vw + 3rem) * 0.796875) !important;
+    }
     width: 100%;
     .firstDiv {
       flex: 1 1 67%;
@@ -127,6 +224,36 @@ const StyledItem = styled.div`
     .currency2 {
       margin-left: 0.15rem;
       font-size: calc(0.4rem + 0.3vw) !important;
+    }
+
+    .removed {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 63, 63, 0.5);
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 5px;
+      flex-direction: column;
+      transition: 0.3s ease;
+      &.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      p {
+        color: white !important;
+        font-size: 0.6rem !important;
+        padding-bottom: 0rem !important;
+        font-weight: 500 !important;
+      }
+      img {
+        width: 12px !important;
+        height: 12px !important;
+      }
     }
   }
 `

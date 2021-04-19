@@ -1,4 +1,4 @@
-import dotenv from "dotenv"
+import dotenv from 'dotenv'
 dotenv.config()
 
 const notFoundRouter = (req, res, next) => {
@@ -12,7 +12,7 @@ const errRouter = (err, req, res, next) => {
   res.status(statusCode)
   res.send({
     message: err.message,
-    stack: (process.env.NODE_ENV = "development" ? err.stack : null),
+    stack: (process.env.NODE_ENV = 'development' ? err.stack : null),
   })
   next()
 }

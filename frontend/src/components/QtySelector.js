@@ -3,7 +3,6 @@ import arrow from '../img/gobackArrow.svg'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 import { updateQtyAction } from '../actions/cart'
-import { throttle } from 'underscore'
 
 const QtySelector = ({
   product,
@@ -12,6 +11,7 @@ const QtySelector = ({
   setQty,
   cartCount,
   setCartCount,
+  className,
 }) => {
   const match = cartItems
     ? cartItems.find((each) => each._id === product._id)
@@ -76,7 +76,7 @@ const QtySelector = ({
   }, [qty, cartItems, dispatch, match])
 
   return (
-    <StyledSelect>
+    <StyledSelect className={`${className ? className : ''}`}>
       <div className='select' onClick={() => setToggle(!toggle)}>
         <h1 className='selectValue'>{qty}</h1>
         <img className='arrowImg' src={arrow} alt='arrow' />

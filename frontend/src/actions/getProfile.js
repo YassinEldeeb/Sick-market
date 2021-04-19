@@ -17,7 +17,11 @@ const userProfileAction = () => async (dispatch, getState) => {
     const { data } = await axios.get('/api/users/profile', config)
 
     dispatch({ type: 'USER_PROFILE_SUCCESS', payload: data })
-    localStorage.setItem('sickUserInfo', JSON.stringify({ user: data, token }))
+    if (data)
+      localStorage.setItem(
+        'sickUserInfo',
+        JSON.stringify({ user: data, token })
+      )
   } catch (error) {
     dispatch({
       type: 'USER_PROFILE_FAIL',

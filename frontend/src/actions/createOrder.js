@@ -21,16 +21,21 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
     }
     const modifiedCart = () => {
       if (isBuyNow === false) {
-        return cart.cartItems.map((eachProduct) => {
+        const modified = cart.cartItems.map((eachProduct) => {
           return {
             name: eachProduct.name,
             qty: eachProduct.qty,
             image: eachProduct.image,
             price: eachProduct.price,
             product: eachProduct._id,
+            removed: eachProduct.removed ? eachProduct.removed : null,
           }
         })
-      } else {
+        const final = modified.filter((e) => {
+          if (!e.removed) return e
+        })
+        return final
+      } else if (!product.removed) {
         return [
           {
             name: product.name,
@@ -40,14 +45,16 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
             product: product._id,
           },
         ]
+      } else {
+        return []
       }
     }
-
+    console.log('CART', modifiedCart())
     const { data } = await axios.post(
       '/api/orders',
       {
         user: userInfo.user._id,
-        orderItems: modifiedCart(),
+        orderItems: modifiedCart().filter((e) => e.qty !== 0),
         shippingAddress: {
           address: cart.address.address,
           city: cart.address.city,
@@ -88,12 +95,32 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
     cart.totalPrice = null
     cart.shipping = null
   } catch (error) {
+    function isJson(str) {
+      try {
+        JSON.parse(str)
+      } catch (e) {
+        return false
+      }
+      return true
+    }
+    let passedError = null
+    if (
+      error.response.data.message &&
+      isJson(error.response.data.message) &&
+      JSON.parse(error.response.data.message).type === 'confirm'
+    ) {
+      passedError = JSON.parse(error.response.data.message)
+    }
     dispatch({
       type: 'CREATE_ORDER_FAIL',
-      payload:
-        error.response && error.response.data.message
+      payload: {
+        error: passedError
+          ? 'okTrue'
+          : error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
+        confirm: passedError ? passedError.error : null,
+      },
     })
   }
 }

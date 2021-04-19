@@ -9,7 +9,7 @@ import Message from '../components/message'
 import Loader from '../components/loader'
 import { useState } from 'react'
 
-const PlaceOrder = ({ setCartCount }) => {
+const PlaceOrder = ({ setCartCount, cartCount }) => {
   const dispatch = useDispatch()
   const { product } = useSelector((state) => state.buyNowProduct)
 
@@ -43,12 +43,18 @@ const PlaceOrder = ({ setCartCount }) => {
     }
   }, [history, location, user])
 
-  const pricesArr = cartItems.map((each) => each.price * each.qty)
-  const totalPrice = !isBuyNow
-    ? pricesArr.length
-      ? pricesArr.reduce((acc, item) => acc + item).toFixed(2)
-      : 0
-    : product.price.toFixed(2)
+  const [pricesArr, setPricesArr] = useState(
+    cartItems.map((each) => {
+      if (!each.removed2) return each.price * each.qty
+    })
+  )
+  const [totalPrice, setTotalPrice] = useState(
+    !isBuyNow
+      ? pricesArr.length
+        ? pricesArr.reduce((acc, item) => acc + item).toFixed(2)
+        : 0
+      : product.price.toFixed(2)
+  )
 
   const toFixedFN = (num) => {
     return Number(num).toFixed(2)
@@ -68,26 +74,57 @@ const PlaceOrder = ({ setCartCount }) => {
   const [allFreeShipping] = useState(cartItems.every((e) => e.freeShipping))
   const [shippingValue] = useState(allFreeShipping ? 0 : 50)
 
-  cart.taxes = toFixedFN((Number(totalPrice) * 14) / 100)
-  cart.totalPrice = Number(totalPrice)
-  cart.shipping = toFixedFN(shippingValue)
-  cart.itemsPrice = totalPrice
-  cart.totalPrice = Math.abs(
-    toFixedFN(
-      Number(totalPrice) +
-        shippingValue +
-        (Number(totalPrice) * 14) / 100 -
-        discountValue()
-    )
+  const { order, orderLoading, orderPlaced, error, errorConfirm } = useSelector(
+    (state) => state.order
   )
-  cart.couponDiscount = discount ? discountValue() : 0
+
+  useEffect(() => {
+    const filtered = cartItems.filter((each) => {
+      if (!each.removed2) {
+        return each.price * each.qty
+      }
+    })
+    setPricesArr(
+      filtered.map((each) => {
+        if (!each.removed2) return each.price * each.qty
+      })
+    )
+    const pricesArr2 = filtered.map((each) => {
+      if (!each.removed2) return each.price * each.qty
+    })
+
+    setTotalPrice(
+      !isBuyNow
+        ? pricesArr2.length
+          ? pricesArr2.reduce((acc, item) => acc + item).toFixed(2)
+          : 0
+        : product.price.toFixed(2)
+    )
+    const totalPrice2 = !isBuyNow
+      ? pricesArr2.length
+        ? pricesArr2.reduce((acc, item) => acc + item).toFixed(2)
+        : 0
+      : product.price.toFixed(2)
+
+    cart.taxes = Number(toFixedFN((Number(totalPrice2) * 14) / 100))
+    cart.totalPrice2 = Number(totalPrice2)
+    cart.shipping = Number(toFixedFN(shippingValue))
+    cart.itemsPrice = Number(totalPrice2)
+    cart.totalPrice2 = Math.abs(
+      toFixedFN(
+        Number(totalPrice2) +
+          shippingValue +
+          (Number(totalPrice2) * 14) / 100 -
+          discountValue()
+      )
+    )
+    cart.couponDiscount = discount ? discountValue() : 0
+  }, [errorConfirm])
 
   const placeOrderHandler = () => {
     dispatch(createOrderAction(setCartCount, isBuyNow))
   }
-  const { order, orderLoading, orderPlaced, error } = useSelector(
-    (state) => state.order
-  )
+
   useEffect(() => {
     if (orderPlaced) {
       localStorage.removeItem('sickDiscount')
@@ -111,12 +148,16 @@ const PlaceOrder = ({ setCartCount }) => {
       <div className='content'>
         <div className='summary'>
           <Message
-            vibrating='true'
+            vibrating={
+              error ? (error.includes('okTrue') ? false : `true`) : 'true'
+            }
             visiblity={error ? true : false}
             msg={
               error
                 ? error.includes('timed out')
                   ? 'Network Error'
+                  : error.includes('okTrue')
+                  ? `Some Products have just Sold Out or Removed, Continue if you don't mind.`
                   : error.includes('mongo')
                   ? 'Server Error'
                   : error.includes("Email isn't verified")
@@ -125,7 +166,7 @@ const PlaceOrder = ({ setCartCount }) => {
                 : 'Ok'
             }
             hidden={error ? false : true}
-            type='error'
+            type={error ? (error.includes('okTrue') ? `ok` : `error`) : 'error'}
           />
           <div className='shipping-section section'>
             <h1>Shipping :</h1>
@@ -142,23 +183,59 @@ const PlaceOrder = ({ setCartCount }) => {
                 : 'Order Items :'}
             </h1>
             {!isBuyNow ? (
-              cartItems.map((each) => (
-                <PlaceOrderItem
-                  price={each.price}
-                  qty={each.qty}
-                  productName={truncate(each.name)}
-                  img={each.image}
-                  id={each._id}
-                />
-              ))
+              cartItems.map((each) => {
+                if (!each.removed) {
+                  return (
+                    <PlaceOrderItem
+                      cartCount={cartCount}
+                      setCartCount={setCartCount}
+                      price={each.price}
+                      qty={each.qty}
+                      productName={truncate(each.name)}
+                      img={each.image}
+                      id={each._id}
+                      soldOut={
+                        errorConfirm
+                          ? errorConfirm.find(
+                              (e) => e.id === each._id && e.error === 'soldOut'
+                            )
+                          : false
+                      }
+                      removed={
+                        errorConfirm
+                          ? errorConfirm.find(
+                              (e) => e.id === each._id && e.error === 'removed'
+                            )
+                          : false
+                      }
+                    />
+                  )
+                }
+              })
             ) : (
               <PlaceOrderItem
+                cartCount={cartCount}
+                setCartCount={setCartCount}
                 price={product.price}
                 qty={product.qty}
                 productName={truncate(product.name)}
                 img={product.image}
                 id={product._id}
                 isBuyNow={isBuyNow}
+                soldOut={
+                  errorConfirm
+                    ? errorConfirm.find(
+                        (e) => e.id === product._id && e.error === 'soldOut'
+                      )
+                    : false
+                }
+                removed={
+                  errorConfirm
+                    ? errorConfirm.find(
+                        (e) => e.id === product._id && e.error === 'removed'
+                      )
+                    : false
+                }
               />
             )}
           </div>
@@ -225,8 +302,7 @@ const PlaceOrder = ({ setCartCount }) => {
                       (Number(totalPrice) * 14) / 100 +
                       -discountValue()
                   )
-                : '+' +
-                  Math.abs(
+                : Math.abs(
                     toFixedFN(
                       Number(totalPrice) +
                         shippingValue +
@@ -506,6 +582,35 @@ const StyledPlaceOrder = styled.div`
       border-bottom: 1px solid rgba(0, 0, 0, 12.5%);
       &:last-child {
         border-bottom: unset;
+      }
+    }
+    .removed {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 63, 63, 0.5);
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 5px;
+      flex-direction: column;
+      transition: 0.3s ease;
+      &.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      p {
+        color: white !important;
+        font-size: 0.65rem !important;
+        padding-bottom: 0rem !important;
+        font-weight: 500 !important;
+      }
+      img {
+        width: 14px !important;
+        height: 14px !important;
       }
     }
   }

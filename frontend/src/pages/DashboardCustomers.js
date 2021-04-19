@@ -297,7 +297,7 @@ const DashboardCustomers = () => {
       />
       {condition() ? (
         <Loader />
-      ) : !error && !searchedError ? (
+      ) : !error && !searchedError && !loading ? (
         <>
           {condition2() && (
             <div
@@ -442,7 +442,7 @@ const DashboardCustomers = () => {
           )}
         </>
       ) : (
-        <DashboardError error={error} />
+        !loading && <DashboardError error={error} />
       )}
     </StyledOrders>
   )
