@@ -76,7 +76,11 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
     }
   }
 
-  const [allFreeShipping] = useState(cartItems.every((e) => e.freeShipping))
+  const [allFreeShipping] = useState(
+    Number(totalPrice) + (Number(totalPrice) * 14) / 100 > 2000
+      ? true
+      : cartItems.every((e) => e.freeShipping)
+  )
   const [shippingValue] = useState(allFreeShipping ? 0 : 50)
 
   const { order, orderLoading, orderPlaced, error, errorConfirm } = useSelector(

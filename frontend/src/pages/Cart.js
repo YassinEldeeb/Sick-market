@@ -72,6 +72,14 @@ const Cart = ({ cartCount, setCartCount }) => {
                   <span className='currency'>EGP</span>
                 </h4>
               </div>
+              {pricesArr.reduce((acc, price) => acc + price) >= 2000 && (
+                <li className='mobileLi'>
+                  Free Shipping is applied for carts above 2000EGP.
+                </li>
+              )}
+              {pricesArr.reduce((acc, price) => acc + price) < 2000 && (
+                <li className='removeMargin'></li>
+              )}
               <Link
                 id={`${
                   cartItems.length - removedProducts.length <= 0
@@ -119,7 +127,15 @@ const Cart = ({ cartCount, setCartCount }) => {
                       {pricesArr.reduce((acc, price) => acc + price).toFixed(2)}
                       <span className='currency'>EGP</span>
                     </h4>
+                    {pricesArr.reduce((acc, price) => acc + price) > 2000 && (
+                      <li>
+                        Free Shipping is applied
+                        <br />
+                        for carts above 2000EGP.
+                      </li>
+                    )}
                   </div>
+
                   <Link
                     id={`${
                       cartItems.length - removedProducts.length <= 0
@@ -143,6 +159,9 @@ const Cart = ({ cartCount, setCartCount }) => {
   )
 }
 const StyledCart = styled.div`
+  .mobileLi {
+    display: none;
+  }
   #disabled {
     pointer-events: none !important;
     filter: grayscale(1);
@@ -175,11 +194,11 @@ const StyledCart = styled.div`
     flex-direction: column;
   }
   .subtotal-mobile {
-    padding-bottom: calc(0.25rem + 0.3vw);
     width: 100%;
     display: none;
     align-items: center;
     justify-content: space-between;
+
     h3,
     h4 {
       color: #1a1a1a;
@@ -198,6 +217,24 @@ const StyledCart = styled.div`
         font-size: calc(0.8rem + 0.4vw);
       }
     }
+  }
+  li {
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+    padding-bottom: calc(0.25rem + 0.3vw);
+    border: 1px solid #00000012;
+    border-radius: 5px;
+    padding: 0.6rem 0.8rem;
+    list-style: none;
+    font-size: calc(0.7rem + 0.3vw);
+  }
+
+  .removeMargin {
+    list-style-type: none;
+    margin-bottom: 0;
+    border: unset;
+    padding: 0 !important;
+    height: calc(0.25rem + 0.3vw);
   }
   .table-total {
     flex-grow: 1;
@@ -219,6 +256,11 @@ const StyledCart = styled.div`
         width: 100%;
         display: flex;
         flex-direction: column;
+        li {
+          opacity: 0.8;
+          list-style: none;
+        }
+
         h3,
         h4 {
           color: #1a1a1a;
@@ -318,6 +360,9 @@ const StyledCart = styled.div`
     }
   }
   @media screen and (max-width: 1050px) {
+    .mobileLi {
+      display: block;
+    }
     .line {
       border-radius: 1px;
       width: 45%;

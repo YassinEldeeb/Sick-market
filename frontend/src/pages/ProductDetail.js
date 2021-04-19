@@ -271,7 +271,7 @@ const StyledDetail = styled.div`
     justify-content: center;
     align-items: center;
     p {
-      color: #2196f3 !important;
+      color: #00b2d8 !important;
       font-size: calc(0.55rem + 0.5vw) !important;
       font-weight: 500;
     }
