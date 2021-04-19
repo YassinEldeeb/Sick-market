@@ -25,7 +25,15 @@ const checkProduct = (token) => async (dispatch, getState) => {
     const productsData = data.products.map((product) => {
       return {
         ...product,
-        qty: product._id ? cartItems.find((e) => e._id === product._id).qty : 0,
+        qty: product._id
+          ? Math.min(
+              Math.min(
+                cartItems.find((e) => e._id === product._id).qty,
+                product.qtyPerUser
+              ),
+              product.countInStock
+            )
+          : 0,
         removed: data.soldOut.find((e) => e === product._id) ? true : null,
       }
     })
