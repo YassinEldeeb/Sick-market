@@ -28,11 +28,15 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
             image: eachProduct.image,
             price: eachProduct.price,
             product: eachProduct._id,
-            removed: eachProduct.removed ? eachProduct.removed : null,
+            removed: eachProduct.removed
+              ? eachProduct.removed
+              : eachProduct.removed2
+              ? eachProduct.removed2
+              : null,
           }
         })
         const final = modified.filter((e) => {
-          if (!e.removed) return e
+          if (!e.removed && !e.removed2) return e
         })
         return final
       } else if (!product.removed) {

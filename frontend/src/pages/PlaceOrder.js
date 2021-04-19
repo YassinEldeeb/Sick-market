@@ -45,7 +45,7 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
 
   const [pricesArr, setPricesArr] = useState(
     cartItems.map((each) => {
-      if (!each.removed2) return each.price * each.qty
+      if (!each.removed2 && !each.removed) return each.price * each.qty
     })
   )
   const [totalPrice, setTotalPrice] = useState(
@@ -80,17 +80,17 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
 
   useEffect(() => {
     const filtered = cartItems.filter((each) => {
-      if (!each.removed2) {
+      if (!each.removed2 && !each.removed) {
         return each.price * each.qty
       }
     })
     setPricesArr(
       filtered.map((each) => {
-        if (!each.removed2) return each.price * each.qty
+        if (!each.removed2 && !each.removed) return each.price * each.qty
       })
     )
     const pricesArr2 = filtered.map((each) => {
-      if (!each.removed2) return each.price * each.qty
+      if (!each.removed2 && !each.removed) return each.price * each.qty
     })
 
     setTotalPrice(

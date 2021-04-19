@@ -8,7 +8,14 @@ import { Link } from 'react-router-dom'
 import SmoothImg from './smoothImgLoading'
 import notAllowed from '../img/notAllowed.svg'
 
-const CartProduct = ({ product, cartCount, setCartCount, check }) => {
+const CartProduct = ({
+  product,
+  cartCount,
+  setCartCount,
+  check,
+  setRemovedProducts,
+  removedProducts,
+}) => {
   const dispatch = useDispatch()
   const [qty, setQty] = useState(product.qty)
   const { cartItems } = useSelector((state) => state.cart)
@@ -88,7 +95,12 @@ const CartProduct = ({ product, cartCount, setCartCount, check }) => {
             className='removeBtn'
             onClick={() => {
               dispatch(removeAction(product))
-              setCartCount(Number(cartCount) - Number(qty))
+              if (!product.removed && !product.removed2)
+                setCartCount(Number(cartCount) - Number(qty))
+              else
+                setRemovedProducts(
+                  removedProducts.filter((e) => e !== product._id)
+                )
             }}
           >
             <i className='fas fa-trash'></i>

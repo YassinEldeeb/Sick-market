@@ -51,7 +51,7 @@ const Cart = ({ cartCount, setCartCount }) => {
 
   useEffect(() => {
     if (checkProductsSuccess)
-      setCartCount(qtyArr.reduce((acc, item) => acc + item))
+      setCartCount(qtyArr.length ? qtyArr.reduce((acc, item) => acc + item) : 0)
   }, [checkProductsSuccess])
   return (
     <StyledCart>
@@ -99,6 +99,8 @@ const Cart = ({ cartCount, setCartCount }) => {
                     key={product._id}
                     cartCount={cartCount}
                     setCartCount={setCartCount}
+                    setRemovedProducts={setRemovedProducts}
+                    removedProducts={removedProducts}
                   />
                 ))
               ) : (

@@ -107,12 +107,12 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
               )}
               <div className='bottomInfo'>
                 <div className='priceList-mobile'>
-                  <h3 className='oldPrice'>
+                  <h3>
                     {product.price}
                     <span className='currency'>EGP</span>
                   </h3>
                   {product.oldPrice && (
-                    <h3>
+                    <h3 className='oldPrice'>
                       {product.oldPrice}
                       <span className='currency'>EGP</span>
                     </h3>

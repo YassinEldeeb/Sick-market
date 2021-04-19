@@ -2,7 +2,12 @@ const initialState = { order: {} }
 const createOrderReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'CREATE_ORDER_REQUEST':
-      return { order: {}, orderLoading: true }
+      return {
+        order: {},
+        orderLoading: true,
+        error: state.error === 'okTrue' ? state.error : null,
+        errorConfirm: state.errorConfirm ? state.errorConfirm : null,
+      }
     case 'CREATE_ORDER_SUCCESS':
       return {
         order: action.payload,
