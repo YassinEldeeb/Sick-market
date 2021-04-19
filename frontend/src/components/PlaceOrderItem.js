@@ -24,8 +24,7 @@ const PlaceOrderItem = ({
   useEffect(() => {
     if (removed || soldOut) {
       const productInCart = cart.cartItems.find((e) => e._id === id)
-
-      productInCart.removed2 = true
+      if (productInCart) productInCart.removed2 = true
     }
   }, [removed, soldOut])
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation, useHistory, Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import CheckoutSteps from '../components/CheckoutSteps'
 import PlaceOrderItem from '../components/PlaceOrderItem'
@@ -14,7 +14,7 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
   const { product } = useSelector((state) => state.buyNowProduct)
 
   function truncate(str) {
-    return str.length > 30 ? str.substr(0, 30 - 1) + '..' : str
+    if (str) return str.length > 30 ? str.substr(0, 30 - 1) + '..' : str
   }
   const { address, cartItems, paymentMethod, discount } = useSelector(
     (state) => state.cart
@@ -27,6 +27,11 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
 
   const isBuyNow = location.search.split('=')[1] === 'buyNow'
 
+  useEffect(() => {
+    if (isBuyNow && !product.price) {
+      history.push('/')
+    }
+  }, [])
   useEffect(() => {
     const pushedLink = () => {
       if (location.search.split('=')[1] === 'buyNow') {
@@ -49,11 +54,11 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
     })
   )
   const [totalPrice, setTotalPrice] = useState(
-    !isBuyNow
-      ? pricesArr.length
-        ? pricesArr.reduce((acc, item) => acc + item).toFixed(2)
-        : 0
-      : product.price.toFixed(2)
+    isBuyNow && product.price
+      ? product.price.toFixed(2)
+      : pricesArr.length
+      ? pricesArr.reduce((acc, item) => acc + item).toFixed(2)
+      : 0
   )
 
   const toFixedFN = (num) => {
@@ -94,17 +99,18 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
     })
 
     setTotalPrice(
-      !isBuyNow
-        ? pricesArr2.length
-          ? pricesArr2.reduce((acc, item) => acc + item).toFixed(2)
-          : 0
-        : product.price.toFixed(2)
-    )
-    const totalPrice2 = !isBuyNow
-      ? pricesArr2.length
+      isBuyNow && product.price
+        ? product.price.toFixed(2)
+        : pricesArr2.length
         ? pricesArr2.reduce((acc, item) => acc + item).toFixed(2)
         : 0
-      : product.price.toFixed(2)
+    )
+    const totalPrice2 =
+      isBuyNow && product.price
+        ? product.price.toFixed(2)
+        : pricesArr2.length
+        ? pricesArr2.reduce((acc, item) => acc + item).toFixed(2)
+        : 0
 
     cart.taxes = Number(toFixedFN((Number(totalPrice2) * 14) / 100))
     cart.totalPrice2 = Number(totalPrice2)
@@ -156,6 +162,8 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
               error
                 ? error.includes('timed out')
                   ? 'Network Error'
+                  : error.includes('okTrue') && product
+                  ? `returnGoBack`
                   : error.includes('okTrue')
                   ? `Some Products have just Sold Out or Removed, Continue if you don't mind.`
                   : error.includes('mongo')

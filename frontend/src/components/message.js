@@ -1,20 +1,28 @@
-import React from "react"
-import styled from "styled-components"
-import { Link } from "react-router-dom"
+import React from 'react'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 const Message = ({
   msg,
-  type = "ok",
+  type = 'ok',
   visiblity = true,
   vibrating,
   hidden = false,
 }) => {
   const msgText = () => {
-    if (msg === "returnTheThing") {
+    if (msg === 'returnTheThing') {
       return (
         <p>
-          Email isn't Verified{" "}
+          Email isn't Verified{' '}
           <Link to='/verify?redirect=/placeOrder'>Verify Email</Link>
+        </p>
+      )
+    }
+    if (msg === 'returnGoBack') {
+      return (
+        <p>
+          Sorry, Your Product have just Sold Out or Removed.{' '}
+          {<Link to='/'>Go Back</Link>}
         </p>
       )
     } else {
@@ -23,24 +31,24 @@ const Message = ({
   }
   return (
     <StyledMessage
-      className={`message ${visiblity && vibrating ? "active" : ""}`}
+      className={`message ${visiblity && vibrating ? 'active' : ''}`}
       style={{
-        background: `${type === "ok" ? "#DCF1F7" : "#F7DDDC"}`,
-        padding: "0.65rem 1.1rem",
-        borderRadius: "5px",
-        border: "1px solid rgba(56, 0, 0, 0.08)",
+        background: `${type === 'ok' ? '#DCF1F7' : '#F7DDDC'}`,
+        padding: '0.65rem 1.1rem',
+        borderRadius: '5px',
+        border: '1px solid rgba(56, 0, 0, 0.08)',
         opacity: `${visiblity ? 1 : 0}`,
-        pointerEvents: `${visiblity ? "all" : "none"}`,
-        height: `${visiblity ? "100%" : "20px"}`,
-        display: `${hidden ? "none" : "inline-block"}`,
+        pointerEvents: `${visiblity ? 'all' : 'none'}`,
+        height: `${visiblity ? '100%' : '20px'}`,
+        display: `${hidden ? 'none' : 'inline-block'}`,
       }}
     >
       <span
         style={{
           fontWeight: 500,
-          color: `${type === "ok" ? "#306F83" : "#712B29"}`,
-          fontSize: "calc(0.8rem + 0.5vw)",
-          display: `${hidden ? "none" : "block"}`,
+          color: `${type === 'ok' ? '#306F83' : '#712B29'}`,
+          fontSize: 'calc(0.8rem + 0.5vw)',
+          display: `${hidden ? 'none' : 'block'}`,
         }}
       >
         {msgText()}
