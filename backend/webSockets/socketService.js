@@ -5,8 +5,13 @@ dotenv.config()
 
 class SocketService {
   constructor(server) {
-    this.io = new Server(server)
-
+    if (process.env.NODE_ENV === 'development') {
+      this.io = new Server(server)
+    } else {
+      this.io = new Server(server, 'https://sick-market.herokuapp.com', [
+        'websocket',
+      ])
+    }
     this.io.on('connection', (socket) => {
       this.socket = socket
       socket.on('userSignedIn', (id) => {
