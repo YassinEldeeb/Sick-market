@@ -1,8 +1,12 @@
 import { Server } from 'socket.io'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 class SocketService {
   constructor(server) {
     this.io = new Server(server)
+
     this.io.on('connection', (socket) => {
       this.socket = socket
       socket.on('userSignedIn', (id) => {

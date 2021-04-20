@@ -61,7 +61,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use(notFoundRouter)
 app.use(errRouter)
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT
 const DYNO_URL = 'https://sick-market.herokuapp.com'
 server.listen(port, () => {
   if (process.env.NODE_ENV === 'production') {

@@ -385,10 +385,9 @@ const DashboardCustomers = () => {
               )}
 
               {(searches.search && searchedUsers) ||
-              (lastLocation &&
-                searchedUsers &&
-                lastLocation.search.split('=')[1] &&
-                location.pathname.split('/')[3]) ? (
+              (searchedUsers && lastLocation
+                ? lastLocation.search.split('=')[1]
+                : true && location.pathname.split('/')[3]) ? (
                 <motion.div
                   variants={hide}
                   initial='hidden'
