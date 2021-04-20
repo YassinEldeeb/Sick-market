@@ -1,5 +1,6 @@
 import { Server } from 'socket.io'
 import dotenv from 'dotenv'
+import redisAdapter from 'socket.io-redis'
 
 dotenv.config()
 
@@ -8,6 +9,9 @@ class SocketService {
     if (process.env.NODE_ENV === 'development') {
       this.io = new Server(server)
     } else {
+      this.io.adapter(
+        redisAdapter({ host: 'sick-market.herokuapp.com', port: 6379 })
+      )
       this.io = new Server(server, 'https://sick-market.herokuapp.com', [
         'websocket',
       ])
