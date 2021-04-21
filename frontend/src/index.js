@@ -11,9 +11,15 @@ dotenv.config()
 
 ReactDOM.render(
   <Provider store={store}>
-    <HttpsRedirect>
+    {process.env.NODE_ENV === 'production' ? (
+      <>
+        {/* <HttpsRedirect> */}
+        <App />
+        {/* </HttpsRedirect> */}
+      </>
+    ) : (
       <App />
-    </HttpsRedirect>
+    )}
   </Provider>,
   document.getElementById('root')
 )

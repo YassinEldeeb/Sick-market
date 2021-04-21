@@ -1,17 +1,17 @@
-import React, { useRef } from "react"
-import styled from "styled-components"
-import gif from "../img/noise.gif"
+import React, { useRef } from 'react'
+import styled from 'styled-components'
+import gif from '../img/noise.gif'
 
 const NotFound = () => {
   const torch = useRef(null)
   const torch2 = useRef(null)
-  window.addEventListener("mousemove", (e) => {
+  window.addEventListener('mousemove', (e) => {
     if (torch.current) {
       torch.current.style.top = `${e.pageY}px`
       torch.current.style.left = `${e.pageX}px`
     }
   })
-  window.addEventListener("touchmove", (e) => {
+  window.addEventListener('touchmove', (e) => {
     if (torch2.current) {
       torch2.current.style.top = `${e.touches[0].clientY}px`
       torch2.current.style.left = `${e.touches[0].clientX}px`
@@ -93,17 +93,16 @@ const StyledNotFound = styled.div`
     transform: translate(18%, 16%);
 
     &:before {
-      content: "";
+      content: '';
       display: block;
       border-radius: 50%;
       width: 100%;
       height: 100%;
       opacity: 0.08;
       background: url(${(props) => props.gif});
-      background-size: 100px;
     }
     &:after {
-      content: "";
+      content: '';
       display: block;
       border-radius: 50%;
       width: 100%;

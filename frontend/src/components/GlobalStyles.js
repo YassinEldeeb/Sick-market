@@ -9,7 +9,11 @@ const Global = createGlobalStyle`
     outline:none;
     scrollbar-width:thin; 
 }
-
+.offline-msg{
+  text-align:center;
+  font-size:calc(1rem + 0.3vw);
+  padding:1rem
+}
 *::-webkit-scrollbar {
   width: 7.4px;
 }
