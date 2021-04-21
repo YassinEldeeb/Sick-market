@@ -13,9 +13,9 @@ ReactDOM.render(
   <Provider store={store}>
     {process.env.NODE_ENV === 'production' ? (
       <>
-        {/* <HttpsRedirect> */}
-        <App />
-        {/* </HttpsRedirect> */}
+        <HttpsRedirect>
+          <App />
+        </HttpsRedirect>
       </>
     ) : (
       <App />
