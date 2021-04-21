@@ -173,9 +173,6 @@ const addProduct = asyncHandler(async (req, res) => {
     await sharp(req.file.buffer)
       .resize({ width: 640, height: 510 })
       .toFile('uploads/' + fileName)
-    await sharp(req.file.buffer)
-      .resize({ width: 30, height: 24 })
-      .toFile('uploads/' + `Tiny-${fileName}`)
   } else {
     image = '/uploads/no.jpg'
   }
@@ -247,9 +244,6 @@ const updateProduct = asyncHandler(async (req, res) => {
     await sharp(req.file.buffer)
       .resize({ width: 640, height: 510 })
       .toFile('uploads/' + fileName)
-    await sharp(req.file.buffer)
-      .resize({ width: 30, height: 24 })
-      .toFile('uploads/' + `Tiny-${fileName}`)
   } else {
     finalImage = product.image
   }
