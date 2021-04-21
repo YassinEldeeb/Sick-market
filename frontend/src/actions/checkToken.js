@@ -15,7 +15,7 @@ const checkToken = (token) => async (dispatch) => {
     await axios.post('/api/users/checkToken', null, config)
     dispatch({ type: 'CHECK_TOKEN_SUCCESS', payload: true })
   } catch (error) {
-    if (error.response.status === 401) {
+    if (error && error.response && error.response.status === 401) {
       dispatch({ type: 'USER_LOGOUT' })
       localStorage.removeItem('sickUserInfo')
       dispatch({ type: 'CHECK_TOKEN_SUCCESS', payload: false })

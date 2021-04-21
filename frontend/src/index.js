@@ -6,11 +6,14 @@ import store from './store'
 import { Provider } from 'react-redux'
 import swDev from './swDev'
 import dotenv from 'dotenv'
+import HttpsRedirect from 'react-https-redirect'
 dotenv.config()
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <HttpsRedirect>
+      <App />
+    </HttpsRedirect>
   </Provider>,
   document.getElementById('root')
 )

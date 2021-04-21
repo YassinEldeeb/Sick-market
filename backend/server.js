@@ -17,6 +17,7 @@ import prerender from 'prerender-node'
 import Category from './models/category.js'
 
 const app = express()
+
 const server = http.Server(app)
 
 app.use(express.json())
