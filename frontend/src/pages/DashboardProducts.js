@@ -394,14 +394,16 @@ const DashboardProducts = ({
     if (e) {
       e.preventDefault()
     }
+    console.log(brand.length, category.length)
     if (
       (sortValue !== 'Date' && sortType !== 'Newest') ||
-      !brand.length ||
-      !category.length
+      brand.length !== 0 ||
+      category.length !== 0
     ) {
       let baseURL = `?${sortValue}=${sortType}`
 
       if (reset !== 'all') {
+        console.log(brand, category, reset)
         if (brand && reset !== 'brand') baseURL += `&brand=${brand}`
         if (category && reset !== 'category') baseURL += `&category=${category}`
       } else {
@@ -424,58 +426,63 @@ const DashboardProducts = ({
         setCategory('')
       }
 
-      if (
-        Object.size(searches) && !searches.search && lastLocation
-          ? lastLocation.pathname.split('/')[1] !== 'products'
-          : true
-      ) {
-        const acutalSortType = (sortValue) => {
-          switch (sortValue) {
-            case 'Date':
-              return 'createdAt'
-            case 'Price':
-              return 'price'
-            case 'Rating':
-              return 'topRated'
-            case 'Selling by qty':
-              return 'topSoldStocks'
-            case 'Selling by value':
-              return 'topSelling'
-            case 'Stock':
-              return 'stock'
+      if (location.pathname.split('/')[3] === 'add' && products) {
+        return
+      } else {
+        if (
+          Object.size(searches) && !searches.search && lastLocation
+            ? lastLocation.pathname.split('/')[1] !== 'products'
+            : true
+        ) {
+          const acutalSortType = (sortValue) => {
+            switch (sortValue) {
+              case 'Date':
+                return 'createdAt'
+              case 'Price':
+                return 'price'
+              case 'Rating':
+                return 'topRated'
+              case 'Selling by qty':
+                return 'topSoldStocks'
+              case 'Selling by value':
+                return 'topSelling'
+              case 'Stock':
+                return 'stock'
+            }
           }
-        }
 
-        const sortValue = Object.keys(searches)[0]
-          ? acutalSortType(Object.keys(searches)[0])
-          : null
+          const sortValue = Object.keys(searches)[0]
+            ? acutalSortType(Object.keys(searches)[0])
+            : null
 
-        setSortValue(
-          Object.keys(searches)[0]
-            ? capitalizeFirstLetter(Object.keys(searches)[0])
-            : 'Date'
-        )
-        const sortType = searches[Object.keys(searches)[0]]
-          ? searches[Object.keys(searches)[0]]
-          : null
-
-        setSortType(
-          searches[Object.keys(searches)[0]]
-            ? capitalizeFirstLetter(searches[Object.keys(searches)[0]])
-            : 'Newest'
-        )
-
-        const brandValue = searches.brand ? searches.brand : null
-        const categoryValue = searches.category ? searches.category : null
-        if (!searches.search && !loading && Object.size(searches)) {
-          dispatch(
-            productListAction(
-              sortValue,
-              sortType.toLowerCase(),
-              brandValue,
-              categoryValue
-            )
+          setSortValue(
+            Object.keys(searches)[0]
+              ? capitalizeFirstLetter(Object.keys(searches)[0])
+              : 'Date'
           )
+          const sortType = searches[Object.keys(searches)[0]]
+            ? searches[Object.keys(searches)[0]]
+            : null
+
+          setSortType(
+            searches[Object.keys(searches)[0]]
+              ? capitalizeFirstLetter(searches[Object.keys(searches)[0]])
+              : 'Newest'
+          )
+
+          const brandValue = searches.brand ? searches.brand : null
+          const categoryValue = searches.category ? searches.category : null
+
+          if (!searches.search && !loading && Object.size(searches)) {
+            dispatch(
+              productListAction(
+                sortValue,
+                sortType.toLowerCase(),
+                brandValue,
+                categoryValue
+              )
+            )
+          }
         }
       }
     }
@@ -483,10 +490,11 @@ const DashboardProducts = ({
   useEffect(() => {
     if (
       (searches.search && location.pathname.split('/')[3] !== 'edit') ||
-      (lastLocation &&
-        lastLocation.pathname.split('/')[3] === 'edit' &&
-        !searchedProducts &&
-        searches.search)
+      (lastLocation
+        ? lastLocation.pathname.split('/')[3] === 'edit' &&
+          !searchedProducts &&
+          searches.search
+        : true)
     ) {
       if (
         lastLocation
@@ -656,7 +664,22 @@ const DashboardProducts = ({
                     </div>
                     {!searches.search && (
                       <button
-                        onClick={() => history.push('/dashboard/products/add')}
+                        onClick={() => {
+                          let baseURL = '/dashboard/products/add?'
+                          if (searches[Object.keys(searches)[0]]) {
+                            baseURL += `${Object.keys(searches)[0]}=${
+                              searches[Object.keys(searches)[0]]
+                            }&`
+                          }
+                          if (searches.brand) {
+                            baseURL += `brand=${searches.brand}&`
+                          }
+                          if (searches.category) {
+                            baseURL += `category=${searches.category}&`
+                          }
+
+                          history.push(baseURL)
+                        }}
                         className='addProduct'
                       >
                         <img src={add} /> New Product

@@ -15,6 +15,7 @@ import CropImg from '../components/CropImg'
 import { throttle } from 'underscore'
 import xSign from '../img/smallX.svg'
 import Switch from 'react-switch'
+import qs from 'qs'
 
 const DashboardNewProduct = ({ scrolled, setScrolled }) => {
   const [freeShipping, setFreeShipping] = useState(false)
@@ -22,6 +23,7 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
+  const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
 
   const [scrollableContent, setScrollableContent] = useState(null)
 
@@ -123,7 +125,20 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
       setImageType(null)
       setImage(null)
 
-      history.push('/dashboard/products')
+      let baseURL = '/dashboard/products?'
+      if (searches[Object.keys(searches)[0]]) {
+        baseURL += `${Object.keys(searches)[0]}=${
+          searches[Object.keys(searches)[0]]
+        }&`
+      }
+      if (searches.brand) {
+        baseURL += `brand=${searches.brand}&`
+      }
+      if (searches.category) {
+        baseURL += `category=${searches.category}&`
+      }
+
+      history.push(baseURL)
     }
   }, [success])
 
@@ -145,7 +160,21 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
     })
     setCompletedCrop(null)
     setImage(null)
-    history.push('/dashboard/products')
+
+    let baseURL = '/dashboard/products?'
+    if (searches[Object.keys(searches)[0]]) {
+      baseURL += `${Object.keys(searches)[0]}=${
+        searches[Object.keys(searches)[0]]
+      }&`
+    }
+    if (searches.brand) {
+      baseURL += `brand=${searches.brand}&`
+    }
+    if (searches.category) {
+      baseURL += `category=${searches.category}&`
+    }
+
+    history.push(baseURL)
   }
   return (
     <StyledUserAction

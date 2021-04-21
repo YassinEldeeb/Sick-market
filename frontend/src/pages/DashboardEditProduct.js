@@ -18,8 +18,10 @@ import { throttle } from 'underscore'
 import xSign from '../img/smallX.svg'
 import qs from 'qs'
 import Switch from 'react-switch'
+import { useLastLocation } from 'react-router-last-location'
 
 const DashboardEditProduct = ({ scrolled, setScrolled }) => {
+  const lastLocation = useLastLocation()
   const [freeShipping, setFreeShipping] = useState(false)
   const dispatch = useDispatch()
   const location = useLocation()
@@ -123,9 +125,24 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       setCompletedCrop(null)
       setAddedImage(null)
 
+      let baseURL = '/dashboard/products?'
+      if (searches[Object.keys(searches)[0]]) {
+        baseURL += `${Object.keys(searches)[0]}=${
+          searches[Object.keys(searches)[0]]
+        }&`
+      }
+      if (searches.brand) {
+        baseURL += `brand=${searches.brand}&`
+      }
+      if (searches.category) {
+        baseURL += `category=${searches.category}&`
+      }
+
       history.push(
-        location.search.split('=')[1] && searchedProducts
-          ? `/dashboard/products?search=${location.search.split('=')[1]}`
+        searches.search && searchedProducts
+          ? `/dashboard/products?search=${searches.search}`
+          : lastLocation
+          ? baseURL
           : '/dashboard/products'
       )
     }
@@ -241,13 +258,15 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       baseURL += `brand=${searches.brand}&`
     }
     if (searches.category) {
-      baseURL += `brand=${searches.category}&`
+      baseURL += `category=${searches.category}&`
     }
 
     history.push(
-      location.search.split('=')[1] && searchedProducts
-        ? `/dashboard/products?search=${location.search.split('=')[1]}`
-        : baseURL
+      searches.search && searchedProducts
+        ? `/dashboard/products?search=${searches.search}`
+        : lastLocation
+        ? baseURL
+        : '/dashboard/products'
     )
   }
   return (
@@ -461,6 +480,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
                       numReviews: 0,
                       oldPrice,
                       freeShipping,
+                      _id: dashboardProduct._id,
                     }}
                     edit={true}
                   />

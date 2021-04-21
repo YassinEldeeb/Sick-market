@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Link, useLocation } from 'react-router-dom'
 import Rating from './Rating'
@@ -63,7 +63,11 @@ const Product = ({
           <canvas className='canvasPreview' ref={previewCanvasRef} />
         ) : type === 'preview' ? (
           <>
-            <img src={noImage ? '/uploads/no.jpg' : data.image} alt='product' />
+            <img
+              src={noImage ? '/uploads/no.jpg' : data.image}
+              alt='product'
+              key={data.image}
+            />
 
             <div className='addLayer'>
               <img className='add' src={add} alt='' />
@@ -125,6 +129,9 @@ const Product = ({
   )
 }
 const StyledProduct = styled.div`
+  .hide {
+    opacity: 0;
+  }
   .priceSection {
     display: flex;
     justify-content: space-between;

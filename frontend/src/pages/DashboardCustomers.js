@@ -151,6 +151,7 @@ const DashboardCustomers = () => {
       return false
     }
   }
+
   const { user } = useSelector((state) => state.userActions)
   const userActions = useSelector((state) => state.userActions)
 
@@ -277,6 +278,13 @@ const DashboardCustomers = () => {
     }
   }, [inView])
 
+  const lastLocationCondition = () => {
+    if (lastLocation) {
+      return lastLocation.search.split('=')[1]
+    } else {
+      return true
+    }
+  }
   return (
     <StyledOrders>
       <DashboardUserAction rankValue={rankValue} setRankValue={setRankValue} />
@@ -295,9 +303,15 @@ const DashboardCustomers = () => {
           userActions.user ? userActions.user.name : ''
         }'s account`}
       />
+      {(error || searchedError) && (
+        <DashboardError error={searches.search ? searchedError : error} />
+      )}
       {condition() ? (
         <Loader />
-      ) : !error && !searchedError && !loading ? (
+      ) : !error &&
+        !searchedError &&
+        ((!loading && !searches.search) ||
+          (!searchLoading && searches.search)) ? (
         <>
           {condition2() && (
             <div
@@ -385,9 +399,9 @@ const DashboardCustomers = () => {
               )}
 
               {(searches.search && searchedUsers) ||
-              (searchedUsers && lastLocation
-                ? lastLocation.search.split('=')[1]
-                : true && location.pathname.split('/')[3]) ? (
+              (searchedUsers &&
+                lastLocationCondition() &&
+                location.pathname.split('/')[3]) ? (
                 <motion.div
                   variants={hide}
                   initial='hidden'
@@ -441,7 +455,7 @@ const DashboardCustomers = () => {
           )}
         </>
       ) : (
-        !loading && <DashboardError error={error} />
+        ''
       )}
     </StyledOrders>
   )

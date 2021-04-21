@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useRef } from "react"
-import styled from "styled-components"
-import xSign from "../img/xSign.svg"
-import closedEye from "../img/closedEye.svg"
-import eye from "../img/eye.svg"
-import { useDispatch, useSelector } from "react-redux"
-import userLoginAction from "../actions/login"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import { useHistory, useLocation, Link } from "react-router-dom"
-import { GoogleLogin } from "react-google-login"
-import dotenv from "dotenv"
-import loginWithGoogle from "../actions/loginWithGoogle"
+import React, { useState, useEffect, useRef } from 'react'
+import styled from 'styled-components'
+import xSign from '../img/xSign.svg'
+import closedEye from '../img/closedEye.svg'
+import eye from '../img/eye.svg'
+import { useDispatch, useSelector } from 'react-redux'
+import userLoginAction from '../actions/login'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import { useHistory, useLocation, Link } from 'react-router-dom'
+import { GoogleLogin } from 'react-google-login'
+import dotenv from 'dotenv'
+import loginWithGoogle from '../actions/loginWithGoogle'
 
 const Login = () => {
   dotenv.config()
   const inputRef = useRef(null)
-  const [emailValue, setEmailValue] = useState("")
-  const [passwordValue, setPasswordValue] = useState("")
+  const [emailValue, setEmailValue] = useState('')
+  const [passwordValue, setPasswordValue] = useState('')
   const [show, setShow] = useState(false)
 
   const dispatch = useDispatch()
@@ -30,8 +30,8 @@ const Login = () => {
 
   const { loading, user, error } = useSelector((state) => state.userInfo)
 
-  const search = location.search.replace("?redirect=", "")
-  const redirect = search ? search : "/"
+  const search = location.search.replace('?redirect=', '')
+  const redirect = search ? search : '/'
 
   useEffect(() => {
     if (user.name) {
@@ -43,9 +43,9 @@ const Login = () => {
     let userObj
     if (
       response.error &&
-      response.error !== "idpiframe_initialization_failed"
+      response.error !== 'idpiframe_initialization_failed'
     ) {
-      if (response.error === "popup_closed_by_user") {
+      if (response.error === 'popup_closed_by_user') {
         return
       }
     } else {
@@ -53,14 +53,14 @@ const Login = () => {
         dispatch(
           loginWithGoogle(
             response.profileObj.givenName +
-              " " +
+              ' ' +
               response.profileObj.familyName,
             response.profileObj.email,
-            response.profileObj.imageUrl.replace("s96", "s250")
+            response.profileObj.imageUrl.replace('s96', 's250')
           )
         )
       }
-      localStorage.setItem("sickUserInfo", JSON.stringify(userObj))
+      localStorage.setItem('sickUserInfo', JSON.stringify(userObj))
     }
   }
 
@@ -75,7 +75,7 @@ const Login = () => {
             buttonText='Continue'
             onSuccess={responseGoogle}
             onFailure={responseGoogle}
-            cookiePolicy={"single_host_origin"}
+            cookiePolicy={'single_host_origin'}
           />
         </div>
         <Message
@@ -83,12 +83,12 @@ const Login = () => {
           visiblity={error ? true : false}
           msg={
             error
-              ? error.includes("timed out")
-                ? "Network Error"
-                : error.includes("mongo")
-                ? "Server Error"
+              ? error.includes('timed out')
+                ? 'Network Error'
+                : error.includes('mongo')
+                ? 'Server Error'
                 : error
-              : "Ok"
+              : 'Ok'
           }
           type='error'
         />
@@ -101,8 +101,8 @@ const Login = () => {
             onChange={(e) => setEmailValue(e.target.value)}
           />
           <img
-            onClick={() => setEmailValue("")}
-            style={{ display: `${emailValue.length ? "block" : "none"}` }}
+            onClick={() => setEmailValue('')}
+            style={{ display: `${emailValue.length ? 'block' : 'none'}` }}
             className='xSign2'
             src={xSign}
             alt='X icon'
@@ -114,11 +114,11 @@ const Login = () => {
             ref={inputRef}
             value={passwordValue}
             id='password'
-            type={`${show ? "text" : "password"}`}
+            type={`${show ? 'text' : 'password'}`}
             onChange={(e) => setPasswordValue(e.target.value)}
           />
           <img
-            style={{ display: `${show ? "none" : "block"}` }}
+            style={{ display: `${show ? 'none' : 'block'}` }}
             className='eye eye1'
             src={closedEye}
             alt='closedEye'
@@ -135,7 +135,7 @@ const Login = () => {
             Forgot Password?
           </Link>
           <img
-            style={{ display: `${!show ? "none" : "block"}` }}
+            style={{ display: `${!show ? 'none' : 'block'}` }}
             className='eye eye2'
             src={eye}
             alt='eye'
@@ -151,14 +151,14 @@ const Login = () => {
         </div>
         <button type='submit'>Login {loading && <Loader />}</button>
         <p className='desktop'>
-          New Customer?{" "}
+          New Customer?{' '}
           <span className='register'>
             <Link to={`/register?redirect=${redirect}`}>Register</Link>
           </span>
         </p>
       </form>
       <p className='mobile'>
-        New Customer?{" "}
+        New Customer?{' '}
         <span className='register'>
           <Link to={`/register?redirect=${redirect}`}>Register</Link>
         </span>
@@ -171,8 +171,9 @@ const StyledLogin = styled.div`
   .forgotPassword {
     text-align: end;
     margin-top: 0.5rem;
-    display: block;
     color: #0084a0;
+    width: max-content;
+    align-self: flex-end;
   }
   .googleBtn {
     border-radius: 6px !important;
@@ -235,6 +236,8 @@ const StyledLogin = styled.div`
     }
     .email,
     .password {
+      display: flex;
+      flex-direction: column;
       position: relative;
       width: 100%;
       input {
