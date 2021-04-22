@@ -28,7 +28,9 @@ let options = {
 
 const app = express()
 
-app.use(sslRedirect())
+if (process.env.NODE_ENV === 'production') {
+  app.use(sslRedirect())
+}
 
 const server = spdy.createServer(options, app)
 
