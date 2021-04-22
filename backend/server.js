@@ -16,7 +16,6 @@ import wakeUpDyno from './utils/wakeUpDyno.js'
 import prerender from 'prerender-node'
 import Category from './models/category.js'
 import fs from 'fs'
-import sslRedirect from 'heroku-ssl-redirect'
 
 const __dirname = path.resolve()
 
@@ -26,10 +25,6 @@ let options = {
 }
 
 const app = express()
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(sslRedirect())
-}
 
 const server = http.Server(app)
 
