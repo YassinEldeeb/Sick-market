@@ -203,7 +203,7 @@ const App = () => {
           </Online>
           <Offline>
             <div className='noInternet'>
-              <Lottie className='lottieNoConnection' options={defaultOptions} />
+              <p>Offline.</p>
             </div>
           </Offline>
         </LastLocationProvider>
