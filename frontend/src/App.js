@@ -21,6 +21,8 @@ import Home from './pages/Home'
 import Cart from './pages/Cart'
 import ProductDetail from './pages/ProductDetail'
 import { Offline, Online } from 'react-detect-offline'
+import Lottie from 'react-lottie'
+import animationData from './lotties/8719-t-rex.json'
 
 const Description = lazy(() => import('./pages/Description'))
 const Login = lazy(() => import('./pages/Login'))
@@ -104,6 +106,12 @@ const App = () => {
       setRegister2(true)
     }
   }, [])
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+  }
 
   return (
     <div className='App' id={`${logoutLoading ? 'logoutLoading' : ''}`}>
@@ -194,7 +202,9 @@ const App = () => {
             </Suspense>
           </Online>
           <Offline>
-            <p className='offline-msg'>You're Offline!</p>
+            <div className='noInternet'>
+              <Lottie className='lottieNoConnection' options={defaultOptions} />
+            </div>
           </Offline>
         </LastLocationProvider>
       </BrowserRouter>

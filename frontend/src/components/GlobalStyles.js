@@ -9,11 +9,13 @@ const Global = createGlobalStyle`
     outline:none;
     scrollbar-width:thin; 
 }
-.offline-msg{
-  text-align:center;
-  font-size:calc(1rem + 0.3vw);
-  padding:1rem
+.noInternet{
+  height:50vh;
+  display:grid;
+  place-items:center;
 }
+
+
 *::-webkit-scrollbar {
   width: 7.4px;
 }
@@ -120,6 +122,12 @@ img{
       
     }
 @media screen and (max-width:1050px){
+  .noInternet{
+  height:unset;
+    div:first-child{
+      width:90% !important;
+    }
+}
       .starsRating{
       display: flex !important;
     }
