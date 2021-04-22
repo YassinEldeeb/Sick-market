@@ -36,7 +36,6 @@
     "sharp": "^0.27.2",
     "socket.io": "^4.0.0",
     "socket.io-redis": "^6.1.0",
-    "spdy": "^4.0.2",
     "validator": "^13.5.2",
     "workbox-cli": "^6.1.5"
   },
