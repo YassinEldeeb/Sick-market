@@ -63,6 +63,7 @@ const App = () => {
   const { loading, validToken, token, logoutLoading, user } = useSelector(
     (state) => state.userInfo
   )
+  const { products } = useSelector((state) => state.productList)
 
   useEffect(() => {
     if (token && !loading && !validToken) {
@@ -125,87 +126,89 @@ const App = () => {
           />
           <AnimatePresence>{logoutLoading && <LoggingOut />}</AnimatePresence>
           <JustComponentForApp />
-          <Online>
-            <Suspense fallback={<p className='loadingText'>Loading...</p>}>
-              <Switch>
-                <Route path='/' exact>
+          <Suspense fallback={<p className='loadingText'>Loading...</p>}>
+            <Switch>
+              <Route path='/' exact>
+                <Offline>
+                  {!products && (
+                    <div className='noInternet'>
+                      <Lottie
+                        className='lottieNoConnection'
+                        options={defaultOptions}
+                      />
+                    </div>
+                  )}
+                </Offline>
+                <Online>
                   <Home
                     scrollPosition={scrollPosition}
                     setScrollPosition={setScrollPosition}
                   />
-                </Route>
-                <Route path='/products/:id'>
-                  <ProductDetail
-                    cartCount={cartCount}
-                    setCartCount={setCartCount}
-                  />
-                </Route>
-                <Route path='/product-description/:id'>
-                  <Description />
-                </Route>
-                <Route path='/cart'>
-                  <Cart cartCount={cartCount} setCartCount={setCartCount} />
-                </Route>
-                <Route path='/login'>
-                  <Login />
-                </Route>
-                <Route path='/forgotPassword'>
-                  <ForgotPassword />
-                </Route>
-                <Route path='/resetPassword'>
-                  <ResetPassword />
-                </Route>
-                <Route path='/register'>
-                  <Register />
-                </Route>
-                <Route path='/verify'>
-                  <Verify />
-                </Route>
-                <Route path='/changeEmail'>
-                  <ChangeEmail />
-                </Route>
-                <Route path='/account/edit-profile'>
-                  <EditProfile />
-                </Route>
-                <Route path='/account/orders'>
-                  <MyOrders />
-                </Route>
-                <Route path='/account/change-password'>
-                  <ChangePassword />
-                </Route>
-                <Route path='/shipping'>
-                  <Shipping />
-                </Route>
-                <Route path='/payment'>
-                  <Payment />
-                </Route>
-                <Route path='/placeOrder'>
-                  <PlaceOrder
-                    cartCount={cartCount}
-                    setCartCount={setCartCount}
-                  />
-                </Route>
-                <Route path='/orders/:id'>
-                  <OrderDetails />
-                </Route>
+                </Online>
+              </Route>
+              <Route path='/products/:id'>
+                <ProductDetail
+                  cartCount={cartCount}
+                  setCartCount={setCartCount}
+                />
+              </Route>
+              <Route path='/product-description/:id'>
+                <Description />
+              </Route>
+              <Route path='/cart'>
+                <Cart cartCount={cartCount} setCartCount={setCartCount} />
+              </Route>
+              <Route path='/login'>
+                <Login />
+              </Route>
+              <Route path='/forgotPassword'>
+                <ForgotPassword />
+              </Route>
+              <Route path='/resetPassword'>
+                <ResetPassword />
+              </Route>
+              <Route path='/register'>
+                <Register />
+              </Route>
+              <Route path='/verify'>
+                <Verify />
+              </Route>
+              <Route path='/changeEmail'>
+                <ChangeEmail />
+              </Route>
+              <Route path='/account/edit-profile'>
+                <EditProfile />
+              </Route>
+              <Route path='/account/orders'>
+                <MyOrders />
+              </Route>
+              <Route path='/account/change-password'>
+                <ChangePassword />
+              </Route>
+              <Route path='/shipping'>
+                <Shipping />
+              </Route>
+              <Route path='/payment'>
+                <Payment />
+              </Route>
+              <Route path='/placeOrder'>
+                <PlaceOrder cartCount={cartCount} setCartCount={setCartCount} />
+              </Route>
+              <Route path='/orders/:id'>
+                <OrderDetails />
+              </Route>
 
-                <Route path='/account'></Route>
+              <Route path='/account'></Route>
 
-                <Route path='/dashboard'>
-                  <Dashboard />
-                </Route>
+              <Route path='/dashboard'>
+                <Dashboard />
+              </Route>
 
-                <Route>
-                  <NotFound />
-                </Route>
-              </Switch>
-            </Suspense>
-          </Online>
-          <Offline>
-            <div className='noInternet'>
-              <Lottie className='lottieNoConnection' options={defaultOptions} />
-            </div>
-          </Offline>
+              <Route>
+                <NotFound />
+              </Route>
+            </Switch>
+          </Suspense>
         </LastLocationProvider>
       </BrowserRouter>
     </div>
