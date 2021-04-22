@@ -17,6 +17,7 @@ import prerender from 'prerender-node'
 import Category from './models/category.js'
 import spdy from 'spdy'
 import fs from 'fs'
+import sslRedirect from 'heroku-ssl-redirect'
 
 const __dirname = path.resolve()
 
@@ -26,6 +27,8 @@ let options = {
 }
 
 const app = express()
+
+app.use(sslRedirect())
 
 const server = spdy.createServer(options, app)
 
