@@ -10,12 +10,11 @@ import bodyparser from 'body-parser'
 import rateLimit from 'express-rate-limit'
 import path from 'path'
 import express from 'express'
-// import http from 'http'
+import http from 'http'
 import SocketService from './webSockets/socketService.js'
 import wakeUpDyno from './utils/wakeUpDyno.js'
 import prerender from 'prerender-node'
 import Category from './models/category.js'
-import spdy from 'spdy'
 import fs from 'fs'
 import sslRedirect from 'heroku-ssl-redirect'
 
@@ -32,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(sslRedirect())
 }
 
-const server = spdy.createServer(options, app)
+const server = http.Server(app)
 
 app.use(express.json())
 dotenv.config()
