@@ -29,7 +29,7 @@ const run = async () => {
 run()
 const register = asyncHandler(async (req, res) => {
   const subscription = req.body
-  const exist = await Subscription.find({ endpoint: subscription.endpoint })
+  const exist = await Subscription.findOne({ endpoint: subscription.endpoint })
 
   if (exist) {
     res.status(400)
