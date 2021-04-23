@@ -130,13 +130,18 @@ const App = () => {
             <Switch>
               <Route path='/' exact>
                 <Offline>
-                  {!products && (
+                  {!products ? (
                     <div className='noInternet'>
                       <Lottie
                         className='lottieNoConnection'
                         options={defaultOptions}
                       />
                     </div>
+                  ) : (
+                    <Home
+                      scrollPosition={scrollPosition}
+                      setScrollPosition={setScrollPosition}
+                    />
                   )}
                 </Offline>
                 <Online>
