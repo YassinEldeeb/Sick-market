@@ -23,7 +23,7 @@ const ProductList = ({ scrollPosition, setScrollPosition }) => {
 
   return (
     <StyledList className={`${!scrolled ? 'hide' : ''}`}>
-      <h1 className='title'>Good Products</h1>
+      <h1 className='title'>Latest Products</h1>
       {loading ? (
         <Loader />
       ) : !error && products ? (

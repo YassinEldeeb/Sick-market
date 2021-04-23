@@ -15,7 +15,7 @@ const testData = {
     'Experience lightning-fast loading with an ultra-high speed SSD, deeper immersion with support for haptic feedback, adaptive triggers and 3D Audio.',
   icon: 'https://sick-market.herokuapp.com/uploads/upload-1618650936223.jpeg',
 
-  url: 'http://localhost:3000/products/607aa7384304c02b202d9e8c',
+  url: 'https://sick-market.herokuapp.com/products/607aa7384304c02b202d9e8c',
 }
 
 const run = async () => {
