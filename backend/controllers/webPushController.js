@@ -26,7 +26,7 @@ const run = async () => {
       .catch((err) => console.error(err))
   })
 }
-run()
+
 const register = asyncHandler(async (req, res) => {
   const subscription = req.body
   const exist = await Subscription.findOne({ endpoint: subscription.endpoint })
@@ -43,9 +43,7 @@ const register = asyncHandler(async (req, res) => {
   res.send()
 
   // sendNotification can only take a string as it's second parameter
-  webpush
-    .sendNotification(subscription, JSON.stringify(testData))
-    .catch((err) => console.error(err))
+  run()
 })
 
 const unRegister = asyncHandler((req, res) => {
