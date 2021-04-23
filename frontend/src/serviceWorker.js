@@ -39,69 +39,64 @@ export function register(config) {
     window.addEventListener('load', () => {
       const swUrl = `${process.env.PUBLIC_URL}/sw.js`
 
-      if (isLocalhost) {
-        // This is running on localhost. Let's check if a service worker still exists or not.
-        checkValidServiceWorker(swUrl, config)
+      // This is running on localhost. Let's check if a service worker still exists or not.
+      checkValidServiceWorker(swUrl, config)
 
-        // Add some additional logging to localhost, pointing developers to the
-        // service worker/PWA documentation.
-        navigator.serviceWorker.ready.then((registration) => {
-          console.log(
-            'This web app is being served cache-first by a service ' +
-              'worker. To learn more, visit https://bit.ly/CRA-PWA'
-          )
+      // Add some additional logging to localhost, pointing developers to the
+      // service worker/PWA documentation.
+      navigator.serviceWorker.ready.then((registration) => {
+        console.log(
+          'This web app is being served cache-first by a service ' +
+            'worker. To learn more, visit https://bit.ly/CRA-PWA'
+        )
 
-          if (!registration.pushManager) {
-            console.log('Push manager unavailable.')
-            return
-          }
+        if (!registration.pushManager) {
+          console.log('Push manager unavailable.')
+          return
+        }
 
-          const convertedVapidKey = urlBase64ToUint8Array(
-            process.env.PUBLIC_VAPID_KEY
-          )
+        const convertedVapidKey = urlBase64ToUint8Array(
+          'BNMzl3E6hRv3v8jfYKxBAECnpCgbCSjFELufcd7sD6M8xMFhJoMj-l7gwJ2j96qm9T9YEKVSaeqWOWOA0eWFMLk'
+        )
 
-          //
+        //
 
-          registration.pushManager
-            .getSubscription()
-            .then((existedSubscription) => {
-              if (existedSubscription === null) {
-                console.log('No subscription detected, make a request.')
-                registration.pushManager
-                  .subscribe({
-                    applicationServerKey: convertedVapidKey,
-                    userVisibleOnly: true,
-                  })
-                  .then(function (newSubscription) {
-                    console.log('New subscription added.')
-                    sendSubscription(newSubscription)
-                  })
-                  .catch(async function (e) {
-                    if (Notification.permission !== 'granted') {
-                      console.log('Permission was not granted.')
-                      try {
-                        await axios.delete('/api/push/unregister')
-                      } catch (err) {
-                        console.log(err)
-                      }
-                    } else {
-                      console.error(
-                        'An error ocurred during the subscription process.',
-                        e
-                      )
+        registration.pushManager
+          .getSubscription()
+          .then((existedSubscription) => {
+            if (existedSubscription === null) {
+              console.log('No subscription detected, make a request.')
+              registration.pushManager
+                .subscribe({
+                  applicationServerKey: convertedVapidKey,
+                  userVisibleOnly: true,
+                })
+                .then(function (newSubscription) {
+                  console.log('New subscription added.')
+                  sendSubscription(newSubscription)
+                })
+                .catch(async function (e) {
+                  if (Notification.permission !== 'granted') {
+                    console.log('Permission was not granted.')
+                    try {
+                      await axios.delete('/api/push/unregister')
+                    } catch (err) {
+                      console.log(err)
                     }
-                  })
-              } else {
-                console.log('Existed subscription detected.')
-                sendSubscription(existedSubscription)
-              }
-            })
-          //
-        })
-      } else {
-        // Is not localhost. Just register service worker
-        registerValidSW(swUrl, config)
-      }
+                  } else {
+                    console.error(
+                      'An error ocurred during the subscription process.',
+                      e
+                    )
+                  }
+                })
+            } else {
+              console.log('Existed subscription detected.')
+              sendSubscription(existedSubscription)
+            }
+          })
+        //
+      })
     })
   }
 }
