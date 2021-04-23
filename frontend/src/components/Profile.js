@@ -4,7 +4,7 @@ import arrow from '../img/arrow3.svg'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { userLogoutAction, userLogoutAllAction } from '../actions/logout'
-import SmoothImg from '../components/smoothImgLoading'
+import SmoothImg from './smoothImgLoading'
 
 const Profile = () => {
   const [dropDown, setDropDown] = useState(false)

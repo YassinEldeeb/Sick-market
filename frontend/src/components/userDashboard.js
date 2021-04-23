@@ -7,9 +7,9 @@ import { motion } from 'framer-motion'
 import { popup } from '../animations'
 import { Link, useLocation } from 'react-router-dom'
 import reactStringReplace from 'react-string-replace'
-import Loader from '../components/loader'
+import Loader from './loader'
 import { useSelector } from 'react-redux'
-import SmoothImg from '../components/smoothImgLoading'
+import SmoothImg from './smoothImgLoading'
 
 const UserDashboard = ({ user }) => {
   const location = useLocation()

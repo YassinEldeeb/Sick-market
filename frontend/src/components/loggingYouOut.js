@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Loader from '../components/loader'
+import Loader from './loader'
 import { motion } from 'framer-motion'
 import { showSmoothly } from '../animations'
 

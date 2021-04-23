@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import Product from '../components/Product'
+import Product from './Product'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { productListAction } from '../actions/products'
-import Loader from '../components/loader'
-import Message from '../components/message'
+import Loader from './loader'
+import Message from './message'
 
 const ProductList = ({ scrollPosition, setScrollPosition }) => {
   const dispatch = useDispatch()

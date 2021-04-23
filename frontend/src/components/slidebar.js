@@ -1,21 +1,21 @@
-import React, { useEffect } from "react"
-import key from "../img/key.svg"
-import orders from "../img/orders.svg"
-import settings from "../img/settings.svg"
-import edit from "../img/edit.svg"
-import { Link, useLocation, useHistory } from "react-router-dom"
-import styled from "styled-components"
-import Goback from "../components/Goback"
-import { useSelector } from "react-redux"
+import React, { useEffect } from 'react'
+import key from '../img/key.svg'
+import orders from '../img/orders.svg'
+import settings from '../img/settings.svg'
+import edit from '../img/edit.svg'
+import { Link, useLocation, useHistory } from 'react-router-dom'
+import styled from 'styled-components'
+import Goback from './Goback'
+import { useSelector } from 'react-redux'
 
 const SlideBar = ({ slider, setSlider }) => {
   const { user } = useSelector((state) => state.userInfo)
   const history = useHistory()
   const location = useLocation().pathname
-  const secondLocation = useLocation().pathname.split("/")[2]
+  const secondLocation = useLocation().pathname.split('/')[2]
   useEffect(() => {
-    if (location === "/account" || location === "/account/") {
-      history.push("/account/edit-profile")
+    if (location === '/account' || location === '/account/') {
+      history.push('/account/edit-profile')
     }
   }, [location, history])
   useEffect(() => {
@@ -23,17 +23,17 @@ const SlideBar = ({ slider, setSlider }) => {
   }, [location])
 
   return (
-    <StyledSlider className={`${slider ? "active" : ""}`}>
+    <StyledSlider className={`${slider ? 'active' : ''}`}>
       <Goback toPath='/' providedClassName='goBackSlider' text='Go Home' />
       <Link
-        className={`link ${secondLocation === "edit-profile" ? "active" : ""}`}
+        className={`link ${secondLocation === 'edit-profile' ? 'active' : ''}`}
         to='edit-profile'
       >
         <img src={edit} alt='edit Icon' />
         <h1>Edit Profile</h1>
       </Link>
       <Link
-        className={`link ${secondLocation === "orders" ? "active" : ""}`}
+        className={`link ${secondLocation === 'orders' ? 'active' : ''}`}
         to='orders'
       >
         <img src={orders} alt='orders Icon' />
@@ -41,17 +41,17 @@ const SlideBar = ({ slider, setSlider }) => {
       </Link>
       <Link
         className={`link ${
-          secondLocation === "account-settings" ? "active" : ""
+          secondLocation === 'account-settings' ? 'active' : ''
         }`}
         to='account-settings'
       >
         <img src={settings} alt='gear Icon' />
         <h1>Account Settings</h1>
       </Link>
-      {!user.profilePicLink && user.profilePicLink !== "cleared" && (
+      {!user.profilePicLink && user.profilePicLink !== 'cleared' && (
         <Link
           className={`link ${
-            secondLocation === "change-password" ? "active" : ""
+            secondLocation === 'change-password' ? 'active' : ''
           }`}
           to='change-password'
         >

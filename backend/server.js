@@ -6,6 +6,7 @@ import { errRouter, notFoundRouter } from './middleware/errMiddleware.js'
 import userRouter from './routes/userRoute.js'
 import orderRouter from './routes/orderRoute.js'
 import couponRouter from './routes/couponRoute.js'
+import pushRouter from './routes/pushNotifications.js'
 import bodyparser from 'body-parser'
 import rateLimit from 'express-rate-limit'
 import path from 'path'
@@ -15,14 +16,8 @@ import SocketService from './webSockets/socketService.js'
 import wakeUpDyno from './utils/wakeUpDyno.js'
 import prerender from 'prerender-node'
 import Category from './models/category.js'
-import fs from 'fs'
 
 const __dirname = path.resolve()
-
-let options = {
-  key: fs.readFileSync(path.join(__dirname, 'certificates/server.key')),
-  cert: fs.readFileSync(path.join(__dirname, 'certificates/server.crt')),
-}
 
 const app = express()
 
@@ -47,6 +42,7 @@ app.use('/api/users/getNewSecurityCode', apiLimiter)
 app.use('/api/users', userRouter)
 app.use('/api/orders', orderRouter)
 app.use('/api/coupons', couponRouter)
+app.use('/api/push', pushRouter)
 
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)

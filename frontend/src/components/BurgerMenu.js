@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { userLogoutAction, userLogoutAllAction } from '../actions/logout'
 import falseSVG from '../img/false.svg'
 import trueSVG from '../img/true.svg'
-import SmoothImg from '../components/smoothImgLoading'
+import SmoothImg from './smoothImgLoading'
 
 const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
   const dispatch = useDispatch()
