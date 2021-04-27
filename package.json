@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node backend/server.js",
+    "start": "pm2-runtime start ecosystem.config.js --env production",
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
@@ -30,6 +30,7 @@
     "mongoose": "^5.11.12",
     "multer": "^1.4.2",
     "nodemailer": "^6.4.17",
+    "pm2": "^4.5.6",
     "prerender-node": "^3.2.5",
     "qs": "^6.7.0",
     "request": "^2.88.2",
