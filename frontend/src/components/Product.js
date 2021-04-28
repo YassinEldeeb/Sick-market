@@ -83,13 +83,12 @@ const Product = ({
               'calc(((200px + 5vw) - (0.5rem + 0.4vw))* 0.796875 + 6px)'
             }
             contHeightS={'calc(((90vw - (0.8rem + 0.4vw) * 2)) * 0.796875)'}
-            width={'640px'}
-            height={'510px'}
             preLoaderId='preLoader'
             loaderId='preloader2'
             src={data.image}
             alt='product'
             tiny={`/api/products/${data._id}/tiny`}
+            className='productLazy'
           />
         )}
       </Link>
@@ -129,6 +128,8 @@ const Product = ({
   )
 }
 const StyledProduct = styled.div`
+  .productLazy {
+  }
   .hide {
     opacity: 0;
   }
@@ -196,7 +197,7 @@ const StyledProduct = styled.div`
     }
     h6 {
       font-weight: 500;
-      font-size: calc(0.6rem + 0.5vw) !important;
+      font-size: calc(0.95rem + 0.1vw) !important;
       color: white !important;
     }
   }
@@ -287,7 +288,7 @@ const StyledProduct = styled.div`
     align-items: center;
     p {
       color: #00b2d8 !important;
-      font-size: calc(0.55rem + 0.5vw) !important;
+      font-size: calc(0.87rem + 0.1vw) !important;
       font-weight: 500;
     }
     img {

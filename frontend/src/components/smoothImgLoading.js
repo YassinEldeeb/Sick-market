@@ -178,9 +178,6 @@ const StyledImg = styled.div`
     width: 100%;
     height: 100%;
     filter: unset !important;
-    background: linear-gradient(to right, #aeaeae40, #d2d2d2);
-    animation: animate ${(props) => props.loadingAnimation / 1000}s infinite
-      alternate-reverse;
   }
   .notShow {
     opacity: 0 !important;
@@ -192,14 +189,6 @@ const StyledImg = styled.div`
   .removeTransition {
     animation: unset !important;
     opacity: 1;
-  }
-  @keyframes animate {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0.5;
-    }
   }
 `
 
