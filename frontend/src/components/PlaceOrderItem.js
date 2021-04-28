@@ -56,6 +56,7 @@ const PlaceOrderItem = ({
             </div>
           )}
           <SmoothImg
+            key={id}
             preLoaderId='preLoader'
             loaderId='preloader2'
             src={img}

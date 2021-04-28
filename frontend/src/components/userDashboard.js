@@ -62,6 +62,7 @@ const UserDashboard = ({ user }) => {
       </div>
       <div className='name'>
         <SmoothImg
+          key={user._id}
           providedClassName='profileImgContLazy'
           tiny={`/api/users/profilePic/tiny/${user._id}`}
           contWidth={`max-content`}

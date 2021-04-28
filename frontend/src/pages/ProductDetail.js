@@ -86,6 +86,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
           <div className='details'>
             <div className='productImg'>
               <SmoothImg
+                key={product._id}
                 providedClassName='smoothImgDetails'
                 width={'640px'}
                 height={'510px'}

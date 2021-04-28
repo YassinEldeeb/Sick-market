@@ -79,6 +79,7 @@ const Product = ({
 
         {type !== 'preview' && (
           <SmoothImg
+            key={data._id}
             contHeight={
               'calc(((200px + 5vw) - (0.5rem + 0.4vw))* 0.796875 + 6px)'
             }

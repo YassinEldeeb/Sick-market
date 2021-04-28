@@ -44,6 +44,7 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
             <div className='profile-mobile'>
               <div className='profile-mobile-pic'>
                 <SmoothImg
+                  key={userInfo.user._id}
                   tiny={`/api/users/profilePic/tiny/${userInfo.user._id}`}
                   src={imgSrcCondition()}
                   alt=''

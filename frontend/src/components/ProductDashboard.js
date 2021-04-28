@@ -102,6 +102,7 @@ const ProductDashboard = ({
       </div>
       <div className='name'>
         <SmoothImg
+          key={product._id}
           providedClassName='imgCont'
           width={'52px'}
           height={'41.5px'}

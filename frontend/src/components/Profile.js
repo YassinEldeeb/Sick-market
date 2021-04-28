@@ -57,6 +57,7 @@ const Profile = () => {
           <div className='profilePic'>
             <div className='profilePicImg'>
               <SmoothImg
+                key={userInfo.user._id}
                 imgId='profileIMG'
                 loaderId={'profileLoading'}
                 width={'100%'}
