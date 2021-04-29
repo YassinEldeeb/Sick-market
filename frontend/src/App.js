@@ -7,22 +7,24 @@ import checkToken from './actions/checkToken'
 import Loader from './components/loader'
 import Nav from './components/Nav'
 import JustComponentForApp from './components/justComponentForApp'
-import EditProfile from './pages/edit-profile'
-import ChangePassword from './pages/changePassword'
-import MyOrders from './pages/MyOrders'
 import socket from './clientSocket/socket'
 import { userLogoutAction } from './actions/logout'
-import LoggingOut from './components/loggingYouOut'
 import { AnimatePresence } from 'framer-motion'
-import Shipping from './pages/Shipping'
-import Payment from './pages/Payment'
-import PlaceOrder from './pages/PlaceOrder'
-import Home from './pages/Home'
-import Cart from './pages/Cart'
-import ProductDetail from './pages/ProductDetail'
+import LoggingOut from './components/loggingYouOut'
 import { Offline, Online } from 'react-detect-offline'
 import Lottie from 'react-lottie'
 import animationData from './lotties/8719-t-rex.json'
+//
+import Home from './pages/Home'
+import ProductDetail from './pages/ProductDetail'
+
+//
+const Cart = lazy(() => import('./pages/Cart'))
+const Account = lazy(() => import('./pages/Account'))
+
+const Shipping = lazy(() => import('./pages/Shipping'))
+const Payment = lazy(() => import('./pages/Payment'))
+const PlaceOrder = lazy(() => import('./pages/PlaceOrder'))
 
 const Description = lazy(() => import('./pages/Description'))
 const Login = lazy(() => import('./pages/Login'))
@@ -174,15 +176,10 @@ const App = () => {
               <Route path='/changeEmail'>
                 <ChangeEmail />
               </Route>
-              <Route path='/account/edit-profile'>
-                <EditProfile />
+              <Route path='/account'>
+                <Account />
               </Route>
-              <Route path='/account/orders'>
-                <MyOrders />
-              </Route>
-              <Route path='/account/change-password'>
-                <ChangePassword />
-              </Route>
+
               <Route path='/shipping'>
                 <Shipping />
               </Route>
@@ -195,8 +192,6 @@ const App = () => {
               <Route path='/orders/:id'>
                 <OrderDetails />
               </Route>
-
-              <Route path='/account'></Route>
 
               <Route path='/dashboard'>
                 <Dashboard />

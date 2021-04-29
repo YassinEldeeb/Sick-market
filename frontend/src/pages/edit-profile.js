@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import SlideBar from '../components/slidebar'
 import FilePondUpload from '../components/filePondUpload'
 import styled from 'styled-components'
 import { ReactComponent as XSign } from '../img/xSign.svg'
@@ -112,21 +111,10 @@ const EditProfile = () => {
     }
   }, [deleteProfilePicLoading, user._id, user.profilePicLink])
 
-  const [slider2, setSlider2] = useState(false)
-
-  useEffect(() => {
-    setSlider2(false)
-  }, [location.pathname])
-
   const [warning, setWarning] = useState(true)
 
   return (
-    <StyledEdit
-      onClick={(e) => {
-        if (e.target.classList.contains('slider-shadow') && slider2)
-          setSlider2(false)
-      }}
-    >
+    <StyledEdit>
       {updated && warning && (
         <PopupMessage
           warning={warning}
@@ -138,16 +126,6 @@ const EditProfile = () => {
           oneTime={false}
         />
       )}
-      <SlideBar slider={slider2} />
-
-      <div className='slider-Burger' onClick={() => setSlider2(!slider2)}>
-        <span
-          className={`first-slider-burger ${slider2 ? 'active' : ''}`}
-        ></span>
-        <span
-          className={`third-slider-burger ${slider2 ? 'active' : ''}`}
-        ></span>
-      </div>
       <div className='content'>
         {profileLoading && <Loader />}
         {!profileLoading && (
@@ -279,13 +257,6 @@ const EditProfile = () => {
           </div>
         )}
       </div>
-      <div
-        className='slider-shadow'
-        style={{
-          pointerEvents: `${slider2 ? 'all' : 'none'}`,
-          background: `${slider2 ? 'rgba(0, 0, 0, 0.2)' : 'unset'}`,
-        }}
-      ></div>
     </StyledEdit>
   )
 }
@@ -317,7 +288,6 @@ const StyledEdit = styled.div`
   .message {
     padding: 0.55rem 0.9rem !important;
   }
-  height: 0px;
   position: relative;
 
   .first-slider-burger.active {

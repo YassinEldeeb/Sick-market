@@ -5,7 +5,6 @@ import { useLocation, useHistory, Switch, Route } from 'react-router-dom'
 
 import { useSelector } from 'react-redux'
 import { useLastLocation } from 'react-router-last-location'
-import { v4 as uuid } from 'uuid'
 import { ReactComponent as Statistics } from '../img/statistics.svg'
 import { ReactComponent as Orders } from '../img/cartD.svg'
 import { ReactComponent as Categories } from '../img/categories.svg'

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import SlideBar from '../components/slidebar'
 import styled from 'styled-components'
 import Message from '../components/message'
 import Loader from '../components/loader'
@@ -11,7 +10,6 @@ import { Link } from 'react-router-dom'
 
 const MyOrders = () => {
   const dispatch = useDispatch()
-  const [slider3, setSlider3] = useState(false)
   const { loadingOrders, orders, error } = useSelector(
     (state) => state.myOrders
   )
@@ -20,22 +18,7 @@ const MyOrders = () => {
     dispatch(getMyOrdersAction())
   }, [])
   return (
-    <StyledOrders
-      onClick={(e) => {
-        if (e.target.classList.contains('slider-shadow') && slider3)
-          setSlider3(false)
-      }}
-    >
-      <SlideBar slider={slider3} />
-      <div className='slider-Burger' onClick={() => setSlider3(!slider3)}>
-        <span
-          className={`first-slider-burger ${slider3 ? 'active' : ''}`}
-        ></span>
-        <span
-          className={`third-slider-burger ${slider3 ? 'active' : ''}`}
-        ></span>
-      </div>
-
+    <StyledOrders>
       <div
         className='tableCont'
         style={{
@@ -109,13 +92,6 @@ const MyOrders = () => {
           )}
         </div>
       </div>
-      <div
-        className='slider-shadow'
-        style={{
-          pointerEvents: `${slider3 ? 'all' : 'none'}`,
-          background: `${slider3 ? 'rgba(0, 0, 0, 0.2)' : 'unset'}`,
-        }}
-      ></div>
     </StyledOrders>
   )
 }
@@ -190,7 +166,6 @@ const StyledOrders = styled.div`
     margin-bottom: 1.1rem;
     font-size: calc(1.8rem + 0.3vw);
   }
-  height: 0px;
   .gridjs.gridjs-container {
     flex: 1 1 !important;
   }
@@ -215,7 +190,8 @@ const StyledOrders = styled.div`
     }
     table tr td {
       svg {
-        width: calc(17px + 0.2vw);
+        width: calc(20px + 0.2vw);
+        height: calc(17px + 0.2vw);
       }
     }
   }

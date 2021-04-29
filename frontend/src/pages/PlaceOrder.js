@@ -428,6 +428,7 @@ const StyledPlaceOrder = styled.div`
         padding: unset !important;
         color: #1a1a1a;
         font-size: calc(0.83rem + 0.3vw);
+        white-space: nowrap;
       }
       p {
         color: #1a1a1a;

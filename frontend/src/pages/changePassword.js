@@ -7,7 +7,6 @@ import Message from '../components/message'
 import Loader from '../components/loader'
 import dotenv from 'dotenv'
 import userUpdateAction from '../actions/update'
-import SlideBar from '../components/slidebar'
 import PopupMessage from '../components/PopupMessage'
 import { useLocation, useHistory } from 'react-router-dom'
 
@@ -51,7 +50,6 @@ const ChangePassword = () => {
     }
   }
 
-  const [slider, setSlider] = useState(false)
   const [warning, setWarning] = useState(true)
 
   useEffect(() => {
@@ -65,12 +63,7 @@ const ChangePassword = () => {
   }, [updateError, requiredInputs, updated])
 
   return (
-    <StyledLogin
-      onClick={(e) => {
-        if (e.target.classList.contains('slider-shadow') && slider)
-          setSlider(false)
-      }}
-    >
+    <StyledLogin>
       {updated && warning && (
         <PopupMessage
           warning={warning}
@@ -82,16 +75,6 @@ const ChangePassword = () => {
           oneTime={false}
         />
       )}
-      <SlideBar slider={slider} />
-      <div className='slider-Burger' onClick={() => setSlider(!slider)}>
-        <span
-          className={`first-slider-burger ${slider ? 'active' : ''}`}
-        ></span>
-        <span
-          className={`third-slider-burger ${slider ? 'active' : ''}`}
-        ></span>
-      </div>
-
       <div className='content'>
         <form onSubmit={submitHandler}>
           <div className='signInDiv'>
@@ -184,13 +167,6 @@ const ChangePassword = () => {
           <button type='submit'>Change {updateLoading && <Loader />}</button>
         </form>
       </div>
-      <div
-        className='slider-shadow'
-        style={{
-          pointerEvents: `${slider ? 'all' : 'none'}`,
-          background: `${slider ? 'rgba(0, 0, 0, 0.2)' : 'unset'}`,
-        }}
-      ></div>
     </StyledLogin>
   )
 }
@@ -204,8 +180,6 @@ const StyledLogin = styled.div`
   .alert .title h1 {
     margin-left: 0.35rem;
   }
-  height: 0px;
-  position: relative;
   .first-slider-burger.active {
     transform: translate(0%, 142%) rotate(-135deg);
   }
@@ -246,6 +220,7 @@ const StyledLogin = styled.div`
     flex: 1 1 auto;
     padding: calc(2rem + 10vh);
     overflow-y: auto;
+    margin-top: calc(0.85rem + 0.4vw);
   }
   .eye3 {
     transform: translate(-50%, -19%) !important;
