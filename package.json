@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "private": true,
   "scripts": {
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
