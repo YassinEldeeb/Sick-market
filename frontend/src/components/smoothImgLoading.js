@@ -165,7 +165,7 @@ const StyledImg = styled.div`
     border-radius: 7px;
     opacity: 1;
     filter: blur(7px);
-    transition: 0.05s;
+    transition: 0.08s;
 
     &.hide {
       opacity: 0 !important;
