@@ -6,11 +6,20 @@ import store from './store'
 import { Provider } from 'react-redux'
 import dotenv from 'dotenv'
 import * as serviceWorker from './serviceWorker'
+import HttpsRedirect from 'react-https-redirect'
 dotenv.config()
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    {process.env.NODE_ENV === 'production' ? (
+      <>
+        <HttpsRedirect>
+          <App />
+        </HttpsRedirect>
+      </>
+    ) : (
+      <App />
+    )}
   </Provider>,
   document.getElementById('root')
 )

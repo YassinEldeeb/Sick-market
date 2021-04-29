@@ -17,20 +17,13 @@ import prerender from 'prerender-node'
 import Category from './models/category.js'
 import fs from 'fs'
 import spdy from 'spdy'
-import http from 'http'
+import http2 from 'http2'
 import enforce from 'express-sslify'
 
 const __dirname = path.resolve()
 
 const app = express()
 
-// const server = spdy.createServer(
-//   {
-//     key: fs.readFileSync(path.resolve(__dirname, './certificates/server.key')),
-//     cert: fs.readFileSync(path.resolve(__dirname, './certificates/server.crt')),
-//   },
-//   app
-// )
 const server = http.createServer(app)
 
 app.use(express.json())
@@ -78,6 +71,7 @@ app.use(errRouter)
 
 const port = process.env.PORT
 const DYNO_URL = 'https://sick-market.herokuapp.com'
+
 server.listen(port, () => {
   if (process.env.NODE_ENV === 'production') {
     wakeUpDyno(DYNO_URL)
