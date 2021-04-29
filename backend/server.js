@@ -17,23 +17,20 @@ import prerender from 'prerender-node'
 import Category from './models/category.js'
 import fs from 'fs'
 import spdy from 'spdy'
+import http from 'http'
 
 const __dirname = path.resolve()
 
 const app = express()
 
-const server = spdy.createServer(
-  {
-    key: fs.readFileSync(path.resolve(__dirname, './certificates/server.key')),
-    cert: fs.readFileSync(path.resolve(__dirname, './certificates/server.crt')),
-  },
-  app
-)
-
-console.log(
-  fs.readFileSync(path.resolve(__dirname, './certificates/server.key')),
-  fs.readFileSync(path.resolve(__dirname, './certificates/server.crt'))
-)
+// const server = spdy.createServer(
+//   {
+//     key: fs.readFileSync(path.resolve(__dirname, './certificates/server.key')),
+//     cert: fs.readFileSync(path.resolve(__dirname, './certificates/server.crt')),
+//   },
+//   app
+// )
+const server = http.createServer(app)
 
 app.use(express.json())
 dotenv.config()
