@@ -83,16 +83,13 @@ const FilePondUpload = () => {
         name='files'
         labelIdle='Drag & Drop your Image or <span class="browseTextFilePond">Browse</span>'
         iconRemove={`<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0)">
 <path d="M106.242 70.7541L129.246 93.7576L79.2946 143.709L58.7851 145.973C56.0395 146.277 53.7197 143.955 54.0252 141.21L56.3072 120.686L106.242 70.7541V70.7541ZM143.474 67.3292L132.673 56.5282C129.303 53.1591 123.839 53.1591 120.47 56.5282L110.309 66.6895L133.312 89.6931L143.474 79.5318C146.843 76.1609 146.843 70.6984 143.474 67.3292V67.3292Z" fill="white"/>
-</g>
 <defs>
 <clipPath id="clip0">
 <rect width="92" height="92" fill="white" transform="translate(54 54)"/>
 </clipPath>
 </defs>
 </svg>
-
 `}
         onupdatefiles={() => setNumUpload(numUpload + 1)}
         server={

@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import add from '../img/choose.svg'
+import { ReactComponent as Add } from '../img/choose.svg'
 import { motion, AnimatePresence } from 'framer-motion'
 import { show, popup3 } from '../animations'
 import { useHistory, useLocation } from 'react-router-dom'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 import DropZone from 'react-drop-zone'
-import smallX from '../img/noImage.svg'
+import { ReactComponent as SmallX } from '../img/noImage.svg'
 
 const EditCropImg = ({
   completedCrop,
@@ -181,7 +181,7 @@ const EditCropImg = ({
           >
             {({ over, overDocument }) => (
               <div className={`dropOrSelect ${over ? 'active' : ''}`}>
-                <img src={add} />
+                <Add />
                 {!over && !overDocument && (
                   <p>
                     Select or Drag your
@@ -207,7 +207,7 @@ const EditCropImg = ({
 
         <div className={`buttons ${image ? 'activeCrop' : ''}`}>
           {productImg !== '/uploads/no.jpg' && !noImage && (
-            <img
+            <SmallX
               onClick={() => {
                 setNoImage(true)
                 formData.append('image', 'no')
@@ -222,9 +222,8 @@ const EditCropImg = ({
                   `/dashboard/products/edit/${location.pathname.split('/')[4]}`
                 )
               }}
-              src={smallX}
               className='deleteIcon'
-            ></img>
+            />
           )}
           <button onClick={cancelHandler} className='cancel'>
             {image ? 'Previous Img' : 'Cancel'}
@@ -301,13 +300,13 @@ const StyledCart = styled(motion.div)`
     align-items: center;
     margin-top: 1.5rem;
     position: relative;
-    img {
+    svg {
       position: absolute;
       left: 0%;
       top: 50%;
       transform: translate(-150%, -50%);
-      width: 35px;
-      height: 35px;
+      width: 35.5px;
+      height: 35.5px;
       padding-right: 0.65rem;
       cursor: pointer;
       opacity: 1;
@@ -350,7 +349,7 @@ const StyledCart = styled(motion.div)`
     border-radius: 10px;
     cursor: pointer;
     transition: background 0.3s ease;
-    img {
+    svg {
       width: 45px;
       height: 45px;
       pointer-events: none;

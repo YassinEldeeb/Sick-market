@@ -86,7 +86,6 @@ img{
     }
   
   .gobackMessage {
-    display: inline-flex !important;
     margin-left:5vw;
   }
   .filepond--drop-label label{
@@ -97,7 +96,7 @@ img{
     text-decoration:underline;
   }
   .goBackForgotPassword ,.flexCont {
-    display: inline-flex !important;
+    display: flex !important;
   }
   .goBackForgotPassword{
     margin-left: 5vw;

@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import SmoothImg from './smoothImgLoading'
-import notAllowed from '../img/notAllowed.svg'
-import close from '../img/close.svg'
+import { ReactComponent as NotAllowed } from '../img/notAllowed.svg'
+import { ReactComponent as Close } from '../img/close.svg'
 import { removeAction } from '../actions/cart'
 
 const PlaceOrderItem = ({
@@ -40,7 +40,7 @@ const PlaceOrderItem = ({
           }}
           className='removeIt'
         >
-          <img src={close} alt='' />
+          <Close />
         </div>
       )}
       <div className='firstDiv'>
@@ -52,7 +52,7 @@ const PlaceOrderItem = ({
           {(soldOut || removed) && (
             <div className={`removed ${removed || soldOut ? '' : 'hide'}`}>
               <p>{removed ? 'Removed' : soldOut ? 'SoldOut' : ''}</p>
-              <img src={notAllowed} />
+              <NotAllowed />
             </div>
           )}
           <SmoothImg
@@ -109,7 +109,7 @@ const StyledItem = styled.div`
     &:hover {
       opacity: 0.6;
     }
-    img {
+    svg {
       width: 20px;
       height: 20px;
     }
@@ -190,7 +190,7 @@ const StyledItem = styled.div`
       padding-bottom: 0rem !important;
       font-weight: 500 !important;
     }
-    img {
+    svg {
       width: 17px !important;
       height: 17px !important;
     }
@@ -250,7 +250,7 @@ const StyledItem = styled.div`
         padding-bottom: 0rem !important;
         font-weight: 500 !important;
       }
-      img {
+      svg {
         width: 12px !important;
         height: 12px !important;
       }

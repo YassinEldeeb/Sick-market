@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import { Link, useLocation } from 'react-router-dom'
 import Rating from './Rating'
 import { useDispatch } from 'react-redux'
-import add from '../img/add.svg'
-import free from '../img/free.svg'
-import discount from '../img/discount.svg'
+import { ReactComponent as Add } from '../img/add.svg'
+import { ReactComponent as Free } from '../img/free.svg'
+import { ReactComponent as Discount } from '../img/discount.svg'
 import SmoothImg from './smoothImgLoading'
 
 const Product = ({
@@ -50,7 +50,7 @@ const Product = ({
       >
         {data.oldPrice && (
           <div className='discount'>
-            <img src={discount} alt='' />
+            <Discount />
             <h6>
               {(((data.oldPrice - data.price) / data.oldPrice) * 100).toFixed(
                 0
@@ -70,7 +70,7 @@ const Product = ({
             />
 
             <div className='addLayer'>
-              <img className='add' src={add} alt='' />
+              <Add className='add' />
             </div>
           </>
         ) : (
@@ -108,7 +108,7 @@ const Product = ({
         <Rating ratingValue={data.rating} numOfReviews={data.numReviews} />
         {data.freeShipping && (
           <div className='freeShipping'>
-            <img src={free} alt='' />
+            <Free />
             <p>Free Shipping</p>
           </div>
         )}
@@ -191,7 +191,7 @@ const StyledProduct = styled.div`
     border-top-left-radius: 0px;
     border-bottom-right-radius: 0px;
 
-    img {
+    svg {
       margin-right: 0.25rem;
       width: 18px !important;
       height: 18px !important;
@@ -292,7 +292,7 @@ const StyledProduct = styled.div`
       font-size: calc(0.87rem + 0.1vw) !important;
       font-weight: 500;
     }
-    img {
+    svg {
       margin-right: 0.2rem;
       width: 17px;
       height: 17px;

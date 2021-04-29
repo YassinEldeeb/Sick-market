@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import key from '../img/key.svg'
-import orders from '../img/orders.svg'
-import settings from '../img/settings.svg'
-import edit from '../img/edit.svg'
+import { ReactComponent as Key } from '../img/key.svg'
+import { ReactComponent as Orders } from '../img/orders.svg'
+import { ReactComponent as Settings } from '../img/settings.svg'
+import { ReactComponent as Edit } from '../img/edit.svg'
 import { Link, useLocation, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import Goback from './Goback'
@@ -29,14 +29,15 @@ const SlideBar = ({ slider, setSlider }) => {
         className={`link ${secondLocation === 'edit-profile' ? 'active' : ''}`}
         to='edit-profile'
       >
-        <img src={edit} alt='edit Icon' />
+        <Edit />
         <h1>Edit Profile</h1>
       </Link>
       <Link
         className={`link ${secondLocation === 'orders' ? 'active' : ''}`}
         to='orders'
       >
-        <img src={orders} alt='orders Icon' />
+        <Orders />
+
         <h1>My Orders</h1>
       </Link>
       <Link
@@ -45,7 +46,7 @@ const SlideBar = ({ slider, setSlider }) => {
         }`}
         to='account-settings'
       >
-        <img src={settings} alt='gear Icon' />
+        <Settings />
         <h1>Account Settings</h1>
       </Link>
       {!user.profilePicLink && user.profilePicLink !== 'cleared' && (
@@ -55,7 +56,7 @@ const SlideBar = ({ slider, setSlider }) => {
           }`}
           to='change-password'
         >
-          <img src={key} alt='key Icon' />
+          <Key />
           <h1>Password</h1>
         </Link>
       )}
@@ -100,11 +101,12 @@ const StyledSlider = styled.div`
     &:hover {
       background: #f7f7f7;
     }
-    img {
+    svg {
       width: calc(1.4rem + 0.3vw);
       height: calc(1.4rem + 0.3vw);
     }
     h1 {
+      white-space: nowrap;
       color: #1a1a1a;
       font-weight: 500;
       font-size: calc(0.85rem + 0.3vw);

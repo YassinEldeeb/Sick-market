@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import arrow from '../img/gobackArrow.svg'
+import { ReactComponent as Arrow } from '../img/gobackArrow.svg'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 import { updateQtyAction } from '../actions/cart'
@@ -79,7 +79,7 @@ const QtySelector = ({
     <StyledSelect className={`${className ? className : ''}`}>
       <div className='select' onClick={() => setToggle(!toggle)}>
         <h1 className='selectValue'>{qty}</h1>
-        <img className='arrowImg' src={arrow} alt='arrow' />
+        <Arrow className='arrowImg' />
         <div className={`drop-menu ${toggle ? 'active' : ''}`}>
           {dropmenu()}
         </div>
@@ -93,7 +93,7 @@ const StyledSelect = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.25rem 1.3rem;
+    padding: 0.25rem 1.2rem;
     background: #f4f4f4;
     position: relative;
     border-radius: 5px;
@@ -144,12 +144,13 @@ const StyledSelect = styled.div`
         }
       }
     }
-    img {
+    .arrowImg {
       transform: rotate(270deg);
       height: 14px;
+      pointer-events: none;
     }
     h1 {
-      margin-right: 0.7rem;
+      margin-right: 0.55rem;
       font-size: calc(1rem + 0.3vw) !important;
     }
   }

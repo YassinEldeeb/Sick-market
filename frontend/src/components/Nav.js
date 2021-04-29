@@ -165,7 +165,7 @@ const Header = styled.div`
       justify-content: space-between;
       align-items: center;
       margin: 0 auto;
-      svg {
+      #Logo {
         cursor: pointer;
         width: calc(10.6rem + 5vw);
       }

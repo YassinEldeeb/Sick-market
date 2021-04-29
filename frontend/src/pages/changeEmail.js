@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useRef } from "react"
-import styled from "styled-components"
-import xSign from "../img/xSign.svg"
-import closedEye from "../img/closedEye.svg"
-import eye from "../img/eye.svg"
-import { useDispatch, useSelector } from "react-redux"
-import userUpdateAction from "../actions/update"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import { useHistory, useLocation } from "react-router-dom"
-import dotenv from "dotenv"
-import Goback from "../components/Goback"
+import React, { useState, useEffect, useRef } from 'react'
+import styled from 'styled-components'
+import { ReactComponent as XSign } from '../img/xSign.svg'
+import { ReactComponent as ClosedEye } from '../img/closedEye.svg'
+import { ReactComponent as Eye } from '../img/eye.svg'
+import { useDispatch, useSelector } from 'react-redux'
+import userUpdateAction from '../actions/update'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import { useHistory, useLocation } from 'react-router-dom'
+import dotenv from 'dotenv'
+import Goback from '../components/Goback'
 
 const ChangeEmail = () => {
   dotenv.config()
   const inputRef = useRef(null)
-  const [emailValue, setEmailValue] = useState("")
-  const [passwordValue, setPasswordValue] = useState("")
+  const [emailValue, setEmailValue] = useState('')
+  const [passwordValue, setPasswordValue] = useState('')
   const [show, setShow] = useState(false)
 
   const dispatch = useDispatch()
@@ -32,16 +32,16 @@ const ChangeEmail = () => {
     (state) => state.userInfo
   )
 
-  const search = location.search.split("=")[1]
-  const redirect = search ? search : "/"
+  const search = location.search.split('=')[1]
+  const redirect = search ? search : '/'
 
   useEffect(() => {
     if (updated) history.push(redirect)
   }, [updated, history, redirect])
 
   useEffect(() => {
-    if (!user || user.status !== "pending") {
-      history.push("/")
+    if (!user || user.status !== 'pending') {
+      history.push('/')
     }
   }, [user, history, redirect])
   return (
@@ -57,12 +57,12 @@ const ChangeEmail = () => {
             visiblity={updateError ? true : false}
             msg={
               updateError
-                ? updateError.includes("timed out")
-                  ? "Network Error"
-                  : updateError.includes("mongo")
-                  ? "Server Error"
+                ? updateError.includes('timed out')
+                  ? 'Network Error'
+                  : updateError.includes('mongo')
+                  ? 'Server Error'
                   : updateError
-                : "Ok"
+                : 'Ok'
             }
             type='error'
           />
@@ -74,12 +74,10 @@ const ChangeEmail = () => {
               type='text'
               onChange={(e) => setEmailValue(e.target.value)}
             />
-            <img
-              onClick={() => setEmailValue("")}
-              style={{ display: `${emailValue.length ? "block" : "none"}` }}
+            <XSign
+              onClick={() => setEmailValue('')}
+              style={{ display: `${emailValue.length ? 'block' : 'none'}` }}
               className='xSign2'
-              src={xSign}
-              alt='X icon'
             />
           </div>
           <div className='password'>
@@ -88,14 +86,12 @@ const ChangeEmail = () => {
               ref={inputRef}
               value={passwordValue}
               id='password'
-              type={`${show ? "text" : "password"}`}
+              type={`${show ? 'text' : 'password'}`}
               onChange={(e) => setPasswordValue(e.target.value)}
             />
-            <img
-              style={{ display: `${show ? "none" : "block"}` }}
+            <ClosedEye
+              style={{ display: `${show ? 'none' : 'block'}` }}
               className='eye eye1'
-              src={closedEye}
-              alt='closedEye'
               draggable='false'
               onClick={() => {
                 inputRef.current.focus()
@@ -105,11 +101,9 @@ const ChangeEmail = () => {
                 }, 0)
               }}
             />
-            <img
-              style={{ display: `${!show ? "none" : "block"}` }}
+            <Eye
+              style={{ display: `${!show ? 'none' : 'block'}` }}
               className='eye eye2'
-              src={eye}
-              alt='eye'
               draggable='false'
               onClick={() => {
                 inputRef.current.focus()
@@ -138,7 +132,7 @@ const StyledLogin = styled.div`
     }
   }
   .eye2 {
-    transform: translate(-50%, 8%) !important;
+    transform: translate(-50%, -15%) !important;
   }
   .xSign2 {
     position: absolute;
@@ -153,7 +147,7 @@ const StyledLogin = styled.div`
     position: absolute;
     right: 0%;
     top: 50%;
-    transform: translate(-50%, -6%);
+    transform: translate(-50%, -21%);
     width: calc(1.8rem + 0.3vw);
     cursor: pointer;
   }
@@ -264,19 +258,16 @@ const StyledLogin = styled.div`
       right: 0%;
       top: 50%;
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-18%, -36%);
-      width: calc(2.8rem + 1vw);
+      transform: translate(-50%, -32%);
+      width: calc(1.4rem + 1vw);
     }
     .eye2 {
-      transform: translate(-18%, -35%) !important;
+      transform: translate(-50%, -28%) !important;
     }
     .xSign2 {
-      transform: translate(-50%, -24%) !important;
-      width: calc(2rem + 1vw);
+      transform: translate(-50%, -28%) !important;
+      width: calc(1rem + 1vw);
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-12%, -36%) !important;
     }
     form {
       width: 90%;

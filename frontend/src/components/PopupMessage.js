@@ -1,21 +1,22 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import danger from "../img/warningBarIcon.svg"
-import trueSVG from "../img/true.svg"
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { ReactComponent as Danger } from '../img/warningBarIcon.svg'
+import { ReactComponent as TrueSVG } from '../img/true.svg'
 
 const PopupMessage = ({
   title,
   desc,
   setWarning,
-  type = "warning",
+  type = 'warning',
   timer,
   oneTime = true,
 }) => {
   const [value, setValue] = useState(null)
+
   const [hovered, setHovered] = useState(false)
   if (timer) {
     setTimeout(() => {
-      setValue("hideIt")
+      setValue('hideIt')
     }, timer * 1000)
   }
 
@@ -23,13 +24,14 @@ const PopupMessage = ({
     <StyledPopup
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`alert ${value && !hovered ? value : ""}`}
+      className={`alert ${value && !hovered ? value : ''}`}
     >
       <div className='title'>
         <svg
+          id='close'
           onClick={() => {
             setWarning(false)
-            if (oneTime) localStorage.setItem("showWarning", "hide")
+            if (oneTime) localStorage.setItem('showWarning', 'hide')
           }}
           viewBox='0 0 91 95'
           fill='none'
@@ -47,10 +49,7 @@ const PopupMessage = ({
             fill='black'
           />
         </svg>
-        <img
-          src={type === "warning" ? danger : trueSVG}
-          alt={type === "warning" ? "Warning Icon" : "Ok Icon"}
-        />
+        {type === 'warning' ? <Danger /> : <TrueSVG />}
         <h1>{title}</h1>
       </div>
       <div className='desc'>
@@ -59,6 +58,7 @@ const PopupMessage = ({
     </StyledPopup>
   )
 }
+
 const StyledPopup = styled.div`
   z-index: 7;
   position: fixed;
@@ -82,7 +82,8 @@ const StyledPopup = styled.div`
     transition: unset;
     display: none;
   }
-  svg {
+
+  #close {
     box-shadow: 0 0 5px #ffffff0f;
     position: absolute;
     right: 5%;
@@ -103,7 +104,7 @@ const StyledPopup = styled.div`
       fill-opacity: 1 !important;
     }
   }
-  img {
+  svg {
     width: calc(1.3rem + 0.3vw);
     height: calc(1.3rem + 0.3vw);
   }
@@ -138,7 +139,7 @@ const StyledPopup = styled.div`
         font-size: calc(1.2rem + 0.3vw);
       }
     }
-    img {
+    svg {
       width: calc(1.2rem + 0.3vw);
       height: calc(1.2rem + 0.3vw);
     }

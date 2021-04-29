@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import xSign from '../img/xSign.svg'
-import closedEye from '../img/closedEye.svg'
-import eye from '../img/eye.svg'
+import { ReactComponent as XSign } from '../img/xSign.svg'
+import { ReactComponent as ClosedEye } from '../img/closedEye.svg'
+import { ReactComponent as Eye } from '../img/eye.svg'
 import { useDispatch, useSelector } from 'react-redux'
 import userLoginAction from '../actions/login'
 import Message from '../components/message'
@@ -100,12 +100,10 @@ const Login = () => {
             type='text'
             onChange={(e) => setEmailValue(e.target.value)}
           />
-          <img
+          <XSign
             onClick={() => setEmailValue('')}
             style={{ display: `${emailValue.length ? 'block' : 'none'}` }}
             className='xSign2'
-            src={xSign}
-            alt='X icon'
           />
         </div>
         <div className='password'>
@@ -117,11 +115,9 @@ const Login = () => {
             type={`${show ? 'text' : 'password'}`}
             onChange={(e) => setPasswordValue(e.target.value)}
           />
-          <img
+          <ClosedEye
             style={{ display: `${show ? 'none' : 'block'}` }}
             className='eye eye1'
-            src={closedEye}
-            alt='closedEye'
             draggable='false'
             onClick={() => {
               inputRef.current.focus()
@@ -134,11 +130,9 @@ const Login = () => {
           <Link to='/forgotPassword' className='forgotPassword'>
             Forgot Password?
           </Link>
-          <img
+          <Eye
             style={{ display: `${!show ? 'none' : 'block'}` }}
             className='eye eye2'
-            src={eye}
-            alt='eye'
             draggable='false'
             onClick={() => {
               inputRef.current.focus()
@@ -184,7 +178,7 @@ const StyledLogin = styled.div`
     }
   }
   .eye2 {
-    transform: translate(-50%, -55%) !important;
+    transform: translate(-50%, -45%) !important;
   }
   .xSign2 {
     position: absolute;
@@ -199,7 +193,7 @@ const StyledLogin = styled.div`
     position: absolute;
     right: 0%;
     top: 50%;
-    transform: translate(-50%, -54%);
+    transform: translate(-50%, -45%);
     width: calc(1.8rem + 0.3vw);
     cursor: pointer;
   }
@@ -319,19 +313,16 @@ const StyledLogin = styled.div`
       right: 0%;
       top: 50%;
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-18%, -60%);
-      width: calc(2.8rem + 1vw);
+      transform: translate(-48%, -63%);
+      width: calc(1.5rem + 1vw);
     }
     .eye2 {
-      transform: translate(-18%, -60%) !important;
+      transform: translate(-48%, -66%) !important;
     }
     .xSign2 {
-      transform: translate(-50%, -24%) !important;
-      width: calc(2rem + 1vw);
+      width: calc(1.2rem + 1vw);
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-12%, -36%) !important;
+      transform: translate(-54%, -32%) !important;
     }
     justify-content: space-around;
     form {

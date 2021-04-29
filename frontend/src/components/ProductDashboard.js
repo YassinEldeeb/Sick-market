@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { parseISO, format } from 'date-fns'
-import pen from '../img/pen.svg'
-import trash from '../img/trash.svg'
-import eye from '../img/eyeSee.svg'
+import { ReactComponent as Pen } from '../img/pen.svg'
+import { ReactComponent as Trash } from '../img/trash.svg'
+import { ReactComponent as Eye } from '../img/eyeSee.svg'
+
 import ReactTooltip from 'react-tooltip'
 import { motion, AnimatePresence } from 'framer-motion'
 import { popup, realtimeStockCounter } from '../animations'
@@ -166,7 +167,7 @@ const ProductDashboard = ({
             }`}
             className='actionOption'
           >
-            <img className='gearImg' src={pen} alt='' />
+            <Pen className='gearImg' />
           </Link>
         </div>
         <div
@@ -184,7 +185,7 @@ const ProductDashboard = ({
             to={`/products/${product._id}`}
             className='actionOption'
           >
-            <img className='gearImg' src={eye} alt='' />
+            <Eye className='gearImg' />
           </Link>
         </div>
         <div
@@ -204,11 +205,11 @@ const ProductDashboard = ({
             className='actionOption trash'
           >
             {!deleteLoading ? (
-              <img className='gearImg' src={trash} alt='' />
+              <Trash className='gearImg' />
             ) : clicked ? (
               <Loader />
             ) : (
-              <img className='gearImg' src={trash} alt='' />
+              <Trash className='gearImg' />
             )}
           </div>
         </div>

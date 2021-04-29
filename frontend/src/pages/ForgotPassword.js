@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react"
-import styled from "styled-components"
-import xSign from "../img/xSign.svg"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import { useDispatch, useSelector } from "react-redux"
-import resetPasswordEmail from "../actions/resetPasswordEmail"
-import Goback from "../components/Goback"
-import { useHistory } from "react-router-dom"
-import PopupMessage from "../components/PopupMessage"
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { ReactComponent as XSign } from '../img/xSign.svg'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import { useDispatch, useSelector } from 'react-redux'
+import resetPasswordEmail from '../actions/resetPasswordEmail'
+import Goback from '../components/Goback'
+import { useHistory } from 'react-router-dom'
+import PopupMessage from '../components/PopupMessage'
 
 const ForgotPassword = () => {
   const dispatch = useDispatch()
-  const [emailValue, setEmailValue] = useState("")
+  const [emailValue, setEmailValue] = useState('')
   const submitHandler = (e) => {
     e.preventDefault()
     dispatch(resetPasswordEmail(emailValue))
@@ -23,13 +23,13 @@ const ForgotPassword = () => {
 
   useEffect(() => {
     if (user.name) {
-      history.push("/")
+      history.push('/')
     }
   }, [user])
   const [setWarning] = useState(false)
   return (
     <>
-      <Goback providedClassName={"goBackForgotPassword"} />
+      <Goback providedClassName={'goBackForgotPassword'} />
       {sent && (
         <PopupMessage
           setWarning={setWarning}
@@ -41,7 +41,7 @@ const ForgotPassword = () => {
             </p>
           }
           title='Email Sent'
-          type={"ok"}
+          type={'ok'}
         />
       )}
       <StyledForgot>
@@ -52,12 +52,12 @@ const ForgotPassword = () => {
             visiblity={error ? true : false}
             msg={
               error
-                ? error.includes("timed out")
-                  ? "Network Error"
-                  : error.includes("mongo")
-                  ? "Server Error"
+                ? error.includes('timed out')
+                  ? 'Network Error'
+                  : error.includes('mongo')
+                  ? 'Server Error'
                   : error
-                : ""
+                : ''
             }
             type='error'
           />
@@ -70,12 +70,10 @@ const ForgotPassword = () => {
                 type='text'
                 id='email'
               />
-              <img
-                onClick={() => setEmailValue("")}
-                style={{ display: `${emailValue.length ? "block" : "none"}` }}
+              <XSign
+                onClick={() => setEmailValue('')}
+                style={{ display: `${emailValue.length ? 'block' : 'none'}` }}
                 className='xSign2'
-                src={xSign}
-                alt='X icon'
               />
             </div>
             <button type='submit'>

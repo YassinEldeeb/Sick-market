@@ -1,22 +1,23 @@
-import React from "react"
-import styled from "styled-components"
-import { Link } from "react-router-dom"
+import React from 'react'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 const Logo = ({ activeMenu, setActiveMenu }) => {
   return (
     <StyledBurger>
       <div
-        className={`burger ${activeMenu ? "active" : ""}`}
+        className={`burger ${activeMenu ? 'active' : ''}`}
         onClick={() => {
           setActiveMenu(!activeMenu)
         }}
       >
-        <span className={`firstBar ${activeMenu ? "active" : ""}`}></span>
-        <span className={`secondBar ${activeMenu ? "active" : ""}`}></span>
-        <span className={`thirdBar ${activeMenu ? "active" : ""}`}></span>
+        <span className={`firstBar ${activeMenu ? 'active' : ''}`}></span>
+        <span className={`secondBar ${activeMenu ? 'active' : ''}`}></span>
+        <span className={`thirdBar ${activeMenu ? 'active' : ''}`}></span>
       </div>
       <Link to='/' aria-label='Home'>
         <svg
+          id='Logo'
           viewBox='0 0 211 43'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
@@ -122,7 +123,7 @@ const Logo = ({ activeMenu, setActiveMenu }) => {
               xlinkHref='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAByCAQAAACPBKGSAAAAAnNCSVQICFXsRgQAAAACYktHRAAAqo0jMgAABDBJREFUeJzt3T2IXFUUB/Az+xXNRgwoJAbBVjEWCklhYWGjCAYbRRRU0EYhWIiKlVZiYWdAUgsRIaCFoIUgksomYLOFYgQVPxAsVmOWqDtWNrL3znjfvH0zc36/LS/nvZv7Hv83O3lnbwQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwc6Oej39fPBZXez4H5LUR78bH7eVrs5vJnk7GEz2fAXK71CUAVmY3jz391fPxIbu/uxT3HQDAHBMAkJgAgMQEACQmACAxAQCJCQBITABAYgIAEhMAkJgAgMT6bgbqu9twDrwYLxQbHkfxS9xVrHwzHo8/C2MrcSnu6Ty35fZO3Ft8EX41LsaDxcoP4kSl8kI82nlui6LvALgS3xbv8fmyGUfbCg/HkcrogcrYjdVTXmmbTiJH4lhl9MfK2NFqZeONsJCmC4BH4r3G438WtzRW7reH4v22wnF1dLdxbNIoXdbPyv9ruu8A2hsOO7Uq7qsbhp4A7L/pAqD+kAMWlP8FgMQEACQmACAxAQCJCQBITABAYgIAEhMAkJgAgMSmC4D2lqG+m41mp3mm9cL11sN2qMyivvK10XrlasNcBtRputO16x6P001bfK7GVpxpqBvCiXim8m+8Gs+XFvqBOFVseBzF73FbYWwlvq/snDaK7bi90payVml2nUPbcTaubagbx8F4ujT4bNxRbDYZxW9xvLC+a7EVm5X323fi1kLlgTgdX5dn258f4lxcs+fIepyPT/Z5NintxLjtp+x8c+V4PG6czUA/33VY+cZznqqs3VPVypcqlXcPs35fzOw+/g/fAQwoUY9V+x+Guam1sPYxv/6puTbZgVqFe/vDOgIAEhMAkJgAgMQEACQmACAxAQCJCQBITABAYgIAEhMA00qwydlyab9gc3ipe5vS4nTrDW03Su/uNl+cya+Vll8WnsObtB8bUV6GiYtQumD1wnGlsscn5iAXO8191KPX4tW2wjPxZGVz0G/izmr1VhwrRshGvBWvtE2qHz+1v9Nf8VHc38NRh/F2PDfEaX0C6K65H3szDlVH666L6yujBxvm09lXcXnPR8pK/NzL+Zbp8TXQL+MCoLvm27DeDTipV7BbdS8e7q9tdekNFGa+BGR2bh56AvxfAgASEwCQmACAxAQAJCYAIDEBAIkJAEhMAEBiAgASEwCQmADorrmfor7958aE6vr4IE0e+72f6TLtnzpQV45moO4+jD+KXb3jGMcbpcJz8WVxe9CV+HXCaV+PQ8WWn/W4MKG6yU68XGlS3IiLfZy04mx8WtwddLGsxefDnHiZGirn1fJsAbhd7UBmAfkVgOl5XCwdAQCJCQBITABAYgIAEhMAkJgAgMQEACQmACAxAQCJCQCm503ApaMZqH87sbsU/QCjuDz0FAAAAAAAAAAAAAAAAAAAAAAAltg/tyLQx5NtrPYAAAAASUVORK5CYII='
             />
           </defs>
-        </svg>
+        </svg>{' '}
       </Link>
     </StyledBurger>
   )

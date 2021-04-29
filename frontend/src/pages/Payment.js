@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import CheckoutSteps from '../components/CheckoutSteps'
-import trueSVG from '../img/true.svg'
-import falseSVG from '../img/false.svg'
+import { ReactComponent as FalseSVG } from '../img/false.svg'
+import { ReactComponent as TrueSVG } from '../img/true.svg'
 import { userSavePayment, savePromoCode } from '../actions/savePaymentMethod'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -118,34 +118,53 @@ const Payment = () => {
   return (
     <>
       <CheckoutSteps step1 step2 step3 current='step3' />
-      <StyledPayment img={trueSVG} img2={falseSVG}>
+      <StyledPayment>
         <div className='align'>
           <h1>Payment Method</h1>
           <div className='methods'>
             <div className='select'>
               <input type='radio' id='credit' />
-              <label
-                className={`${
-                  method === 'PayPal or Credit & Debit Cards' ? 'active' : ''
-                }`}
-                htmlFor='credit'
-                onClick={() => setMethod('PayPal or Credit & Debit Cards')}
-              >
-                PayPal or Credit & Debit Cards
-              </label>
+              <div className='labelCont'>
+                <label
+                  className={`${
+                    method === 'PayPal or Credit & Debit Cards' ? 'active' : ''
+                  }`}
+                  htmlFor='credit'
+                  onClick={() => setMethod('PayPal or Credit & Debit Cards')}
+                >
+                  PayPal or Credit & Debit Cards
+                </label>
+                {method === 'PayPal or Credit & Debit Cards' ? (
+                  <TrueSVG className='activeSelect' />
+                ) : (
+                  <div className='selectOption'></div>
+                )}
+              </div>
               <input type='radio' id='delivery' />
-              <label
-                className={`${method === 'Cash on Delivery' ? 'active' : ''} ${
-                  totalPrice < 20 || totalPrice > 17000 ? 'disabled' : ''
-                }`}
-                htmlFor='Cash on Delivery'
-                onClick={() => {
-                  if (!totalPrice < 20 || totalPrice > 17000)
-                    setMethod('Cash on Delivery')
-                }}
-              >
-                Cash on Delivery
-              </label>
+              <div className='labelCont'>
+                <label
+                  className={`${
+                    method === 'Cash on Delivery' ? 'active' : ''
+                  } ${totalPrice < 20 || totalPrice > 17000 ? 'disabled' : ''}`}
+                  htmlFor='Cash on Delivery'
+                  onClick={() => {
+                    if (!totalPrice < 20 || totalPrice > 17000)
+                      setMethod('Cash on Delivery')
+                  }}
+                >
+                  Cash on Delivery
+                </label>
+                {method === 'Cash on Delivery' ? (
+                  <TrueSVG class='activeSelect' />
+                ) : (
+                  <div
+                    className={`selectOption ${
+                      totalPrice < 20 || totalPrice > 17000 ? 'disabled' : ''
+                    }`}
+                  ></div>
+                )}
+              </div>
+
               {totalPrice < 20 && (
                 <li className='explaningWhy'>Your order is less than 20 EGP</li>
               )}
@@ -177,6 +196,13 @@ const Payment = () => {
                     (!errorCoupon && !discount) || loadingCoupon ? 'idle' : ''
                   }`}
                 >
+                  {!loadingCoupon &&
+                    !errorCoupon &&
+                    !loadingCoupon &&
+                    discount && <TrueSVG className='couponIcons' />}
+                  {errorCoupon && !loadingCoupon && (
+                    <FalseSVG className='couponIcons' />
+                  )}
                   {loadingCoupon && <Loader />}
                 </button>
                 <div className={`inputError ${!errorCoupon ? 'ok' : ''}`}>
@@ -295,6 +321,11 @@ const StyledPayment = styled.div`
   .methods {
     margin-left: 0.7rem;
   }
+  .couponIcons {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
   .select {
     width: 100%;
     display: flex;
@@ -307,18 +338,10 @@ const StyledPayment = styled.div`
     input {
       display: none;
     }
-    label {
+    .labelCont {
       margin-bottom: 0.7rem;
       position: relative;
-      font-size: calc(0.61rem + 1vw);
-      font-weight: 400;
-      cursor: pointer;
-      color: #1a1a1a;
-      &:last-child {
-        margin-bottom: unset;
-      }
-      &::before {
-        content: '';
+      .selectOption {
         display: block;
         width: 24px;
         height: 24px;
@@ -328,7 +351,31 @@ const StyledPayment = styled.div`
         left: 0;
         top: 50%;
         transform: translate(-120%, -50%);
+        &.disabled {
+          pointer-events: none;
+          opacity: 0.5;
+        }
       }
+      .activeSelect {
+        display: block;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translate(-120%, -50%);
+      }
+    }
+    label {
+      font-size: calc(0.61rem + 1vw);
+      font-weight: 400;
+      cursor: pointer;
+      color: #1a1a1a;
+      &:last-child {
+        margin-bottom: unset;
+      }
+
       &.active::before {
         box-shadow: unset;
         background: url(${(props) => props.img});

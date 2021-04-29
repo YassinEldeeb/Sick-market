@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import xSign from '../img/xSign.svg'
+import { ReactComponent as XSign } from '../img/xSign.svg'
 import { useLocation, useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import userSaveAddress from '../actions/saveAddress'
@@ -8,7 +8,7 @@ import CheckoutSteps from '../components/CheckoutSteps'
 import Select from 'react-select'
 import axios from 'axios'
 import Loader from '../components/loader'
-import locationIcon from '../img/locationIcon.svg'
+import { ReactComponent as LocationIcon } from '../img/locationIcon.svg'
 
 const Shipping = () => {
   const { address, geocodingLoading, cartItems } = useSelector(
@@ -396,7 +396,7 @@ const Shipping = () => {
           <div className='title'>
             <h1>Shipping</h1>
             <button type='button' onClick={geolocationHandler}>
-              {!geocodingLoading && <img src={locationIcon} />}
+              {!geocodingLoading && <LocationIcon />}
               {geocodingLoading && <Loader />}
             </button>
           </div>
@@ -409,12 +409,10 @@ const Shipping = () => {
               required
               onChange={(e) => setAddress(e.target.value)}
             />
-            <img
+            <XSign
               onClick={() => setAddress('')}
               style={{ display: `${addressValue.length ? 'block' : 'none'}` }}
               className='xSign2'
-              src={xSign}
-              alt='X icon'
             />
           </div>
           <div className='city'>
@@ -426,12 +424,10 @@ const Shipping = () => {
               required
               onChange={(e) => setCity(e.target.value)}
             />
-            <img
+            <XSign
               onClick={() => setCity('')}
               style={{ display: `${city.length ? 'block' : 'none'}` }}
               className='xSign2'
-              src={xSign}
-              alt='X icon'
             />
           </div>
           <div className='governorate'>
@@ -481,12 +477,10 @@ const Shipping = () => {
               required
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
-            <img
+            <XSign
               onClick={() => setPhoneNumber('')}
               style={{ display: `${phoneNumber.length ? 'block' : 'none'}` }}
               className='xSign2'
-              src={xSign}
-              alt='X icon'
             />
           </div>
           <button type='submit'>
@@ -604,7 +598,7 @@ const StyledShipping = styled.div`
       button {
         padding: 0.5rem;
         border-radius: 6px;
-        img {
+        svg:first-child {
           margin-left: 0rem !important;
           width: 1.7rem !important;
           height: 1.7rem !important;
@@ -639,11 +633,9 @@ const StyledShipping = styled.div`
     margin-top: unset !important;
     justify-content: flex-start;
     .xSign2 {
-      transform: translate(-50%, -24%) !important;
-      width: calc(2rem + 1vw);
+      width: calc(1.2rem + 1vw);
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-12%, -36%) !important;
+      transform: translate(-48%, -28%) !important;
     }
     form {
       width: 100%;

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { parseISO, format } from 'date-fns'
-import gear from '../img/gear.svg'
+import { ReactComponent as Gear } from '../img/gear.svg'
 import ReactTooltip from 'react-tooltip'
 import { motion } from 'framer-motion'
 import { popup } from '../animations'
@@ -96,11 +96,7 @@ const UserDashboard = ({ user }) => {
           onClick={() => setClicked(true)}
           className='gear'
         >
-          {actionLoading && clicked ? (
-            <Loader />
-          ) : (
-            <img className='gearImg' src={gear} alt='' />
-          )}
+          {actionLoading && clicked ? <Loader /> : <Gear className='gearImg' />}
         </Link>
       </div>
     </StyledUser>

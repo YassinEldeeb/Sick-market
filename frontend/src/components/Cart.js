@@ -1,14 +1,15 @@
-import React from "react"
-import styled from "styled-components"
-import cart from "../img/cart.svg"
-import { Link } from "react-router-dom"
+import React from 'react'
+import styled from 'styled-components'
+import { ReactComponent as CartSVG } from '../img/cart.svg'
+
+import { Link } from 'react-router-dom'
 
 const Cart = ({ cartCount }) => {
   return (
     <StyledCart className='cart'>
       <Link to='/cart'>
         <div className='cartImg'>
-          <img src={cart} alt='cart' />
+          <CartSVG />
           {cartCount !== 0 && <span className='cart_counter'>{cartCount}</span>}
         </div>
         <h1>Cart</h1>
@@ -31,11 +32,12 @@ const StyledCart = styled.div`
     .cartImg {
       position: relative;
       width: calc(1.65rem + 0.8vw);
+      height: calc((1.65rem + 0.8vw) * 0.6829268292682927);
       margin-right: 0.15rem;
       display: flex;
       justify-content: center;
       align-items: center;
-      img {
+      svg {
         z-index: 2;
         position: relative;
         width: 100%;

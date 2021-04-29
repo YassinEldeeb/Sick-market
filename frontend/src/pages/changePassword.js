@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect } from "react"
-import styled from "styled-components"
-import closedEye from "../img/closedEye.svg"
-import eye from "../img/eye.svg"
-import { useDispatch, useSelector } from "react-redux"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import dotenv from "dotenv"
-import userUpdateAction from "../actions/update"
-import SlideBar from "../components/slidebar"
-import PopupMessage from "../components/PopupMessage"
-import { useLocation, useHistory } from "react-router-dom"
+import React, { useState, useRef, useEffect } from 'react'
+import styled from 'styled-components'
+import { ReactComponent as ClosedEye } from '../img/closedEye.svg'
+import { ReactComponent as Eye } from '../img/eye.svg'
+import { useDispatch, useSelector } from 'react-redux'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import dotenv from 'dotenv'
+import userUpdateAction from '../actions/update'
+import SlideBar from '../components/slidebar'
+import PopupMessage from '../components/PopupMessage'
+import { useLocation, useHistory } from 'react-router-dom'
 
 const ChangePassword = () => {
   dotenv.config()
@@ -22,8 +22,8 @@ const ChangePassword = () => {
 
   const inputRef = useRef(null)
   const inputRef2 = useRef(null)
-  const [oldPasswordValue, setOldPasswordValue] = useState("")
-  const [passwordValue, setPasswordValue] = useState("")
+  const [oldPasswordValue, setOldPasswordValue] = useState('')
+  const [passwordValue, setPasswordValue] = useState('')
   const [show, setShow] = useState(false)
   const [requiredInputs, setRequiredInputs] = useState(null)
 
@@ -31,11 +31,11 @@ const ChangePassword = () => {
 
   useEffect(() => {
     if (
-      (location.pathname === "/account/change-password" &&
+      (location.pathname === '/account/change-password' &&
         user.profilePicLink) ||
-      (location.pathname === "/account/change-password/" && user.profilePicLink)
+      (location.pathname === '/account/change-password/' && user.profilePicLink)
     ) {
-      history.push("/account/edit-profile")
+      history.push('/account/edit-profile')
     }
   }, [])
   const submitHandler = (e) => {
@@ -43,9 +43,9 @@ const ChangePassword = () => {
     setWarning(true)
     setRequiredInputs(null)
     if (!oldPasswordValue.length && !passwordValue.length) {
-      setRequiredInputs("Old & New Passwords are required")
+      setRequiredInputs('Old & New Passwords are required')
     } else if (oldPasswordValue === passwordValue) {
-      setRequiredInputs("Old & New Passwords are the Same")
+      setRequiredInputs('Old & New Passwords are the Same')
     } else {
       dispatch(userUpdateAction(null, null, oldPasswordValue, passwordValue))
     }
@@ -56,10 +56,10 @@ const ChangePassword = () => {
 
   useEffect(() => {
     if (requiredInputs || updateError || updated) {
-      document.querySelector(".content").scroll({
+      document.querySelector('.content').scroll({
         top: 0,
         left: 0,
-        behavior: `${updated ? "smooth" : "auto"}`,
+        behavior: `${updated ? 'smooth' : 'auto'}`,
       })
     }
   }, [updateError, requiredInputs, updated])
@@ -67,7 +67,7 @@ const ChangePassword = () => {
   return (
     <StyledLogin
       onClick={(e) => {
-        if (e.target.classList.contains("slider-shadow") && slider)
+        if (e.target.classList.contains('slider-shadow') && slider)
           setSlider(false)
       }}
     >
@@ -85,10 +85,10 @@ const ChangePassword = () => {
       <SlideBar slider={slider} />
       <div className='slider-Burger' onClick={() => setSlider(!slider)}>
         <span
-          className={`first-slider-burger ${slider ? "active" : ""}`}
+          className={`first-slider-burger ${slider ? 'active' : ''}`}
         ></span>
         <span
-          className={`third-slider-burger ${slider ? "active" : ""}`}
+          className={`third-slider-burger ${slider ? 'active' : ''}`}
         ></span>
       </div>
 
@@ -104,12 +104,12 @@ const ChangePassword = () => {
               requiredInputs
                 ? requiredInputs
                 : updateError
-                ? updateError.includes("timed out")
-                  ? "Network Error"
-                  : updateError.includes("mongo")
-                  ? "Server Error"
+                ? updateError.includes('timed out')
+                  ? 'Network Error'
+                  : updateError.includes('mongo')
+                  ? 'Server Error'
                   : updateError
-                : "Ok"
+                : 'Ok'
             }
             type='error'
           />
@@ -119,14 +119,12 @@ const ChangePassword = () => {
               ref={inputRef2}
               value={oldPasswordValue}
               id='old-password'
-              type={`${show ? "text" : "password"}`}
+              type={`${show ? 'text' : 'password'}`}
               onChange={(e) => setOldPasswordValue(e.target.value)}
             />
-            <img
-              style={{ display: `${show ? "none" : "block"}` }}
+            <ClosedEye
+              style={{ display: `${show ? 'none' : 'block'}` }}
               className='eye eye3'
-              src={closedEye}
-              alt='closedEye'
               draggable='false'
               onClick={() => {
                 inputRef2.current.focus()
@@ -136,11 +134,9 @@ const ChangePassword = () => {
                 }, 0)
               }}
             />
-            <img
-              style={{ display: `${!show ? "none" : "block"}` }}
+            <Eye
+              style={{ display: `${!show ? 'none' : 'block'}` }}
               className='eye eye4'
-              src={eye}
-              alt='eye'
               draggable='false'
               onClick={() => {
                 inputRef.current.focus()
@@ -157,14 +153,12 @@ const ChangePassword = () => {
               ref={inputRef}
               value={passwordValue}
               id='password'
-              type={`${show ? "text" : "password"}`}
+              type={`${show ? 'text' : 'password'}`}
               onChange={(e) => setPasswordValue(e.target.value)}
             />
-            <img
-              style={{ display: `${show ? "none" : "block"}` }}
+            <ClosedEye
+              style={{ display: `${show ? 'none' : 'block'}` }}
               className='eye eye1'
-              src={closedEye}
-              alt='closedEye'
               draggable='false'
               onClick={() => {
                 inputRef.current.focus()
@@ -174,11 +168,9 @@ const ChangePassword = () => {
                 }, 0)
               }}
             />
-            <img
-              style={{ display: `${!show ? "none" : "block"}` }}
+            <Eye
+              style={{ display: `${!show ? 'none' : 'block'}` }}
               className='eye eye2'
-              src={eye}
-              alt='eye'
               draggable='false'
               onClick={() => {
                 inputRef.current.focus()
@@ -195,8 +187,8 @@ const ChangePassword = () => {
       <div
         className='slider-shadow'
         style={{
-          pointerEvents: `${slider ? "all" : "none"}`,
-          background: `${slider ? "rgba(0, 0, 0, 0.2)" : "unset"}`,
+          pointerEvents: `${slider ? 'all' : 'none'}`,
+          background: `${slider ? 'rgba(0, 0, 0, 0.2)' : 'unset'}`,
         }}
       ></div>
     </StyledLogin>
@@ -256,19 +248,19 @@ const StyledLogin = styled.div`
     overflow-y: auto;
   }
   .eye3 {
-    transform: translate(-50%, 0%) !important;
+    transform: translate(-50%, -19%) !important;
   }
   .eye4 {
-    transform: translate(-50%, 10%) !important;
+    transform: translate(-50%, -12%) !important;
   }
   .eye2 {
-    transform: translate(-50%, 34%) !important;
+    transform: translate(-50%, 13%) !important;
   }
   .eye {
     position: absolute;
     right: 0%;
     top: 50%;
-    transform: translate(-50%, 18%);
+    transform: translate(-50%, 0%);
     width: calc(1.8rem + 0.3vw);
     cursor: pointer;
   }
@@ -366,22 +358,26 @@ const StyledLogin = styled.div`
     .message {
       padding: 0.5rem 0.7rem !important;
     }
+    .eye3 {
+      transform: translate(-50%, -26%) !important;
+    }
+    .eye4 {
+      transform: translate(-50%, -20%) !important;
+    }
+    .eye2 {
+      transform: translate(-50%, -40%) !important;
+    }
+    .eye1 {
+      transform: translate(-50%, -42%) !important;
+    }
     .eye {
       position: absolute;
       right: 0%;
       top: 50%;
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-17%, -29%) !important;
-      width: calc(2.8rem + 1vw);
+      width: calc(1.5rem + 1vw);
     }
-    .eye1,
-    .eye2 {
-      transform: translate(-17%, -42%) !important;
-    }
-    .eye4 {
-      transform: translate(-17%, -27%) !important;
-    }
+
     .xSign2 {
       transform: translate(-50%, -24%) !important;
       width: calc(2rem + 1vw);

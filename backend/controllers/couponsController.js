@@ -1,13 +1,13 @@
-import asyncHandler from "express-async-handler"
-import Coupon from "../models/couponModel.js"
+import asyncHandler from 'express-async-handler'
+import Coupon from '../models/couponModel.js'
 
 const generateCouponCode = asyncHandler(async (req, res) => {
   const { code, limited, amount, expireDate } = req.body
 
   function coupongenerator() {
-    var coupon = ""
+    var coupon = ''
     var possible =
-      "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789"
+      'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789'
     for (var i = 0; i < 4; i++) {
       coupon += possible.charAt(Math.floor(Math.random() * possible.length))
     }
@@ -23,7 +23,7 @@ const generateCouponCode = asyncHandler(async (req, res) => {
       if (!existCode) {
         obj.code = code
       } else {
-        throw new Error("Code already Exists")
+        throw new Error('Code already Exists')
       }
     } else {
       let existCode
@@ -61,7 +61,7 @@ const validateCouponCode = asyncHandler(async (req, res) => {
   }
   const validCode = await Coupon.findOne({ code })
   if (!validCode) {
-    throw new Error("Invalid Code")
+    throw new Error('Invalid Code')
   }
 
   if (validCode.numOfUsedTimes >= validCode.limited) {
@@ -77,7 +77,7 @@ const validateCouponCode = asyncHandler(async (req, res) => {
 const deleteCouponCode = asyncHandler(async (req, res) => {
   const { code, deleteAll } = req.body
   if (!code && !deleteAll) {
-    throw new Error("Code is required to delete it")
+    throw new Error('Code is required to delete it')
   }
   if (deleteAll) {
     await Coupon.deleteMany({})

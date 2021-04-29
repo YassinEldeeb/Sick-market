@@ -5,9 +5,15 @@ import Loader from '../components/loader'
 import DashboardError from '../components/DashboardError'
 import { AnimatePresence, motion } from 'framer-motion'
 import { hide, popupLeft } from '../animations'
-import search from '../img/searchIcon.svg'
 import { useHistory, useLocation } from 'react-router-dom'
-import smallX from '../img/smallX.svg'
+
+import { ReactComponent as Search } from '../img/searchIcon.svg'
+import { ReactComponent as SmallX } from '../img/smallX.svg'
+import { ReactComponent as Sort } from '../img/sort.svg'
+import { ReactComponent as Connect } from '../img/connect.svg'
+import { ReactComponent as Arrow } from '../img/arrow3.svg'
+import { ReactComponent as Info } from '../img/info.svg'
+import { ReactComponent as Add } from '../img/addIcon.svg'
 import { useLastLocation } from 'react-router-last-location'
 import { throttle } from 'underscore'
 import socket from '../clientSocket/socket'
@@ -17,12 +23,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import deleteProduct from '../actions/deleteProduct'
 import DashboardNewProduct from './DashboardNewProduct'
 import DashboardEditProduct from './DashboardEditProduct'
-import sort from '../img/sort.svg'
-import connect from '../img/connect.svg'
 import Input from '../components/DashboardInput'
-import arrow from '../img/arrow3.svg'
-import info from '../img/info.svg'
-import add from '../img/addIcon.svg'
 import { useRef } from 'react'
 import qs from 'qs'
 import searchProducts from '../actions/searchProduct'
@@ -682,7 +683,8 @@ const DashboardProducts = ({
                         }}
                         className='addProduct'
                       >
-                        <img src={add} /> New Product
+                        <Add />
+                        New Product
                       </button>
                     )}
                   </div>
@@ -732,7 +734,7 @@ const DashboardProducts = ({
                               <div className='sort'>
                                 <p>
                                   <span className='sortText'>Sort</span>
-                                  <img src={sort} />
+                                  <Sort />
                                 </p>
                                 <div className='sortDiv'>
                                   <div
@@ -743,7 +745,7 @@ const DashboardProducts = ({
                                     className='sortValue'
                                   >
                                     <p>{sortValue}</p>
-                                    <img src={arrow} />
+                                    <Arrow />
                                     {openType && (
                                       <div className='sortValueDropDown selectDropDown first'>
                                         <Scrollbars>
@@ -764,7 +766,7 @@ const DashboardProducts = ({
                                       </div>
                                     )}
                                   </div>
-                                  <img src={connect} />
+                                  <Connect />
                                   <div
                                     ref={valueRef}
                                     onClick={() => {
@@ -773,7 +775,7 @@ const DashboardProducts = ({
                                     className='sortType'
                                   >
                                     <p>{sortType}</p>
-                                    <img src={arrow} />
+                                    <Arrow />
                                     {openValue && (
                                       <div className='sortTypeDropDown selectDropDown'>
                                         {sortValueTypes.map((e) => (
@@ -798,12 +800,11 @@ const DashboardProducts = ({
                                 <div className='inputDiv'>
                                   <Input value={brand} setValue={setBrand} />
                                   {searches.brand && (
-                                    <img
+                                    <SmallX
+                                      className='clearFilter'
                                       onClick={() => {
                                         filterHandler(null, 'brand')
                                       }}
-                                      className='clearFilter'
-                                      src={smallX}
                                     />
                                   )}
                                 </div>
@@ -816,12 +817,11 @@ const DashboardProducts = ({
                                     setValue={setCategory}
                                   />
                                   {searches.category && (
-                                    <img
+                                    <SmallX
                                       onClick={() => {
                                         filterHandler(null, 'category')
                                       }}
                                       className='clearFilter'
-                                      src={smallX}
                                     />
                                   )}
                                 </div>
@@ -868,11 +868,11 @@ const DashboardProducts = ({
                           type='text'
                         />
                         {searches.search && searchedProducts && (
-                          <img onClick={returnHandler} src={smallX} alt='' />
+                          <SmallX onClick={returnHandler} />
                         )}
                       </div>
                       <button type='submit'>
-                        <img src={search} />
+                        <Search />
                       </button>
                     </form>
                   </div>
@@ -909,14 +909,13 @@ const DashboardProducts = ({
                   <div className='Actions'>
                     <p>
                       Actions
-                      <img
+                      <Info
                         id='actionImgInfo'
                         className={`${actionsInfo ? 'active' : 'notActive'}`}
                         onClick={() => {
                           localStorage.setItem('actionsInfo', !actionsInfo)
                           setActionsInfo(!actionsInfo)
                         }}
-                        src={info}
                       />
                     </p>
                   </div>
@@ -1038,7 +1037,7 @@ const StyledDashboardProducts = styled(motion.div)`
     display: flex;
     justify-content: center;
     align-items: center;
-    img {
+    svg {
       margin-right: 0.4rem;
       width: 19px;
       height: 19px;
@@ -1160,7 +1159,7 @@ const StyledDashboardProducts = styled(motion.div)`
         }
       }
     }
-    img {
+    svg {
       margin: 0 0 0 0.35rem !important;
       width: 12px !important;
       height: 12px !important;
@@ -1339,7 +1338,7 @@ const StyledDashboardProducts = styled(motion.div)`
       .sortText {
         margin-right: 0.45rem;
       }
-      .sort img {
+      .sort svg {
         width: 20px;
         height: 20px;
         pointer-events: none;
@@ -1417,7 +1416,7 @@ const StyledDashboardProducts = styled(motion.div)`
       &:hover {
         background: #343660;
       }
-      img {
+      svg {
         width: 23px;
         height: 23px;
       }

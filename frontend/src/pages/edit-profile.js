@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import SlideBar from '../components/slidebar'
 import FilePondUpload from '../components/filePondUpload'
 import styled from 'styled-components'
-import xSign from '../img/xSign.svg'
-import closedEye from '../img/closedEye.svg'
-import eye from '../img/eye.svg'
+import { ReactComponent as XSign } from '../img/xSign.svg'
+import { ReactComponent as ClosedEye } from '../img/closedEye.svg'
+import { ReactComponent as Eye } from '../img/eye.svg'
 import userProfileAction from '../actions/getProfile'
 import Message from '../components/message'
 import Loader from '../components/loader'
@@ -185,12 +185,10 @@ const EditProfile = () => {
                   type='text'
                   onChange={(e) => setNameValue(e.target.value)}
                 />
-                <img
+                <XSign
                   onClick={() => setNameValue('')}
                   style={{ display: `${nameValue.length ? 'block' : 'none'}` }}
                   className='xSign1'
-                  src={xSign}
-                  alt='X icon'
                 />
               </div>
               {user.profilePicLink && (
@@ -218,14 +216,12 @@ const EditProfile = () => {
                       type='text'
                       onChange={(e) => setEmailValue(e.target.value)}
                     />
-                    <img
+                    <XSign
                       onClick={() => setEmailValue('')}
                       style={{
                         display: `${emailValue.length ? 'block' : 'none'}`,
                       }}
                       className='xSign2'
-                      src={xSign}
-                      alt='X icon'
                     />
                   </div>
                   {user.status !== 'Verified' && (
@@ -251,11 +247,9 @@ const EditProfile = () => {
                     type={`${show ? 'text' : 'password'}`}
                     onChange={(e) => setPasswordValue(e.target.value)}
                   />
-                  <img
+                  <ClosedEye
                     style={{ display: `${show ? 'none' : 'block'}` }}
                     className='eye eye1'
-                    src={closedEye}
-                    alt='closedEye'
                     draggable='false'
                     onClick={() => {
                       inputRef.current.focus()
@@ -265,11 +259,10 @@ const EditProfile = () => {
                       }, 0)
                     }}
                   />
-                  <img
+
+                  <Eye
                     style={{ display: `${!show ? 'none' : 'block'}` }}
                     className='eye eye2'
-                    src={eye}
-                    alt='eye'
                     draggable='false'
                     onClick={() => {
                       inputRef.current.focus()
@@ -365,12 +358,12 @@ const StyledEdit = styled.div`
     right: 0%;
     top: 50%;
     cursor: pointer;
-    padding: 0.6rem;
-    transform: translate(-18%, -26%);
-    width: calc(2.4rem + 1vw);
+    transform: translate(-45%, -20%) !important;
+
+    width: calc(1.3rem + 1vw);
   }
   .eye2 {
-    transform: translate(-18%, -22%) !important;
+    transform: translate(-45%, -15%) !important;
   }
   .wrapper {
     width: 50%;
@@ -558,23 +551,17 @@ const StyledEdit = styled.div`
       right: 0%;
       top: 50%;
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-14%, -36%);
-      width: calc(2.8rem + 1vw);
+      transform: translate(-45%, -35%) !important;
+      width: calc(1.5rem + 1vw);
     }
     .eye2 {
-      transform: translate(-14%, -36%) !important;
+      transform: translate(-45%, -32%) !important;
     }
     .xSign2,
     .xSign1 {
-      transform: translate(-50%, -24%) !important;
-      width: calc(2rem + 1vw);
+      width: calc(1.2rem + 1vw);
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-12%, -36%) !important;
-    }
-    .xSign1 {
-      transform: translate(-12%, -28%) !important;
+      transform: translate(-50%, -30%) !important;
     }
 
     justify-content: space-around;

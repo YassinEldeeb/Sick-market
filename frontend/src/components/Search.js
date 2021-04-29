@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import arrow from '../img/arrow2.svg'
-import search from '../img/search.svg'
-import xSign from '../img/xSign.svg'
+import { ReactComponent as Arrow } from '../img/arrow2.svg'
+import { ReactComponent as SearchSVG } from '../img/search.svg'
+import { ReactComponent as XSign } from '../img/xSign.svg'
 
 const Search = () => {
   const [toggle, setToggle] = useState(false)
@@ -35,7 +35,7 @@ const Search = () => {
     <StyledSearch className='searchForm' onSubmit={formSubmitHandler}>
       <div className='dropDown' onClick={() => setToggle(!toggle)}>
         <p>{toggleValue}</p>
-        <img src={arrow} alt='arrow' />
+        <Arrow />
       </div>
 
       <div className='inputDiv'>
@@ -50,16 +50,14 @@ const Search = () => {
           type='text'
           id='search'
         />
-        <img
+        <XSign
           onClick={() => setInputValue('')}
           style={{ display: `${activeDelete ? 'block' : 'none'}` }}
           className='xSign'
-          src={xSign}
-          alt='X icon'
         />
       </div>
       <button type='submit' className='submit'>
-        <img src={search} alt='search icon' />
+        <SearchSVG />
       </button>
       <div
         className='dropDown-select-category'
@@ -167,8 +165,9 @@ const StyledSearch = styled.form`
     &:hover {
       background: rgba(0, 176, 216, 0.95);
     }
-    img {
+    svg {
       width: calc(0.8rem + 1vw);
+      height: calc(0.8rem + 1vw);
     }
   }
   .dropDown {
@@ -183,7 +182,7 @@ const StyledSearch = styled.form`
     border-bottom-right-radius: 0;
     cursor: pointer;
 
-    img {
+    svg {
       pointer-events: none;
       width: 10px;
       margin-top: 0.15rem;

@@ -13,9 +13,10 @@ import editProduct from '../actions/editProduct'
 import DashboardError from '../components/DashboardError'
 import EditCropImg from '../components/EditCropImg'
 import { DashboardProductDetailAction } from '../actions/products'
-import info from '../img/info.svg'
 import { throttle } from 'underscore'
-import xSign from '../img/smallX.svg'
+import { ReactComponent as Info } from '../img/info.svg'
+import { ReactComponent as XSign } from '../img/smallX.svg'
+
 import qs from 'qs'
 import Switch from 'react-switch'
 import { useLastLocation } from 'react-router-last-location'
@@ -248,6 +249,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
     setCompletedCrop(null)
     setAddedImage(null)
     setImageType(null)
+    setNoImage(false)
     let baseURL = '/dashboard/products?'
     if (searches[Object.keys(searches)[0]]) {
       baseURL += `${Object.keys(searches)[0]}=${
@@ -287,15 +289,16 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
         )}
         {location.pathname.split('/')[3] === 'edit' && dashboardProduct && (
           <>
-            <motion.img
+            <motion.div
               variants={hide5}
               onClick={returnHandler}
               className='CloseModel'
-              src={xSign}
               initial='hidden'
               animate='show'
               exit='exit'
-            />
+            >
+              <XSign />
+            </motion.div>
             <motion.div
               variants={popup2}
               initial='hidden'
@@ -411,11 +414,11 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
                   <div className='cardTitle'>
                     <h5>Preview</h5>
                     <div className='info'>
-                      <img
-                        className={`${openInfo ? 'active' : ''}`}
+                      <Info
                         onClick={() => setOpenInfo(!openInfo)}
-                        src={info}
+                        className={`${openInfo ? 'active' : ''}`}
                       />
+
                       <AnimatePresence>
                         {openInfo && (
                           <motion.div
@@ -566,10 +569,15 @@ const StyledUserAction = styled(motion.div)`
     position: absolute;
     right: 3%;
     top: 4%;
-    width: 22px;
-    height: 22px;
     opacity: 0.7;
     transition: 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg {
+      width: 22px;
+      height: 22px;
+    }
     &:hover {
       opacity: 0.9 !important;
     }
@@ -640,6 +648,9 @@ const StyledUserAction = styled(motion.div)`
     transition: 0.2s ease;
     display: flex;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     img {
       width: 100%;
       height: 100%;

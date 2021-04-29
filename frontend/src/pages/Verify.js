@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react"
-import styled from "styled-components"
-import verifyEmailAction from "../actions/verifyEmail"
-import danger from "../img/danger.svg"
-import { useDispatch, useSelector } from "react-redux"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import { Link, useHistory, useLocation } from "react-router-dom"
-import newCodeAction from "../actions/newCode"
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
+import verifyEmailAction from '../actions/verifyEmail'
+import { ReactComponent as Danger } from '../img/danger.svg'
+import { useDispatch, useSelector } from 'react-redux'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import newCodeAction from '../actions/newCode'
 
 const Verify = () => {
-  const [code, setCode] = useState("")
-  const [codeError, setCodeError] = useState("")
+  const [code, setCode] = useState('')
+  const [codeError, setCodeError] = useState('')
   const {
     verificationError,
     verifyLoading,
@@ -20,11 +20,11 @@ const Verify = () => {
   } = useSelector((state) => state.userInfo)
   const [timer, setTimer] = useState(0)
   const [startTimer, setStartTimer] = useState(false)
-  const status = user ? user.status : ""
+  const status = user ? user.status : ''
 
   const [timerSeconds] = useState(
-    localStorage.getItem("sickTimerSeconds")
-      ? JSON.parse(localStorage.getItem("sickTimerSeconds"))
+    localStorage.getItem('sickTimerSeconds')
+      ? JSON.parse(localStorage.getItem('sickTimerSeconds'))
       : 60
   )
 
@@ -34,10 +34,10 @@ const Verify = () => {
       setTimeout(() => {
         if (timer > 0) {
           setTimer((prevTime) => prevTime - 1)
-          localStorage.setItem("sickTimerSeconds", timer)
+          localStorage.setItem('sickTimerSeconds', timer)
         } else {
           setStartTimer(false)
-          localStorage.removeItem("sickTimerSeconds")
+          localStorage.removeItem('sickTimerSeconds')
         }
       }, 1000)
     }
@@ -45,13 +45,13 @@ const Verify = () => {
 
   const dispatch = useDispatch()
   const verifyHandler = (e) => {
-    setCodeError("")
+    setCodeError('')
     e.preventDefault()
 
     if (code.length === 4) {
       dispatch(verifyEmailAction(Number(code)))
     } else {
-      setCodeError("Code must be 4 Digits")
+      setCodeError('Code must be 4 Digits')
     }
   }
   const sendAgainHandler = () => {
@@ -65,19 +65,19 @@ const Verify = () => {
 
   const history = useHistory()
 
-  const redirect = location.search.split("=")[1]
-    ? location.search.split("=")[1]
-    : "/"
+  const redirect = location.search.split('=')[1]
+    ? location.search.split('=')[1]
+    : '/'
 
   const order = useSelector((state) => state.order)
   useEffect(() => {
     if (user.name) {
-      if (status === "Verified") {
+      if (status === 'Verified') {
         order.error = null
         history.push(redirect)
       }
     } else {
-      history.push("/login")
+      history.push('/login')
     }
   }, [status, user, history])
 
@@ -96,7 +96,7 @@ const Verify = () => {
     if (newCodeLoading === false && !newCodeError) {
       setTimer(60)
       if (!startTimer) setStartTimer(true)
-    } else if (newCodeError === "Email already Verified") {
+    } else if (newCodeError === 'Email already Verified') {
       history.push(redirect)
     }
   }, [newCodeLoading, history, newCodeError, startTimer])
@@ -106,7 +106,7 @@ const Verify = () => {
       <div className='modelBox'>
         <div className='danger'>
           <div className='danger-text'>
-            <img src={danger} alt='danger' />
+            <Danger />
             <p>
               If you didn’t find the email in your Inbox, maybe It’s in your
               Spam box
@@ -128,19 +128,19 @@ const Verify = () => {
                 codeError.length
                   ? codeError
                   : verificationError
-                  ? verificationError.includes("timed out")
-                    ? "Network Error"
-                    : verificationError.includes("mongo")
-                    ? "Server Error"
+                  ? verificationError.includes('timed out')
+                    ? 'Network Error'
+                    : verificationError.includes('mongo')
+                    ? 'Server Error'
                     : verificationError
-                  : "Ok"
+                  : 'Ok'
               }
               type='error'
             />
             <form className='verifyBtns' onSubmit={verifyHandler}>
               {user && newCodeLoading === false && !newCodeError && (
                 <p className='emailSentMessage'>
-                  Email Sent to '{user.email}'{" "}
+                  Email Sent to '{user.email}'{' '}
                   <Link to='/changeEmail?redirect=verify'>Change Email</Link>
                 </p>
               )}
@@ -157,10 +157,10 @@ const Verify = () => {
                   Verify {verifyLoading && <Loader />}
                 </button>
                 <p
-                  className={`${startTimer ? "waitActive" : ""}`}
+                  className={`${startTimer ? 'waitActive' : ''}`}
                   onClick={sendAgainHandler}
                 >
-                  {timer ? `Send again(${timer})` : "Send again"}
+                  {timer ? `Send again(${timer})` : 'Send again'}
                 </p>
               </div>
             </form>

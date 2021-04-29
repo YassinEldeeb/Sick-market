@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import flag from '../img/flag.svg'
-import dollar from '../img/dolar.svg'
-import lang from '../img/lang.svg'
+import flag from '../img/flag.jpg'
+import { ReactComponent as Dollar } from '../img/dolar.svg'
+import { ReactComponent as Lang } from '../img/lang.svg'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { userLogoutAction, userLogoutAllAction } from '../actions/logout'
-import falseSVG from '../img/false.svg'
-import trueSVG from '../img/true.svg'
+import { ReactComponent as FalseSVG } from '../img/false.svg'
+import { ReactComponent as TrueSVG } from '../img/true.svg'
 import SmoothImg from './smoothImgLoading'
 
 const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
@@ -17,7 +17,6 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
   }
   const userInfo = useSelector((state) => state.userInfo)
   const [check, setCheck] = useState(false)
-  const bgIdentify = () => (check ? trueSVG : falseSVG)
 
   const imgSrcCondition = () => {
     if (
@@ -31,7 +30,6 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
   }
   return (
     <StyledMenu
-      bg={bgIdentify()}
       className={`allBoxModel ${activeMenu ? 'active' : ''}`}
       onClick={(e) => {
         if (e.target.classList.contains('allBoxModel') && activeMenu)
@@ -79,15 +77,15 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
           </div>
           <div className='settingsChildren'>
             <div className='settingChild'>
-              <img src={flag} alt='country' />
+              <img src={flag} alt='' />
               <h4>Egypt</h4>
             </div>
             <div className='settingChild'>
-              <img src={lang} alt='USA flag' />
+              <Lang />
               <h4>English</h4>
             </div>
             <div className='settingChild'>
-              <img src={dollar} alt='dollar' />
+              <Dollar />
               <h4>EGP</h4>
             </div>
           </div>
@@ -107,6 +105,9 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
               <input value={check} type='checkbox' id='radio' />
               <label onClick={() => setCheck(!check)} htmlFor='radio'>
                 all Users
+                <div className='trueFalse'>
+                  {check ? <TrueSVG /> : <FalseSVG />}
+                </div>
               </label>
             </div>
           </div>
@@ -251,9 +252,7 @@ const StyledMenu = styled.div`
         label {
           margin-left: 0.2rem;
           position: relative;
-          ::after {
-            content: '';
-            background: url(${(props) => props.bg});
+          .trueFalse {
             transform: translate(100%, -30%);
             position: absolute;
             right: 0;
@@ -263,6 +262,11 @@ const StyledMenu = styled.div`
             height: 12px;
             border-radius: 50%;
             background-size: cover;
+            display: flex;
+            svg {
+              width: 100%;
+              height: 100%;
+            }
           }
         }
       }

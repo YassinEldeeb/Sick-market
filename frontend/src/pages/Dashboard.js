@@ -1,49 +1,44 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Scrollbars } from 'react-custom-scrollbars'
-import {
-  useLocation,
-  useHistory,
-  Switch,
-  Route,
-  BrowserRouter,
-} from 'react-router-dom'
+import { useLocation, useHistory, Switch, Route } from 'react-router-dom'
 
 import { useSelector } from 'react-redux'
 import { useLastLocation } from 'react-router-last-location'
 import { v4 as uuid } from 'uuid'
-import statistics from '../img/statistics.svg'
-import orders from '../img/cartD.svg'
-import categories from '../img/categories.svg'
-import GeoMap from '../img/world.svg'
-import Products from '../img/products.svg'
-import discounts from '../img/discounts.svg'
-import employees from '../img/employees.svg'
-import customers from '../img/customers.svg'
-import chat from '../img/chat.svg'
-import emails from '../img/emails.svg'
-import home from '../img/home.svg'
+import { ReactComponent as Statistics } from '../img/statistics.svg'
+import { ReactComponent as Orders } from '../img/cartD.svg'
+import { ReactComponent as Categories } from '../img/categories.svg'
+import { ReactComponent as GeoMap } from '../img/world.svg'
+import { ReactComponent as Products } from '../img/products.svg'
+import { ReactComponent as Discounts } from '../img/discounts.svg'
+import { ReactComponent as Employees } from '../img/employees.svg'
+import { ReactComponent as Customers } from '../img/customers.svg'
+import { ReactComponent as Chat } from '../img/chat.svg'
+import { ReactComponent as Emails } from '../img/emails.svg'
+import { ReactComponent as Home } from '../img/home.svg'
 
 import DashboardTab from '../components/DashboardTab'
 import DashboardCustomers from './DashboardCustomers'
 import DashboardProducts from './DashboardProducts'
 import { useRef } from 'react'
 import Meta from '../components/Meta'
+import Product from '../components/Product'
 
 const main = [
-  { text: 'Statistics', i: statistics },
-  { text: 'Orders', i: orders },
-  { text: 'Categories', i: categories },
-  { text: 'GeoMap', i: GeoMap },
-  { text: 'Products', i: Products },
-  { text: 'Discounts', i: discounts },
-  { text: 'Employees', i: employees },
-  { text: 'Customers', i: customers },
+  { text: 'Statistics', i: <Statistics /> },
+  { text: 'Orders', i: <Orders /> },
+  { text: 'Categories', i: <Categories /> },
+  { text: 'GeoMap', i: <GeoMap /> },
+  { text: 'Products', i: <Products /> },
+  { text: 'Discounts', i: <Discounts /> },
+  { text: 'Employees', i: <Employees /> },
+  { text: 'Customers', i: <Customers /> },
 ]
 
 const communicate = [
-  { text: 'Notify', i: chat },
-  { text: 'Emails', i: emails },
+  { text: 'Notify', i: <Chat /> },
+  { text: 'Emails', i: <Emails /> },
 ]
 
 const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
@@ -140,15 +135,15 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
           <DashboardTab
             providedClassName='backHome'
             text={'Home'}
-            icon={home}
+            Icon={<Home />}
           />
           <p>Main</p>
           {main.map((e) => (
-            <DashboardTab text={e.text} icon={e.i} />
+            <DashboardTab text={e.text} Icon={e.i} />
           ))}
           <p className='last'>Communicate</p>
           {communicate.map((e) => (
-            <DashboardTab text={e.text} icon={e.i} />
+            <DashboardTab text={e.text} Icon={e.i} />
           ))}
         </Scrollbars>
       </div>

@@ -13,7 +13,7 @@ import canOrderAction from '../actions/canOrder'
 import canReviewAction from '../actions/canReview'
 import deleteUserAction from '../actions/deleteUser'
 import Loader from '../components/loader'
-import verified from '../img/verified.svg'
+import { ReactComponent as Verified } from '../img/verified.svg'
 import editRank from '../actions/editRank'
 
 const DashboardUserAction = ({ setRankValue, rankValue }) => {
@@ -204,7 +204,7 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
                       <p className='email'>
                         {user.email}{' '}
                         {user.status === 'Verified' && (
-                          <img id='verified' src={verified} alt='' />
+                          <Verified id='verified' />
                         )}
                       </p>
                       {user.name}
@@ -312,6 +312,9 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
 }
 
 const StyledUserAction = styled(motion.div)`
+  #verified {
+    margin-left: 0.3rem;
+  }
   #deleting {
     cursor: not-allowed !important;
   }
@@ -449,6 +452,9 @@ const StyledUserAction = styled(motion.div)`
   .descCont .email {
     font-size: calc(0.6rem + 0.3vw) !important;
     color: white !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .allow {
     display: flex;

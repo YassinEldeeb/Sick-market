@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import arrow from '../img/arrow3.svg'
+import { ReactComponent as Arrow } from '../img/arrow3.svg'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { userLogoutAction, userLogoutAllAction } from '../actions/logout'
@@ -74,16 +74,8 @@ const Profile = () => {
             )}
           </div>
           <h1 className='name'>{truncate(userInfo.user.name)}</h1>
-          <img
-            style={{
-              transform: `translateY(15%) rotate${
-                dropDown ? '(180deg)' : '(0deg)'
-              }`,
-            }}
-            className='arrowProfile'
-            src={arrow}
-            alt='arrow'
-          />
+
+          <Arrow className='arrowProfile' />
           <div className={`dropMenu ${dropDown ? 'active' : ''}`}>
             <div className='account'>
               <Link to='/account/edit-profile'>Account</Link>
@@ -157,8 +149,8 @@ const StyledProfile = styled.div`
     .arrowProfile {
       position: relative;
       transition: 0.02s ease;
-      margin-left: 0.2rem;
-      transform: translateY(15%);
+      margin-left: 0.3rem;
+      transform: translateY(9%);
       width: 13px;
       height: 13px;
     }

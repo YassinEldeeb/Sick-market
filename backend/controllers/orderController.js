@@ -207,10 +207,19 @@ const getMyOrders = asyncHandler(async (req, res) => {
   res.send(user.orders)
 })
 
+const getAllOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate(
+    'user',
+    'availablePic email totalPaidOrders _id name'
+  )
+
+  res.send(orders)
+})
 export {
   addOrderItems,
   getOrderById,
   updateOrderToPaid,
   getMyOrders,
   updateOrderToDelivered,
+  getAllOrders,
 }

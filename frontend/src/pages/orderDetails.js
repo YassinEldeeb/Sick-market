@@ -8,7 +8,7 @@ import Message from '../components/message'
 import Loader from '../components/loader'
 import QrReader from 'react-qr-reader'
 import qrCodeImg from '../img/qrCode.png'
-import closeImg from '../img/close.svg'
+import { ReactComponent as CloseImg } from '../img/close.svg'
 import Lottie from 'react-lottie'
 import animationData from '../lotties/41791-loading-wrong.json'
 import animationData2 from '../lotties/41793-correct.json'
@@ -195,13 +195,12 @@ const OrderDetails = () => {
                 onScan={qrScanHandler}
                 className='qrCodeScanner'
               />
-              <img
+              <CloseImg
                 onClick={() => {
                   setShowScanner(false)
                   setShowSVGAnimation(null)
                 }}
                 className='close'
-                src={closeImg}
               />
             </div>
           )}
@@ -252,13 +251,12 @@ const OrderDetails = () => {
                         width={'50%'}
                         height={'50%'}
                       />
-                      <img
+                      <CloseImg
                         onClick={() => {
                           setShowSVGAnimation(null)
                           setShowScanner(false)
                         }}
                         className='close'
-                        src={closeImg}
                       />
                     </div>
                   )}
@@ -269,13 +267,12 @@ const OrderDetails = () => {
                         width={'50%'}
                         height={'50%'}
                       />
-                      <img
+                      <CloseImg
                         onClick={() => {
                           setShowSVGAnimation(null)
                           setShowScanner(false)
                         }}
                         className='close'
-                        src={closeImg}
                       />
                     </div>
                   )}

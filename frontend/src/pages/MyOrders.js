@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
-import SlideBar from "../components/slidebar"
-import styled from "styled-components"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import getMyOrdersAction from "../actions/getMyOrders"
-import falseSVG from "../img/false.svg"
-import trueSVG from "../img/true.svg"
-import { Link } from "react-router-dom"
+import React, { useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import SlideBar from '../components/slidebar'
+import styled from 'styled-components'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import getMyOrdersAction from '../actions/getMyOrders'
+import { ReactComponent as FalseSVG } from '../img/false.svg'
+import { ReactComponent as TrueSVG } from '../img/true.svg'
+import { Link } from 'react-router-dom'
 
 const MyOrders = () => {
   const dispatch = useDispatch()
@@ -22,17 +22,17 @@ const MyOrders = () => {
   return (
     <StyledOrders
       onClick={(e) => {
-        if (e.target.classList.contains("slider-shadow") && slider3)
+        if (e.target.classList.contains('slider-shadow') && slider3)
           setSlider3(false)
       }}
     >
       <SlideBar slider={slider3} />
       <div className='slider-Burger' onClick={() => setSlider3(!slider3)}>
         <span
-          className={`first-slider-burger ${slider3 ? "active" : ""}`}
+          className={`first-slider-burger ${slider3 ? 'active' : ''}`}
         ></span>
         <span
-          className={`third-slider-burger ${slider3 ? "active" : ""}`}
+          className={`third-slider-burger ${slider3 ? 'active' : ''}`}
         ></span>
       </div>
 
@@ -40,7 +40,7 @@ const MyOrders = () => {
         className='tableCont'
         style={{
           alignItems: `${
-            error || (orders && !orders.length) ? "flex-start" : "center"
+            error || (orders && !orders.length) ? 'flex-start' : 'center'
           }`,
         }}
       >
@@ -53,7 +53,7 @@ const MyOrders = () => {
               msg={"You didn't order anything yet"}
             />
           ) : (
-            ""
+            ''
           )}
           {orders && orders.length ? (
             <>
@@ -75,23 +75,11 @@ const MyOrders = () => {
                       <td>{each._id}</td>
                       <td>{each.createdAt.substring(0, 10)}</td>
                       <td>{each.totalPrice}</td>
-                      <td>
-                        {each.isPaid ? (
-                          <img src={trueSVG} />
-                        ) : (
-                          <img src={falseSVG} />
-                        )}
-                      </td>
-                      <td>
-                        {each.isDelivered ? (
-                          <img src={trueSVG} />
-                        ) : (
-                          <img src={falseSVG} />
-                        )}
-                      </td>
+                      <td>{each.isPaid ? <TrueSVG /> : <FalseSVG />}</td>
+                      <td>{each.isDelivered ? <TrueSVG /> : <FalseSVG />}</td>
                       <td>
                         {each.couponDiscount === 0 ? (
-                          <img src={falseSVG} />
+                          <FalseSVG />
                         ) : (
                           <p className='discountAmount'>
                             {each.couponDiscount}
@@ -117,15 +105,15 @@ const MyOrders = () => {
               </div>
             </>
           ) : (
-            ""
+            ''
           )}
         </div>
       </div>
       <div
         className='slider-shadow'
         style={{
-          pointerEvents: `${slider3 ? "all" : "none"}`,
-          background: `${slider3 ? "rgba(0, 0, 0, 0.2)" : "unset"}`,
+          pointerEvents: `${slider3 ? 'all' : 'none'}`,
+          background: `${slider3 ? 'rgba(0, 0, 0, 0.2)' : 'unset'}`,
         }}
       ></div>
     </StyledOrders>
@@ -226,7 +214,7 @@ const StyledOrders = styled.div`
       border: 1px solid rgba(0, 0, 0, 0.05);
     }
     table tr td {
-      img {
+      svg {
         width: calc(17px + 0.2vw);
       }
     }

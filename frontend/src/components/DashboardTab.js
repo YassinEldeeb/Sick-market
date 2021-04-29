@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 
 const DashboardTab = memo(
-  ({ text, icon, providedClassName }) => {
+  ({ text, Icon, providedClassName }) => {
     const location = useLocation()
     const { newUsers } = useSelector((state) => state.dashboardUsers)
     const { newProducts } = useSelector((state) => state.productList)
@@ -21,7 +21,7 @@ const DashboardTab = memo(
           providedClassName ? providedClassName : ''
         }`}
       >
-        <img src={icon} alt='icon' />
+        {Icon}
         <h4>{text}</h4>
         {text === 'Customers' && newUsers > 0 && (
           <h6 className='counter'>{newUsers}</h6>
@@ -41,6 +41,7 @@ const DashboardTab = memo(
 )
 
 const Tab = styled(Link)`
+  min-width: max-content;
   .counter {
     position: absolute;
     right: 0%;
@@ -71,9 +72,9 @@ const Tab = styled(Link)`
   &.active {
     background: #3e3f6f;
   }
-  img {
-    width: 26px;
-    height: 26px;
+  svg {
+    width: 26px !important;
+    height: 26px !important;
   }
   transition: 0.2s ease;
   &:not(.active):hover {

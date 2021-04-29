@@ -125,7 +125,7 @@ const StyledImg = styled.div`
     object-fit: cover;
   }
   .actualImg {
-    max-height: 100%;
+    height: 100%;
     opacity: 0;
     pointer-events: none;
     z-index: 1;

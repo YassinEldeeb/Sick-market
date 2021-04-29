@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import add from '../img/choose.svg'
+import { ReactComponent as Add } from '../img/choose.svg'
 import { motion, AnimatePresence } from 'framer-motion'
 import { show, popup3 } from '../animations'
 import { useHistory } from 'react-router-dom'
@@ -168,7 +168,7 @@ const CropImg = ({
         >
           {({ over, overDocument }) => (
             <div className={`dropOrSelect ${over ? 'active' : ''}`}>
-              <img src={add} />
+              <Add />
               {!over && !overDocument && (
                 <p>
                   Select or Drag your
@@ -231,7 +231,7 @@ const StyledCart = styled(motion.div)`
   .ReactCrop {
     height: 100%;
   }
-  .ReactCrop div img {
+  .ReactCrop div svg {
     max-height: 100%;
   }
   .ReactCrop div:first-child {
@@ -295,7 +295,7 @@ const StyledCart = styled(motion.div)`
     border-radius: 10px;
     cursor: pointer;
     transition: background 0.3s ease;
-    img {
+    svg {
       width: 45px;
       height: 45px;
       pointer-events: none;

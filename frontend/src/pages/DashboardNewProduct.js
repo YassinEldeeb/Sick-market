@@ -13,7 +13,7 @@ import { addNewProductAction } from '../actions/addProduct'
 import DashboardError from '../components/DashboardError'
 import CropImg from '../components/CropImg'
 import { throttle } from 'underscore'
-import xSign from '../img/smallX.svg'
+import { ReactComponent as XSign } from '../img/smallX.svg'
 import Switch from 'react-switch'
 import qs from 'qs'
 
@@ -197,15 +197,16 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
       <AnimatePresence>
         {location.pathname.split('/')[3] === 'add' && (
           <>
-            <motion.img
+            <motion.div
               variants={hide5}
               onClick={returnHandler}
               className='CloseModel'
-              src={xSign}
               initial='hidden'
               animate='show'
               exit='exit'
-            />
+            >
+              <XSign />
+            </motion.div>
 
             <motion.div
               variants={popup2}
@@ -411,10 +412,15 @@ const StyledUserAction = styled(motion.div)`
     position: absolute;
     right: 3%;
     top: 4%;
-    width: 22px;
-    height: 22px;
     opacity: 0.7;
     transition: 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg {
+      width: 22px;
+      height: 22px;
+    }
     &:hover {
       opacity: 0.9 !important;
     }

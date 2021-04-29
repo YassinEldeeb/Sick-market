@@ -8,16 +8,16 @@ import UserDashboard from '../components/userDashboard'
 import DashboardError from '../components/DashboardError'
 import { motion } from 'framer-motion'
 import { hide } from '../animations'
-import search from '../img/searchIcon.svg'
 import { useHistory, useLocation } from 'react-router-dom'
-import smallX from '../img/smallX.svg'
 import DashboardUserAction from './DashboardUserAction'
 import { useLastLocation } from 'react-router-last-location'
 import { throttle } from 'underscore'
 import infiniteScrollUsersAction from '../actions/infiniteScrollUsers'
 import infiniteScrollSearchUsersAction from '../actions/infiniteScrollSearchedUsers'
 import ConfirmPopup from '../components/confirmPopup'
-import arrow from '../img/sort.svg'
+import { ReactComponent as SmallX } from '../img/smallX.svg'
+import { ReactComponent as Search } from '../img/searchIcon.svg'
+import { ReactComponent as Sort } from '../img/sort.svg'
 import { v4 as uuid } from 'uuid'
 import { useRef } from 'react'
 import qs from 'qs'
@@ -343,11 +343,10 @@ const DashboardCustomers = () => {
                     onClick={() => setOpenFilter(!openFilter)}
                   >
                     <p className='value'>{filterValue}</p>
-                    <img
+                    <Sort
                       className={`${openFilter ? 'activeFilterImg' : ''}`}
-                      src={arrow}
-                      alt=''
                     />
+
                     {openFilter && (
                       <div className='filterDropDown'>
                         {filter.map((e) => (
@@ -367,12 +366,10 @@ const DashboardCustomers = () => {
                       placeholder='Search'
                       type='text'
                     />
-                    {searchUser && (
-                      <img onClick={returnHandler} src={smallX} alt='' />
-                    )}
+                    {searchUser && <SmallX onClick={returnHandler} />}
                   </div>
                   <button type='submit'>
-                    <img src={search} />
+                    <Search />
                   </button>
                 </div>
               </form>
@@ -510,7 +507,7 @@ const StyledOrders = styled(motion.div)`
   .inputCont {
     position: relative;
   }
-  .inputCont img {
+  .inputCont svg {
     cursor: pointer;
     position: absolute;
     right: 5.5%;
@@ -541,7 +538,7 @@ const StyledOrders = styled(motion.div)`
     align-items: center;
     cursor: pointer;
 
-    img {
+    svg {
       filter: brightness(1000);
       margin-left: 0.4rem;
       transition: 0.08s ease;
@@ -617,7 +614,7 @@ const StyledOrders = styled(motion.div)`
       &:hover {
         background: #343660;
       }
-      img {
+      svg {
         width: 23px;
         height: 23px;
       }

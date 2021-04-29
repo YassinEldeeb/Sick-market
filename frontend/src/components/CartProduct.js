@@ -6,7 +6,7 @@ import { removeAction } from '../actions/cart'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import SmoothImg from './smoothImgLoading'
-import notAllowed from '../img/notAllowed.svg'
+import { ReactComponent as NotAllowed } from '../img/notAllowed.svg'
 
 const CartProduct = ({
   product,
@@ -78,10 +78,11 @@ const CartProduct = ({
           </h1>
         ) : (
           <div className='removed'>
-            <img src={notAllowed} />
+            <NotAllowed />
             <h1>{removed ? 'Not Available' : soldOut ? 'Sold Out' : ''}</h1>
           </div>
         )}
+
         <div className='removeAndQty'>
           <QtySelector
             className={removed || soldOut ? 'qtySelect' : null}
@@ -150,7 +151,7 @@ const StyledProduct = styled.div`
     padding: 0.55rem 0.75rem;
     background: #ff6969;
     border-radius: 5px;
-    img {
+    svg {
       width: 18px;
       height: 18px;
       margin-right: 0.25rem;
@@ -234,7 +235,7 @@ const StyledProduct = styled.div`
       h1 {
         font-size: calc(0.4rem + 0.3vw) !important;
       }
-      img {
+      svg {
         width: 8px;
         height: 8px;
         margin-right: 0.15rem;
@@ -289,7 +290,7 @@ const StyledProduct = styled.div`
         font-size: calc(0.8rem + 0.3vw) !important;
         margin-right: 0.45rem;
       }
-      img {
+      svg {
         width: 5px !important;
       }
       .drop-menu {

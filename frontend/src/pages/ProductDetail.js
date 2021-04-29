@@ -13,8 +13,8 @@ import { buyNowAction } from '../actions/buyNow'
 import { useLastLocation } from 'react-router-last-location'
 import SmoothImg from '../components/smoothImgLoading'
 import Meta from '../components/Meta'
-import free from '../img/free.svg'
-import discount from '../img/discount.svg'
+import { ReactComponent as Free } from '../img/free.svg'
+import { ReactComponent as Discount } from '../img/discount.svg'
 
 const ProductDetail = ({ cartCount, setCartCount }) => {
   const lastLocation = useLastLocation()
@@ -96,7 +96,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
               />
               {product.oldPrice && (
                 <div className='discount'>
-                  <img src={discount} alt='' />
+                  <Discount />
                   <h6>
                     {(
                       ((product.oldPrice - product.price) / product.oldPrice) *
@@ -180,7 +180,8 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
               />
               {product.freeShipping && (
                 <div className='freeShipping'>
-                  <img src={free} alt='' />
+                  <Free />
+
                   <p>Free Shipping</p>
                 </div>
               )}
@@ -276,7 +277,7 @@ const StyledDetail = styled.div`
       font-size: calc(0.55rem + 0.5vw) !important;
       font-weight: 500;
     }
-    img {
+    svg {
       margin-right: 0.2rem;
       width: 17px;
       height: 17px;
@@ -312,7 +313,7 @@ const StyledDetail = styled.div`
     border-top-left-radius: 0px;
     border-bottom-right-radius: 0px;
 
-    img {
+    svg {
       margin-right: 0.25rem;
       width: 18px !important;
       height: 18px !important;
@@ -372,7 +373,7 @@ const StyledDetail = styled.div`
         font-size: calc(0.9rem + 1vw);
         margin-right: 0.5rem;
       }
-      .select img {
+      .select svg {
         height: 12px;
       }
     }
@@ -535,7 +536,7 @@ const StyledDetail = styled.div`
     .discount {
       padding: 0.4rem 0.65rem;
 
-      img {
+      svg {
         width: 15px !important;
         height: 15px !important;
       }

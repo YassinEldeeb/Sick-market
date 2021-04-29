@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useRef } from "react"
-import styled from "styled-components"
-import xSign from "../img/xSign.svg"
-import closedEye from "../img/closedEye.svg"
-import eye from "../img/eye.svg"
-import { useDispatch, useSelector } from "react-redux"
-import userRegisterAction from "../actions/register"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import { useHistory, useLocation, Link } from "react-router-dom"
+import React, { useState, useEffect, useRef } from 'react'
+import styled from 'styled-components'
+import { ReactComponent as XSign } from '../img/xSign.svg'
+import { ReactComponent as ClosedEye } from '../img/closedEye.svg'
+import { ReactComponent as Eye } from '../img/eye.svg'
+
+import { useDispatch, useSelector } from 'react-redux'
+import userRegisterAction from '../actions/register'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import { useHistory, useLocation, Link } from 'react-router-dom'
 
 const Register = () => {
   const inputRef = useRef(null)
   const inputRef2 = useRef(null)
-  const [name, setName] = useState("")
-  const [emailValue, setEmailValue] = useState("")
-  const [passwordValue, setPasswordValue] = useState("")
-  const [confirmPasswordValue, setConfirmPasswordValue] = useState("")
+  const [name, setName] = useState('')
+  const [emailValue, setEmailValue] = useState('')
+  const [passwordValue, setPasswordValue] = useState('')
+  const [confirmPasswordValue, setConfirmPasswordValue] = useState('')
   const [show, setShow] = useState(false)
   const [passwordMatch, SetpasswordMatch] = useState(null)
 
@@ -30,10 +31,10 @@ const Register = () => {
       SetpasswordMatch("Password & Confirm Password don't match")
     } else {
       if ((!name, !emailValue, !passwordValue)) {
-        SetpasswordMatch("name, Email and Password are Required")
+        SetpasswordMatch('name, Email and Password are Required')
       } else {
         if (!isNaN(name)) {
-          SetpasswordMatch("Name must be alphabetical letters!")
+          SetpasswordMatch('Name must be alphabetical letters!')
         } else {
           SetpasswordMatch(null)
           dispatch(userRegisterAction(name, emailValue, passwordValue))
@@ -44,8 +45,8 @@ const Register = () => {
 
   const { loading, user, error } = useSelector((state) => state.userInfo)
 
-  const search = location.search.replace("?redirect=", "")
-  const redirect = search !== "/" ? search : "/verify"
+  const search = location.search.replace('?redirect=', '')
+  const redirect = search !== '/' ? search : '/verify'
 
   useEffect(() => {
     if (user.name) {
@@ -58,14 +59,14 @@ const Register = () => {
       return passwordMatch
     } else {
       if (error) {
-        if (error.includes("mongo")) {
-          return "Server Error"
+        if (error.includes('mongo')) {
+          return 'Server Error'
         }
-        if (error.includes("timed out")) {
-          return "Network Error"
+        if (error.includes('timed out')) {
+          return 'Network Error'
         }
-        if (error.includes("is shorter than the minimum allowed length (8)")) {
-          return "Password is shorter than the minimum allowed length (8)."
+        if (error.includes('is shorter than the minimum allowed length (8)')) {
+          return 'Password is shorter than the minimum allowed length (8).'
         }
         switch (error) {
           case "User validation failed: password: Password can't contain any sort of 'password' keyword":
@@ -74,7 +75,7 @@ const Register = () => {
             return error
         }
       } else {
-        return "ok"
+        return 'ok'
       }
     }
   }
@@ -107,12 +108,10 @@ const Register = () => {
             type='text'
             onChange={(e) => setName(e.target.value)}
           />
-          <img
-            onClick={() => setName("")}
-            style={{ display: `${name.length ? "block" : "none"}` }}
+          <XSign
+            onClick={() => setName('')}
+            style={{ display: `${name.length ? 'block' : 'none'}` }}
             className='xSign2'
-            src={xSign}
-            alt='X icon'
           />
         </div>
         <div className='email'>
@@ -123,12 +122,10 @@ const Register = () => {
             type='text'
             onChange={(e) => setEmailValue(e.target.value)}
           />
-          <img
-            onClick={() => setEmailValue("")}
-            style={{ display: `${emailValue.length ? "block" : "none"}` }}
+          <XSign
+            onClick={() => setEmailValue('')}
+            style={{ display: `${emailValue.length ? 'block' : 'none'}` }}
             className='xSign2'
-            src={xSign}
-            alt='X icon'
           />
         </div>
         <div className='password'>
@@ -137,14 +134,12 @@ const Register = () => {
             ref={inputRef}
             value={passwordValue}
             id='password'
-            type={`${show ? "text" : "password"}`}
+            type={`${show ? 'text' : 'password'}`}
             onChange={(e) => setPasswordValue(e.target.value)}
           />
-          <img
-            style={{ display: `${show ? "none" : "block"}` }}
+          <ClosedEye
+            style={{ display: `${show ? 'none' : 'block'}` }}
             className='eye eye1'
-            src={closedEye}
-            alt='closedEye'
             draggable='false'
             onClick={() => {
               inputRef.current.focus()
@@ -154,11 +149,9 @@ const Register = () => {
               }, 0)
             }}
           />
-          <img
-            style={{ display: `${!show ? "none" : "block"}` }}
+          <Eye
+            style={{ display: `${!show ? 'none' : 'block'}` }}
             className='eye eye2'
-            src={eye}
-            alt='eye'
             draggable='false'
             onClick={() => {
               inputRef.current.focus()
@@ -175,14 +168,12 @@ const Register = () => {
             ref={inputRef2}
             value={confirmPasswordValue}
             id='confirmPassword'
-            type={`${show ? "text" : "password"}`}
+            type={`${show ? 'text' : 'password'}`}
             onChange={(e) => setConfirmPasswordValue(e.target.value)}
           />
-          <img
-            style={{ display: `${show ? "none" : "block"}` }}
+          <ClosedEye
+            style={{ display: `${show ? 'none' : 'block'}` }}
             className='eye eye1'
-            src={closedEye}
-            alt='closedEye'
             draggable='false'
             onClick={() => {
               inputRef2.current.focus()
@@ -192,11 +183,9 @@ const Register = () => {
               }, 0)
             }}
           />
-          <img
-            style={{ display: `${!show ? "none" : "block"}` }}
+          <Eye
+            style={{ display: `${!show ? 'none' : 'block'}` }}
             className='eye eye2'
-            src={eye}
-            alt='eye'
             draggable='false'
             onClick={() => {
               inputRef2.current.focus()
@@ -212,14 +201,14 @@ const Register = () => {
           Register {loading && <Loader />}
         </button>
         <p className='desktop'>
-          Have an Account?{" "}
+          Have an Account?{' '}
           <span className='register'>
             <Link to={`/login?redirect=${redirect}`}>Login</Link>
           </span>
         </p>
       </form>
       <p className='mobile'>
-        Have an Account?{" "}
+        Have an Account?{' '}
         <span className='register'>
           <Link to={`/login?redirect=${redirect}`}>Login</Link>
         </span>
@@ -230,7 +219,7 @@ const Register = () => {
 
 const StyledRegister = styled.div`
   .eye2 {
-    transform: translate(-50%, 8%) !important;
+    transform: translate(-50%, -16%) !important;
   }
   .xSign2 {
     position: absolute;
@@ -245,7 +234,7 @@ const StyledRegister = styled.div`
     position: absolute;
     right: 0%;
     top: 50%;
-    transform: translate(-50%, -6%);
+    transform: translate(-50%, -20%);
     width: calc(1.8rem + 0.3vw);
     cursor: pointer;
   }
@@ -361,19 +350,16 @@ const StyledRegister = styled.div`
       right: 0%;
       top: 50%;
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-18%, -36%);
-      width: calc(2.8rem + 1vw);
+      transform: translate(-53%, -31%);
+      width: calc(1.4rem + 1vw);
     }
     .eye2 {
-      transform: translate(-18%, -35%) !important;
+      transform: translate(-53%, -28%) !important;
     }
     .xSign2 {
-      transform: translate(-50%, -24%) !important;
-      width: calc(2rem + 1vw);
+      transform: translate(-46%, -26%) !important;
+      width: calc(1.2rem + 1vw);
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-12%, -36%) !important;
     }
     justify-content: space-around;
     form {

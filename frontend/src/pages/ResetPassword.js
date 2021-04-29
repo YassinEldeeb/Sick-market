@@ -1,12 +1,12 @@
-import React, { useState, useRef, useEffect } from "react"
-import styled from "styled-components"
-import { useDispatch, useSelector } from "react-redux"
-import closedEye from "../img/closedEye.svg"
-import eye from "../img/eye.svg"
-import Message from "../components/message"
-import Loader from "../components/loader"
-import resetPassword from "../actions/resetPassword"
-import { useHistory, useLocation, Link } from "react-router-dom"
+import React, { useState, useRef, useEffect } from 'react'
+import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
+import { ReactComponent as ClosedEye } from '../img/closedEye.svg'
+import { ReactComponent as Eye } from '../img/eye.svg'
+import Message from '../components/message'
+import Loader from '../components/loader'
+import resetPassword from '../actions/resetPassword'
+import { useHistory, useLocation, Link } from 'react-router-dom'
 
 const ResetPassword = () => {
   const inputRef = useRef(null)
@@ -15,61 +15,61 @@ const ResetPassword = () => {
     (state) => state.userInfo
   )
 
-  const [passwordValue, setPasswordValue] = useState("")
-  const [confirmPasswordValue, setConfirmPasswordValue] = useState("")
-  const [confirmPasswordValid, setConfirmPasswordValid] = useState("")
+  const [passwordValue, setPasswordValue] = useState('')
+  const [confirmPasswordValue, setConfirmPasswordValue] = useState('')
+  const [confirmPasswordValid, setConfirmPasswordValid] = useState('')
   const [show, setShow] = useState(false)
 
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
 
-  const token = location.search.split("=")[1]
+  const token = location.search.split('=')[1]
 
   useEffect(() => {
     if (!token) {
-      history.push("/forgotPassword")
+      history.push('/forgotPassword')
     }
   }, [])
   const submitHandler = (e) => {
     e.preventDefault()
-    setConfirmPasswordValid("")
+    setConfirmPasswordValid('')
     if (!confirmPasswordValue || !passwordValue) {
-      setConfirmPasswordValid("Password & Confirm Password are required")
+      setConfirmPasswordValid('Password & Confirm Password are required')
       return
     } else if (confirmPasswordValue !== passwordValue) {
       setConfirmPasswordValid("Password & Confirm Password don't match")
       return
     } else {
-      setConfirmPasswordValid("")
+      setConfirmPasswordValid('')
       dispatch(resetPassword(passwordValue, token))
     }
   }
 
   useEffect(() => {
-    if (reset) history.push("/login")
+    if (reset) history.push('/login')
   }, [history, reset])
 
   useEffect(() => {
     if (user.name) {
-      history.push("/")
+      history.push('/')
     }
   }, [user])
   const messageError = () => {
     if (confirmPasswordValid) {
       return confirmPasswordValid
     } else if (error) {
-      if (error.includes("timed out")) {
-        return "Network Error"
-      } else if (error.includes("mongo")) {
-        return "Server Error"
+      if (error.includes('timed out')) {
+        return 'Network Error'
+      } else if (error.includes('mongo')) {
+        return 'Server Error'
       } else if (
-        error.includes("jwt expired") ||
-        error.includes("Link Expired")
+        error.includes('jwt expired') ||
+        error.includes('Link Expired')
       ) {
         return (
           <p>
-            Send a Reset Password Email at{" "}
+            Send a Reset Password Email at{' '}
             <Link className='ForgotLink' to='forgotPassword'>
               Forgot Password
             </Link>
@@ -79,7 +79,7 @@ const ResetPassword = () => {
         return error
       }
     } else {
-      return ""
+      return ''
     }
   }
   return (
@@ -101,14 +101,12 @@ const ResetPassword = () => {
               ref={inputRef}
               value={passwordValue}
               id='password'
-              type={`${show ? "text" : "password"}`}
+              type={`${show ? 'text' : 'password'}`}
               onChange={(e) => setPasswordValue(e.target.value)}
             />
-            <img
-              style={{ display: `${show ? "none" : "block"}` }}
+            <ClosedEye
+              style={{ display: `${show ? 'none' : 'block'}` }}
               className='eye eye1'
-              src={closedEye}
-              alt='closedEye'
               draggable='false'
               onClick={() => {
                 inputRef.current.focus()
@@ -118,12 +116,9 @@ const ResetPassword = () => {
                 }, 0)
               }}
             />
-            <img
-              style={{ display: `${!show ? "none" : "block"}` }}
+            <Eye
+              style={{ display: `${!show ? 'none' : 'block'}` }}
               className='eye eye2'
-              src={eye}
-              alt='eye'
-              draggable='false'
               onClick={() => {
                 inputRef.current.focus()
                 setShow(!show)
@@ -139,14 +134,12 @@ const ResetPassword = () => {
               ref={inputRef2}
               value={confirmPasswordValue}
               id='confirmPassword'
-              type={`${show ? "text" : "password"}`}
+              type={`${show ? 'text' : 'password'}`}
               onChange={(e) => setConfirmPasswordValue(e.target.value)}
             />
-            <img
-              style={{ display: `${show ? "none" : "block"}` }}
+            <ClosedEye
+              style={{ display: `${show ? 'none' : 'block'}` }}
               className='eye eye1'
-              src={closedEye}
-              alt='closedEye'
               draggable='false'
               onClick={() => {
                 inputRef2.current.focus()
@@ -156,11 +149,9 @@ const ResetPassword = () => {
                 }, 0)
               }}
             />
-            <img
-              style={{ display: `${!show ? "none" : "block"}` }}
+            <Eye
+              style={{ display: `${!show ? 'none' : 'block'}` }}
               className='eye eye2'
-              src={eye}
-              alt='eye'
               draggable='false'
               onClick={() => {
                 inputRef2.current.focus()
@@ -215,13 +206,13 @@ const StyledReset = styled.div`
     max-width: 606px;
   }
   .eye2 {
-    transform: translate(-50%, 8%) !important;
+    transform: translate(-50%, -14%) !important;
   }
   .eye {
     position: absolute;
     right: 0%;
     top: 50%;
-    transform: translate(-50%, -6%);
+    transform: translate(-50%, -19%);
     width: calc(1.8rem + 0.3vw);
     cursor: pointer;
   }
@@ -300,12 +291,11 @@ const StyledReset = styled.div`
       right: 0%;
       top: 50%;
       cursor: pointer;
-      padding: 0.6rem;
-      transform: translate(-18%, -36%);
-      width: calc(2.8rem + 1vw);
+      transform: translate(-52%, -28%);
+      width: calc(1.4rem + 1vw);
     }
     .eye2 {
-      transform: translate(-18%, -35%) !important;
+      transform: translate(-52%, -25%) !important;
     }
     .message {
       padding: 0.5rem 0.7rem !important;
