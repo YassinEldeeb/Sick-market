@@ -24,14 +24,14 @@ const __dirname = path.resolve()
 
 const app = express()
 
-const server = spdy.createServer(
-  {
-    key: fs.readFileSync(path.resolve(__dirname, './certificates/server.key')),
-    cert: fs.readFileSync(path.resolve(__dirname, './certificates/server.crt')),
-  },
-  app
-)
-// const server = http.createServer(app)
+// const server = spdy.createServer(
+//   {
+//     key: fs.readFileSync(path.resolve(__dirname, './certificates/server.key')),
+//     cert: fs.readFileSync(path.resolve(__dirname, './certificates/server.crt')),
+//   },
+//   app
+// )
+const server = http.createServer(app)
 
 app.use(express.json())
 app.use(enforce.HTTPS())
