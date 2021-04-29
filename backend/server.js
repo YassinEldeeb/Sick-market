@@ -18,21 +18,23 @@ import Category from './models/category.js'
 import fs from 'fs'
 import spdy from 'spdy'
 import http from 'http'
+import enforce from 'express-sslify'
 
 const __dirname = path.resolve()
 
 const app = express()
 
-// const server = spdy.createServer(
-//   {
-//     key: fs.readFileSync(path.resolve(__dirname, './certificates/server.key')),
-//     cert: fs.readFileSync(path.resolve(__dirname, './certificates/server.crt')),
-//   },
-//   app
-// )
-const server = http.createServer(app)
+const server = spdy.createServer(
+  {
+    key: fs.readFileSync(path.resolve(__dirname, './certificates/server.key')),
+    cert: fs.readFileSync(path.resolve(__dirname, './certificates/server.crt')),
+  },
+  app
+)
+// const server = http.createServer(app)
 
 app.use(express.json())
+app.use(enforce.HTTPS())
 dotenv.config()
 app.use(prerender.set('prerenderToken', [process.env.PRERENDER_TOKEN]))
 
@@ -45,15 +47,6 @@ const apiLimiter = rateLimit({
   max: 1,
   message: { message: 'Try again in 60 seconds' },
 })
-
-app.get(
-  '/.well-known/acme-challenge/FKjXGeml4KSrh-9YIvAAZrek5PesWG8s7c-4TMRGVb8',
-  function (req, res) {
-    res.send(
-      'FKjXGeml4KSrh-9YIvAAZrek5PesWG8s7c-4TMRGVb8.kDr21LPOdzCANe5GgmGkqdK7xOBB9ewuJU6rFOmo_mQ'
-    )
-  }
-)
 
 app.use('/api/products', productRouter)
 app.use('/api/users/getNewSecurityCode', apiLimiter)
