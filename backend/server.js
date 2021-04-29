@@ -78,11 +78,11 @@ app.use(notFoundRouter)
 app.use(errRouter)
 
 const port = process.env.PORT
-const DYNO_URL = 'https://sickmarket.ml'
+// const DYNO_URL = 'https://sickmarket.ml'
 server.listen(port, () => {
-  if (process.env.NODE_ENV === 'production') {
-    wakeUpDyno(DYNO_URL)
-  }
+  // if (process.env.NODE_ENV === 'production') {
+  //   wakeUpDyno(DYNO_URL)
+  // }
 
   console.log(
     `Server running in ${process.env.NODE_ENV} mode on port ${port}`.yellow.bold
