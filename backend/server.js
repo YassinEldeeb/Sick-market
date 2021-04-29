@@ -30,6 +30,11 @@ const server = spdy.createServer(
   app
 )
 
+console.log(
+  fs.readFileSync(path.resolve(__dirname, './certificates/server.key')),
+  fs.readFileSync(path.resolve(__dirname, './certificates/server.crt'))
+)
+
 app.use(express.json())
 dotenv.config()
 app.use(prerender.set('prerenderToken', [process.env.PRERENDER_TOKEN]))
