@@ -15,10 +15,6 @@ import SocketService from './webSockets/socketService.js'
 import wakeUpDyno from './utils/wakeUpDyno.js'
 import prerender from 'prerender-node'
 import Category from './models/category.js'
-import fs from 'fs'
-import spdy from 'spdy'
-import http2 from 'http2'
-import enforce from 'express-sslify'
 
 const __dirname = path.resolve()
 
@@ -27,7 +23,6 @@ const app = express()
 const server = http.createServer(app)
 
 app.use(express.json())
-app.use(enforce.HTTPS())
 dotenv.config()
 app.use(prerender.set('prerenderToken', [process.env.PRERENDER_TOKEN]))
 
