@@ -176,20 +176,32 @@ const addProduct = asyncHandler(async (req, res) => {
   } else {
     image = '/uploads/no.jpg'
   }
-  const newProduct = new Product({
-    name,
-    brand,
-    category,
-    description,
-    price,
-    countInStock,
-    qtyPerUser,
-    image,
-    user: req.user._id,
-    oldPrice,
-    freeShipping,
-  })
-  await newProduct.save()
+  let newProduct
+  try {
+    newProduct = new Product({
+      name,
+      brand,
+      category,
+      description,
+      price,
+      countInStock,
+      qtyPerUser,
+      image,
+      user: req.user._id,
+      oldPrice,
+      freeShipping,
+    })
+    await newProduct.save()
+  } catch (error) {
+    if (
+      newProduct.image !== '/uploads/no.jpg' &&
+      fs.existsSync(join(__dirname, newProduct.image))
+    ) {
+      fs.unlinkSync(join(__dirname, newProduct.image))
+      console.log('Image is Removed')
+    }
+    throw new Error(error)
+  }
   const newPopulatedProduct = await Product.findOne(newProduct._id).populate(
     'user',
     'name'
@@ -271,7 +283,17 @@ const updateProduct = asyncHandler(async (req, res) => {
 
   product.lastUpdated = new Date()
 
-  await product.save()
+  try {
+    await product.save()
+  } catch (error) {
+    if (
+      product.image !== '/uploads/no.jpg' &&
+      fs.existsSync(join(__dirname, product.image))
+    ) {
+      fs.unlinkSync(join(__dirname, product.image))
+      console.log('Image is Removed')
+    }
+  }
 
   res.send(product)
 })

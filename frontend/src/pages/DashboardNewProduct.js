@@ -92,7 +92,10 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
     for (const e in dataObj) {
       formData.append(e, dataObj[e])
     }
-
+    console.log('FormData Entities:')
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ', ' + pair[1])
+    }
     dispatch(addNewProductAction(formData))
   }
   const { newLoading, newError, success } = useSelector(
@@ -124,6 +127,8 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
       setCompletedCrop(null)
       setImageType(null)
       setImage(null)
+      setOldPrice('')
+      setFreeShipping(false)
 
       let baseURL = '/dashboard/products?'
       if (searches[Object.keys(searches)[0]]) {

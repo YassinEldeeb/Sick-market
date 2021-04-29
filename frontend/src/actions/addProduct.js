@@ -1,11 +1,11 @@
-import axios from "axios"
+import axios from 'axios'
 
 export const addNewProductAction = (productData) => async (
   dispatch,
   getState
 ) => {
   try {
-    dispatch({ type: "ADD_PRODUCT_REQUEST" })
+    dispatch({ type: 'ADD_PRODUCT_REQUEST' })
 
     const { userInfo } = getState((state) => state.userInfo)
 
@@ -18,14 +18,15 @@ export const addNewProductAction = (productData) => async (
       cancelToken: source.token,
     }
 
-    const { data } = await axios.post("/api/products", productData, config)
-    dispatch({
-      type: "ADD_PRODUCT_SUCCESS",
-      payload: data,
-    })
+    const { data } = await axios.post('/api/products', productData, config)
+    if (data && data._id)
+      dispatch({
+        type: 'ADD_PRODUCT_SUCCESS',
+        payload: data,
+      })
   } catch (error) {
     dispatch({
-      type: "ADD_PRODUCT_FAIL",
+      type: 'ADD_PRODUCT_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
