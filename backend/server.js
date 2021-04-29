@@ -11,17 +11,24 @@ import bodyparser from 'body-parser'
 import rateLimit from 'express-rate-limit'
 import path from 'path'
 import express from 'express'
-import http from 'http'
 import SocketService from './webSockets/socketService.js'
 import wakeUpDyno from './utils/wakeUpDyno.js'
 import prerender from 'prerender-node'
 import Category from './models/category.js'
+import fs from 'fs'
+import spdy from 'spdy'
 
 const __dirname = path.resolve()
 
 const app = express()
 
-const server = http.Server(app)
+const server = spdy.createServer(
+  {
+    key: fs.readFileSync(path.resolve(__dirname, './certificates/server.key')),
+    cert: fs.readFileSync(path.resolve(__dirname, './certificates/server.crt')),
+  },
+  app
+)
 
 app.use(express.json())
 dotenv.config()
