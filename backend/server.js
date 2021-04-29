@@ -49,6 +49,15 @@ const apiLimiter = rateLimit({
   message: { message: 'Try again in 60 seconds' },
 })
 
+app.get(
+  '/.well-known/acme-challenge/FKjXGeml4KSrh-9YIvAAZrek5PesWG8s7c-4TMRGVb8',
+  function (req, res) {
+    res.send(
+      'FKjXGeml4KSrh-9YIvAAZrek5PesWG8s7c-4TMRGVb8.kDr21LPOdzCANe5GgmGkqdK7xOBB9ewuJU6rFOmo_mQ'
+    )
+  }
+)
+
 app.use('/api/products', productRouter)
 app.use('/api/users/getNewSecurityCode', apiLimiter)
 app.use('/api/users', userRouter)
@@ -78,11 +87,11 @@ app.use(notFoundRouter)
 app.use(errRouter)
 
 const port = process.env.PORT
-// const DYNO_URL = 'https://sickmarket.ml'
+const DYNO_URL = 'https://sick-market.herokuapp.com'
 server.listen(port, () => {
-  // if (process.env.NODE_ENV === 'production') {
-  //   wakeUpDyno(DYNO_URL)
-  // }
+  if (process.env.NODE_ENV === 'production') {
+    wakeUpDyno(DYNO_URL)
+  }
 
   console.log(
     `Server running in ${process.env.NODE_ENV} mode on port ${port}`.yellow.bold
