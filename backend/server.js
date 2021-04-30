@@ -15,6 +15,7 @@ import SocketService from './webSockets/socketService.js'
 import wakeUpDyno from './utils/wakeUpDyno.js'
 import prerender from 'prerender-node'
 import Category from './models/category.js'
+import http from 'http'
 
 const __dirname = path.resolve()
 
