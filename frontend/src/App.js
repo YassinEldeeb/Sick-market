@@ -131,20 +131,10 @@ const App = () => {
           <Suspense fallback={<p className='loadingText'>Loading...</p>}>
             <Switch>
               <Route path='/' exact>
-                <Offline>
-                  <div className='noInternet'>
-                    <Lottie
-                      className='lottieNoConnection'
-                      options={defaultOptions}
-                    />
-                  </div>
-                </Offline>
-                <Online>
-                  <Home
-                    scrollPosition={scrollPosition}
-                    setScrollPosition={setScrollPosition}
-                  />
-                </Online>
+                <Home
+                  scrollPosition={scrollPosition}
+                  setScrollPosition={setScrollPosition}
+                />
               </Route>
               <Route path='/products/:id'>
                 <ProductDetail

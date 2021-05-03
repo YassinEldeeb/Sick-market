@@ -64,9 +64,7 @@ const SmoothImg = ({
       <img
         src={tiny}
         style={{ width, height }}
-        className={`lazyImgLoader ${loaded ? 'hide' : ''} ${
-          loadedImages.find((e) => e.img === src) ? 'notShow' : ''
-        }`}
+        className={`lazyImgLoader`}
         id={`${loaderId ? loaderId : ''}`}
         onLoad={() => setLoadedTiny(true)}
         onError={(e) => (e.target.src = '/uploads/tinyNo.jpg')}

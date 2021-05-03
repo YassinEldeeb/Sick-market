@@ -8,9 +8,7 @@ class SocketService {
     if (process.env.NODE_ENV === 'development') {
       this.io = new Server(server)
     } else {
-      this.io = new Server(server, 'https://sick-market.herokuapp.com', [
-        'websocket',
-      ])
+      this.io = new Server(server, 'https://sickmarket.ml', ['websocket'])
     }
     this.io.on('connection', (socket) => {
       this.socket = socket
