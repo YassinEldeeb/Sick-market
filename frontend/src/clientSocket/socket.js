@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client'
 
-const socket = io('http://3.22.112.164', {
+const socket = io('https://sickmarket.ml', {
   transports: ['websocket'],
   secure: true,
 })
