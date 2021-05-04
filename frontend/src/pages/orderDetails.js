@@ -663,6 +663,7 @@ const StyledPlaceOrder = styled.div`
       align-items: center;
       border-top: 1px solid rgba(0, 0, 0, 7.5%);
       margin: 0 calc(1.3rem + 0.3vw);
+      white-space: nowrap;
       h1 {
         padding: unset !important;
         color: #1a1a1a;

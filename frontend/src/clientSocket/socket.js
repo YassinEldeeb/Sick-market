@@ -1,8 +1,5 @@
 import { io } from 'socket.io-client'
 
-const socket = io('wss://sickmarket.ml', {
-  transports: ['websocket'],
-  secure: true,
-})
+const socket = io()
 
 export default socket

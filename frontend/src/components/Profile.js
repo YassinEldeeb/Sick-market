@@ -109,6 +109,10 @@ const Profile = () => {
   )
 }
 const StyledProfile = styled.div`
+  .dropDown {
+    max-height: 50vh;
+    overflow-y: auto;
+  }
   #profileIMG {
     width: 48px;
     height: 48px;
