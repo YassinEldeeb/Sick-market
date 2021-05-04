@@ -106,11 +106,6 @@ const App = () => {
     }
   }, [])
 
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-  }
 
   return (
     <div className='App' id={`${logoutLoading ? 'logoutLoading' : ''}`}>
