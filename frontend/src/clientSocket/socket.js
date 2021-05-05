@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client'
 
-const socket = io('http://localhost:3000/dropcodes', {
+const socket = io('https://sickmarket.ml/dropcodes', {
   path: '/websockets',
   transports: ['polling', 'websocket'],
 })
