@@ -6,17 +6,9 @@ dotenv.config()
 class SocketService {
   constructor(server) {
     if (process.env.NODE_ENV === 'development') {
-      this.io = new Server(server, {
-        maxHttpBufferSize: 1024, // max message payload size (prevents clients from sending gigabytes of data)
-        pingInterval: 60 * 1000, // 1 minute
-        pingTimeout: 4 * 60 * 1000, // 4 minutes
-      })
+      this.io = new Server(server)
     } else {
-      this.io = new Server(server, {
-        maxHttpBufferSize: 1024, // max message payload size (prevents clients from sending gigabytes of data)
-        pingInterval: 60 * 1000, // 1 minute
-        pingTimeout: 4 * 60 * 1000, // 4 minutes
-      })
+      this.io = new Server(server)
     }
     this.io.on('connection', (socket) => {
       this.socket = socket
