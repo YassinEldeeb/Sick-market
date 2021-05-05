@@ -46,7 +46,9 @@ const Cart = ({ cartCount, setCartCount }) => {
   }, [check])
 
   useEffect(() => {
-    dispatch(checkProduct(user.token))
+    if (cartItems.length) {
+      dispatch(checkProduct(user.token))
+    }
   }, [])
 
   useEffect(() => {
@@ -57,7 +59,10 @@ const Cart = ({ cartCount, setCartCount }) => {
     <StyledCart>
       <Goback />
       <h1 className='title'>Shopping Cart</h1>
-      {loadingCheck && <Loader />}
+      {loadingCheck && cartItems.length > 0 && <Loader />}
+      {cartItems.length === 0 && loadingCheck && (
+        <Message msg='Your cart is empty' />
+      )}
       {checkError && <Message msg={checkError} type='error' />}
       {!loadingCheck && !checkError ? (
         <>

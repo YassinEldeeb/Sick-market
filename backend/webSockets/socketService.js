@@ -8,7 +8,7 @@ class SocketService {
     if (process.env.NODE_ENV === 'development') {
       this.io = new Server(server)
     } else {
-      this.io = new Server(server, ['websocket'])
+      this.io = new Server(server)
     }
     this.io.on('connection', (socket) => {
       this.socket = socket

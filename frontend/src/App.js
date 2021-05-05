@@ -13,14 +13,13 @@ import LoggingOut from './components/loggingYouOut'
 //
 import Home from './pages/Home'
 import ProductDetail from './pages/ProductDetail'
+import Cart from './pages/Cart'
+import Shipping from './pages/Shipping'
+import Payment from './pages/Payment'
+import PlaceOrder from './pages/PlaceOrder'
 
 //
-const Cart = lazy(() => import('./pages/Cart'))
 const Account = lazy(() => import('./pages/Account'))
-
-const Shipping = lazy(() => import('./pages/Shipping'))
-const Payment = lazy(() => import('./pages/Payment'))
-const PlaceOrder = lazy(() => import('./pages/PlaceOrder'))
 
 const Description = lazy(() => import('./pages/Description'))
 const Login = lazy(() => import('./pages/Login'))
@@ -105,7 +104,6 @@ const App = () => {
       setRegister2(true)
     }
   }, [])
-
 
   return (
     <div className='App' id={`${logoutLoading ? 'logoutLoading' : ''}`}>

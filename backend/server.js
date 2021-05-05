@@ -25,7 +25,7 @@ const server = http.createServer(app)
 
 app.use(express.json())
 dotenv.config()
-app.use(prerender.set('prerenderToken', [process.env.PRERENDER_TOKEN]))
+app.use(prerender.set('prerenderToken', process.env.PRERENDER_TOKEN))
 
 connectDB()
 
