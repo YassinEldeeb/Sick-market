@@ -16,6 +16,7 @@ import wakeUpDyno from './utils/wakeUpDyno.js'
 import prerender from 'prerender-node'
 import Category from './models/category.js'
 import http from 'http'
+import cors from 'cors'
 
 const __dirname = path.resolve()
 
@@ -23,6 +24,7 @@ const app = express()
 
 const server = http.createServer(app)
 
+app.use(cors())
 app.use(express.json())
 dotenv.config()
 app.use(prerender.set('prerenderToken', process.env.PRERENDER_TOKEN))
