@@ -7,14 +7,12 @@ class SocketService {
   constructor(server) {
     if (process.env.NODE_ENV === 'development') {
       this.io = new Server(server, {
-        path: '/websockets', // path to make requests to [http://host/websockets]
         maxHttpBufferSize: 1024, // max message payload size (prevents clients from sending gigabytes of data)
         pingInterval: 60 * 1000, // 1 minute
         pingTimeout: 4 * 60 * 1000, // 4 minutes
       })
     } else {
       this.io = new Server(server, {
-        path: '/websockets', // path to make requests to [http://host/websockets]
         maxHttpBufferSize: 1024, // max message payload size (prevents clients from sending gigabytes of data)
         pingInterval: 60 * 1000, // 1 minute
         pingTimeout: 4 * 60 * 1000, // 4 minutes
