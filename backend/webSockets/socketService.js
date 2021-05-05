@@ -20,7 +20,7 @@ class SocketService {
         pingTimeout: 4 * 60 * 1000, // 4 minutes
       })
     }
-    this.io.of('/dropcodes').on('connection', (socket) => {
+    this.io.on('connection', (socket) => {
       this.socket = socket
       socket.on('userSignedIn', (id) => {
         if (id) {
