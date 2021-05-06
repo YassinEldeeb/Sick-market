@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client'
 
 const socket = io({
-  transports: ['polling', 'websocket'],
+  transports: ['websocket'],
 })
 
 export default socket

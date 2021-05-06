@@ -17,6 +17,7 @@ import prerender from 'prerender-node'
 import Category from './models/category.js'
 import http from 'http'
 import cors from 'cors'
+import fs from 'fs'
 
 const __dirname = path.resolve()
 
