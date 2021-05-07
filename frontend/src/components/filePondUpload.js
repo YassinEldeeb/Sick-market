@@ -28,10 +28,16 @@ const FilePondUpload = () => {
         if (user.profilePicLink && user.profilePicLink !== 'cleared') {
           return [{ source: `${user.profilePicLink}` }]
         } else {
-          return [{ source: `/api/users/profilePic/${user._id}` }]
+          return [
+            {
+              source: `http://localhost:5000/api/users/profilePic/${user._id}`,
+            },
+          ]
         }
       } else {
-        return [{ source: `/api/users/profilePic/${user._id}` }]
+        return [
+          { source: `http://localhost:5000/api/users/profilePic/${user._id}` },
+        ]
       }
     } else {
       return []
@@ -43,7 +49,11 @@ const FilePondUpload = () => {
     if (!user.availablePic) {
       setNumUpload(0)
       setFiles([
-        { source: `/api/users/profilePic/${user._id}?${new Date().getTime()}` },
+        {
+          source: `http://localhost:5000/api/users/profilePic/${
+            user._id
+          }?${new Date().getTime()}`,
+        },
       ])
     }
   }, [user.availablePic, user._id])
@@ -110,7 +120,10 @@ const FilePondUpload = () => {
                   formData.append('profilePic', file)
 
                   const request = new XMLHttpRequest()
-                  request.open('POST', '/api/users/me/profilePic')
+                  request.open(
+                    'POST',
+                    'http://localhost:5000/api/users/me/profilePic'
+                  )
                   request.setRequestHeader('Authorization', `Bearer ${token}`)
                   request.upload.onprogress = (e) => {
                     progress(e.lengthComputable, e.loaded, e.total)
@@ -146,12 +159,14 @@ const FilePondUpload = () => {
           document.querySelector('#profileIMG').src =
             user.profilePicLink && user.profilePicLink !== 'cleared'
               ? user.profilePicLink
-              : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+              : `http://localhost:5000/api/users/profilePic/${user._id}?` +
+                new Date().getTime()
 
           document.querySelector('.profile-mobile-pic img').src =
             user.profilePicLink && user.profilePicLink !== 'cleared'
               ? user.profilePicLink
-              : `/api/users/profilePic/${user._id}?` + new Date().getTime()
+              : `http://localhost:5000/api/users/profilePic/${user._id}?` +
+                new Date().getTime()
         }}
       />
     </>

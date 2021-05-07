@@ -19,7 +19,7 @@ const infiniteScrollSearchUsersAction = (search, skip = 0) => async (
     }
 
     const { data } = await axios.post(
-      `/api/users/search?limit=10&skip=${10 * skip}`,
+      `http://localhost:5000/api/users/search?limit=10&skip=${10 * skip}`,
       { search },
       config
     )

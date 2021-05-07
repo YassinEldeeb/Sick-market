@@ -63,7 +63,7 @@ const EditCropImg = ({
     const scaleX = image.naturalWidth / image.width
     const scaleY = image.naturalHeight / image.height
     const ctx = canvas.getContext('2d')
-    const pixelRatio = 20
+    const pixelRatio = 4
 
     canvas.width = crop.width * pixelRatio
     canvas.height = crop.height * pixelRatio
@@ -158,6 +158,7 @@ const EditCropImg = ({
                   const motionCont = document.querySelector('.motionCont')
                   motionCont.style.width = 'max-content'
 
+                  image.style.height = '100%'
                   cont.style.width = `${image.width}px`
                   cont.style.height = `max-content`
                   contDiv.style.height = `max-content`
@@ -206,7 +207,7 @@ const EditCropImg = ({
         )}
 
         <div className={`buttons ${image ? 'activeCrop' : ''}`}>
-          {productImg !== '/uploads/no.jpg' && !noImage && (
+          {productImg !== 'http://localhost:5000/uploads/no.jpg' && !noImage && (
             <SmallX
               onClick={() => {
                 setNoImage(true)

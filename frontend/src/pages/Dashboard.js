@@ -20,9 +20,9 @@ import { ReactComponent as Home } from '../img/home.svg'
 import DashboardTab from '../components/DashboardTab'
 import DashboardCustomers from './DashboardCustomers'
 import DashboardProducts from './DashboardProducts'
+import DashboardOrders from './DashboardOrders'
 import { useRef } from 'react'
 import Meta from '../components/Meta'
-import Product from '../components/Product'
 
 const main = [
   { text: 'Statistics', i: <Statistics /> },
@@ -175,6 +175,9 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
               dashboardScrollPosition={dashboardScrollPosition}
               setDashboardScrollPosition={setDashboardScrollPosition}
             />
+          </Route>
+          <Route path='/dashboard/orders'>
+            <DashboardOrders />
           </Route>
         </Switch>
       </Scrollbars>

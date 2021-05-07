@@ -47,7 +47,7 @@ const Profile = () => {
     ) {
       return userInfo.user.profilePicLink
     } else {
-      return `/api/users/profilePic/${userInfo.user._id}`
+      return `http://localhost:5000/api/users/profilePic/${userInfo.user._id}`
     }
   }
   return (
@@ -64,7 +64,7 @@ const Profile = () => {
                 height={'100%'}
                 src={imgSrcCondition()}
                 alt=''
-                tiny={`/api/users/profilePic/tiny/${userInfo.user._id}`}
+                tiny={`http://localhost:5000/api/users/profilePic/tiny/${userInfo.user._id}`}
               />
             </div>
             {userInfo.user.rank && userInfo.user.rank !== 'user' && (

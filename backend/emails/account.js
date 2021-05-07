@@ -326,14 +326,14 @@ const sendVerificationEmail = async (email, name) => {
                             alt="I'm an image"
                             border="0"
                             class="center fixedwidth"
-                            src="/uploads/logo"
+                            src="https://sickmarket.ml/uploads/logo.png"
                             style="
                               text-decoration: none;
                               -ms-interpolation-mode: bicubic;
                               height: auto;
                               border: 0;
                               width: 100%;
-                              max-width: 320px;
+                              max-width: calc(150px + 10vw) !important;
                               display: block;
                             "
                             title="I'm an image"
@@ -1000,7 +1000,7 @@ const sendResetPasswordEmail = async (email) => {
     html: `Sick Market, You've 10 minutes for the Link before it expires, Follow the Link: <a href="${
       process.env.NODE_ENV === 'development'
         ? 'http://localhost:3000'
-        : 'https://sick-market.herokuapp.com'
+        : 'https://sickmarket.ml'
     }/resetPassword?token=${token}">Reset Password</a>`,
   }
 
@@ -1033,7 +1033,7 @@ const orderPlaced = async (order, email) => {
     html: `Sick Market, You've Placed an Order with an ID of ${
       order._id
     }, which contains ${order.orderItems.map((each) => {
-      return `<img src=${'https://sick-market.herokuapp.com' + each.image} />`
+      return `<img src=${'https://sickmarket.ml' + each.image} />`
     })}`,
   }
 

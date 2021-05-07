@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from 'axios'
 
 const getOrderAction = (id) => async (dispatch, getState) => {
   const { userInfo } = getState((state) => state.userInfo)
   try {
-    dispatch({ type: "GET_ORDER_REQUEST" })
+    dispatch({ type: 'GET_ORDER_REQUEST' })
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
     const config = {
@@ -12,11 +12,14 @@ const getOrderAction = (id) => async (dispatch, getState) => {
       },
       cancelToken: source.token,
     }
-    const { data } = await axios.get(`/api/orders/${id}`, config)
-    dispatch({ type: "GET_ORDER_SUCCESS", payload: data })
+    const { data } = await axios.get(
+      `http://localhost:5000/api/orders/${id}`,
+      config
+    )
+    dispatch({ type: 'GET_ORDER_SUCCESS', payload: data })
   } catch (error) {
     dispatch({
-      type: "GET_ORDER_FAIL",
+      type: 'GET_ORDER_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

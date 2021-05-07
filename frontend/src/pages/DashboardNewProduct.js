@@ -324,7 +324,7 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
                       brand: brand.length ? brand : 'Test',
                       countInStock: stock,
                       category,
-                      image: '/uploads/no.jpg',
+                      image: 'http://localhost:5000/uploads/no.jpg',
                       numReviews: 0,
                       oldPrice,
                       freeShipping,

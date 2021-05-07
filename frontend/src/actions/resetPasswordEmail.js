@@ -7,7 +7,7 @@ const resetPasswordEmail = (email) => async (dispatch) => {
     const source = cancelToken.source()
 
     await axios.post(
-      '/api/users/resetPasswordEmail',
+      'http://localhost:5000/api/users/resetPasswordEmail',
       {
         email,
       },

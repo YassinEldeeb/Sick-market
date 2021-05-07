@@ -12,7 +12,7 @@ const userLoginAction = (email, password) => async (dispatch) => {
       cancelToken: source.token,
     }
     const { data } = await axios.post(
-      '/api/users/login',
+      'http://localhost:5000/api/users/login',
       { email, password },
       config
     )

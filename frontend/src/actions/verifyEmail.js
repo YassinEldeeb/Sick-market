@@ -1,32 +1,32 @@
-import axios from "axios"
+import axios from 'axios'
 
 export const verifyEmailAction = (enteredCode) => async (
   dispatch,
   getState
 ) => {
-  dispatch({ type: "VERIFY_REQUEST" })
+  dispatch({ type: 'VERIFY_REQUEST' })
   const userInfo = getState().userInfo
-  if (userInfo.token && userInfo.user.status === "pending") {
+  if (userInfo.token && userInfo.user.status === 'pending') {
     try {
       const cancelToken = axios.CancelToken
       const source = cancelToken.source()
 
       const config = {
         headers: {
-          Content_Type: "application/json",
+          Content_Type: 'application/json',
           Authorization: `Bearer ${userInfo.token}`,
         },
         cancelToken: source.token,
       }
       await axios.post(
-        "/api/users/getSecurityCode",
+        'http://localhost:5000/api/users/getSecurityCode',
         { code: Number(enteredCode) },
         config
       )
-      dispatch({ type: "VERIFY_SUCCESS" })
+      dispatch({ type: 'VERIFY_SUCCESS' })
 
       localStorage.setItem(
-        "sickUserInfo",
+        'sickUserInfo',
         JSON.stringify({
           user: getState().userInfo.user,
           token: getState().userInfo.token,
@@ -34,7 +34,7 @@ export const verifyEmailAction = (enteredCode) => async (
       )
     } catch (error) {
       dispatch({
-        type: "VERIFY_FAIL",
+        type: 'VERIFY_FAIL',
         payload:
           error.response && error.response.data.message
             ? error.response.data.message

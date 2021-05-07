@@ -145,6 +145,7 @@ const CropImg = ({
                 const motionCont = document.querySelector('.motionCont')
                 motionCont.style.width = 'max-content'
 
+                image.style.height = '100%'
                 cont.style.width = `${image.width}px`
                 cont.style.height = `max-content`
                 contDiv.style.height = `max-content`

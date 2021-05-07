@@ -90,9 +90,9 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 providedClassName='smoothImgDetails'
                 width={'640px'}
                 height={'510px'}
-                src={product.image}
+                src={'http://localhost:5000' + product.image}
                 alt='product'
-                tiny={`/api/products/${product._id}/tiny`}
+                tiny={`http://localhost:5000/api/products/${product._id}/tiny`}
               />
               {product.oldPrice && (
                 <div className='discount'>
@@ -254,12 +254,12 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
       )}
       {product && (
         <Meta
-          ogImage={`https://sick-market.herokuapp.com${product.image}`}
+          ogImage={`https://sickmarket.ml${product.image}`}
           ogTitle={product.name}
           ogDescription={product.description}
           title={product.name}
           description={product.description}
-          url={`https://sick-market.herokuapp.com/products/${product._id}`}
+          url={`https://sickmarket.ml/products/${product._id}`}
           product={true}
         />
       )}

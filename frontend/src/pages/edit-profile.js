@@ -94,7 +94,8 @@ const EditProfile = () => {
       return userInfo.user.profilePicLink
     } else {
       return (
-        `/api/users/profilePic/${userInfo.user._id}?` + new Date().getTime()
+        `http://localhost:5000/api/users/profilePic/${userInfo.user._id}?` +
+        new Date().getTime()
       )
     }
   }

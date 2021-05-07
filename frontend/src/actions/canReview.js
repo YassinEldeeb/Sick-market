@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from 'axios'
 
 const canReviewAction = (id, value, search) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: "CAN_REVIEW_REQUEST",
+      type: 'CAN_REVIEW_REQUEST',
     })
 
     const { userInfo } = getState((state) => state.userInfo)
@@ -44,15 +44,19 @@ const canReviewAction = (id, value, search) => async (dispatch, getState) => {
       targetUser = sUsers.find((each) => each._id.toString() === id.toString())
     }
 
-    await axios.post(`/api/users/canReview/${id}`, { canReview: value }, config)
+    await axios.post(
+      `http://localhost:5000/api/users/canReview/${id}`,
+      { canReview: value },
+      config
+    )
     if (targetUser) targetUser.canReview = value
 
     dispatch({
-      type: "CAN_REVIEW_SUCCESS",
+      type: 'CAN_REVIEW_SUCCESS',
     })
   } catch (error) {
     dispatch({
-      type: "CAN_REVIEW_FAIL",
+      type: 'CAN_REVIEW_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

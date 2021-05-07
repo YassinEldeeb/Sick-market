@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from 'axios'
 
 const canOrderAction = (id, value, search) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: "CAN_ORDER_REQUEST",
+      type: 'CAN_ORDER_REQUEST',
     })
 
     const { userInfo } = getState((state) => state.userInfo)
@@ -44,15 +44,19 @@ const canOrderAction = (id, value, search) => async (dispatch, getState) => {
       targetUser = sUsers.find((each) => each._id.toString() === id.toString())
     }
 
-    await axios.post(`/api/users/canOrder/${id}`, { canOrder: value }, config)
+    await axios.post(
+      `http://localhost:5000/api/users/canOrder/${id}`,
+      { canOrder: value },
+      config
+    )
     if (targetUser) targetUser.canOrder = value
 
     dispatch({
-      type: "CAN_ORDER_SUCCESS",
+      type: 'CAN_ORDER_SUCCESS',
     })
   } catch (error) {
     dispatch({
-      type: "CAN_ORDER_FAIL",
+      type: 'CAN_ORDER_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

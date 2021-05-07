@@ -35,7 +35,7 @@ const userUpdateAction = (name, email, password, newPassword) => async (
     }
 
     const { data } = await axios.patch(
-      '/api/users/profile',
+      'http://localhost:5000/api/users/profile',
       passedObjFN(),
       config
     )

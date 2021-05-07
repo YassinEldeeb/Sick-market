@@ -44,13 +44,13 @@ const CartProduct = ({
       >
         <SmoothImg
           key={product._id}
-          tiny={`/api/products/${product._id}/tiny`}
+          tiny={`http://localhost:5000/api/products/${product._id}/tiny`}
           contWidth={'10vw'}
           contWidthMobile={'20vw'}
           width={'100%'}
           height={'120%'}
           className='productImg'
-          src={product.image}
+          src={'http://localhost:5000' + product.image}
           alt='product'
           imgId='productImg'
           loaderId='productImgLoader'

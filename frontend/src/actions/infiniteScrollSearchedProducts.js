@@ -11,7 +11,9 @@ const infiniteScrollProducts = (skip, search) => async (dispatch) => {
       cancelToken: source.token,
     }
     const { data } = await axios.get(
-      `/api/products/search?find=${search}&skip=${skip * 10}&limit=${10}`,
+      `http://localhost:5000/api/products/search?find=${search}&skip=${
+        skip * 10
+      }&limit=${10}`,
       config
     )
 

@@ -3,11 +3,11 @@ export const buyNowAction = (qty) => async (dispatch, getState) => {
   let product = state
 
   dispatch({
-    type: "ADD_TO_BUYNOW_CART",
+    type: 'ADD_TO_BUYNOW_CART',
     payload: {
       name: product.name,
       qty,
-      image: product.image,
+      image: 'http://localhost:5000' + product.image,
       price: product.price,
       _id: product._id,
       rating: product.rating,

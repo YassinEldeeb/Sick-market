@@ -158,7 +158,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
         setCategory(dashboardProduct.category)
         setDescription(dashboardProduct.description)
         setQtyPerUser(dashboardProduct.qtyPerUser)
-        setImage(dashboardProduct.image)
+        setImage('http://localhost:5000' + dashboardProduct.image)
         setOldPrice(dashboardProduct.oldPrice ? dashboardProduct.oldPrice : '')
         setFreeShipping(
           dashboardProduct.freeShipping ? dashboardProduct.freeShipping : ''
@@ -176,7 +176,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       setCategory(dashboardProduct.category)
       setDescription(dashboardProduct.description)
       setQtyPerUser(dashboardProduct.qtyPerUser)
-      setImage(dashboardProduct.image)
+      setImage('http://localhost:5000' + dashboardProduct.image)
       setOldPrice(dashboardProduct.oldPrice ? dashboardProduct.oldPrice : '')
       setFreeShipping(
         dashboardProduct.freeShipping ? dashboardProduct.freeShipping : ''
@@ -191,7 +191,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
     aspect: 64 / 51,
     unit: '%',
   })
-  const [image, setImage] = useState('/uploads/no.jpg')
+  const [image, setImage] = useState('http://localhost:5000/uploads/no.jpg')
   const [noImage, setNoImage] = useState(false)
   const [addedImage, setAddedImage] = useState(null)
   const [imageType, setImageType] = useState(null)

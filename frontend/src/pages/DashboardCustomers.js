@@ -84,15 +84,17 @@ const DashboardCustomers = () => {
   }, [lastLocation])
 
   useEffect(() => {
-    if (!searchUser && !location.pathname.split('/')[3]) {
-      if (!users || lastLocationValue) {
-        dispatch(getDashboardUsersAction(filterValue))
-        setSkip(1)
-      }
-    } else if (lastLocationValue && !location.pathname.split('/')[3]) {
-      if (searchUser || !searchedUsers) {
-        dispatch(SearchDashboardCustomers(searchUser))
-        setSkip2(1)
+    if (lastSearch !== searchUser) {
+      if (!searchUser && !location.pathname.split('/')[3]) {
+        if (!users || lastLocationValue) {
+          dispatch(getDashboardUsersAction(filterValue))
+          setSkip(1)
+        }
+      } else if (lastLocationValue && !location.pathname.split('/')[3]) {
+        if (searchUser || !searchedUsers) {
+          dispatch(SearchDashboardCustomers(searchUser))
+          setSkip2(1)
+        }
       }
     }
   }, [dispatch, searchUser, lastLocation])
@@ -152,7 +154,9 @@ const DashboardCustomers = () => {
     }
   }
 
-  const { user } = useSelector((state) => state.userActions)
+  const { user, loading: userLoading } = useSelector(
+    (state) => state.userActions
+  )
   const userActions = useSelector((state) => state.userActions)
 
   useEffect(() => {
@@ -286,7 +290,7 @@ const DashboardCustomers = () => {
     }
   }
   return (
-    <StyledOrders>
+    <StyledCustomers>
       <DashboardUserAction rankValue={rankValue} setRankValue={setRankValue} />
       <ConfirmPopup
         resetValue={setRankValue}
@@ -454,11 +458,12 @@ const DashboardCustomers = () => {
       ) : (
         ''
       )}
-    </StyledOrders>
+      {!condition() && userLoading && !users && !searchedUsers && <Loader />}
+    </StyledCustomers>
   )
 }
 
-const StyledOrders = styled(motion.div)`
+const StyledCustomers = styled(motion.div)`
   overflow-x: hidden;
   overflow-y: hidden;
   height: max-content;

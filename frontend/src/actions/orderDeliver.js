@@ -15,7 +15,7 @@ const orderDeliverAction = (id) => async (dispatch, getState) => {
       cancelToken: source.token,
     }
     const { data } = await axios.patch(
-      `/api/orders/${id}/deliver`,
+      `http://localhost:5000/api/orders/${id}/deliver`,
       null,
       config
     )

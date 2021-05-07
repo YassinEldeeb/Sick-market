@@ -52,7 +52,7 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
     if (user.profilePicLink && user.profilePicLink !== 'cleared') {
       return user.profilePicLink
     } else {
-      return `/api/users/profilePic/${user._id}`
+      return `http://localhost:5000/api/users/profilePic/${user._id}`
     }
   }
 

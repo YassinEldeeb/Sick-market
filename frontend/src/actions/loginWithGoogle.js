@@ -1,35 +1,35 @@
-import axios from "axios"
-import dotenv from "dotenv"
+import axios from 'axios'
+import dotenv from 'dotenv'
 
 const loginWithGoogle = (name, email, profilePic) => async (dispatch) => {
   dotenv.config()
   try {
-    dispatch({ type: "USER_LOGIN_REQUEST" })
+    dispatch({ type: 'USER_LOGIN_REQUEST' })
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
     const config = {
       headers: {
-        Content_Type: "application/json",
+        Content_Type: 'application/json',
       },
       cancelToken: source.token,
     }
-    const googleSignture = "214GOOGLEyassinSIGNTURE123SICK.21S16123P9jhnG6h"
+    const googleSignture = '214GOOGLEyassinSIGNTURE123SICK.21S16123P9jhnG6h'
     const { data } = await axios.post(
-      "/api/users/googleOauth",
+      'http://localhost:5000/api/users/googleOauth',
       { name, email, profilePicLink: profilePic, googleSignture },
       config
     )
-    dispatch({ type: "USER_LOGIN_SUCCESS", payload: data })
-    localStorage.setItem("sickUserInfo", JSON.stringify(data))
+    dispatch({ type: 'USER_LOGIN_SUCCESS', payload: data })
+    localStorage.setItem('sickUserInfo', JSON.stringify(data))
   } catch (error) {
     dispatch({
-      type: "USER_LOGIN_FAIL",
+      type: 'USER_LOGIN_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message,
     })
-    localStorage.removeItem("sickUserInfo")
+    localStorage.removeItem('sickUserInfo')
   }
 }
 export default loginWithGoogle

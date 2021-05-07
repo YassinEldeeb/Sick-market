@@ -69,7 +69,9 @@ export function register(config) {
                   if (Notification.permission !== 'granted') {
                     console.log('Permission was not granted.')
                     try {
-                      await axios.delete('/api/push/unregister')
+                      await axios.delete(
+                        'http://localhost:5000/api/push/unregister'
+                      )
                     } catch (err) {
                       console.log(err)
                     }
@@ -93,7 +95,7 @@ export function register(config) {
 
 const sendSubscription = async (subscription) => {
   try {
-    await axios.post('/api/push/register', subscription)
+    await axios.post('http://localhost:5000/api/push/register', subscription)
   } catch (err) {
     console.log(err)
   }
@@ -198,7 +200,7 @@ export function unsubscribePush() {
 
         subscription
           .unsubscribe()
-          .then(() => axios.delete('/api/push/unregister'))
+          .then(() => axios.delete('http://localhost:5000/api/push/unregister'))
           .catch((err) => console.error(err))
       })
       .catch((err) => console.error(err))

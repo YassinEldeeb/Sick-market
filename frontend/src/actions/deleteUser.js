@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from 'axios'
 
 const deleteUserAction = (id, search) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: "DELETE_USER_REQUEST",
+      type: 'DELETE_USER_REQUEST',
     })
 
     const { userInfo } = getState((state) => state.userInfo)
@@ -39,7 +39,7 @@ const deleteUserAction = (id, search) => async (dispatch, getState) => {
         return false
       }
     }
-    await axios.delete(`/api/users/${id}`, config)
+    await axios.delete(`http://localhost:5000/users/${id}`, config)
 
     if (condition()) {
       users.users = users.users.filter(
@@ -54,11 +54,11 @@ const deleteUserAction = (id, search) => async (dispatch, getState) => {
     }
 
     dispatch({
-      type: "DELETE_USER_SUCCESS",
+      type: 'DELETE_USER_SUCCESS',
     })
   } catch (error) {
     dispatch({
-      type: "DELETE_USER_FAIL",
+      type: 'DELETE_USER_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

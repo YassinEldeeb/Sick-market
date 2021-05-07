@@ -204,7 +204,7 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
                       price={each.price}
                       qty={each.qty}
                       productName={truncate(each.name)}
-                      img={each.image}
+                      img={'http://localhost:5000' + each.image}
                       id={each._id}
                       soldOut={
                         errorConfirm
@@ -231,7 +231,7 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
                 price={product.price}
                 qty={product.qty}
                 productName={truncate(product.name)}
-                img={product.image}
+                img={product}
                 id={product._id}
                 isBuyNow={isBuyNow}
                 soldOut={

@@ -109,9 +109,9 @@ const ProductDashboard = ({
           height={'41.5px'}
           loaderId='loaderImg'
           contWidth={`max-content`}
-          src={`/api/products/${product._id}/image?w=80&h=64`}
+          src={`http://localhost:5000/api/products/${product._id}/image?w=80&h=64`}
           alt=''
-          tiny={`/api/products/${product._id}/tiny`}
+          tiny={`http://localhost:5000/api/products/${product._id}/tiny`}
         />
         <p data-for='product-card-tooltip' data-tip={product.name}>
           {product.name}

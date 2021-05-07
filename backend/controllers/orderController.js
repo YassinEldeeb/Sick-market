@@ -210,7 +210,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
 const getAllOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({}).populate(
     'user',
-    'availablePic email totalPaidOrders _id name'
+    'availablePic email totalPaidOrders _id name profilePicLink'
   )
 
   res.send(orders)

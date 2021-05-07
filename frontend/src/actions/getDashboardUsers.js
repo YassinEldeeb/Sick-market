@@ -15,7 +15,7 @@ const getDashboardUsersAction = (filterValue) => async (dispatch, getState) => {
       cancelToken: source.token,
     }
     const { data } = await axios.get(
-      `/api/users?limit=10&sort=${
+      `http://localhost:5000/api/users?limit=10&sort=${
         filterValue === 'top paid' ? 'topPaid' : filterValue
       }`,
       config

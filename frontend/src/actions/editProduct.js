@@ -21,7 +21,11 @@ const editProduct = (id, formData, search) => async (dispatch, getState) => {
       cancelToken: source.token,
     }
 
-    const { data } = await axios.patch(`/api/products/${id}`, formData, config)
+    const { data } = await axios.patch(
+      `http://localhost:5000/api/products/${id}`,
+      formData,
+      config
+    )
 
     let finalArr
     if (productList.products && !search) {

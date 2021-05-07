@@ -18,7 +18,11 @@ export const addNewProductAction = (productData) => async (
       cancelToken: source.token,
     }
 
-    const { data } = await axios.post('/api/products', productData, config)
+    const { data } = await axios.post(
+      'http://localhost:5000/api/products',
+      productData,
+      config
+    )
     if (data && data._id)
       dispatch({
         type: 'ADD_PRODUCT_SUCCESS',

@@ -12,7 +12,7 @@ const checkToken = (token) => async (dispatch) => {
       },
       cancelToken: source.token,
     }
-    await axios.post('/api/users/checkToken', null, config)
+    await axios.post('http://localhost:5000/api/users/checkToken', null, config)
     dispatch({ type: 'CHECK_TOKEN_SUCCESS', payload: true })
   } catch (error) {
     if (error && error.response && error.response.status === 401) {

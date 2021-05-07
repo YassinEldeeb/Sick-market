@@ -10,9 +10,11 @@ import reactStringReplace from 'react-string-replace'
 import Loader from './loader'
 import { useSelector } from 'react-redux'
 import SmoothImg from './smoothImgLoading'
+import qs from 'qs'
 
 const UserDashboard = ({ user }) => {
   const location = useLocation()
+  const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
   const [equal] = useState(
     location.search.split('=')[1] ? location.search.split('=')[1] : false
   )
@@ -21,7 +23,7 @@ const UserDashboard = ({ user }) => {
     if (user.profilePicLink && user.profilePicLink !== 'cleared') {
       return user.profilePicLink
     } else {
-      return `/api/users/profilePic/${user._id}`
+      return `http://localhost:5000/api/users/profilePic/${user._id}`
     }
   }
 
@@ -64,7 +66,7 @@ const UserDashboard = ({ user }) => {
         <SmoothImg
           key={user._id}
           providedClassName='profileImgContLazy'
-          tiny={`/api/users/profilePic/tiny/${user._id}`}
+          tiny={`http://localhost:5000/api/users/profilePic/tiny/${user._id}`}
           contWidth={`max-content`}
           width={'100%'}
           height={'100%'}
@@ -92,7 +94,11 @@ const UserDashboard = ({ user }) => {
       </div>
       <div className='gearCont'>
         <Link
-          to={`/dashboard/customers/${user._id}`}
+          to={
+            searches.search
+              ? `/dashboard/customers/${user._id}?search=${searches.search}`
+              : `/dashboard/customers/${user._id}`
+          }
           onClick={() => setClicked(true)}
           className='gear'
         >

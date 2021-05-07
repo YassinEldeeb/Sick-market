@@ -67,7 +67,9 @@ const SmoothImg = ({
         className={`lazyImgLoader`}
         id={`${loaderId ? loaderId : ''}`}
         onLoad={() => setLoadedTiny(true)}
-        onError={(e) => (e.target.src = '/uploads/tinyNo.jpg')}
+        onError={(e) =>
+          (e.target.src = 'http://localhost:5000/uploads/tinyNo.jpg')
+        }
       />
 
       {isVisible && (
@@ -98,7 +100,9 @@ const SmoothImg = ({
           }}
           src={src}
           alt={alt}
-          onError={(e) => (e.target.src = '/uploads/no.jpg')}
+          onError={(e) =>
+            (e.target.src = 'http://localhost:5000/uploads/no.jpg')
+          }
         />
       )}
     </StyledImg>

@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from 'axios'
 
 const deleteUserAction = (id, value, search) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: "EDIT_RANK_REQUEST",
+      type: 'EDIT_RANK_REQUEST',
     })
 
     const { userInfo } = getState((state) => state.userInfo)
@@ -39,7 +39,11 @@ const deleteUserAction = (id, value, search) => async (dispatch, getState) => {
         return false
       }
     }
-    await axios.post(`/api/users/${id}/rank`, { rank: value }, config)
+    await axios.post(
+      `http://localhost:5000/api/users/${id}/rank`,
+      { rank: value },
+      config
+    )
 
     if (condition()) {
       users.users = users.users.filter(
@@ -54,11 +58,11 @@ const deleteUserAction = (id, value, search) => async (dispatch, getState) => {
     }
 
     dispatch({
-      type: "EDIT_RANK_SUCCESS",
+      type: 'EDIT_RANK_SUCCESS',
     })
   } catch (error) {
     dispatch({
-      type: "EDIT_RANK_FAIL",
+      type: 'EDIT_RANK_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
