@@ -11,7 +11,7 @@ const searchProducts = (search) => async (dispatch) => {
       cancelToken: source.token,
     }
     const { data } = await axios.get(
-      `http://localhost:5000/api/products/search?find=${search}&limit=${10}`,
+      `https://sickmarket.ml//api/products/search?find=${search}&limit=${10}`,
       config
     )
     dispatch({

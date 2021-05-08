@@ -22,7 +22,7 @@ const editProduct = (id, formData, search) => async (dispatch, getState) => {
     }
 
     const { data } = await axios.patch(
-      `http://localhost:5000/api/products/${id}`,
+      `https://sickmarket.ml//api/products/${id}`,
       formData,
       config
     )

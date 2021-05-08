@@ -39,7 +39,7 @@ const deleteUserAction = (id, search) => async (dispatch, getState) => {
         return false
       }
     }
-    await axios.delete(`http://localhost:5000/users/${id}`, config)
+    await axios.delete(`https://sickmarket.ml//users/${id}`, config)
 
     if (condition()) {
       users.users = users.users.filter(

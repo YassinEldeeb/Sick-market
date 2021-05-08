@@ -207,7 +207,7 @@ const EditCropImg = ({
         )}
 
         <div className={`buttons ${image ? 'activeCrop' : ''}`}>
-          {productImg !== 'http://localhost:5000/uploads/no.jpg' && !noImage && (
+          {productImg !== 'https://sickmarket.ml//uploads/no.jpg' && !noImage && (
             <SmallX
               onClick={() => {
                 setNoImage(true)

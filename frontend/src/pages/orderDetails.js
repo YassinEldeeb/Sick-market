@@ -119,7 +119,7 @@ const OrderDetails = () => {
   useEffect(() => {
     const addPaypalScript = async () => {
       const { data: clientId } = await axios.get(
-        'http://localhost:5000/api/config/paypal'
+        'https://sickmarket.ml//api/config/paypal'
       )
       const script = document.createElement('script')
       script.type = 'text/javascript'
@@ -325,7 +325,7 @@ const OrderDetails = () => {
                           price={each.price}
                           qty={each.qty}
                           productName={truncate(each.name)}
-                          img={'http://localhost:5000' + each.image}
+                          img={'https://sickmarket.ml/' + each.image}
                           id={each.product}
                           key={each._id}
                         />

@@ -29,7 +29,7 @@ const deleteProduct = (id, search) => async (dispatch, getState) => {
         return false
       }
     }
-    await axios.delete(`http://localhost:5000/api/products/${id}`, config)
+    await axios.delete(`https://sickmarket.ml//api/products/${id}`, config)
     if (condition() && !search) {
       products.products = products.products.filter(
         (each) => each._id.toString() !== id.toString()

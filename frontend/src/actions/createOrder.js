@@ -25,7 +25,7 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
           return {
             name: eachProduct.name,
             qty: eachProduct.qty,
-            image: 'http://localhost:5000' + eachProduct.image,
+            image: 'https://sickmarket.ml/' + eachProduct.image,
             price: eachProduct.price,
             product: eachProduct._id,
             removed: eachProduct.removed
@@ -44,7 +44,7 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
           {
             name: product.name,
             qty: product.qty,
-            image: 'http://localhost:5000' + product.image,
+            image: 'https://sickmarket.ml/' + product.image,
             price: product.price,
             product: product._id,
           },
@@ -55,7 +55,7 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
     }
     console.log('CART', modifiedCart())
     const { data } = await axios.post(
-      'http://localhost:5000/api/orders',
+      'https://sickmarket.ml//api/orders',
       {
         user: userInfo.user._id,
         orderItems: modifiedCart().filter((e) => e.qty !== 0),

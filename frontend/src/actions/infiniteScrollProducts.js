@@ -17,7 +17,7 @@ const infiniteScrollProducts = (
       cancelToken: source.token,
     }
     const { data } = await axios.get(
-      `http://localhost:5000/api/products?limit=10&skip=${
+      `https://sickmarket.ml//api/products?limit=10&skip=${
         10 * skip
       }&${filterType}=${filterValue}&brand=${brand}&category=${category}`,
       config

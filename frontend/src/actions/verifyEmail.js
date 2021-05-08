@@ -19,7 +19,7 @@ export const verifyEmailAction = (enteredCode) => async (
         cancelToken: source.token,
       }
       await axios.post(
-        'http://localhost:5000/api/users/getSecurityCode',
+        'https://sickmarket.ml//api/users/getSecurityCode',
         { code: Number(enteredCode) },
         config
       )

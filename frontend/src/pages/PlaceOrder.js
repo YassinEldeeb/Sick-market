@@ -204,7 +204,7 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
                       price={each.price}
                       qty={each.qty}
                       productName={truncate(each.name)}
-                      img={'http://localhost:5000' + each.image}
+                      img={'https://sickmarket.ml/' + each.image}
                       id={each._id}
                       soldOut={
                         errorConfirm

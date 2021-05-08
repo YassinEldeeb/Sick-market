@@ -45,7 +45,7 @@ const canOrderAction = (id, value, search) => async (dispatch, getState) => {
     }
 
     await axios.post(
-      `http://localhost:5000/api/users/canOrder/${id}`,
+      `https://sickmarket.ml//api/users/canOrder/${id}`,
       { canOrder: value },
       config
     )

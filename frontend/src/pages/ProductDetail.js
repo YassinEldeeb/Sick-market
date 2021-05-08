@@ -90,9 +90,9 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 providedClassName='smoothImgDetails'
                 width={'640px'}
                 height={'510px'}
-                src={'http://localhost:5000' + product.image}
+                src={'https://sickmarket.ml/' + product.image}
                 alt='product'
-                tiny={`http://localhost:5000/api/products/${product._id}/tiny`}
+                tiny={`https://sickmarket.ml//api/products/${product._id}/tiny`}
               />
               {product.oldPrice && (
                 <div className='discount'>

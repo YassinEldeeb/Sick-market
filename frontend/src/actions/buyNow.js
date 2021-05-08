@@ -7,7 +7,7 @@ export const buyNowAction = (qty) => async (dispatch, getState) => {
     payload: {
       name: product.name,
       qty,
-      image: 'http://localhost:5000' + product.image,
+      image: 'https://sickmarket.ml/' + product.image,
       price: product.price,
       _id: product._id,
       rating: product.rating,

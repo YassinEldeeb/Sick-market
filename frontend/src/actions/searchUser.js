@@ -15,7 +15,7 @@ const searchDashboardUsersAction = (search) => async (dispatch, getState) => {
       cancelToken: source.token,
     }
     const { data } = await axios.post(
-      'http://localhost:5000/api/users/search?limit=10',
+      'https://sickmarket.ml//api/users/search?limit=10',
       { search },
       config
     )
