@@ -254,7 +254,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
       )}
       {product && (
         <Meta
-          ogImage={product.image}
+          ogImage={`https://sickmarket.ml` + product.image}
           ogTitle={product.name}
           ogDescription={product.description}
           title={product.name}

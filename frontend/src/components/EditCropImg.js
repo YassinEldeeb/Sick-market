@@ -158,7 +158,7 @@ const EditCropImg = ({
                   const motionCont = document.querySelector('.motionCont')
                   motionCont.style.width = 'max-content'
 
-                  image.style.height = '100%'
+                  image.style.maxHeight = '100%'
                   cont.style.width = `${image.width}px`
                   cont.style.height = `max-content`
                   contDiv.style.height = `max-content`
