@@ -5,17 +5,17 @@ import Subscription from '../models/subscriptionModel.js'
 //Web Push Config
 webpush.setVapidDetails(
   'mailto:yassineldeeb94@gmail.com',
-  process.env.PUBLIC_VAPID_KEY,
-  process.env.PRIVATE_VAPID_KEY
+  'BNMzl3E6hRv3v8jfYKxBAECnpCgbCSjFELufcd7sD6M8xMFhJoMj-l7gwJ2j96qm9T9YEKVSaeqWOWOA0eWFMLk',
+  'Etwb3VDgxXr7eF6uXLuRgqg8FBVy79AkjCJ-8Uj9Lw0'
 )
 
 const testData = {
   title: 'PlayStation®5',
   body:
     'Experience lightning-fast loading with an ultra-high speed SSD, deeper immersion with support for haptic feedback, adaptive triggers and 3D Audio.',
-  icon: 'https://sick-market.herokuapp.com/uploads/upload-1618650936223.jpeg',
+  icon: 'https://sickmarket.ml/uploads/upload-1618650936223.jpeg',
 
-  url: 'https://sick-market.herokuapp.com/products/607aa7384304c02b202d9e8c',
+  url: 'https://sickmarket.ml/products/607aa7384304c02b202d9e8c',
 }
 
 const run = async () => {
