@@ -21,7 +21,7 @@ export const cartAction = (id, qty) => async (dispatch, getState) => {
       payload: {
         name: product.name,
         qty,
-        image: 'https://sickmarket.ml/' + product.image,
+        image: product.image,
         price: product.price,
         _id: product._id,
         rating: product.rating,

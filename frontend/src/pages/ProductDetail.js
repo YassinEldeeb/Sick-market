@@ -90,7 +90,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 providedClassName='smoothImgDetails'
                 width={'640px'}
                 height={'510px'}
-                src={'https://sickmarket.ml' + product.image}
+                src={product.image}
                 alt='product'
                 tiny={`https://sickmarket.ml/api/products/${product._id}/tiny`}
               />
@@ -254,7 +254,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
       )}
       {product && (
         <Meta
-          ogImage={'https://sickmarket.ml' + product.image}
+          ogImage={product.image}
           ogTitle={product.name}
           ogDescription={product.description}
           title={product.name}

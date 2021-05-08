@@ -158,7 +158,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
         setCategory(dashboardProduct.category)
         setDescription(dashboardProduct.description)
         setQtyPerUser(dashboardProduct.qtyPerUser)
-        setImage('https://sickmarket.ml/' + dashboardProduct.image)
+        setImage(dashboardProduct.image)
         setOldPrice(dashboardProduct.oldPrice ? dashboardProduct.oldPrice : '')
         setFreeShipping(
           dashboardProduct.freeShipping ? dashboardProduct.freeShipping : ''
@@ -176,7 +176,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
       setCategory(dashboardProduct.category)
       setDescription(dashboardProduct.description)
       setQtyPerUser(dashboardProduct.qtyPerUser)
-      setImage('https://sickmarket.ml/' + dashboardProduct.image)
+      setImage(dashboardProduct.image)
       setOldPrice(dashboardProduct.oldPrice ? dashboardProduct.oldPrice : '')
       setFreeShipping(
         dashboardProduct.freeShipping ? dashboardProduct.freeShipping : ''

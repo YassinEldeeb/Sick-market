@@ -59,7 +59,7 @@ const PlaceOrderItem = ({
             key={id}
             preLoaderId='preLoader'
             loaderId='preloader2'
-            src={'https://sickmarket.ml' + img}
+            src={img}
             alt='product'
             tiny={`https://sickmarket.ml/api/products/${id}/tiny`}
           />

@@ -325,7 +325,7 @@ const OrderDetails = () => {
                           price={each.price}
                           qty={each.qty}
                           productName={truncate(each.name)}
-                          img={'https://sickmarket.ml/' + each.image}
+                          img={each.image}
                           id={each.product}
                           key={each._id}
                         />
