@@ -64,7 +64,11 @@ const Product = ({
         ) : type === 'preview' ? (
           <>
             <img
-              src={noImage ? '/uploads/no.jpg' : data.image}
+              src={
+                noImage
+                  ? '/uploads/no.jpg'
+                  : 'https://sickmarket.ml' + data.image
+              }
               alt='product'
               key={data.image}
             />
