@@ -28,7 +28,7 @@ const server = http.createServer(app)
 app.use(cors())
 app.use(express.json())
 dotenv.config()
-app.use(prerender.set('prerenderToken', 'OSMiIyjAPrwDaVRXvhYH'))
+app.use(prerender.set('prerenderToken', '3AVvQBjmu6rivH2BTYuk'))
 
 connectDB()
 
