@@ -15,7 +15,7 @@ const orderDeliverAction = (id) => async (dispatch, getState) => {
       cancelToken: source.token,
     }
     const { data } = await axios.patch(
-      `https://sickmarket.ml/api/orders/${id}/deliver`,
+      `/api/orders/${id}/deliver`,
       null,
       config
     )

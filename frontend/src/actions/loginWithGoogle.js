@@ -15,7 +15,7 @@ const loginWithGoogle = (name, email, profilePic) => async (dispatch) => {
     }
     const googleSignture = '214GOOGLEyassinSIGNTURE123SICK.21S16123P9jhnG6h'
     const { data } = await axios.post(
-      'https://sickmarket.ml/api/users/googleOauth',
+      '/api/users/googleOauth',
       { name, email, profilePicLink: profilePic, googleSignture },
       config
     )

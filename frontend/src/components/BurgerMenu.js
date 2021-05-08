@@ -25,7 +25,7 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
     ) {
       return userInfo.user.profilePicLink
     } else {
-      return `https://sickmarket.ml/api/users/profilePic/${userInfo.user._id}`
+      return `/api/users/profilePic/${userInfo.user._id}`
     }
   }
   return (
@@ -43,7 +43,7 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
               <div className='profile-mobile-pic'>
                 <SmoothImg
                   key={userInfo.user._id}
-                  tiny={`https://sickmarket.ml/api/users/profilePic/tiny/${userInfo.user._id}`}
+                  tiny={`/api/users/profilePic/tiny/${userInfo.user._id}`}
                   src={imgSrcCondition()}
                   alt=''
                 />

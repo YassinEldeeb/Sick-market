@@ -44,7 +44,7 @@ const CartProduct = ({
       >
         <SmoothImg
           key={product._id}
-          tiny={`https://sickmarket.ml/api/products/${product._id}/tiny`}
+          tiny={`/api/products/${product._id}/tiny`}
           contWidth={'10vw'}
           contWidthMobile={'20vw'}
           width={'100%'}

@@ -44,11 +44,7 @@ const canOrderAction = (id, value, search) => async (dispatch, getState) => {
       targetUser = sUsers.find((each) => each._id.toString() === id.toString())
     }
 
-    await axios.post(
-      `https://sickmarket.ml/api/users/canOrder/${id}`,
-      { canOrder: value },
-      config
-    )
+    await axios.post(`/api/users/canOrder/${id}`, { canOrder: value }, config)
     if (targetUser) targetUser.canOrder = value
 
     dispatch({

@@ -15,7 +15,7 @@ const getDashboardUsersAction = (filterValue) => async (dispatch, getState) => {
       cancelToken: source.token,
     }
     const { data } = await axios.get(
-      `https://sickmarket.ml/api/users?limit=10&sort=${
+      `/api/users?limit=10&sort=${
         filterValue === 'top paid' ? 'topPaid' : filterValue
       }`,
       config

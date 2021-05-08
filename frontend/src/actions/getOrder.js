@@ -12,10 +12,7 @@ const getOrderAction = (id) => async (dispatch, getState) => {
       },
       cancelToken: source.token,
     }
-    const { data } = await axios.get(
-      `https://sickmarket.ml/api/orders/${id}`,
-      config
-    )
+    const { data } = await axios.get(`/api/orders/${id}`, config)
     dispatch({ type: 'GET_ORDER_SUCCESS', payload: data })
   } catch (error) {
     dispatch({

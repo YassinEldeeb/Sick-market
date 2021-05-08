@@ -14,10 +14,7 @@ export const newCodeAction = () => async (dispatch, getState) => {
         },
         cancelToken: source.token,
       }
-      await axios.get(
-        'https://sickmarket.ml/api/users/getNewSecurityCode',
-        config
-      )
+      await axios.get('/api/users/getNewSecurityCode', config)
       dispatch({ type: 'NEW_VERIFY_CODE_SUCCESS' })
     } catch (error) {
       dispatch({

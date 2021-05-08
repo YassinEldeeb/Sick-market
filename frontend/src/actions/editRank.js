@@ -39,11 +39,7 @@ const deleteUserAction = (id, value, search) => async (dispatch, getState) => {
         return false
       }
     }
-    await axios.post(
-      `https://sickmarket.ml/api/users/${id}/rank`,
-      { rank: value },
-      config
-    )
+    await axios.post(`/api/users/${id}/rank`, { rank: value }, config)
 
     if (condition()) {
       users.users = users.users.filter(

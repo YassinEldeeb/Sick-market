@@ -44,11 +44,7 @@ const canReviewAction = (id, value, search) => async (dispatch, getState) => {
       targetUser = sUsers.find((each) => each._id.toString() === id.toString())
     }
 
-    await axios.post(
-      `https://sickmarket.ml/api/users/canReview/${id}`,
-      { canReview: value },
-      config
-    )
+    await axios.post(`/api/users/canReview/${id}`, { canReview: value }, config)
     if (targetUser) targetUser.canReview = value
 
     dispatch({

@@ -17,7 +17,7 @@ const checkProduct = (token) => async (dispatch, getState) => {
     const IDsArray = cartItems.map((e) => e._id)
 
     const { data } = await axios.post(
-      'https://sickmarket.ml/api/products/check',
+      '/api/products/check',
       { products: IDsArray },
       config
     )

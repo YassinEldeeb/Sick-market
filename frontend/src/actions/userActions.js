@@ -44,10 +44,7 @@ const userActions = (id, search) => async (dispatch, getState) => {
     }
     let payloadData
     if (!targetUser) {
-      const { data } = await axios.get(
-        `https://sickmarket.ml/api/users/${id}`,
-        config
-      )
+      const { data } = await axios.get(`/api/users/${id}`, config)
       payloadData = data
     } else {
       payloadData = targetUser

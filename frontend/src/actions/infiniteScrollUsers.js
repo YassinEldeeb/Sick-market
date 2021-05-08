@@ -18,7 +18,7 @@ const infiniteScrollUsersAction = (skip, filterValue) => async (
       cancelToken: source.token,
     }
     const { data } = await axios.get(
-      `https://sickmarket.ml/api/users?limit=10&skip=${10 * skip}&sort=${
+      `/api/users?limit=10&skip=${10 * skip}&sort=${
         filterValue === 'top paid' ? 'topPaid' : filterValue
       }`,
       config

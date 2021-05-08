@@ -14,11 +14,7 @@ const addCouponAction = (code) => async (dispatch, getState) => {
       cancelToken: source.token,
     }
 
-    const codeResponse = await axios.post(
-      'https://sickmarket.ml/api/coupons/use',
-      { code },
-      config
-    )
+    const codeResponse = await axios.post('/api/coupons/use', { code }, config)
     dispatch({
       type: 'COUPON_SUCCESS',
       payload: codeResponse.data,

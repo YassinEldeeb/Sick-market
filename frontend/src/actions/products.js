@@ -8,9 +8,8 @@ export const productListAction = (type, value, brand, category) => async (
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
 
-    let BaseUrl = 'https://sickmarket.ml/api/products?limit=10&'
-    let BasicURL =
-      'https://sickmarket.ml/api/products?createdAt=newest&limit=10'
+    let BaseUrl = '/api/products?limit=10&'
+    let BasicURL = '/api/products?createdAt=newest&limit=10'
 
     if (type) {
       const valueFN = () => {
@@ -67,12 +66,9 @@ export const productDetailAction = (id) => async (dispatch) => {
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
     dispatch({ type: 'PRODUCT_DETAIL_REQUEST' })
-    const { data } = await axios.get(
-      `https://sickmarket.ml/api/products/${id}`,
-      {
-        cancelToken: source.token,
-      }
-    )
+    const { data } = await axios.get(`/api/products/${id}`, {
+      cancelToken: source.token,
+    })
     dispatch({ type: 'PRODUCT_DETAIL_SUCCESS', payload: data })
   } catch (error) {
     dispatch({
@@ -122,12 +118,9 @@ export const DashboardProductDetailAction = (id, search) => async (
     }
     let payloadData
     if (!targetProduct) {
-      const { data } = await axios.get(
-        `https://sickmarket.ml/api/products/${id}`,
-        {
-          cancelToken: source.token,
-        }
-      )
+      const { data } = await axios.get(`/api/products/${id}`, {
+        cancelToken: source.token,
+      })
       payloadData = data
     } else {
       payloadData = targetProduct

@@ -88,7 +88,7 @@ const Product = ({
             loaderId='preloader2'
             src={data.image}
             alt='product'
-            tiny={`https://sickmarket.ml/api/products/${data._id}/tiny`}
+            tiny={`/api/products/${data._id}/tiny`}
             className='productLazy'
           />
         )}

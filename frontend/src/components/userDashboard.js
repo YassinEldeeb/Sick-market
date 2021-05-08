@@ -23,7 +23,7 @@ const UserDashboard = ({ user }) => {
     if (user.profilePicLink && user.profilePicLink !== 'cleared') {
       return user.profilePicLink
     } else {
-      return `https://sickmarket.ml/api/users/profilePic/${user._id}`
+      return `/api/users/profilePic/${user._id}`
     }
   }
 
@@ -66,7 +66,7 @@ const UserDashboard = ({ user }) => {
         <SmoothImg
           key={user._id}
           providedClassName='profileImgContLazy'
-          tiny={`https://sickmarket.ml/api/users/profilePic/tiny/${user._id}`}
+          tiny={`/api/users/profilePic/tiny/${user._id}`}
           contWidth={`max-content`}
           width={'100%'}
           height={'100%'}

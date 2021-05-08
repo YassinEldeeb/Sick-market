@@ -52,7 +52,7 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
     if (user.profilePicLink && user.profilePicLink !== 'cleared') {
       return user.profilePicLink
     } else {
-      return `https://sickmarket.ml/api/users/profilePic/${user._id}`
+      return `/api/users/profilePic/${user._id}`
     }
   }
 

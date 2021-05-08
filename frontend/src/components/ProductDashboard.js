@@ -109,9 +109,9 @@ const ProductDashboard = ({
           height={'41.5px'}
           loaderId='loaderImg'
           contWidth={`max-content`}
-          src={`https://sickmarket.ml/api/products/${product._id}/image?w=80&h=64`}
+          src={`/api/products/${product._id}/image?w=80&h=64`}
           alt=''
-          tiny={`https://sickmarket.ml/api/products/${product._id}/tiny`}
+          tiny={`/api/products/${product._id}/tiny`}
         />
         <p data-for='product-card-tooltip' data-tip={product.name}>
           {product.name}

@@ -6,12 +6,9 @@ export const cartAction = (id, qty) => async (dispatch, getState) => {
   if (Object.keys(product).length === 0) {
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
-    const { data } = await axios.get(
-      `https://sickmarket.ml/api/products/${id}`,
-      {
-        cancelToken: source.token,
-      }
-    )
+    const { data } = await axios.get(`/api/products/${id}`, {
+      cancelToken: source.token,
+    })
     product = data
   }
   const exist = getState().cart.cartItems.find((product) => product._id === id)

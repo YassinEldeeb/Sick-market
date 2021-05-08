@@ -14,7 +14,7 @@ const userRegisterAction = (name, email, password) => async (dispatch) => {
     }
 
     const { data } = await axios.post(
-      'https://sickmarket.ml/api/users',
+      '/api/users',
       { name, email, password },
       config
     )
