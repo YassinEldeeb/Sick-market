@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "@babel/runtime": "^7.12.1",
     "@testing-library/jest-dom": "^5.11.8",

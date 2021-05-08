@@ -6,8 +6,8 @@ const Meta = ({
   description = 'The best E-commerce on the entire planet, Cause I built it!',
   ogTitle = 'Sick Market',
   ogDescription = 'The best E-commerce on the entire planet, Cause I built it!',
-  ogImage = 'https://sick-market.herokuapp.com/public/facicon4.png',
-  url = `https://sick-market.herokuapp.com`,
+  ogImage = 'https://sickmarket.ml/public/logo-og.png',
+  url = `https://sickmarket.ml/public/logo-og.png`,
   product,
 }) => {
   return (
