@@ -191,7 +191,7 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
     aspect: 64 / 51,
     unit: '%',
   })
-  const [image, setImage] = useState('https://sickmarket.ml//uploads/no.jpg')
+  const [image, setImage] = useState('https://sickmarket.ml/uploads/no.jpg')
   const [noImage, setNoImage] = useState(false)
   const [addedImage, setAddedImage] = useState(null)
   const [imageType, setImageType] = useState(null)

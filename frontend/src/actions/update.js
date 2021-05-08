@@ -35,7 +35,7 @@ const userUpdateAction = (name, email, password, newPassword) => async (
     }
 
     const { data } = await axios.patch(
-      'https://sickmarket.ml//api/users/profile',
+      'https://sickmarket.ml/api/users/profile',
       passedObjFN(),
       config
     )

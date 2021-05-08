@@ -94,7 +94,7 @@ const EditProfile = () => {
       return userInfo.user.profilePicLink
     } else {
       return (
-        `https://sickmarket.ml//api/users/profilePic/${userInfo.user._id}?` +
+        `https://sickmarket.ml/api/users/profilePic/${userInfo.user._id}?` +
         new Date().getTime()
       )
     }

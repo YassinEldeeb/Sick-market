@@ -65,7 +65,7 @@ const Product = ({
           <>
             <img
               src={
-                noImage ? 'https://sickmarket.ml//uploads/no.jpg' : data.image
+                noImage ? 'https://sickmarket.ml/uploads/no.jpg' : data.image
               }
               alt='product'
               key={data.image}
@@ -90,7 +90,7 @@ const Product = ({
             loaderId='preloader2'
             src={'https://sickmarket.ml/' + data.image}
             alt='product'
-            tiny={`https://sickmarket.ml//api/products/${data._id}/tiny`}
+            tiny={`https://sickmarket.ml/api/products/${data._id}/tiny`}
             className='productLazy'
           />
         )}

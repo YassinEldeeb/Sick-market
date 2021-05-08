@@ -15,7 +15,7 @@ const addCouponAction = (code) => async (dispatch, getState) => {
     }
 
     const codeResponse = await axios.post(
-      'https://sickmarket.ml//api/coupons/use',
+      'https://sickmarket.ml/api/coupons/use',
       { code },
       config
     )

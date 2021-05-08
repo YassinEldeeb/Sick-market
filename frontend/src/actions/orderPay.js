@@ -15,7 +15,7 @@ const orderPayAction = (id, paymentResult) => async (dispatch, getState) => {
       cancelToken: source.token,
     }
     const { data } = await axios.patch(
-      `https://sickmarket.ml//api/orders/${id}/pay`,
+      `https://sickmarket.ml/api/orders/${id}/pay`,
       paymentResult,
       config
     )

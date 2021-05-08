@@ -19,7 +19,7 @@ const infiniteScrollSearchUsersAction = (search, skip = 0) => async (
     }
 
     const { data } = await axios.post(
-      `https://sickmarket.ml//api/users/search?limit=10&skip=${10 * skip}`,
+      `https://sickmarket.ml/api/users/search?limit=10&skip=${10 * skip}`,
       { search },
       config
     )

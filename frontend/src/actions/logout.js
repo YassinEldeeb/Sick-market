@@ -15,7 +15,7 @@ export const userLogoutAction = () => async (dispatch, getState) => {
     }
     dispatch({ type: 'USER_LOGOUT_REQUEST' })
     try {
-      await axios.post('https://sickmarket.ml//api/users/logout', null, config)
+      await axios.post('https://sickmarket.ml/api/users/logout', null, config)
     } catch (error) {
       dispatch({
         type: 'USER_LOGOUT_FAIL',

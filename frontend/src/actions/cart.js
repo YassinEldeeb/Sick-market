@@ -7,7 +7,7 @@ export const cartAction = (id, qty) => async (dispatch, getState) => {
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
     const { data } = await axios.get(
-      `https://sickmarket.ml//api/products/${id}`,
+      `https://sickmarket.ml/api/products/${id}`,
       {
         cancelToken: source.token,
       }

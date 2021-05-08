@@ -45,7 +45,7 @@ const canReviewAction = (id, value, search) => async (dispatch, getState) => {
     }
 
     await axios.post(
-      `https://sickmarket.ml//api/users/canReview/${id}`,
+      `https://sickmarket.ml/api/users/canReview/${id}`,
       { canReview: value },
       config
     )

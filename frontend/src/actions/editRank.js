@@ -40,7 +40,7 @@ const deleteUserAction = (id, value, search) => async (dispatch, getState) => {
       }
     }
     await axios.post(
-      `https://sickmarket.ml//api/users/${id}/rank`,
+      `https://sickmarket.ml/api/users/${id}/rank`,
       { rank: value },
       config
     )

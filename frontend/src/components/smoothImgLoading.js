@@ -68,7 +68,7 @@ const SmoothImg = ({
         id={`${loaderId ? loaderId : ''}`}
         onLoad={() => setLoadedTiny(true)}
         onError={(e) =>
-          (e.target.src = 'https://sickmarket.ml//uploads/tinyNo.jpg')
+          (e.target.src = 'https://sickmarket.ml/uploads/tinyNo.jpg')
         }
       />
 
@@ -101,7 +101,7 @@ const SmoothImg = ({
           src={src}
           alt={alt}
           onError={(e) =>
-            (e.target.src = 'https://sickmarket.ml//uploads/no.jpg')
+            (e.target.src = 'https://sickmarket.ml/uploads/no.jpg')
           }
         />
       )}

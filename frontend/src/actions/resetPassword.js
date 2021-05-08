@@ -14,7 +14,7 @@ const resetPassword = (password, token) => async (dispatch) => {
       cancelToken: source.token,
     }
     await axios.post(
-      'https://sickmarket.ml//api/users/resetPassword',
+      'https://sickmarket.ml/api/users/resetPassword',
       {
         password,
       },

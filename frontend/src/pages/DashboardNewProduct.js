@@ -324,7 +324,7 @@ const DashboardNewProduct = ({ scrolled, setScrolled }) => {
                       brand: brand.length ? brand : 'Test',
                       countInStock: stock,
                       category,
-                      image: 'https://sickmarket.ml//uploads/no.jpg',
+                      image: 'https://sickmarket.ml/uploads/no.jpg',
                       numReviews: 0,
                       oldPrice,
                       freeShipping,

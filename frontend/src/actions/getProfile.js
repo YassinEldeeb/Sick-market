@@ -15,7 +15,7 @@ const userProfileAction = () => async (dispatch, getState) => {
       cancelToken: source.token,
     }
     const { data } = await axios.get(
-      'https://sickmarket.ml//api/users/profile',
+      'https://sickmarket.ml/api/users/profile',
       config
     )
 

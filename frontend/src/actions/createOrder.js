@@ -55,7 +55,7 @@ const createOrderAction = (setCartCount, isBuyNow) => async (
     }
     console.log('CART', modifiedCart())
     const { data } = await axios.post(
-      'https://sickmarket.ml//api/orders',
+      'https://sickmarket.ml/api/orders',
       {
         user: userInfo.user._id,
         orderItems: modifiedCart().filter((e) => e.qty !== 0),

@@ -19,7 +19,7 @@ export const addNewProductAction = (productData) => async (
     }
 
     const { data } = await axios.post(
-      'https://sickmarket.ml//api/products',
+      'https://sickmarket.ml/api/products',
       productData,
       config
     )

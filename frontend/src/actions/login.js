@@ -12,7 +12,7 @@ const userLoginAction = (email, password) => async (dispatch) => {
       cancelToken: source.token,
     }
     const { data } = await axios.post(
-      'https://sickmarket.ml//api/users/login',
+      'https://sickmarket.ml/api/users/login',
       { email, password },
       config
     )

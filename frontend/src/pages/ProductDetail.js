@@ -92,7 +92,7 @@ const ProductDetail = ({ cartCount, setCartCount }) => {
                 height={'510px'}
                 src={'https://sickmarket.ml/' + product.image}
                 alt='product'
-                tiny={`https://sickmarket.ml//api/products/${product._id}/tiny`}
+                tiny={`https://sickmarket.ml/api/products/${product._id}/tiny`}
               />
               {product.oldPrice && (
                 <div className='discount'>

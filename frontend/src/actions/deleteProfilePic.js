@@ -15,7 +15,7 @@ const deleteProfilePicAction = () => async (dispatch, getState) => {
       cancelToken: source.token,
     }
     const { data } = await axios.delete(
-      'https://sickmarket.ml//api/users/me/profilePic',
+      'https://sickmarket.ml/api/users/me/profilePic',
       config
     )
     dispatch({ type: 'DELETE_PROFILE_PIC_SUCCESS', payload: data })

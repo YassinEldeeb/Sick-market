@@ -119,7 +119,7 @@ const OrderDetails = () => {
   useEffect(() => {
     const addPaypalScript = async () => {
       const { data: clientId } = await axios.get(
-        'https://sickmarket.ml//api/config/paypal'
+        'https://sickmarket.ml/api/config/paypal'
       )
       const script = document.createElement('script')
       script.type = 'text/javascript'

@@ -30,14 +30,14 @@ const FilePondUpload = () => {
         } else {
           return [
             {
-              source: `https://sickmarket.ml//api/users/profilePic/${user._id}`,
+              source: `https://sickmarket.ml/api/users/profilePic/${user._id}`,
             },
           ]
         }
       } else {
         return [
           {
-            source: `https://sickmarket.ml//api/users/profilePic/${user._id}`,
+            source: `https://sickmarket.ml/api/users/profilePic/${user._id}`,
           },
         ]
       }
@@ -52,7 +52,7 @@ const FilePondUpload = () => {
       setNumUpload(0)
       setFiles([
         {
-          source: `https://sickmarket.ml//api/users/profilePic/${
+          source: `https://sickmarket.ml/api/users/profilePic/${
             user._id
           }?${new Date().getTime()}`,
         },
@@ -124,7 +124,7 @@ const FilePondUpload = () => {
                   const request = new XMLHttpRequest()
                   request.open(
                     'POST',
-                    'https://sickmarket.ml//api/users/me/profilePic'
+                    'https://sickmarket.ml/api/users/me/profilePic'
                   )
                   request.setRequestHeader('Authorization', `Bearer ${token}`)
                   request.upload.onprogress = (e) => {
@@ -161,13 +161,13 @@ const FilePondUpload = () => {
           document.querySelector('#profileIMG').src =
             user.profilePicLink && user.profilePicLink !== 'cleared'
               ? user.profilePicLink
-              : `https://sickmarket.ml//api/users/profilePic/${user._id}?` +
+              : `https://sickmarket.ml/api/users/profilePic/${user._id}?` +
                 new Date().getTime()
 
           document.querySelector('.profile-mobile-pic img').src =
             user.profilePicLink && user.profilePicLink !== 'cleared'
               ? user.profilePicLink
-              : `https://sickmarket.ml//api/users/profilePic/${user._id}?` +
+              : `https://sickmarket.ml/api/users/profilePic/${user._id}?` +
                 new Date().getTime()
         }}
       />
