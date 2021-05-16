@@ -79,7 +79,7 @@ const DashboardOrders = () => {
       ) : orders ? (
         <>
           <div className='title'>
-            <h1>Orders2</h1>
+            <h1>Orders</h1>
             <p>{count} Orders Found</p>
           </div>
 
