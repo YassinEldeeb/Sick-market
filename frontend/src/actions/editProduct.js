@@ -36,7 +36,6 @@ const editProduct = (id, formData, search) => async (dispatch, getState) => {
       finalArr = searchedProducts.products.map((each) => {
         if (each._id.toString() === id.toString()) {
           each = data
-          console.log(each)
         }
         return each
       })

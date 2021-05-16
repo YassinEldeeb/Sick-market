@@ -1,10 +1,10 @@
-import asyncHandler from "express-async-handler"
-import jwt from "jsonwebtoken"
-import User from "../models/userModel.js"
+import asyncHandler from 'express-async-handler'
+import jwt from 'jsonwebtoken'
+import User from '../models/userModel.js'
 
 const protect = asyncHandler(async (req, res, next) => {
   const passedToken = req.headers.authorization
-  const token = passedToken ? passedToken.split(" ")[1] : null
+  const token = passedToken ? passedToken.split(' ')[1] : null
 
   if (token) {
     try {
@@ -12,7 +12,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
       const user = await User.findOne({
         _id: decoded.id,
-        "tokens.token": token,
+        'tokens.token': token,
       })
       if (user) {
         req.user = user
@@ -20,7 +20,8 @@ const protect = asyncHandler(async (req, res, next) => {
         next()
       } else {
         console.log(user, decoded)
-        throw new Error("Unauthorized, Invalid Token")
+        res.status(401)
+        throw new Error('Unauthorized, Invalid Token')
       }
     } catch (err) {
       console.log(err)
@@ -28,16 +29,17 @@ const protect = asyncHandler(async (req, res, next) => {
       throw new Error(err.message)
     }
   } else {
-    throw new Error("Unauthorized, No Token")
+    res.status(401)
+    throw new Error('Unauthorized, No Token')
   }
 })
 
 const admin = asyncHandler(async (req, res, next) => {
-  if (req.user.rank == "admin") {
+  if (req.user.rank == 'admin') {
     next()
   } else {
     res.status(401)
-    throw new Error("Not an Admin!")
+    throw new Error('Not an Admin!')
   }
 })
 

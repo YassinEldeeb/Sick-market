@@ -25,7 +25,7 @@ const BurgerMenu = ({ activeMenu, setActiveMenu }) => {
     ) {
       return userInfo.user.profilePicLink
     } else {
-      return `/api/users/profilePic/${userInfo.user._id}`
+      return `/api/users/profilePic/tiny/${userInfo.user._id}?w=66&h=66`
     }
   }
   return (

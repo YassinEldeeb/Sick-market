@@ -47,7 +47,7 @@ const Profile = () => {
     ) {
       return userInfo.user.profilePicLink
     } else {
-      return `/api/users/profilePic/${userInfo.user._id}`
+      return `/api/users/profilePic/tiny/${userInfo.user._id}?w=48&h=48`
     }
   }
   return (

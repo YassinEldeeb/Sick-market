@@ -23,6 +23,8 @@ import DashboardProducts from './DashboardProducts'
 import DashboardOrders from './DashboardOrders'
 import { useRef } from 'react'
 import Meta from '../components/Meta'
+import { useDispatch } from 'react-redux'
+import getDashboardOrdersAction from '../actions/getDashboardOrders'
 
 const main = [
   { text: 'Statistics', i: <Statistics /> },
@@ -41,6 +43,9 @@ const communicate = [
 ]
 
 const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
+  const dispatch = useDispatch()
+  const { orders, loading } = useSelector((state) => state.dashboardOrders)
+
   const scrollRef = useRef(null)
   const lastLocation = useLastLocation()
   const location = useLocation()
@@ -49,7 +54,7 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
   const userActions = useSelector((state) => state.userActions)
   const { user } = useSelector((state) => state.userInfo)
   const productList = useSelector((state) => state.productList)
-
+  const dashboardOrders = useSelector((state) => state.dashboardOrders)
   const history = useHistory()
 
   useEffect(() => {
@@ -77,6 +82,7 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
         : false
     ) {
       dashboardUsers.loading = true
+      dashboardOrders.loading = true
 
       const content = document.querySelector('.view')
       if (content)
@@ -124,6 +130,11 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
     }
   }, [location.pathname])
 
+  const clickTab = () => {
+    if (!loading && location.pathname.split('/')[2] === 'orders') {
+      dispatch(getDashboardOrdersAction())
+    }
+  }
   return (
     <StyledDashboard>
       <div className='sidebar'>
@@ -138,7 +149,11 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
           />
           <p>Main</p>
           {main.map((e) => (
-            <DashboardTab text={e.text} Icon={e.i} />
+            <DashboardTab
+              onClickFN={e.text === 'Orders' ? clickTab : ''}
+              text={e.text}
+              Icon={e.i}
+            />
           ))}
           <p className='last'>Communicate</p>
           {communicate.map((e) => (
@@ -199,6 +214,9 @@ const StyledDashboard = styled.div`
     margin-right: -8px;
     margin-bottom: -8px;
   }
+  .view {
+    overflow-x: hidden !important;
+  }
   .thumb-horizontal {
     position: relative;
     display: block;
@@ -215,6 +233,7 @@ const StyledDashboard = styled.div`
     bottom: 2px;
     left: 2px;
     border-radius: 3px;
+    display: none;
   }
 
   .track-vertical {

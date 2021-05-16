@@ -395,7 +395,6 @@ const DashboardProducts = ({
     if (e) {
       e.preventDefault()
     }
-    console.log(brand.length, category.length)
     if (
       (sortValue !== 'Date' && sortType !== 'Newest') ||
       brand.length !== 0 ||
@@ -404,7 +403,6 @@ const DashboardProducts = ({
       let baseURL = `?${sortValue}=${sortType}`
 
       if (reset !== 'all') {
-        console.log(brand, category, reset)
         if (brand && reset !== 'brand') baseURL += `&brand=${brand}`
         if (category && reset !== 'category') baseURL += `&category=${category}`
       } else {

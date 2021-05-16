@@ -6,6 +6,10 @@ import {
   getMyOrders,
   updateOrderToDelivered,
   getAllOrders,
+  getOrderAdminById,
+  updateOrderToApproved,
+  updateOrderToRejected,
+  updateOrderToPacked,
 } from '../controllers/orderController.js'
 import { protect, admin } from '../middleware/authMiddleware.js'
 
@@ -14,8 +18,12 @@ const orderRouter = express.Router()
 orderRouter.post('/', protect, addOrderItems)
 orderRouter.get('/myOrders', protect, getMyOrders)
 orderRouter.get('/allOrders', protect, admin, getAllOrders)
+orderRouter.get('/admin/:id', protect, admin, getOrderAdminById)
 orderRouter.get('/:id', protect, getOrderById)
 orderRouter.patch('/:id/pay', protect, updateOrderToPaid)
 orderRouter.patch('/:id/deliver', protect, updateOrderToDelivered)
+orderRouter.patch('/:id/approve', protect, admin, updateOrderToApproved)
+orderRouter.patch('/:id/reject', protect, admin, updateOrderToRejected)
+orderRouter.patch('/:id/pack', protect, admin, updateOrderToPacked)
 
 export default orderRouter

@@ -106,7 +106,7 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
   const order = await Order.findById(req.params.id).populate(
     'user',
-    'email name'
+    'rank availablePic email totalPaidOrders _id name profilePicLink'
   )
 
   if (!order) {
@@ -194,27 +194,92 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 
 const getMyOrders = asyncHandler(async (req, res) => {
   const user = req.user
-  await user
-    .populate({
-      path: 'orders',
-      options: {
-        limit: parseInt(req.query.limit),
-        skip: parseInt(req.query.skip),
-      },
-    })
-    .execPopulate()
-
-  res.send(user.orders)
-})
-
-const getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({}).populate(
-    'user',
-    'availablePic email totalPaidOrders _id name profilePicLink'
-  )
+  const orders = await Order.find({ user: user._id })
+    .limit(parseInt(req.query.limit ? req.query.limit : 0))
+    .skip(parseInt(req.query.skip ? req.query.skip : 0))
+    .sort({ createdAt: -1 })
 
   res.send(orders)
 })
+
+const getAllOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({})
+    .limit(parseInt(req.query.limit ? req.query.limit : 0))
+    .skip(parseInt(req.query.skip ? req.query.skip : 0))
+    .populate(
+      'user',
+      'rank availablePic email totalPaidOrders _id name profilePicLink'
+    )
+    .sort({ createdAt: -1 })
+  const count = await Order.countDocuments()
+
+  res.send({ orders, count })
+})
+
+const getOrderAdminById = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id).populate(
+    'user',
+    'rank availablePic email totalPaidOrders _id name profilePicLink'
+  )
+
+  if (!order) {
+    res.status(404)
+    throw new Error('Order Not Found')
+  }
+
+  res.send(order)
+})
+
+const updateOrderToApproved = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id)
+
+  if (!order) {
+    res.status(404)
+    throw new Error('Order Not Found')
+  }
+
+  order.approved = Date.now()
+  await order.save()
+
+  res.send({ approved: order.approved })
+})
+const updateOrderToRejected = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id)
+
+  const { reason } = req.body
+
+  if (!order) {
+    res.status(404)
+    throw new Error('Order Not Found')
+  }
+  if (!reason) {
+    res.status(400)
+    throw new Error('Reason is required to Reject Order')
+  }
+  order.approved = undefined
+  order.rejected = { reason, date: Date.now() }
+  await order.save()
+
+  res.send({ rejected: order.rejected })
+})
+const updateOrderToPacked = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id)
+
+  if (!order) {
+    res.status(404)
+    throw new Error('Order Not Found')
+  }
+  if (!order.approved) {
+    res.status(404)
+    throw new Error(`Order need to be approved first!`)
+  }
+
+  order.packed = Date.now()
+  await order.save()
+
+  res.send({ packed: order.packed })
+})
+
 export {
   addOrderItems,
   getOrderById,
@@ -222,4 +287,8 @@ export {
   getMyOrders,
   updateOrderToDelivered,
   getAllOrders,
+  getOrderAdminById,
+  updateOrderToApproved,
+  updateOrderToRejected,
+  updateOrderToPacked,
 }

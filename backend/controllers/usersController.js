@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
+import Order from '../models/orderModel.js'
 import sharp from 'sharp'
 import fs from 'fs'
 import validator from 'validator'
@@ -11,6 +12,9 @@ import SecretCode from '../models/secretCode.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
+import path from 'path'
+
+const __dirname = path.resolve()
 
 //Update USER Rank - /api/users/rank @Admin
 const updateUserRank = asyncHandler(async (req, res) => {
@@ -121,6 +125,11 @@ const deleteUser = asyncHandler(async (req, res) => {
 
   if (user) {
     await user.delete()
+    await Order.deleteMany({
+      user: user._id,
+      isDelivered: false,
+      isPaid: false,
+    })
   } else {
     res.status(404)
     throw new Erorr('User not found!')
@@ -502,11 +511,23 @@ const serveProfilePic = asyncHandler(async (req, res) => {
       await axios({ url: user.profilePicLink, responseType: 'arraybuffer' })
     ).data
   }
+
   res.send(input ? input : user.profilePic)
 })
 
 // GET get Tiny Avatar - /api/users/profilePic/:id
 const serveTinyProfilePic = asyncHandler(async (req, res) => {
+  if (req.query.noImage) {
+    console.log(path.join(__dirname, './uploads/no.jpg'))
+    const image = await sharp(path.join(__dirname, './uploads/no.jpg'))
+      .resize({ width: Number(req.query.w), height: Number(req.query.h) })
+      .toBuffer()
+    res.set('Content-Type', 'image/png')
+    res.send(image)
+
+    return
+  }
+
   const user = await User.findById(req.params.id)
 
   if (!user || (!user.profilePic && !user.profilePicLink)) {
@@ -526,7 +547,10 @@ const serveTinyProfilePic = asyncHandler(async (req, res) => {
   }
 
   const tiny = await sharp(input ? input : user.profilePic)
-    .resize({ width: 20, height: 20 })
+    .resize({
+      width: req.query.w ? Number(req.query.w) : 20,
+      height: req.query.h ? Number(req.query.h) : 20,
+    })
     .png()
     .toBuffer()
   res.send(tiny)

@@ -214,10 +214,6 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
         )
       )
     }
-    console.log(
-      dashboardProduct ? dashboardProduct._id : '',
-      location.pathname.split('/')[4]
-    )
   }, [location.pathname])
 
   const editProductHandler = (e) => {

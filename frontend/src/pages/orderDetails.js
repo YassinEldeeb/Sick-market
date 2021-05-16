@@ -378,27 +378,7 @@ const OrderDetails = () => {
                             )}
                           </h1>
                         )}
-                        {toFixedFN(
-                          Number(order.itemsPrice) +
-                            50 +
-                            (Number(order.itemsPrice) * 14) / 100 +
-                            -order.couponDiscount
-                        ) > 0
-                          ? toFixedFN(
-                              Number(order.itemsPrice) +
-                                50 +
-                                (Number(order.itemsPrice) * 14) / 100 +
-                                -order.couponDiscount
-                            )
-                          : '+' +
-                            Math.abs(
-                              toFixedFN(
-                                Number(order.itemsPrice) +
-                                  50 +
-                                  (Number(order.itemsPrice) * 14) / 100 +
-                                  -order.couponDiscount
-                              )
-                            )}
+                        {parseFloat(order.totalPrice.toFixed(1))}
                         <span
                           className={`currency ${
                             toFixedFN(

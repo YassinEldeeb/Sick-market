@@ -491,8 +491,6 @@ const StyledUserAction = styled(motion.div)`
   position: absolute;
   left: 50%;
   top: 0;
-  -webkit-transform: translate(-50%, 0%);
-  -ms-transform: translate(-50%, 0%);
   transform: translate(-50%, 0%);
   cursor: pointer;
   pointer-events: none;

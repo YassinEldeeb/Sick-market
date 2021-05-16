@@ -5,17 +5,15 @@ import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 
 const DashboardTab = memo(
-  ({ text, Icon, providedClassName }) => {
+  ({ text, Icon, providedClassName, onClickFN }) => {
     const location = useLocation()
     const { newUsers } = useSelector((state) => state.dashboardUsers)
     const { newProducts } = useSelector((state) => state.productList)
     const page = location.pathname.split('/')[2]
 
-    useEffect(() => {
-      console.log('Tab is Rendered!')
-    }, [])
     return (
       <Tab
+        onClick={onClickFN}
         to={providedClassName ? '/' : `/dashboard/${text.toLowerCase()}`}
         className={`${page === text.toLowerCase() ? 'active' : ''} ${
           providedClassName ? providedClassName : ''

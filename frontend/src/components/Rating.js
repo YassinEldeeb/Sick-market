@@ -3,49 +3,20 @@ import React from 'react'
 const Rating = ({ ratingValue, numOfReviews }) => {
   const getStars = () => {
     const stars = []
-    const renderedStars = []
-    const rating = Math.round(ratingValue * 10) / 10
-    for (let i = 0.5; i < 5; i += 0.5) {
-      if (rating >= i) {
-        stars.push(0.5)
-      }
-    }
-    if (rating >= 5) {
-      for (let i = 0; i < 5; i++) {
-        renderedStars.push(
-          <i key={`star${renderedStars.length}`} className='fas fa-star'></i>
-        )
-      }
-    } else {
-      if (Number.isInteger(stars.length / 2)) {
-        for (let i = 0; i < stars.length / 2; i++) {
-          renderedStars.push(
-            <i key={`star${renderedStars.length}`} className='fas fa-star'></i>
-          )
-        }
+
+    for (let i = 1; i <= 5; i++) {
+      if (i <= ratingValue) {
+        stars.push(<i key={`star${i}`} className='fas fa-star'></i>)
+      } else if (i - 0.5 <= ratingValue) {
+        stars.push(<i key={`star${i}`} className='fas fa-star-half-alt'></i>)
       } else {
-        for (let i = 0; i < Math.floor(stars.length / 2); i++) {
-          renderedStars.push(
-            <i key={`star${renderedStars.length}`} className='fas fa-star'></i>
-          )
-        }
-        renderedStars.push(
-          <i
-            key={`star${renderedStars.length}`}
-            className='fas fa-star-half-alt'
-          ></i>
-        )
+        stars.push(<i key={`star${i}`} className='far fa-star'></i>)
       }
     }
-    while (renderedStars.length < 5) {
-      for (let i = 0; i < 5 - renderedStars.length; i++) {
-        renderedStars.push(
-          <i key={`star${renderedStars.length}`} className='far fa-star'></i>
-        )
-      }
-    }
-    return renderedStars
+
+    return stars
   }
+
   return (
     <div className='starsRating'>
       {getStars()}

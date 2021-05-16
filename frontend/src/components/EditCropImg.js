@@ -35,7 +35,6 @@ const EditCropImg = ({
       unit: '%',
     })
     setImage(null)
-    console.log('Image!!!!:', image)
     setCompletedCrop(null)
     history.push(`/dashboard/products/edit/${location.pathname.split('/')[4]}`)
   }

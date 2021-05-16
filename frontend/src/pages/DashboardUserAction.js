@@ -15,6 +15,7 @@ import deleteUserAction from '../actions/deleteUser'
 import Loader from '../components/loader'
 import { ReactComponent as Verified } from '../img/verified.svg'
 import editRank from '../actions/editRank'
+import SmoothImg from '../components/smoothImgLoading'
 
 const DashboardUserAction = ({ setRankValue, rankValue }) => {
   const lastLocation = useLastLocation()
@@ -197,7 +198,17 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
           >
             <>
               <div className='info'>
-                <img className='profilePic' src={imgSrcCondition()} />
+                <SmoothImg
+                  key={user._id}
+                  tiny={`/api/users/profilePic/tiny/${user._id}`}
+                  contWidth={`max-content`}
+                  width={'100%'}
+                  height={'100%'}
+                  loaderId='loaderImg'
+                  providedClassName='profilePic'
+                  src={imgSrcCondition()}
+                  alt=''
+                />
                 <div className='desc'>
                   <div className='descCont'>
                     <h1>
@@ -480,6 +491,8 @@ const StyledUserAction = styled(motion.div)`
     border-radius: 20px;
     width: calc(100% - (calc(2.5rem + 0.5vh) * 2));
     height: max-content;
+    max-height: 95vh;
+    overflow-y: auto;
     .actions {
       font-size: calc(1rem + 0.3vw);
       position: relative;
@@ -501,11 +514,14 @@ const StyledUserAction = styled(motion.div)`
       justify-content: flex-start;
       align-items: center;
       margin-bottom: calc(2rem + 0.3vh);
-      img {
-        width: 95px;
-        height: 95px;
+      .profilePic {
+        min-width: 95px;
+        min-height: 95px;
+        max-width: 95px;
+        max-height: 95px;
         border-radius: 50%;
       }
+
       .desc {
         margin-left: 0.8rem;
         width: 100%;

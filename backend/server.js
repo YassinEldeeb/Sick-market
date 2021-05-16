@@ -12,7 +12,6 @@ import rateLimit from 'express-rate-limit'
 import path from 'path'
 import express from 'express'
 import SocketService from './webSockets/socketService.js'
-import wakeUpDyno from './utils/wakeUpDyno.js'
 import prerender from 'prerender-node'
 import Category from './models/category.js'
 import http from 'http'
@@ -28,7 +27,7 @@ const server = http.createServer(app)
 app.use(cors())
 app.use(express.json())
 dotenv.config()
-app.use(prerender.set('prerenderToken', '3AVvQBjmu6rivH2BTYuk'))
+app.use(prerender.set('prerenderToken', process.env.PRERENDER_TOKEN))
 
 connectDB()
 
@@ -52,7 +51,12 @@ app.get('/api/config/paypal', (req, res) =>
 )
 
 if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/build')))
+
   app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  })
 } else {
   app.get('/', (req, res) => {
     res.send('The API is running!')
@@ -64,13 +68,8 @@ app.use(notFoundRouter)
 app.use(errRouter)
 
 const port = process.env.PORT
-const DYNO_URL = 'https://sick-market.herokuapp.com'
 
 server.listen(port, () => {
-  if (process.env.NODE_ENV === 'production') {
-    wakeUpDyno(DYNO_URL)
-  }
-
   console.log(
     `Server running in ${process.env.NODE_ENV} mode on port ${port}`.yellow.bold
   )

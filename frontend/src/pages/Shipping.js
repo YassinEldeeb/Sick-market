@@ -8,12 +8,14 @@ import CheckoutSteps from '../components/CheckoutSteps'
 import Select from 'react-select'
 import axios from 'axios'
 import Loader from '../components/loader'
-import { ReactComponent as LocationIcon } from '../img/locationIcon.svg'
 
 const Shipping = () => {
-  const { address, geocodingLoading, cartItems } = useSelector(
-    (state) => state.cart
-  )
+  const {
+    address,
+    geocodingLoading,
+    cartItems,
+    success: geocodingSuccess,
+  } = useSelector((state) => state.cart)
   const { product } = useSelector((state) => state.buyNowProduct)
   useEffect(() => {
     if (!cartItems.length && !product.name) {
@@ -21,12 +23,15 @@ const Shipping = () => {
     }
   }, [cartItems])
 
+  const [addressType, setAddressType] = useState(
+    address.addressType ? address.addressType : ''
+  )
   const [addressValue, setAddress] = useState(
     address.address ? address.address : ''
   )
   const [city, setCity] = useState(address.city ? address.city : '')
   const [governorate, setGovernorate] = useState(
-    address.governorate ? address.governorate : ''
+    address.rawGovernorate ? address.rawGovernorate : ''
   )
   const [phoneNumber, setPhoneNumber] = useState(
     address.phoneNumber ? address.phoneNumber : ''
@@ -79,15 +84,15 @@ const Shipping = () => {
 
       const latitudeAndLongValue = async () => {
         if (
-          governorate !== address.governorate ||
-          addressValue !== address.address ||
-          city !== address.city
+          (governorate !== address.governorate ||
+            addressValue !== address.address ||
+            city !== address.city) &&
+          addressType === 'Entering another location manualy'
         ) {
           setForwardGeocoding(true)
           const { data } = await axios.get(
             `https://api.mapbox.com/geocoding/v5/mapbox.places/${addressValue}, ${city}, ${governorate}, Egypt.json?access_token=pk.eyJ1IjoieWFzc2luNzg5IiwiYSI6ImNraGNiZDc2cjBjcXoycm5nZDQzeWh5MGsifQ.vZNRBIwM6P8fwbZvoPgp1A`
           )
-
           const lon = data.features[0].center[0]
           const lat = data.features[0].center[1]
           setForwardGeocoding(false)
@@ -99,6 +104,7 @@ const Shipping = () => {
 
       dispatch(
         userSaveAddress({
+          addressType,
           address: addressValue,
           city,
           governorate,
@@ -164,6 +170,11 @@ const Shipping = () => {
     singleValue: () => ({
       color: '#1a1a1a',
       fontSize: 'calc(1rem + 0.3vw)',
+      whiteSpace: 'nowrap',
+      width: 'max-content',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      maxWidth: '96%',
     }),
   }
 
@@ -302,6 +313,7 @@ const Shipping = () => {
       return ''
     }
   }
+
   const geolocationHandler = () => {
     if (!geocodingLoading) {
       if (navigator.geolocation) {
@@ -310,11 +322,11 @@ const Shipping = () => {
 
         async function showPosition(position) {
           try {
-            setLatitude(position.coords.latitude)
-            setLongitude(position.coords.longitude)
             const { data } = await axios.get(
               `https://us1.locationiq.com/v1/reverse.php?key=pk.49f42f5ce86c30300b67591afd65161c&lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json`
             )
+            setLatitude(position.coords.latitude)
+            setLongitude(position.coords.longitude)
 
             const display_address_value = `${
               data.address.house_number ? data.address.house_number : ''
@@ -342,7 +354,10 @@ const Shipping = () => {
             dispatch({
               type: 'GEOCODING_SUCCESS',
               payload: {
-                location: { lat: latitude, lon: longitude },
+                location: {
+                  lat: position.coords.latitude,
+                  lon: position.coords.longitude,
+                },
                 display_address: display_address_value,
                 address: `${
                   data.address.house_number ? data.address.house_number : ''
@@ -386,6 +401,14 @@ const Shipping = () => {
       }
     }
   }
+  const addressTypesOptions = [
+    { value: 'Detecting my location', label: 'Detecting my location' },
+    {
+      value: 'Entering another location manualy',
+      label: 'Entering another location manualy',
+    },
+    { value: 'Pointing to it on map', label: 'Pointing to it on map' },
+  ]
 
   return (
     <>
@@ -395,52 +418,32 @@ const Shipping = () => {
         <form onSubmit={submitHandler}>
           <div className='title'>
             <h1>Shipping</h1>
-            <button type='button' onClick={geolocationHandler}>
-              {!geocodingLoading && <LocationIcon />}
-              {geocodingLoading && <Loader />}
-            </button>
           </div>
-          <div className='address'>
-            <label htmlFor='address'>Address</label>
-            <input
-              value={addressValue}
-              id='address'
-              type='text'
-              required
-              onChange={(e) => setAddress(e.target.value)}
-            />
-            <XSign
-              onClick={() => setAddress('')}
-              style={{ display: `${addressValue.length ? 'block' : 'none'}` }}
-              className='xSign2'
-            />
-          </div>
-          <div className='city'>
-            <label htmlFor='city'>City</label>
-            <input
-              value={city}
-              id='city'
-              type='text'
-              required
-              onChange={(e) => setCity(e.target.value)}
-            />
-            <XSign
-              onClick={() => setCity('')}
-              style={{ display: `${city.length ? 'block' : 'none'}` }}
-              className='xSign2'
-            />
-          </div>
-          <div className='governorate'>
-            <label htmlFor='governorate'>Governorate</label>
+
+          <div className='type'>
+            <label>Tell us the address by</label>
             <Select
               styles={customStyles}
-              onChange={(e) => setGovernorate(e.value)}
+              onChange={(e) => {
+                setAddressType(e.value)
+                if (address.addressType !== e.value) {
+                  setAddress('')
+                  setPhoneNumber('')
+                  setCity('')
+                  setGovernorate('')
+                } else {
+                  setAddress(address.address)
+                  setPhoneNumber(address.phoneNumber)
+                  setCity(address.city)
+                  setGovernorate(address.governorate)
+                }
+              }}
               value={
-                governorate.length
-                  ? { label: governorate, value: governorate }
-                  : null
+                addressType.length
+                  ? { label: addressType, value: addressType }
+                  : ''
               }
-              options={options}
+              options={addressTypesOptions}
             />
             <input
               autoComplete='off'
@@ -454,38 +457,121 @@ const Shipping = () => {
                 left: 0,
                 transform: 'translate(2.5% ,-15%)',
               }}
-              value={governorate}
+              value={addressType}
               required={true}
               onChange={(e) => e}
             />
           </div>
-          <div className='phoneNumber'>
-            <label htmlFor='phoneNumber'>Phone Number</label>
-            <input
-              style={{
-                boxShadow: `${
-                  (!phoneNumber.toString().startsWith('01') &&
-                    phoneNumber.length) ||
-                  (phoneNumber.toString().length !== 11 && phoneNumber.length)
-                    ? '0 0 3px red'
-                    : 'unset'
-                }`,
-              }}
-              value={phoneNumber}
-              id='phoneNumber'
-              type='number'
-              required
-              onChange={(e) => setPhoneNumber(e.target.value)}
-            />
-            <XSign
-              onClick={() => setPhoneNumber('')}
-              style={{ display: `${phoneNumber.length ? 'block' : 'none'}` }}
-              className='xSign2'
-            />
-          </div>
-          <button type='submit'>
-            Continue {forwardGeocoding && <Loader />}
-          </button>
+          {addressType === 'Detecting my location' && (
+            <button
+              className='geolocation'
+              type='button'
+              onClick={geolocationHandler}
+            >
+              Get my Location
+              {geocodingLoading && <Loader />}
+            </button>
+          )}
+          {((addressType !== 'Detecting my location' &&
+            addressType.length > 0) ||
+            (addressType === 'Detecting my location' &&
+            address.addressType !== 'Detecting my location'
+              ? geocodingSuccess
+              : true && latitude > 0 && longitude > 0)) && (
+            <>
+              <div className='address'>
+                <label htmlFor='address'>Address</label>
+                <input
+                  value={addressValue}
+                  id='address'
+                  type='text'
+                  required
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+                <XSign
+                  onClick={() => setAddress('')}
+                  style={{
+                    display: `${addressValue.length ? 'block' : 'none'}`,
+                  }}
+                  className='xSign2'
+                />
+              </div>
+              <div className='city'>
+                <label htmlFor='city'>City</label>
+                <input
+                  value={city}
+                  id='city'
+                  type='text'
+                  required
+                  onChange={(e) => setCity(e.target.value)}
+                />
+                <XSign
+                  onClick={() => setCity('')}
+                  style={{ display: `${city.length ? 'block' : 'none'}` }}
+                  className='xSign2'
+                />
+              </div>
+              <div className='governorate'>
+                <label htmlFor='governorate'>Governorate</label>
+                <Select
+                  styles={customStyles}
+                  onChange={(e) => setGovernorate(e.value)}
+                  value={
+                    governorate.length
+                      ? { label: governorate, value: governorate }
+                      : null
+                  }
+                  options={options}
+                />
+                <input
+                  autoComplete='off'
+                  style={{
+                    opacity: 0,
+                    height: '100%',
+                    pointerEvents: 'none',
+                    width: '100%',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    transform: 'translate(2.5% ,-15%)',
+                  }}
+                  value={governorate}
+                  required={true}
+                  onChange={(e) => e}
+                />
+              </div>
+              <div className='phoneNumber'>
+                <label htmlFor='phoneNumber'>Phone Number</label>
+                <input
+                  style={{
+                    boxShadow: `${
+                      (!phoneNumber.toString().startsWith('01') &&
+                        phoneNumber.length) ||
+                      (phoneNumber.toString().length !== 11 &&
+                        phoneNumber.length)
+                        ? '0 0 3px red'
+                        : 'unset'
+                    }`,
+                  }}
+                  value={phoneNumber}
+                  id='phoneNumber'
+                  type='number'
+                  required
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+                <XSign
+                  onClick={() => setPhoneNumber('')}
+                  style={{
+                    display: `${phoneNumber.length ? 'block' : 'none'}`,
+                  }}
+                  className='xSign2'
+                />
+              </div>
+              <button type='submit'>
+                Continue {forwardGeocoding && <Loader />}
+              </button>
+            </>
+          )}
         </form>
       </StyledShipping>
     </>
@@ -519,7 +605,7 @@ const StyledShipping = styled.div`
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex: 1 1 auto;
 
   form {
@@ -528,7 +614,7 @@ const StyledShipping = styled.div`
     align-items: flex-start;
     width: 52%;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     max-width: 750px;
     margin-top: 1.8rem;
     h1 {
@@ -542,10 +628,23 @@ const StyledShipping = styled.div`
       align-items: center;
       width: 100%;
     }
+    .geolocation {
+      padding: 0.5rem 0.9rem;
+      border-radius: 6px;
+      font-size: calc(1rem + 0.3vw);
+      margin-bottom: 1rem;
+
+      #loader:first-child {
+        height: 1.3rem !important;
+        width: 1.3rem !important;
+        margin-left: 0.3rem !important;
+      }
+    }
     .address,
     .governorate,
     .city,
-    .phoneNumber {
+    .phoneNumber,
+    .type {
       position: relative;
       width: 100%;
       input {
@@ -565,6 +664,7 @@ const StyledShipping = styled.div`
     .governorate {
       position: relative;
     }
+
     button {
       display: flex;
       justify-content: space-between;
@@ -595,20 +695,6 @@ const StyledShipping = styled.div`
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.2rem;
-      button {
-        padding: 0.5rem;
-        border-radius: 6px;
-        svg:first-child {
-          margin-left: 0rem !important;
-          width: 1.7rem !important;
-          height: 1.7rem !important;
-        }
-        #loader:first-child {
-          height: 1.7rem !important;
-          width: 1.7rem !important;
-          margin-left: 0rem !important;
-        }
-      }
     }
     #governorate,
     #city,
@@ -638,6 +724,14 @@ const StyledShipping = styled.div`
       transform: translate(-48%, -28%) !important;
     }
     form {
+      .geolocation {
+        padding: 0.55rem 0.9rem;
+        #loader:first-child {
+          height: 1.1rem !important;
+          width: 1.1rem !important;
+          margin-left: 0.3rem !important;
+        }
+      }
       width: 100%;
       margin-top: 1.2rem;
       h1 {

@@ -21,6 +21,8 @@ import editRank from './reducers/editRank'
 import deleteProduct from './reducers/deleteProduct'
 import productSearchReducer from './reducers/searchProduct'
 import loadedImagesReducer from './reducers/loadedImages'
+import getDashboardOrders from './reducers/dashboardOrders'
+import orderActions from './reducers/dashboardOrderActions'
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -45,6 +47,8 @@ const reducers = combineReducers({
   productSearch: productSearchReducer,
   loadedImages: loadedImagesReducer,
   orderDeliver: orderDeliverReducer,
+  dashboardOrders: getDashboardOrders,
+  orderActions,
 })
 let initialState
 

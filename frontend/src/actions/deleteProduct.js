@@ -41,7 +41,6 @@ const deleteProduct = (id, search) => async (dispatch, getState) => {
         (each) => each._id.toString() !== id.toString()
       )
       searchedProducts.count -= 1
-      console.log(searchedProducts)
       state.productSearch = { ...searchedProducts }
     }
 

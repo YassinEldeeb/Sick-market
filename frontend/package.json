@@ -19,6 +19,8 @@
     "filepond-plugin-image-exif-orientation": "^1.0.9",
     "filepond-plugin-image-preview": "^4.6.4",
     "framer-motion": "^3.10.2",
+    "mapbox-gl": "^2.2.0",
+    "qrcode.react": "^1.0.1",
     "qs": "^6.5.2",
     "react": "^17.0.1",
     "react-custom-scrollbars": "^4.2.1",
@@ -42,6 +44,7 @@
     "react-select": "^2.0.5",
     "react-string-replace": "^0.4.4",
     "react-switch": "^6.0.0",
+    "react-to-print": "^2.12.4",
     "react-tooltip": "^4.2.15",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
@@ -57,10 +60,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "optimization": {
-    "sideEffects": false,
-    "FAST_REFRESH": false
   },
   "eslintConfig": {
     "extends": [

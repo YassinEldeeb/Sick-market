@@ -109,22 +109,16 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
         ? pricesArr2.reduce((acc, item) => acc + item).toFixed(2)
         : 0
     )
-    const totalPrice2 =
-      isBuyNow && product.price
-        ? product.price.toFixed(2)
-        : pricesArr2.length
-        ? pricesArr2.reduce((acc, item) => acc + item).toFixed(2)
-        : 0
 
-    cart.taxes = Number(toFixedFN((Number(totalPrice2) * 14) / 100))
-    cart.totalPrice2 = Number(totalPrice2)
+    cart.taxes = Number(toFixedFN((Number(totalPrice) * 14) / 100))
+    cart.totalPrice = Number(totalPrice)
     cart.shipping = Number(toFixedFN(shippingValue))
-    cart.itemsPrice = Number(totalPrice2)
-    cart.totalPrice2 = Math.abs(
+    cart.itemsPrice = Number(totalPrice)
+    cart.totalPrice = Math.abs(
       toFixedFN(
-        Number(totalPrice2) +
+        Number(totalPrice) +
           shippingValue +
-          (Number(totalPrice2) * 14) / 100 -
+          (Number(totalPrice) * 14) / 100 -
           discountValue()
       )
     )
@@ -204,7 +198,7 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
                       price={each.price}
                       qty={each.qty}
                       productName={truncate(each.name)}
-                      img={'https://sickmarket.ml/' + each.image}
+                      img={each.image}
                       id={each._id}
                       soldOut={
                         errorConfirm

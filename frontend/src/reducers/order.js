@@ -1,4 +1,5 @@
 const initialState = { order: {} }
+
 const createOrderReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'CREATE_ORDER_REQUEST':
@@ -21,6 +22,7 @@ const createOrderReducer = (state = initialState, action) => {
         orderLoading: false,
         orderPlaced: false,
       }
+
     default:
       return state
   }

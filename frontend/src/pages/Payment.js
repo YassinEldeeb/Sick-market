@@ -334,7 +334,7 @@ const StyledPayment = styled.div`
     flex-direction: column;
     padding-left: 43px;
     margin-bottom: 1.2rem;
-    border-left: 2px solid #dfdfdf;
+    border-left: 2px solid #dfdfdf61;
     input {
       display: none;
     }

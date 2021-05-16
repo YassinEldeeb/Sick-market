@@ -27,6 +27,7 @@ const orderSchema = mongoose.Schema(
       governorate: { type: String, required: true, trim: true },
       lat: { type: String, required: true, trim: true },
       lon: { type: String, required: true, trim: true },
+      accurate: { type: Boolean },
     },
     paymentMethod: {
       type: String,
@@ -77,8 +78,15 @@ const orderSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
-    readyForShipping: {
-      type: Boolean,
+    approved: {
+      type: Date,
+    },
+    rejected: {
+      reason: { type: String },
+      date: { type: Date },
+    },
+    packed: {
+      type: Date,
     },
   },
   { timestamps: true }

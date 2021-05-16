@@ -31,9 +31,15 @@ const cartReducer = (state = initialState, action) => {
         ...state,
         address: action.payload,
         geocodingLoading: false,
+        success: true,
       }
     case 'GEOCODING_FAIL':
-      return { ...state, error: action.payload, geocodingLoading: false }
+      return {
+        ...state,
+        success: false,
+        error: action.payload,
+        geocodingLoading: false,
+      }
     case 'COUPON_REQUEST':
       return { ...state, loadingCoupon: true }
     case 'COUPON_SUCCESS':
@@ -44,7 +50,11 @@ const cartReducer = (state = initialState, action) => {
         errorCoupon: null,
       }
     case 'COUPON_FAIL':
-      return { ...state, loadingCoupon: false, errorCoupon: action.payload }
+      return {
+        ...state,
+        loadingCoupon: false,
+        errorCoupon: action.payload,
+      }
     case 'CHECK_PRODUCTS_REQUEST':
       return {
         ...state,

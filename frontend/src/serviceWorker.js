@@ -72,9 +72,7 @@ export function register(config) {
                       await axios.delete(
                         'http://localhost:5000/api/push/unregister'
                       )
-                    } catch (err) {
-                      console.log(err)
-                    }
+                    } catch (err) {}
                   } else {
                     console.error(
                       'An error ocurred during the subscription process.',
@@ -96,9 +94,7 @@ export function register(config) {
 const sendSubscription = async (subscription) => {
   try {
     await axios.post('http://localhost:5000/api/push/register', subscription)
-  } catch (err) {
-    console.log(err)
-  }
+  } catch (err) {}
 }
 
 function registerValidSW(swUrl, config) {
