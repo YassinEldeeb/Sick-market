@@ -91,6 +91,76 @@ const orderActions = (state = initialState, action) => {
         errorReject: action.payload,
         rejectLoading: false,
       }
+    case 'PAID_DASHBOARD_ORDER_ACTIONS':
+      let order
+      if (state.order && action.payload._id === state.order._id) {
+        order = { ...state.order, isPaid: true, paidAt: action.payload.paidAt }
+      } else {
+        order = state.order
+      }
+      return {
+        ...state,
+        order: order,
+      }
+    case 'DELIVERED_DASHBOARD_ORDER_ACTIONS':
+      let order2
+      if (state.order && action.payload._id === state.order._id) {
+        order2 = {
+          ...state.order,
+          isDelivered: true,
+          deliveredAt: action.payload.deliveredAt,
+        }
+      } else {
+        order2 = state.order
+      }
+
+      return {
+        ...state,
+        order: order2,
+      }
+    case 'APPROVE_DASHBOARD_ORDER_ACTIONS':
+      let order3
+      if (state.order && action.payload._id === state.order._id) {
+        order3 = {
+          ...state.order,
+          approved: action.payload.approved,
+        }
+      } else {
+        order3 = state.order
+      }
+      return {
+        ...state,
+        order: order3,
+      }
+    case 'REJECT_DASHBOARD_ORDER_ACTIONS':
+      let order4
+      if (state.order && action.payload._id === state.order._id) {
+        order4 = {
+          ...state.order,
+          approved: undefined,
+          rejected: action.payload.rejected,
+        }
+      } else {
+        order4 = state.order
+      }
+      return {
+        ...state,
+        order: order4,
+      }
+    case 'PACK_DASHBOARD_ORDER_ACTIONS':
+      let order5
+      if (state.order && action.payload._id === state.order._id) {
+        order5 = {
+          ...state.order,
+          packed: action.payload.packed,
+        }
+      } else {
+        order5 = state.order
+      }
+      return {
+        ...state,
+        order: order5,
+      }
     default:
       return state
   }

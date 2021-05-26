@@ -6,7 +6,7 @@ import { ReactComponent as Printer } from '../img/printer.svg'
 
 import ReactTooltip from 'react-tooltip'
 import { motion, AnimatePresence } from 'framer-motion'
-import { popup, realtimeStockCounter } from '../animations'
+import { popup } from '../animations'
 import { Link, useLocation } from 'react-router-dom'
 import Loader from './loader'
 import { useSelector, useDispatch } from 'react-redux'
@@ -54,22 +54,24 @@ const OrderDashboard = ({
     return componentRef.current
   }, [componentRef.current])
 
+  const [printLoading, setPrintLoading] = useState(false)
+
   const reactToPrintTrigger = useCallback(() => {
     return (
-      <div
-        data-for='order-warning-actions-card-tooltip'
-        data-tip={order.approved ? null : 'Approve First'}
-        className={`ActionCont ${order.approved ? '' : 'notAllowed'}`}
-      >
+      <div className={`ActionCont ${order.approved ? '' : 'notAllowed'}`}>
         <div
           id={`${order.approved ? '' : 'notAllowed'}`}
           className={`actionOption trash ${order.approved ? '' : 'notAllowed'}`}
         >
-          <Printer className='gearImg' />
+          {printLoading ? (
+            <Loader className='loadingPrint' />
+          ) : (
+            <Printer className='gearImg' />
+          )}
         </div>
       </div>
     )
-  }, [])
+  }, [order.approved, printLoading])
 
   return (
     <StyledUser variants={popup}>
@@ -180,7 +182,10 @@ const OrderDashboard = ({
                 setDashboardScrollPosition(view.scrollTop)
               }
             }}
-            to={`/dashboard/orders/${order._id}`}
+            to={
+              `/dashboard/orders/${order._id}` +
+              `${location.search ? location.search : ''}`
+            }
             className='actionOption'
             data-for='order-card-tooltip'
           >
@@ -191,6 +196,8 @@ const OrderDashboard = ({
         <ReactToPrint
           content={reactToPrintContent}
           trigger={reactToPrintTrigger}
+          onBeforeGetContent={() => setPrintLoading(true)}
+          onBeforePrint={() => setPrintLoading(false)}
         />
         <div style={{ display: 'none' }}>
           <OrderPaper
@@ -209,8 +216,16 @@ const OrderDashboard = ({
 }
 
 const StyledUser = styled(motion.div)`
+  .loadingPrint {
+    width: 23px;
+    height: 23px;
+  }
+  #greybackground path {
+    stroke: #ffffff !important;
+  }
   .notAllowed {
-    cursor: not-allowed !important;
+    pointer-events: none !important;
+    opacity: 0.8;
   }
   .indicator {
     min-width: 15px;

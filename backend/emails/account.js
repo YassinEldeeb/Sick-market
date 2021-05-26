@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import SecretCode from '../models/secretCode.js'
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
+import asyncHandler from 'express-async-handler'
 
 dotenv.config()
 
@@ -976,7 +977,7 @@ const sendVerificationEmail = async (email, name) => {
   })
 }
 
-const sendResetPasswordEmail = async (email) => {
+const sendResetPasswordEmail = asyncHandler(async (email) => {
   const token = jwt.sign({ email }, process.env.JWT_SECRET, {
     expiresIn: '600000',
   })
@@ -1011,9 +1012,9 @@ const sendResetPasswordEmail = async (email) => {
       console.log('Email sent successfully')
     }
   })
-}
+})
 
-const orderPlaced = async (order, email) => {
+const orderPlaced = asyncHandler(async (order, email) => {
   // Generate test SMTP service account from ethereal.email
   let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -1044,6 +1045,6 @@ const orderPlaced = async (order, email) => {
       console.log('Email sent successfully')
     }
   })
-}
+})
 
 export { sendVerificationEmail, sendResetPasswordEmail, orderPlaced }

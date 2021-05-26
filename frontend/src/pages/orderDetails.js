@@ -16,6 +16,7 @@ import axios from 'axios'
 import { PayPalButton } from 'react-paypal-button-v2'
 import orderPayAction from '../actions/orderPay'
 import orderDeliverAction from '../actions/orderDeliver'
+import { parseISO, format } from 'date-fns'
 
 const OrderDetails = () => {
   const orderThatIsPlaced = useSelector((state) => state.order)
@@ -292,7 +293,15 @@ const OrderDetails = () => {
                           <Message type='error' msg='Not Delivered' />
                         )}
                         {order.isDelivered && (
-                          <Message msg={'Delivered on ' + order.deliveredAt} />
+                          <Message
+                            msg={
+                              'Delivered on ' +
+                              format(
+                                parseISO(order.deliveredAt),
+                                'yyyy-MM-dd / hh:mm a'
+                              )
+                            }
+                          />
                         )}
 
                         {!order.isDelivered && (
@@ -309,7 +318,15 @@ const OrderDetails = () => {
                       <p>Method: {order.paymentMethod}</p>
                       {!order.isPaid && <Message type='error' msg='Not Paid' />}
                       {order.isPaid && (
-                        <Message msg={'Paid on ' + order.paidAt} />
+                        <Message
+                          msg={
+                            'Paid on ' +
+                            format(
+                              parseISO(order.paidAt),
+                              'yyyy-MM-dd / hh:mm a'
+                            )
+                          }
+                        />
                       )}
                     </div>
                     <div className='order-section section'>

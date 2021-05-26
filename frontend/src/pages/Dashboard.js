@@ -77,7 +77,7 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
       history.push('/dashboard/statistics')
     }
     if (
-      !location.pathname.split('/')[3] && lastLocation
+      !location.pathname.split('/')[3] && !location.search && lastLocation
         ? !lastLocation.pathname.split('/')[3]
         : false
     ) {

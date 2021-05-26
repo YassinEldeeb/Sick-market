@@ -440,6 +440,18 @@ const DashboardEditProduct = ({ scrolled, setScrolled }) => {
                                 </Link>
                               </motion.li>
                               <motion.li layout>
+                                Sold Stocks:
+                                <Link className='links'>
+                                  {dashboardProduct.paidStock}
+                                </Link>
+                              </motion.li>
+                              <motion.li layout>
+                                Paid Amount:
+                                <Link className='links'>
+                                  {dashboardProduct.paidAmount}
+                                </Link>
+                              </motion.li>
+                              <motion.li layout>
                                 Created at:{' '}
                                 {format(
                                   parseISO(dashboardProduct.createdAt),
@@ -631,6 +643,7 @@ const StyledUserAction = styled(motion.div)`
       li {
         width: max-content;
         padding-bottom: 0.2rem;
+        font-size: 0.95rem;
         &:last-child {
           padding-bottom: 0rem;
         }

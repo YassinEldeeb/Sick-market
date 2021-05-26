@@ -26,12 +26,9 @@ const ProductDashboard = ({
   const location = useLocation()
   const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
 
-  const {
-    loading: deleteLoading,
-    success,
-    asking,
-    confirm,
-  } = useSelector((state) => state.deleteProduct)
+  const { loading: deleteLoading, product: productId } = useSelector(
+    (state) => state.deleteProduct
+  )
   const dispatch = useDispatch()
   const lastLocation = useLastLocation()
 
@@ -208,7 +205,7 @@ const ProductDashboard = ({
           >
             {!deleteLoading ? (
               <Trash className='gearImg' />
-            ) : clicked ? (
+            ) : product._id === productId ? (
               <Loader />
             ) : (
               <Trash className='gearImg' />

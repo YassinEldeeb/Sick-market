@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.4.2",
+    "@socket.io/redis-adapter": "^7.0.0",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -34,10 +35,11 @@
     "nodemailer": "^6.4.17",
     "prerender-node": "^3.2.5",
     "qs": "^6.7.0",
+    "redis": "^3.1.2",
     "request": "^2.88.2",
     "sharp": "^0.27.2",
     "socket.io": "^4.0.1",
-    "spdy": "^4.0.2",
+    "uws": "^200.0.0",
     "validator": "^13.5.2",
     "web-push": "^3.4.4"
   },

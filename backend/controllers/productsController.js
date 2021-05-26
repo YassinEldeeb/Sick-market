@@ -206,7 +206,7 @@ const addProduct = asyncHandler(async (req, res) => {
     'user',
     'name'
   )
-  console.log('Fired!😀', req.user._id)
+
   req.app.get('socketService').emiter('ProductAdded', req.user._id, 'Admins')
 
   res.status(201).send(newPopulatedProduct)

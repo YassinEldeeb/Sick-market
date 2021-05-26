@@ -102,7 +102,7 @@ const UserDashboard = ({ user }) => {
           onClick={() => setClicked(true)}
           className='gear'
         >
-          {actionLoading && clicked ? <Loader /> : <Gear className='gearImg' />}
+          <Gear className='gearImg' />
         </Link>
       </div>
     </StyledUser>

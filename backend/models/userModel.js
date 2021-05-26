@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import validator from 'validator'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
+import asyncHandler from 'express-async-handler'
 dotenv.config()
 
 const userSchema = mongoose.Schema(
@@ -110,34 +111,35 @@ userSchema.methods.generateToken = function () {
   })
   return token
 }
+userSchema.statics.findByCredentials = asyncHandler(
+  async (email, password, type) => {
+    if (validator.isEmail(email)) {
+      const user = await User.findOne({ email })
 
-userSchema.statics.findByCredentials = async function (email, password, type) {
-  if (validator.isEmail(email)) {
-    const user = await User.findOne({ email })
-
-    if (!user) {
-      throw new Error('Incorrect Email or Password')
-    }
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = user.generateToken()
-      user.tokens.unshift({ token })
-      await user.save()
-      return { user, token: user.tokens[0].token }
-    } else {
-      if (password !== user.password && user.profilePicLink) {
-        throw new Error('Try Logging in with Google')
-      } else if (password !== user.password && !user.profilePicLink) {
-        if (type) {
-          throw new Error('Email already Exists, Login below')
-        } else {
-          throw new Error('Incorrect Email or Password')
+      if (!user) {
+        throw new Error('Incorrect Email or Password')
+      }
+      if (user && (await bcrypt.compare(password, user.password))) {
+        const token = user.generateToken()
+        user.tokens.unshift({ token })
+        await user.save()
+        return { user, token: user.tokens[0].token }
+      } else {
+        if (password !== user.password && user.profilePicLink) {
+          throw new Error('Try Logging in with Google')
+        } else if (password !== user.password && !user.profilePicLink) {
+          if (type) {
+            throw new Error('Email already Exists, Login below')
+          } else {
+            throw new Error('Incorrect Email or Password')
+          }
         }
       }
+    } else {
+      throw new Error("Email isn't an actual email")
     }
-  } else {
-    throw new Error("Email isn't an actual email")
   }
-}
+)
 
 userSchema.pre('save', async function (next) {
   const user = this

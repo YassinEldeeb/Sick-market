@@ -17,6 +17,7 @@ export const realtimeStockCounter = {
     transition: { duration: 0.3 },
   },
 }
+
 export const popup = {
   hidden: {
     opacity: 0,
@@ -35,6 +36,7 @@ export const popup = {
     y: 5,
   },
 }
+
 export const popupLeft = {
   hidden: {
     opacity: 0,
@@ -48,6 +50,7 @@ export const popupLeft = {
     transition: { duration: 0.1 },
   },
 }
+
 export const popup3 = {
   hidden: {
     opacity: 0,

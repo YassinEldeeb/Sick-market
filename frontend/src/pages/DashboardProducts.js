@@ -396,7 +396,7 @@ const DashboardProducts = ({
       e.preventDefault()
     }
     if (
-      (sortValue !== 'Date' && sortType !== 'Newest') ||
+      (sortValue && sortType) ||
       brand.length !== 0 ||
       category.length !== 0
     ) {
@@ -702,6 +702,7 @@ const DashboardProducts = ({
                       >
                         <p className='filterTitle'>Fitler</p>
                         <svg
+                          className='filterSVG'
                           width='14'
                           height='14'
                           viewBox='0 0 14 14'
@@ -1010,8 +1011,22 @@ const DashboardProducts = ({
 }
 
 const StyledDashboardProducts = styled(motion.div)`
+  .clearSearch {
+    position: absolute;
+    right: 9%;
+    top: 50%;
+    transform: translate(0, -50%);
+    cursor: pointer;
+    transition: 0.2s ease;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
   &.hide {
     opacity: 0 !important;
+  }
+  .filterSVG {
+    pointer-events: none;
   }
   .inputDiv {
     position: relative;
@@ -1159,7 +1174,7 @@ const StyledDashboardProducts = styled(motion.div)`
     }
     svg {
       margin: 0 0 0 0.35rem !important;
-      width: 12px !important;
+      min-width: 12px !important;
       height: 12px !important;
     }
   }
@@ -1293,7 +1308,6 @@ const StyledDashboardProducts = styled(motion.div)`
       transition: 0.08s ease;
       width: 13px;
       height: 13px;
-      pointer-events: none;
     }
     .value {
       color: rgba(255, 255, 255, 1) !important;

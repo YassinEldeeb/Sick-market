@@ -4,6 +4,7 @@ const deleteProduct = (id, search) => async (dispatch, getState) => {
   try {
     dispatch({
       type: 'DELETE_PRODUCT_REQUEST',
+      payload: id,
     })
 
     const { userInfo } = getState((state) => state.userInfo)

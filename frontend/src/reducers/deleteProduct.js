@@ -3,7 +3,7 @@ const initialState = { loading: false }
 const deleteProduct = (state = initialState, action) => {
   switch (action.type) {
     case 'DELETE_PRODUCT_REQUEST':
-      return { success: false, loading: true }
+      return { success: false, loading: true, product: action.payload }
     case 'DELETE_PRODUCT_SUCCESS':
       return {
         success: true,

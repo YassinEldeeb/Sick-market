@@ -27,6 +27,9 @@ import { approveOrderAction } from '../actions/approveOrder'
 import { packOrderAction } from '../actions/packOrder'
 import { rejectOrderAction } from '../actions/rejectOrder'
 import ConfirmPopup from '../components/confirmPopup'
+import OrderPaper from '../components/OrderPaper'
+import ReactToPrint from 'react-to-print'
+import socket from '../clientSocket/socket'
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoieWFzc2luNzg5IiwiYSI6ImNraGNiZDc2cjBjcXoycm5nZDQzeWh5MGsifQ.vZNRBIwM6P8fwbZvoPgp1A'
@@ -40,9 +43,23 @@ const DashboardOrderActions = ({ scrolled }) => {
 
   const [element, inView] = useInView()
 
+  const { orders } = useSelector((state) => state.dashboardOrders)
+
   const returnHandler = () => {
-    history.push('/dashboard/orders')
+    console.log('SEARCH', location.search.length)
+    const added =
+      !orders && location.search.length > 0 ? `&query=something` : ''
+    history.push('/dashboard/orders' + `${location.search}` + added)
   }
+  useEffect(() => {
+    if (
+      location.search.includes('&query=something') &&
+      location.pathname.split('/')[3]
+    )
+      history.push({
+        search: location.search.replace('&query=something', ''),
+      })
+  }, [location.search, location.pathname])
   const imgSrcCondition = () => {
     if (order.user) {
       if (
@@ -133,6 +150,70 @@ const DashboardOrderActions = ({ scrolled }) => {
       dispatch(rejectOrderAction(id, reasonValue))
     }
   }, [confirm])
+
+  const componentRef = useRef(null)
+
+  const reactToPrintContent = React.useCallback(() => {
+    return componentRef.current
+  }, [componentRef.current])
+
+  const [printLoading, setPrintLoading] = useState(false)
+
+  const reactToPrintTrigger = useCallback(() => {
+    if (order) {
+      return (
+        <div className={`ActionCont`}>
+          <div
+            className={`actionOption trash ${
+              order.approved ? '' : 'notAllowed'
+            }`}
+          >
+            {printLoading ? (
+              <Loader className='loadingPrint' />
+            ) : (
+              <Printer className='gearImg' />
+            )}
+          </div>
+        </div>
+      )
+    }
+  }, [order, printLoading])
+
+  useEffect(() => {
+    socket.on('orderPaid', (data) => {
+      dispatch({
+        type: 'PAID_DASHBOARD_ORDER_ACTIONS',
+        payload: data,
+      })
+    })
+
+    socket.on('orderDelivered', (data) => {
+      dispatch({
+        type: 'DELIVERED_DASHBOARD_ORDER_ACTIONS',
+        payload: data,
+      })
+    })
+
+    socket.on('orderApproved', (data) => {
+      dispatch({
+        type: 'APPROVE_DASHBOARD_ORDER_ACTIONS',
+        payload: data,
+      })
+    })
+    socket.on('orderRejected', (data) => {
+      dispatch({
+        type: 'REJECT_DASHBOARD_ORDER_ACTIONS',
+        payload: data,
+      })
+    })
+
+    socket.on('orderPacked', (data) => {
+      dispatch({
+        type: 'PACK_DASHBOARD_ORDER_ACTIONS',
+        payload: data,
+      })
+    })
+  }, [])
 
   return (
     <StyledUserAction
@@ -368,7 +449,7 @@ const DashboardOrderActions = ({ scrolled }) => {
                       )}
                       {order.isDelivered && (
                         <li>
-                          Delivired At:{' '}
+                          Delivered At:{' '}
                           <span>
                             {format(
                               parseISO(order.deliveredAt),
@@ -449,11 +530,25 @@ const DashboardOrderActions = ({ scrolled }) => {
                     )}
                   </div>
                   {order.approved && !order.packed && (
-                    <div className='ActionCont'>
-                      <div className='actionOption trash'>
-                        <Printer className='gearImg' />
+                    <>
+                      <ReactToPrint
+                        content={reactToPrintContent}
+                        trigger={reactToPrintTrigger}
+                        onBeforeGetContent={() => setPrintLoading(true)}
+                        onBeforePrint={() => setPrintLoading(false)}
+                      />
+                      <div style={{ display: 'none' }}>
+                        <OrderPaper
+                          name={order.user.name}
+                          email={order.user.email}
+                          address={order.shippingAddress.address}
+                          method={order.paymentMethod}
+                          id={order._id}
+                          createdAt={order.createdAt}
+                          refrence={componentRef}
+                        />
                       </div>
-                    </div>
+                    </>
                   )}
                 </div>
               </Scrollbars>
@@ -699,6 +794,9 @@ const StyledUserAction = styled(motion.div)`
     align-items: center;
     gap: 0.7rem;
   }
+  position: absolute;
+  left: 0;
+  top: 0;
   &#active {
     background: rgba(29, 33, 62, 0.6);
     pointer-events: all;
@@ -783,10 +881,6 @@ const StyledUserAction = styled(motion.div)`
     }
   }
 
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translate(-50%, 0%);
   cursor: pointer;
   pointer-events: none;
   width: 100%;

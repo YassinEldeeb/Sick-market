@@ -151,7 +151,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     facilitatorAccessToken: req.body.facilitatorAccessToken,
   }
   order.isPaid = true
-  const date = format(Date.now(), 'yyyy-MM-dd / hh:mm a')
+  const date = Date.now()
 
   order.paidAt = date
 
@@ -161,6 +161,11 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   await req.user.save()
 
   await order.save()
+
+  req.app
+    .get('socketService')
+    .emiter('orderPaid', { _id: order._id, paidAt: order.paidAt }, 'Admins')
+
   res.send({ order })
 })
 
@@ -184,11 +189,20 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
     throw new Error('Order not Found!')
   }
   order.isDelivered = true
-  const date = format(Date.now(), 'yyyy-MM-dd / hh:mm a')
+  const date = Date.now()
 
   order.deliveredAt = date
 
   await order.save()
+
+  req.app
+    .get('socketService')
+    .emiter(
+      'orderDelivered',
+      { _id: order._id, deliveredAt: order.deliveredAt },
+      'Admins'
+    )
+
   res.send(date)
 })
 
@@ -203,15 +217,55 @@ const getMyOrders = asyncHandler(async (req, res) => {
 })
 
 const getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({})
+  let sort = {}
+
+  if (req.query.createdAt) {
+    sort = { createdAt: req.query.createdAt === 'newest' ? -1 : 1 }
+  } else if (req.query.total) {
+    sort = {
+      totalPrice: req.query.total === 'highest' ? -1 : 1,
+    }
+  }
+
+  let findObj = {}
+
+  if (req.query.email) {
+    const userId = await User.findOne({ email: req.query.email }, '_id')
+
+    if (userId) findObj.user = userId
+  }
+
+  if (req.query.paid) {
+    findObj.isPaid = req.query.paid
+  }
+  if (req.query.governorate) {
+    const regex = new RegExp(`${req.query.governorate}`, 'i')
+    findObj['shippingAddress.governorate'] = regex
+  }
+  if (req.query.delivered) {
+    findObj.isDelivered = req.query.delivered
+  }
+  if (req.query.approved) {
+    findObj.approved = { $exists: req.query.approved === 'true' ? true : false }
+  }
+  if (req.query.rejected) {
+    findObj.rejected = { $exists: req.query.rejected === 'true' ? true : false }
+  }
+
+  if (req.query.packed) {
+    findObj.packed = { $exists: req.query.packed === 'true' ? true : false }
+  }
+
+  const orders = await Order.find(findObj)
+    .sort(sort)
     .limit(parseInt(req.query.limit ? req.query.limit : 0))
     .skip(parseInt(req.query.skip ? req.query.skip : 0))
     .populate(
       'user',
       'rank availablePic email totalPaidOrders _id name profilePicLink'
     )
-    .sort({ createdAt: -1 })
-  const count = await Order.countDocuments()
+
+  const count = await Order.countDocuments(findObj)
 
   res.send({ orders, count })
 })
@@ -241,6 +295,14 @@ const updateOrderToApproved = asyncHandler(async (req, res) => {
   order.approved = Date.now()
   await order.save()
 
+  req.app
+    .get('socketService')
+    .emiter(
+      'orderApproved',
+      { _id: order._id, approved: order.approved },
+      'Admins'
+    )
+
   res.send({ approved: order.approved })
 })
 const updateOrderToRejected = asyncHandler(async (req, res) => {
@@ -260,6 +322,14 @@ const updateOrderToRejected = asyncHandler(async (req, res) => {
   order.rejected = { reason, date: Date.now() }
   await order.save()
 
+  req.app
+    .get('socketService')
+    .emiter(
+      'orderRejected',
+      { _id: order._id, rejected: order.rejected },
+      'Admins'
+    )
+
   res.send({ rejected: order.rejected })
 })
 const updateOrderToPacked = asyncHandler(async (req, res) => {
@@ -276,6 +346,10 @@ const updateOrderToPacked = asyncHandler(async (req, res) => {
 
   order.packed = Date.now()
   await order.save()
+
+  req.app
+    .get('socketService')
+    .emiter('orderPacked', { _id: order._id, packed: order.packed }, 'Admins')
 
   res.send({ packed: order.packed })
 })

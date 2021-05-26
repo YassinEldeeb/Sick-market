@@ -1,15 +1,17 @@
 import { Server } from 'socket.io'
 import dotenv from 'dotenv'
+import { createAdapter } from '@socket.io/redis-adapter'
+import { createClient } from 'redis'
 
 dotenv.config()
 
 class SocketService {
   constructor(server) {
-    if (process.env.NODE_ENV === 'development') {
-      this.io = new Server(server)
-    } else {
-      this.io = new Server(server)
-    }
+    this.io = new Server(server)
+    // this.pubClient = new createClient(6379, 'localhost')
+    // const subClient = pubClient.duplicate()
+    // this.io.adapter(createAdapter(pubClient, subClient))
+
     this.io.on('connection', (socket) => {
       this.socket = socket
       socket.on('userSignedIn', (id) => {
