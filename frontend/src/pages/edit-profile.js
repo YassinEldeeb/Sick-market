@@ -233,7 +233,8 @@ const EditProfile = () => {
                       inputRef.current.focus()
                       setShow(!show)
                       setTimeout(function () {
-                        inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
+                        inputRef.current.selectionStart =
+                          inputRef.current.selectionEnd = 10000
                       }, 0)
                     }}
                   />
@@ -246,7 +247,8 @@ const EditProfile = () => {
                       inputRef.current.focus()
                       setShow(!show)
                       setTimeout(function () {
-                        inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
+                        inputRef.current.selectionStart =
+                          inputRef.current.selectionEnd = 10000
                       }, 0)
                     }}
                   />

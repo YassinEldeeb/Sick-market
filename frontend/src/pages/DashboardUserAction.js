@@ -104,9 +104,11 @@ const DashboardUserAction = ({ setRankValue, rankValue }) => {
     success: deleteSuccess,
     confirm: deleteConfirm,
   } = useSelector((state) => state.deleteUser)
-  const { loading: rankLoading, success: rankSuccess, confirm } = useSelector(
-    (state) => state.editRank
-  )
+  const {
+    loading: rankLoading,
+    success: rankSuccess,
+    confirm,
+  } = useSelector((state) => state.editRank)
   const [e, setE] = useState(true)
   const [e2, setE2] = useState(true)
 

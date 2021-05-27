@@ -61,6 +61,7 @@ const Nav = ({ activeMenu, setActiveMenu, cartCount }) => {
       orderDetails.orderLoading = true
     }
   }, [location.pathname])
+
   return (
     <>
       {status !== 'Verified' &&

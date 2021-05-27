@@ -12,13 +12,8 @@ import Loader from '../components/loader'
 const Cart = ({ cartCount, setCartCount }) => {
   const dispatch = useDispatch()
 
-  const {
-    cartItems,
-    check,
-    loadingCheck,
-    checkError,
-    checkProductsSuccess,
-  } = useSelector((state) => state.cart)
+  const { cartItems, check, loadingCheck, checkError, checkProductsSuccess } =
+    useSelector((state) => state.cart)
   const { user } = useSelector((state) => state.userInfo)
   const pricesArr = cartItems.map((each) => {
     if (!each.removed) return each.price * each.qty
