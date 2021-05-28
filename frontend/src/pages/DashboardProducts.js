@@ -58,9 +58,8 @@ const DashboardProducts = ({
     return size
   }
 
-  const { products, error, loading, count, filtering } = useSelector(
-    (state) => state.productList
-  )
+  const { products, error, loading, count, filtering, infiniteLoading } =
+    useSelector((state) => state.productList)
 
   const [skip, setSkip] = useState(1)
   const [skip2, setSkip2] = useState(1)
@@ -572,7 +571,7 @@ const DashboardProducts = ({
           return 'stock'
       }
     }
-    if (!searches.search && products && !loading) {
+    if (!searches.search && products && !loading && !infiniteLoading) {
       dispatch(
         infiniteScrollProducts(
           skip,
@@ -586,7 +585,12 @@ const DashboardProducts = ({
     }
   }
   const infiniteScrollingMoreDataSearched = () => {
-    if (searches.search && searchedProducts && !searchLoading) {
+    if (
+      searches.search &&
+      searchedProducts &&
+      !searchLoading &&
+      !infiniteLoading
+    ) {
       dispatch(infiniteScrollProductsSearched(skip2, searches.search))
       setSkip2(skip2 + 1)
     }

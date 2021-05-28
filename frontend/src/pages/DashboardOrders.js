@@ -8,9 +8,7 @@ import { hide, popupLeft } from '../animations'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useLastLocation } from 'react-router-last-location'
 import { throttle } from 'underscore'
-import ConfirmPopup from '../components/confirmPopup'
 import { ReactComponent as SmallX } from '../img/smallX.svg'
-import { ReactComponent as Search } from '../img/searchIcon.svg'
 import { ReactComponent as Sort } from '../img/sort.svg'
 import { v4 as uuid } from 'uuid'
 import { useRef } from 'react'
@@ -24,6 +22,7 @@ import { ReactComponent as Arrow } from '../img/arrow3.svg'
 import { ReactComponent as Connect } from '../img/connect.svg'
 import Input from '../components/DashboardInput'
 import Select from 'react-select'
+import infiniteScrollOrders from '../actions/infiniteScrollOrders'
 
 const defaultSelectValues = [
   { value: 'Paid', label: 'Paid' },
@@ -38,6 +37,9 @@ const defaultSelectValues = [
   { value: 'Not Rejected', label: 'Not Rejected' },
 ]
 const DashboardOrders = () => {
+  const [element, inView] = useInView()
+  const [skip, setSkip] = useState(1)
+
   Object.size = function (obj) {
     var size = 0,
       key
@@ -97,6 +99,7 @@ const DashboardOrders = () => {
     }
     if (!location.pathname.split('/')[3] && Object.size(searches) === 0) {
       dispatch(getDashboardOrdersAction())
+      setSkip(1)
     }
   }, [])
   useEffect(() => {
@@ -108,6 +111,7 @@ const DashboardOrders = () => {
       Object.size(searches) === 0
     ) {
       dispatch(getDashboardOrdersAction())
+      setSkip(1)
     }
     const container = document.querySelector('#view')
 
@@ -120,12 +124,9 @@ const DashboardOrders = () => {
     }
   }, [location.pathname])
 
-  const { orders, loading, count, error, filtering } = useSelector(
-    (state) => state.dashboardOrders
-  )
-  const { order, loading: orderLoading } = useSelector(
-    (state) => state.orderActions
-  )
+  const { orders, loading, count, error, filtering, infiniteLoading } =
+    useSelector((state) => state.dashboardOrders)
+  const { loading: orderLoading } = useSelector((state) => state.orderActions)
 
   useEffect(() => {
     socket.on('orderPaid', (data) => {
@@ -181,7 +182,7 @@ const DashboardOrders = () => {
         baseURL = '/dashboard/orders'
         dispatch(getDashboardOrdersAction())
       }
-      // setSkip(1)
+      setSkip(1)
       history.push(baseURL)
     }
     setOpenFilter(false)
@@ -418,6 +419,22 @@ const DashboardOrders = () => {
       )
     }
   }, [location.search])
+
+  useEffect(() => {
+    if (inView && !loading && !infiniteLoading) {
+      dispatch(
+        infiniteScrollOrders(
+          skip,
+          Object.keys(searches)[0] === 'Date' ? 'createdAt' : 'total',
+          searches[Object.keys(searches)[0]],
+          searches.governorate ? searches.governorate : null,
+          searches.user ? searches.user : null,
+          searches.filter ? JSON.parse(searches.filter) : null
+        )
+      )
+      setSkip(skip + 1)
+    }
+  }, [inView])
 
   return (
     <StyledOrders>
@@ -659,6 +676,13 @@ const DashboardOrders = () => {
           ) : (
             ''
           )}
+          {orders && !filtering && orders.length < count ? (
+            <Loader providedClassName='infiniteLoader' refElement={element} />
+          ) : (
+            !loading &&
+            orders &&
+            count !== 0 && <p className='end'>Yay! You have seen it all</p>
+          )}
         </>
       )}
     </StyledOrders>
@@ -666,6 +690,20 @@ const DashboardOrders = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  .end {
+    color: rgba(255, 255, 255, 0.7) !important;
+    text-align: center;
+    font-weight: 400 !important;
+    font-size: 1rem !important;
+    margin-bottom: 0.6rem;
+  }
+  .infiniteLoader {
+    margin-bottom: 0.6rem;
+  }
+  .infiniteLoader #loader:first-child {
+    width: calc(2rem + 0.5vw) !important;
+    height: calc(2rem + 0.5vw) !important;
+  }
   .filterSVG {
     pointer-events: none;
   }

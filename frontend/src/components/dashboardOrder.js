@@ -31,6 +31,7 @@ const OrderDashboard = ({
 
   useEffect(() => {
     ReactTooltip.rebuild()
+    console.log('rendered')
   }, [])
 
   const imgSrcCondition = () => {
@@ -56,10 +57,14 @@ const OrderDashboard = ({
 
   const [printLoading, setPrintLoading] = useState(false)
 
+  const [showPrint, setShowPrint] = useState(false)
   const reactToPrintTrigger = useCallback(() => {
     return (
       <div className={`ActionCont ${order.approved ? '' : 'notAllowed'}`}>
         <div
+          onClick={() => {
+            setShowPrint(true)
+          }}
           id={`${order.approved ? '' : 'notAllowed'}`}
           className={`actionOption trash ${order.approved ? '' : 'notAllowed'}`}
         >
@@ -201,6 +206,7 @@ const OrderDashboard = ({
         />
         <div style={{ display: 'none' }}>
           <OrderPaper
+            showPrint={showPrint}
             name={order.user.name}
             email={order.user.email}
             address={order.shippingAddress.address}

@@ -4,7 +4,6 @@
   "proxy": "http://127.0.0.1:5000",
   "dependencies": {
     "@babel/runtime": "^7.12.1",
-    "@loadable/component": "^5.15.0",
     "axios": "^0.21.1",
     "babel-preset-react-app": "^10.0.0",
     "date-fns": "^2.0.0-alpha.27",

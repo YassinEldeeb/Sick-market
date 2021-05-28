@@ -1,5 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react'
-import loadable from '@loadable/component'
+import React, { useState, useEffect, Suspense, lazy } from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { LastLocationProvider } from 'react-router-last-location'
 import Global from './components/GlobalStyles'
@@ -7,32 +6,33 @@ import { useDispatch, useSelector } from 'react-redux'
 import checkToken from './actions/checkToken'
 import Nav from './components/Nav'
 import JustComponentForApp from './components/justComponentForApp'
+import Loader from './components/loader'
 import socket from './clientSocket/socket'
 import { userLogoutAction } from './actions/logout'
 import { AnimatePresence } from 'framer-motion'
 import LoggingOut from './components/loggingYouOut'
+import Home from './pages/Home'
+import ProductDetail from './pages/ProductDetail'
+import Cart from './pages/Cart'
+import Shipping from './pages/Shipping'
+import Payment from './pages/Payment'
+import PlaceOrder from './pages/PlaceOrder'
 //
-const Home = loadable(() => import('./pages/Home'))
-const ProductDetail = loadable(() => import('./pages/ProductDetail'))
-const Cart = loadable(() => import('./pages/Cart'))
-const Shipping = loadable(() => import('./pages/Shipping'))
-const Payment = loadable(() => import('./pages/Payment'))
-const PlaceOrder = loadable(() => import('./pages/PlaceOrder'))
 //
-const Account = loadable(() => import('./pages/Account'))
+const Account = lazy(() => import('./pages/Account'))
 
-const Description = loadable(() => import('./pages/Description'))
-const Login = loadable(() => import('./pages/Login'))
-const Register = loadable(() => import('./pages/Register'))
-const Verify = loadable(() => import('./pages/Verify'))
-const ChangeEmail = loadable(() => import('./pages/changeEmail'))
+const Description = lazy(() => import('./pages/Description'))
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
+const Verify = lazy(() => import('./pages/Verify'))
+const ChangeEmail = lazy(() => import('./pages/changeEmail'))
 
-const NotFound = loadable(() => import('./pages/notFound'))
+const NotFound = lazy(() => import('./pages/notFound'))
 
-const ForgotPassword = loadable(() => import('./pages/ForgotPassword'))
-const ResetPassword = loadable(() => import('./pages/ResetPassword'))
-const OrderDetails = loadable(() => import('./pages/orderDetails'))
-const Dashboard = loadable(() => import('./pages/Dashboard'))
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword'))
+const OrderDetails = lazy(() => import('./pages/orderDetails'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
 
 const App = () => {
   const [scrollPosition, setScrollPosition] = useState(0)
@@ -117,68 +117,70 @@ const App = () => {
           />
           <AnimatePresence>{logoutLoading && <LoggingOut />}</AnimatePresence>
           <JustComponentForApp />
-          <Switch>
-            <Route path='/' exact>
-              <Home
-                scrollPosition={scrollPosition}
-                setScrollPosition={setScrollPosition}
-              />
-            </Route>
-            <Route path='/products/:id'>
-              <ProductDetail
-                cartCount={cartCount}
-                setCartCount={setCartCount}
-              />
-            </Route>
-            <Route path='/product-description/:id'>
-              <Description />
-            </Route>
-            <Route path='/cart'>
-              <Cart cartCount={cartCount} setCartCount={setCartCount} />
-            </Route>
-            <Route path='/login'>
-              <Login />
-            </Route>
-            <Route path='/forgotPassword'>
-              <ForgotPassword />
-            </Route>
-            <Route path='/resetPassword'>
-              <ResetPassword />
-            </Route>
-            <Route path='/register'>
-              <Register />
-            </Route>
-            <Route path='/verify'>
-              <Verify />
-            </Route>
-            <Route path='/changeEmail'>
-              <ChangeEmail />
-            </Route>
-            <Route path='/account'>
-              <Account />
-            </Route>
+          <Suspense fallback={<p className='loadingText'>Loading</p>}>
+            <Switch>
+              <Route path='/' exact>
+                <Home
+                  scrollPosition={scrollPosition}
+                  setScrollPosition={setScrollPosition}
+                />
+              </Route>
+              <Route path='/products/:id'>
+                <ProductDetail
+                  cartCount={cartCount}
+                  setCartCount={setCartCount}
+                />
+              </Route>
+              <Route path='/product-description/:id'>
+                <Description />
+              </Route>
+              <Route path='/cart'>
+                <Cart cartCount={cartCount} setCartCount={setCartCount} />
+              </Route>
+              <Route path='/login'>
+                <Login />
+              </Route>
+              <Route path='/forgotPassword'>
+                <ForgotPassword />
+              </Route>
+              <Route path='/resetPassword'>
+                <ResetPassword />
+              </Route>
+              <Route path='/register'>
+                <Register />
+              </Route>
+              <Route path='/verify'>
+                <Verify />
+              </Route>
+              <Route path='/changeEmail'>
+                <ChangeEmail />
+              </Route>
+              <Route path='/account'>
+                <Account />
+              </Route>
 
-            <Route path='/shipping'>
-              <Shipping />
-            </Route>
-            <Route path='/payment'>
-              <Payment />
-            </Route>
-            <Route path='/placeOrder'>
-              <PlaceOrder cartCount={cartCount} setCartCount={setCartCount} />
-            </Route>
-            <Route path='/orders/:id'>
-              <OrderDetails />
-            </Route>
+              <Route path='/shipping'>
+                <Shipping />
+              </Route>
+              <Route path='/payment'>
+                <Payment />
+              </Route>
+              <Route path='/placeOrder'>
+                <PlaceOrder cartCount={cartCount} setCartCount={setCartCount} />
+              </Route>
+              <Route path='/orders/:id'>
+                <OrderDetails />
+              </Route>
 
-            <Route path='/dashboard'>
-              <Dashboard />
-            </Route>
+              <Route path='/dashboard'>
+                <Dashboard />
+              </Route>
 
-            <Route>
-              <NotFound />
-            </Route>
-          </Switch>
+              <Route>
+                <NotFound />
+              </Route>
+            </Switch>
+          </Suspense>
         </LastLocationProvider>
       </BrowserRouter>
     </div>

@@ -9,11 +9,10 @@ const Global = createGlobalStyle`
     outline:none;
     scrollbar-width:thin; 
 }
-.noInternet{
-  height:50vh;
-  display:grid;
-  place-items:center;
+.loadingSuspense{
+  margin-top: 2rem;
 }
+
 
 
 *::-webkit-scrollbar {
@@ -35,7 +34,7 @@ img{
 }
 .loadingText{
   text-align:center;
-  margin:0.5rem 0;
+  margin: 1rem 0;
 }
 .App{
     min-height:100vh;

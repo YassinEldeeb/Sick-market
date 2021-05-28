@@ -12,32 +12,39 @@ const OrderPaper = ({
   method = 'PayPal or Credit & Debit Cards',
   id = '609b03ca3aef99512496b085',
   createdAt = '17 may 2021',
+  showPrint,
 }) => {
   return (
     <StyledPaper ref={refrence}>
-      <div className='content'>
-        <div className='logoCont'>
-          <img id='Logo' src={logo} />
-        </div>
-        <div className='section'>
-          <h1 className='title'>Shipping :</h1>
-          <span>Name: {name}</span>
-          <span>Email: {email}</span>
-          <span>Address: {address}</span>
-        </div>
-        <div className='section'>
-          <h1 className='title'>Payment Method :</h1>
-          <span>Method: {method}</span>
-        </div>
-        <div className='section'>
-          <h1 className='title'>Delivery QR Code :</h1>
-          <QRCode value={id} />
-        </div>
-      </div>
-      <div className='bottom'>
-        <h1>Created: {format(parseISO(createdAt), 'yyyy-MM-dd / hh:mm a')}</h1>
-        <h1>Sick market©2021 all rights reserverd</h1>
-      </div>
+      {showPrint && (
+        <>
+          <div className='content'>
+            <div className='logoCont'>
+              <img id='Logo' src={logo} />
+            </div>
+            <div className='section'>
+              <h1 className='title'>Shipping :</h1>
+              <span>Name: {name}</span>
+              <span>Email: {email}</span>
+              <span>Address: {address}</span>
+            </div>
+            <div className='section'>
+              <h1 className='title'>Payment Method :</h1>
+              <span>Method: {method}</span>
+            </div>
+            <div className='section'>
+              <h1 className='title'>Delivery QR Code :</h1>
+              <QRCode value={id} />
+            </div>
+          </div>
+          <div className='bottom'>
+            <h1>
+              Created: {format(parseISO(createdAt), 'yyyy-MM-dd / hh:mm a')}
+            </h1>
+            <h1>Sick market©2021 all rights reserverd</h1>
+          </div>
+        </>
+      )}
     </StyledPaper>
   )
 }

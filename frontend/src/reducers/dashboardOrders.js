@@ -125,6 +125,28 @@ const getDashboardOrders = (state = initialState, action) => {
         ...state,
         orders: modifiedOrders5,
       }
+    case 'INFINITE_ORDERS_REQUEST':
+      return {
+        ...state,
+        infiniteLoading: true,
+      }
+    case 'INFINITE_ORDERS_SUCCESS':
+      let value
+      if (state.orders) {
+        value = [...state.orders, ...action.payload]
+      } else {
+        value = [...action.payload]
+      }
+      return {
+        ...state,
+        orders: value,
+        infiniteLoading: false,
+      }
+    case 'INFINITE_ORDERS_FAIL':
+      return {
+        infiniteLoading: false,
+        error: action.payload,
+      }
     default:
       return state
   }
