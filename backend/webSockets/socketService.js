@@ -9,9 +9,8 @@ class SocketService {
     this.io = new Server(server, {
       cors: {
         origin: [
-          process.env.NODE_ENV === 'development'
-            ? 'http://localhost:3000'
-            : 'https://sickmarket.ml',
+          'http://localhost:3000',
+          'https://sickmarket.ml',
           'https://admin.socket.io',
         ],
       },
