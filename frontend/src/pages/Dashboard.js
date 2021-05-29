@@ -133,8 +133,11 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
   const clickTab = () => {
     if (!loading && location.pathname.split('/')[2] === 'orders') {
       dispatch(getDashboardOrdersAction())
+      setSkip(1)
     }
   }
+  const [skip, setSkip] = useState(1)
+
   return (
     <StyledDashboard>
       <div className='sidebar'>
@@ -192,7 +195,7 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
             />
           </Route>
           <Route path='/dashboard/orders'>
-            <DashboardOrders />
+            <DashboardOrders skip={skip} setSkip={setSkip} />
           </Route>
         </Switch>
       </Scrollbars>

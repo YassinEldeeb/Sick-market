@@ -37,9 +37,8 @@ const defaultSelectValues = [
   { value: 'Rejected', label: 'Rejected' },
   { value: 'Not Rejected', label: 'Not Rejected' },
 ]
-const DashboardOrders = () => {
+const DashboardOrders = ({ skip, setSkip }) => {
   const [element, inView] = useInView()
-  const [skip, setSkip] = useState(1)
 
   Object.size = function (obj) {
     var size = 0,
@@ -101,6 +100,7 @@ const DashboardOrders = () => {
     if (!location.pathname.split('/')[3] && Object.size(searches) === 0) {
       dispatch(getDashboardOrdersAction())
       setSkip(1)
+      console.log('reseted1')
     }
   }, [])
   useEffect(() => {
@@ -112,6 +112,7 @@ const DashboardOrders = () => {
       Object.size(searches) === 0
     ) {
       dispatch(getDashboardOrdersAction())
+      console.log('reseted2')
       setSkip(1)
     }
     const container = document.querySelector('#view')
@@ -183,6 +184,7 @@ const DashboardOrders = () => {
         baseURL = '/dashboard/orders'
         dispatch(getDashboardOrdersAction())
       }
+      console.log('reseted3')
       setSkip(1)
       history.push(baseURL)
     }
@@ -418,6 +420,7 @@ const DashboardOrders = () => {
           searches.filter ? JSON.parse(searches.filter) : null
         )
       )
+      console.log('reseted4')
     }
   }, [location.search])
 
