@@ -4,8 +4,8 @@ self.__precacheManifest = [
     "url": "/static/js/0.f6744a94.chunk.js"
   },
   {
-    "revision": "67a2086a6b676064c54f",
-    "url": "/static/js/main.19f21bec.chunk.js"
+    "revision": "a06d5155a028141e3a66",
+    "url": "/static/js/main.a70f8121.chunk.js"
   },
   {
     "revision": "79b6d39ebef436179ea4",
@@ -284,7 +284,7 @@ self.__precacheManifest = [
     "url": "/static/media/danger.32e20194.svg"
   },
   {
-    "revision": "2fe6dc8dc13cfc96d22bc889524ba093",
+    "revision": "09cb173deed191fb006b1ba839139a52",
     "url": "/index.html"
   }
 ];
