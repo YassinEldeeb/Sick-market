@@ -1,16 +1,25 @@
 import { Server } from 'socket.io'
 import dotenv from 'dotenv'
-import { createAdapter } from '@socket.io/redis-adapter'
-import { createClient } from 'redis'
+import { instrument } from '@socket.io/admin-ui'
 
 dotenv.config()
 
 class SocketService {
   constructor(server) {
-    this.io = new Server(server)
-    // this.pubClient = new createClient(6379, 'localhost')
-    // const subClient = pubClient.duplicate()
-    // this.io.adapter(createAdapter(pubClient, subClient))
+    this.io = new Server(server, {
+      cors: {
+        origin: [
+          process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3000'
+            : 'https://sickmarket.ml',
+          'https://admin.socket.io',
+        ],
+      },
+      transports:
+        process.env.NODE_ENV === 'development'
+          ? ['websocket', 'polling']
+          : ['websocket'],
+    })
 
     this.io.on('connection', (socket) => {
       this.socket = socket
@@ -30,6 +39,16 @@ class SocketService {
         console.log('User has Disconnected 😟')
         socket.removeAllListeners()
       })
+    })
+    instrument(this.io, {
+      auth:
+        process.env.NODE_ENV === 'development'
+          ? false
+          : {
+              type: 'basic',
+              username: 'admin',
+              password: process.env.MAIL_PASSWORD,
+            },
     })
   }
   emiter(event, body, room) {
