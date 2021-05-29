@@ -47,7 +47,7 @@ class SocketService {
           : {
               type: 'basic',
               username: 'admin',
-              password: process.env.MAIL_PASSWORD,
+              password: process.env.HASHED_PASSWORD,
             },
     })
   }
