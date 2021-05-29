@@ -23,6 +23,7 @@ import { ReactComponent as Connect } from '../img/connect.svg'
 import Input from '../components/DashboardInput'
 import Select from 'react-select'
 import infiniteScrollOrders from '../actions/infiniteScrollOrders'
+import ReactTooltip from 'react-tooltip'
 
 const defaultSelectValues = [
   { value: 'Paid', label: 'Paid' },
@@ -436,6 +437,14 @@ const DashboardOrders = () => {
     }
   }, [inView])
 
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [orders])
+
+  const Row = ({ index, style }) => (
+    <OrderDashboard key={orders[index]._id} order={orders[index]} />
+  )
+
   return (
     <StyledOrders>
       <DashboardOrderActions scrolled={scrolled} setScrolled={setScrolled} />
@@ -667,8 +676,14 @@ const DashboardOrders = () => {
               animate='show'
               exit='exit'
             >
-              {orders.map((each) => (
-                <OrderDashboard order={each} />
+              <ReactTooltip
+                id='order-card-tooltip'
+                effect='solid'
+                delayHide={100}
+                delayShow={400}
+              />
+              {orders.map((each, i) => (
+                <OrderDashboard key={each._id} order={each} />
               ))}
             </motion.div>
           ) : count === 0 && !loading ? (
@@ -690,6 +705,13 @@ const DashboardOrders = () => {
 }
 
 const StyledOrders = styled(motion.div)`
+  .__react_component_tooltip {
+    background: #1e203e;
+    border-radius: 5px;
+    &::after {
+      border-top-color: #1e203e !important;
+    }
+  }
   .end {
     color: rgba(255, 255, 255, 0.7) !important;
     text-align: center;

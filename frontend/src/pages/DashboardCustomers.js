@@ -22,6 +22,7 @@ import { v4 as uuid } from 'uuid'
 import { useRef } from 'react'
 import qs from 'qs'
 import { useInView } from 'react-intersection-observer'
+import ReactTooltip from 'react-tooltip'
 
 const DashboardCustomers = () => {
   const filterStoredValue = localStorage.getItem('filterUsers')
@@ -289,6 +290,11 @@ const DashboardCustomers = () => {
       return true
     }
   }
+
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [users, searchedUsers])
+
   return (
     <StyledCustomers>
       <DashboardUserAction rankValue={rankValue} setRankValue={setRankValue} />
@@ -409,6 +415,12 @@ const DashboardCustomers = () => {
                   animate='show'
                   exit='exit'
                 >
+                  <ReactTooltip
+                    id='user-tooltip'
+                    effect='solid'
+                    delayHide={100}
+                    delayShow={400}
+                  />
                   {searchedUsers.map((each) => (
                     <UserDashboard key={each._id} user={each} />
                   ))}
@@ -428,6 +440,13 @@ const DashboardCustomers = () => {
                   animate='show'
                   exit='exit'
                 >
+                  <ReactTooltip
+                    id='user-tooltip'
+                    effect='solid'
+                    delayHide={100}
+                    delayShow={400}
+                  />
+
                   {users.map((each) => (
                     <UserDashboard keyId={each._id} user={each} />
                   ))}
@@ -468,6 +487,13 @@ const StyledCustomers = styled(motion.div)`
   overflow-y: hidden;
   height: max-content;
   min-height: 100%;
+  .__react_component_tooltip {
+    background: #1e203e;
+    border-radius: 5px;
+    &::after {
+      border-top-color: #1e203e !important;
+    }
+  }
   .infiniteLoader {
     margin-bottom: 0.6rem;
   }

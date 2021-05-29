@@ -5,7 +5,6 @@ import { ReactComponent as Pen } from '../img/pen.svg'
 import { ReactComponent as Trash } from '../img/trash.svg'
 import { ReactComponent as Eye } from '../img/eyeSee.svg'
 
-import ReactTooltip from 'react-tooltip'
 import { motion, AnimatePresence } from 'framer-motion'
 import { popup, realtimeStockCounter } from '../animations'
 import { Link, useLocation } from 'react-router-dom'
@@ -18,7 +17,6 @@ import qs from 'qs'
 const ProductDashboard = ({
   product,
   setClickedForDelete,
-  actionsInfo,
   search,
   data,
   setDashboardScrollPosition,
@@ -59,9 +57,6 @@ const ProductDashboard = ({
       if (newStock) setChanged(changed + newStock.countInStock)
     }
   }, [data])
-  useEffect(() => {
-    ReactTooltip.rebuild()
-  }, [])
 
   const editURL = (id) => {
     let baseURL = `/dashboard/products/edit/${id}?`
@@ -81,20 +76,6 @@ const ProductDashboard = ({
   }
   return (
     <StyledUser variants={animCondition()}>
-      <ReactTooltip
-        id='product-card-tooltip'
-        effect='solid'
-        delayHide={100}
-        delayShow={400}
-      />
-      {actionsInfo && (
-        <ReactTooltip
-          delayHide={100}
-          delayShow={400}
-          effect='solid'
-          id='action-info-tooltip'
-        />
-      )}
       <div className='id'>
         <p data-for='product-card-tooltip' data-tip={'#' + product._id}>
           #{product._id.substr(product._id.length - 4)}
@@ -289,13 +270,7 @@ const StyledUser = styled(motion.div)`
   .highlightSearch {
     background: #232647a1;
   }
-  .__react_component_tooltip {
-    background: #1e203e;
-    border-radius: 5px;
-    &::after {
-      border-top-color: #1e203e !important;
-    }
-  }
+
   display: flex;
   justify-content: flex-start;
   align-items: center;

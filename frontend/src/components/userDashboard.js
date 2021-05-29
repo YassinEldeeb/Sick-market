@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { parseISO, format } from 'date-fns'
 import { ReactComponent as Gear } from '../img/gear.svg'
-import ReactTooltip from 'react-tooltip'
 import { motion } from 'framer-motion'
 import { popup } from '../animations'
 import { Link, useLocation } from 'react-router-dom'
@@ -46,17 +45,8 @@ const UserDashboard = ({ user }) => {
     }
   }, [actionLoading])
 
-  useEffect(() => {
-    ReactTooltip.rebuild()
-  }, [])
   return (
     <StyledUser variants={popup}>
-      <ReactTooltip
-        id='user-tooltip'
-        effect='solid'
-        delayHide={100}
-        delayShow={400}
-      />
       <div className='id'>
         <p data-for='user-tooltip' data-tip={'#' + user._id}>
           #{user._id.substr(user._id.length - 4)}
@@ -133,13 +123,7 @@ const StyledUser = styled(motion.div)`
   .highlightSearch {
     background: #232647a1;
   }
-  .__react_component_tooltip {
-    background: #1e203e;
-    border-radius: 5px;
-    &::after {
-      border-top-color: #1e203e !important;
-    }
-  }
+
   display: flex;
   justify-content: flex-start;
   align-items: center;

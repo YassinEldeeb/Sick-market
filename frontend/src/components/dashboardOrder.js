@@ -4,35 +4,20 @@ import { parseISO, format } from 'date-fns'
 import { ReactComponent as Gear } from '../img/gear.svg'
 import { ReactComponent as Printer } from '../img/printer.svg'
 
-import ReactTooltip from 'react-tooltip'
 import { motion, AnimatePresence } from 'framer-motion'
 import { popup } from '../animations'
 import { Link, useLocation } from 'react-router-dom'
 import Loader from './loader'
-import { useSelector, useDispatch } from 'react-redux'
-import { useLastLocation } from 'react-router-last-location'
 import SmoothImg from './smoothImgLoading'
-import qs from 'qs'
 import OrderPaper from './OrderPaper'
 import ReactToPrint from 'react-to-print'
 
 const OrderDashboard = ({
   order,
-  setClickedForDelete,
-  actionsInfo,
-  search,
   setDashboardScrollPosition,
+  animate = true,
 }) => {
   const location = useLocation()
-  const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
-
-  const dispatch = useDispatch()
-  const lastLocation = useLastLocation()
-
-  useEffect(() => {
-    ReactTooltip.rebuild()
-    console.log('rendered')
-  }, [])
 
   const imgSrcCondition = () => {
     if (order.user) {
@@ -57,14 +42,10 @@ const OrderDashboard = ({
 
   const [printLoading, setPrintLoading] = useState(false)
 
-  const [showPrint, setShowPrint] = useState(false)
   const reactToPrintTrigger = useCallback(() => {
     return (
       <div className={`ActionCont ${order.approved ? '' : 'notAllowed'}`}>
         <div
-          onClick={() => {
-            setShowPrint(true)
-          }}
           id={`${order.approved ? '' : 'notAllowed'}`}
           className={`actionOption trash ${order.approved ? '' : 'notAllowed'}`}
         >
@@ -79,27 +60,7 @@ const OrderDashboard = ({
   }, [order.approved, printLoading])
 
   return (
-    <StyledUser variants={popup}>
-      <ReactTooltip
-        id='order-card-tooltip'
-        effect='solid'
-        delayHide={100}
-        delayShow={400}
-      />
-
-      <ReactTooltip
-        delayHide={100}
-        delayShow={700}
-        effect='solid'
-        id='order-actions-card-tooltip'
-      />
-      <ReactTooltip
-        delayHide={300}
-        delayShow={100}
-        effect='solid'
-        id='order-warning-actions-card-tooltip'
-      />
-
+    <StyledUser variants={animate ? popup : ''}>
       <div className='id'>
         <p data-for='order-card-tooltip' data-tip={'#' + order._id}>
           #{order._id.substr(order._id.length - 4)}
@@ -206,7 +167,6 @@ const OrderDashboard = ({
         />
         <div style={{ display: 'none' }}>
           <OrderPaper
-            showPrint={showPrint}
             name={order.user.name}
             email={order.user.email}
             address={order.shippingAddress.address}
@@ -214,6 +174,7 @@ const OrderDashboard = ({
             id={order._id}
             createdAt={order.createdAt}
             refrence={componentRef}
+            approved={order.approved}
           />
         </div>
       </div>
@@ -239,9 +200,8 @@ const StyledUser = styled(motion.div)`
     background: #ff6969;
     border-radius: 50%;
     border: 2.7px solid #ff6969;
-    animation: pulse-red 1.3s ease infinite;
     transition: 0.2s ease;
-
+    animation: pulse-red 1.3s ease infinite;
     &.ok {
       border: unset;
       min-width: 15px;
@@ -254,11 +214,9 @@ const StyledUser = styled(motion.div)`
     0% {
       box-shadow: 0 0 0 0 rgba(255, 105, 105, 0.5);
     }
-
     70% {
       box-shadow: 0 0 0 8px rgba(255, 105, 105, 0);
     }
-
     100% {
       box-shadow: 0 0 0 0 rgba(255, 105, 105, 0);
     }
@@ -338,13 +296,6 @@ const StyledUser = styled(motion.div)`
   }
   .highlightSearch {
     background: #232647a1;
-  }
-  .__react_component_tooltip {
-    background: #1e203e;
-    border-radius: 5px;
-    &::after {
-      border-top-color: #1e203e !important;
-    }
   }
 
   display: flex;

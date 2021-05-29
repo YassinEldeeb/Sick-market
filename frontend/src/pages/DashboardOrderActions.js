@@ -546,6 +546,7 @@ const DashboardOrderActions = ({ scrolled }) => {
                           id={order._id}
                           createdAt={order.createdAt}
                           refrence={componentRef}
+                          approved={order.approved}
                         />
                       </div>
                     </>

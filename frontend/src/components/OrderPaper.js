@@ -6,17 +6,17 @@ import { parseISO, format } from 'date-fns'
 
 const OrderPaper = ({
   refrence,
-  name = 'Yassin Eldeeb',
-  email = 'yassineldeeb94@gmail.com',
-  address = 'Islam street, tagneed tanta, Tanta, Gharbia, Egypt, 01032659113',
-  method = 'PayPal or Credit & Debit Cards',
-  id = '609b03ca3aef99512496b085',
-  createdAt = '17 may 2021',
-  showPrint,
+  name,
+  email,
+  address,
+  method,
+  id,
+  createdAt,
+  approved,
 }) => {
   return (
     <StyledPaper ref={refrence}>
-      {showPrint && (
+      {approved && (
         <>
           <div className='content'>
             <div className='logoCont'>

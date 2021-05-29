@@ -31,6 +31,7 @@ import { Scrollbars } from 'react-custom-scrollbars'
 import infiniteScrollProducts from '../actions/infiniteScrollProducts'
 import infiniteScrollProductsSearched from '../actions/infiniteScrollSearchedProducts'
 import { useInView } from 'react-intersection-observer'
+import ReactTooltip from 'react-tooltip'
 
 const DashboardProducts = ({
   setDashboardScrollPosition,
@@ -603,6 +604,10 @@ const DashboardProducts = ({
     }
   }, [inView])
 
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [products, searchedProducts])
+
   return (
     <StyledDashboardProducts>
       <DashboardNewProduct
@@ -946,13 +951,27 @@ const DashboardProducts = ({
                       animate='show'
                       exit='exit'
                     >
+                      {actionsInfo && (
+                        <ReactTooltip
+                          delayHide={100}
+                          delayShow={400}
+                          effect='solid'
+                          id='action-info-tooltip'
+                        />
+                      )}
+                      <ReactTooltip
+                        id='product-card-tooltip'
+                        effect='solid'
+                        delayHide={100}
+                        delayShow={400}
+                      />
+
                       {products.map((each) => (
                         <ProductDashboard
                           setDashboardScrollPosition={
                             setDashboardScrollPosition
                           }
                           data={data}
-                          actionsInfo={actionsInfo}
                           setClickedForDelete={setClickedForDelete}
                           clickedForDelete={clickedForDelete}
                           key={each._id}
@@ -970,6 +989,20 @@ const DashboardProducts = ({
                       animate='show'
                       exit='exit'
                     >
+                      {actionsInfo && (
+                        <ReactTooltip
+                          delayHide={100}
+                          delayShow={400}
+                          effect='solid'
+                          id='action-info-tooltip'
+                        />
+                      )}
+                      <ReactTooltip
+                        id='product-card-tooltip'
+                        effect='solid'
+                        delayHide={100}
+                        delayShow={400}
+                      />
                       {searchedProducts.map((each) => (
                         <ProductDashboard
                           setDashboardScrollPosition={
@@ -977,7 +1010,6 @@ const DashboardProducts = ({
                           }
                           data={data}
                           search={searches.search}
-                          actionsInfo={actionsInfo}
                           setClickedForDelete={setClickedForDelete}
                           clickedForDelete={clickedForDelete}
                           key={each._id}
@@ -1015,6 +1047,13 @@ const DashboardProducts = ({
 }
 
 const StyledDashboardProducts = styled(motion.div)`
+  .__react_component_tooltip {
+    background: #1e203e;
+    border-radius: 5px;
+    &::after {
+      border-top-color: #1e203e !important;
+    }
+  }
   .clearSearch {
     position: absolute;
     right: 9%;
