@@ -1,5 +1,11 @@
 import { io } from 'socket.io-client'
+import dotenv from 'dotenv'
+dotenv.config()
 
-const socket = io('http://localhost:5000')
+const socket = io(
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5000'
+    : 'https://sickmarket.ml/client'
+)
 
 export default socket
