@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import styled from 'styled-components'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { useLocation, useHistory, Switch, Route } from 'react-router-dom'
@@ -18,13 +18,56 @@ import { ReactComponent as Emails } from '../img/emails.svg'
 import { ReactComponent as Home } from '../img/home.svg'
 
 import DashboardTab from '../components/DashboardTab'
-import DashboardCustomers from './DashboardCustomers'
-import DashboardProducts from './DashboardProducts'
-import DashboardOrders from './DashboardOrders'
-import { useRef } from 'react'
+
 import Meta from '../components/Meta'
 import { useDispatch } from 'react-redux'
 import getDashboardOrdersAction from '../actions/getDashboardOrders'
+
+import NProgress from 'nprogress'
+import 'nprogress/styles125.css'
+import Loadable from 'react-loadable'
+
+const LazyLoad = () => {
+  useEffect(() => {
+    NProgress.start()
+    return () => {
+      NProgress.done()
+    }
+  })
+
+  return ''
+}
+
+function Loading(props) {
+  if (props.error) {
+    return (
+      <div>
+        Error! <button onClick={props.retry}>Retry</button>
+      </div>
+    )
+  } else if (props.pastDelay) {
+    return <LazyLoad />
+  } else {
+    return null
+  }
+}
+
+const DashboardCustomers = Loadable({
+  loader: () => import('./DashboardCustomers'),
+  loading: Loading,
+  delay: 100,
+})
+
+const DashboardProducts = Loadable({
+  loader: () => import('./DashboardProducts'),
+  loading: Loading,
+  delay: 100,
+})
+const DashboardOrders = Loadable({
+  loader: () => import('./DashboardOrders'),
+  loading: Loading,
+  delay: 100,
+})
 
 const main = [
   { text: 'Statistics', i: <Statistics /> },
@@ -44,7 +87,7 @@ const communicate = [
 
 const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
   const dispatch = useDispatch()
-  const { orders, loading } = useSelector((state) => state.dashboardOrders)
+  const { loading } = useSelector((state) => state.dashboardOrders)
 
   const scrollRef = useRef(null)
   const lastLocation = useLastLocation()
@@ -187,6 +230,7 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
           <Route path='/dashboard/customers'>
             <DashboardCustomers />
           </Route>
+
           <Route path='/dashboard/products'>
             <DashboardProducts
               scrollRef={scrollRef}

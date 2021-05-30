@@ -22,7 +22,7 @@ const UserDashboard = ({ user }) => {
     if (user.profilePicLink && user.profilePicLink !== 'cleared') {
       return user.profilePicLink
     } else {
-      return `/api/users/profilePic/${user._id}`
+      return `/api/users/profilePic/tiny/${user._id}?w=50&h=50`
     }
   }
 

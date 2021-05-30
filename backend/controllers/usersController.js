@@ -518,7 +518,6 @@ const serveProfilePic = asyncHandler(async (req, res) => {
 // GET get Tiny Avatar - /api/users/profilePic/:id
 const serveTinyProfilePic = asyncHandler(async (req, res) => {
   if (req.query.noImage) {
-    console.log(path.join(__dirname, './uploads/no.jpg'))
     const image = await sharp(path.join(__dirname, './uploads/no.jpg'))
       .resize({ width: Number(req.query.w), height: Number(req.query.h) })
       .toBuffer()
@@ -531,9 +530,16 @@ const serveTinyProfilePic = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
 
   if (!user || (!user.profilePic && !user.profilePicLink)) {
-    fs.readFile('./backend/images/defaultAvatarTiny.png', (err, data) => {
+    fs.readFile('./backend/images/defaultAvatar.png', async (err, data) => {
       res.set('Content-Type', 'image/png')
-      res.send(data)
+      const tiny = await sharp(data)
+        .resize({
+          width: req.query.w ? Number(req.query.w) : 20,
+          height: req.query.h ? Number(req.query.h) : 20,
+        })
+        .png()
+        .toBuffer()
+      res.send(tiny)
     })
     return
   }

@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler'
 import Coupon from '../models/couponModel.js'
 
 const generateCouponCode = asyncHandler(async (req, res) => {
-  const { code, limited, amount, expireDate } = req.body
+  const { code, limited, amount, isPercent } = req.body
 
   function coupongenerator() {
     var coupon = ''
@@ -39,8 +39,9 @@ const generateCouponCode = asyncHandler(async (req, res) => {
     if (limited) {
       obj.limited = limited
     }
-    if (expireDate) {
-      obj.expireDate = expireDate
+
+    if (isPercent !== undefined) {
+      obj.isPercent = isPercent
     }
     if (amount) {
       obj.amount = amount

@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from 'mongoose'
 
 const couponSchema = mongoose.Schema(
   {
@@ -11,11 +11,12 @@ const couponSchema = mongoose.Schema(
     limited: { type: Number },
     numOfUsedTimes: { type: Number, required: true, default: 0 },
     amount: { type: Number, required: true },
+    isPercent: { type: Boolean, default: true },
   },
 
   { timestamps: true }
 )
 
-const Coupon = mongoose.model("Coupon", couponSchema)
+const Coupon = mongoose.model('Coupon', couponSchema)
 
 export default Coupon

@@ -40,15 +40,7 @@ class SocketService {
       })
     })
     instrument(this.io, {
-      auth:
-        process.env.NODE_ENV === 'development'
-          ? false
-          : {
-              type: 'basic',
-              username: 'admin',
-              password:
-                '$2y$12$7ac1ElAJinBsg9Unpk8HnOj9rGxGUN.fve9TbuwVCOMBZPnwB6p0C',
-            },
+      auth: false,
     })
   }
   emiter(event, body, room) {
