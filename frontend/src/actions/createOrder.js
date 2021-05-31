@@ -51,6 +51,7 @@ const createOrderAction =
           return []
         }
       }
+
       const { data } = await axios.post(
         '/api/orders',
         {
@@ -68,22 +69,21 @@ const createOrderAction =
                 ? undefined
                 : true,
           },
-          couponDiscount: cart.couponDiscount ? cart.couponDiscount : 0,
+          couponDiscount: cart.couponDiscount
+            ? {
+                discount: Number(cart.couponDiscount),
+                isPercent: cart.discount.code.isPercent,
+                info: {
+                  code: cart.discount.code.code,
+                  codeId: cart.discount.code._id,
+                },
+              }
+            : null,
           paymentMethod: cart.paymentMethod,
           taxPrice: cart.taxes,
           shippingPrice: cart.shipping,
           totalPrice: cart.totalPrice,
           itemsPrice: cart.itemsPrice,
-          code: cart.discount ? cart.discount.code.code : null,
-          voucherRemaining: cart.couponDiscount
-            ? Number(cart.couponDiscount) - cart.totalPrice > 0
-              ? Math.abs(
-                  (
-                    Number(cart.totalPrice) - Number(cart.couponDiscount)
-                  ).toFixed(2)
-                )
-              : null
-            : null,
         },
         config
       )
@@ -91,7 +91,7 @@ const createOrderAction =
         localStorage.removeItem('sickCartProducts')
         setCartCount(0)
       }
-
+      cart.discount = null
       dispatch({ type: 'CREATE_ORDER_SUCCESS', payload: data })
       if (!isBuyNow) {
         cart.cartItems = []

@@ -72,7 +72,9 @@ const Cart = ({ cartCount, setCartCount }) => {
                   <span className='currency'>EGP</span>
                 </h4>
               </div>
-              {pricesArr.reduce((acc, price) => acc + price) >= 2000 && (
+              {pricesArr.reduce((acc, price) => acc + price) +
+                pricesArr.reduce((acc, price) => acc + price) * (14 / 100) >=
+                2000 && (
                 <li className='mobileLi'>
                   Free Shipping is applied for carts above 2000EGP.
                 </li>

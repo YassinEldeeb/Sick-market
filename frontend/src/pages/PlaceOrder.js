@@ -61,23 +61,28 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
       : 0
   )
 
-  const toFixedFN = (num) => {
-    return Number(num).toFixed(2)
-  }
+  const toFixedFN = (num) => Number(num).toFixed(2)
 
   const discountValue = () => {
     if (discount) {
-      return toFixedFN(
-        (discount.code.amount / 100) *
-          (Number(totalPrice) + (Number(totalPrice) * 14) / 100)
-      )
+      if (discount.code.isPercent) {
+        return toFixedFN(
+          (discount.code.amount / 100) *
+            (Number(totalPrice) + (Number(totalPrice) * 14) / 100)
+        )
+      } else {
+        const total = Number(totalPrice) + (Number(totalPrice) * 14) / 100
+        console.log(total, discount.code.amount)
+        return toFixedFN(Math.min(discount.code.amount, total))
+      }
     } else {
       return 0
     }
   }
 
+  console.log('Discount', discountValue())
   const [allFreeShipping] = useState(
-    Number(totalPrice) + (Number(totalPrice) * 14) / 100 > 2000
+    Number(totalPrice) + (Number(totalPrice) * 14) / 100 >= 2000
       ? true
       : cartItems.every((e) => e.freeShipping)
   )
@@ -160,7 +165,7 @@ const PlaceOrder = ({ setCartCount, cartCount }) => {
               error
                 ? error.includes('timed out')
                   ? 'Network Error'
-                  : error.includes('okTrue') && product
+                  : error.includes('okTrue') && product && isBuyNow
                   ? `returnGoBack`
                   : error.includes('okTrue')
                   ? `Some Products have just Sold Out or Removed, Continue if you don't mind.`

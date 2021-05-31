@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-const getDashboardUsersAction = (filterValue) => async (dispatch, getState) => {
+const getDashboardDiscounts = (sortValue) => async (dispatch, getState) => {
   try {
     dispatch({
-      type: 'GET_DASHBOARD_USERS_REQUEST',
+      type: 'GET_DISCOUNTS_REQUEST',
     })
     const { userInfo } = getState((state) => state.userInfo)
     const cancelToken = axios.CancelToken
@@ -14,20 +14,14 @@ const getDashboardUsersAction = (filterValue) => async (dispatch, getState) => {
       },
       cancelToken: source.token,
     }
-    const { data } = await axios.get(
-      `/api/users?limit=10&sort=${
-        filterValue === 'top paid' ? 'topPaid' : filterValue
-      }`,
-      config
-    )
-
+    const { data } = await axios.get(`/api/coupons?limit=10`, config)
     dispatch({
-      type: 'GET_DASHBOARD_USERS_SUCCESS',
-      payload: data,
+      type: 'GET_DISCOUNTS_SUCCESS',
+      payload: { discounts: data.coupons, count: data.count },
     })
   } catch (error) {
     dispatch({
-      type: 'GET_DASHBOARD_USERS_FAIL',
+      type: 'GET_DISCOUNTS_FAIL',
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -35,4 +29,4 @@ const getDashboardUsersAction = (filterValue) => async (dispatch, getState) => {
     })
   }
 }
-export default getDashboardUsersAction
+export default getDashboardDiscounts

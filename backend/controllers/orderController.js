@@ -16,7 +16,6 @@ const addOrderItems = asyncHandler(async (req, res) => {
     totalPrice,
     itemsPrice,
     couponDiscount,
-    code,
   } = req.body
 
   if (req.user.status !== 'Verified') {
@@ -30,17 +29,41 @@ const addOrderItems = asyncHandler(async (req, res) => {
     res.status(405)
     throw new Error('You are prohibited from ordering by Admins')
   }
+
+  let codeDiscount
+
+  if (couponDiscount && couponDiscount.info.code) {
+    const usedCoupon = await Coupon.findOne({ code: couponDiscount.info.code })
+    if (!usedCoupon) {
+      throw new Error('Invalid Coupon')
+    }
+    codeDiscount = usedCoupon
+    if (usedCoupon) {
+      const usedBefore = await Order.findOne({
+        'couponDiscount.info.code': usedCoupon.code,
+        'couponDiscount.info.codeId': usedCoupon._id,
+      })
+
+      if (usedBefore) throw new Error('Coupon Used Before')
+    }
+  }
+
   const productsProblems = []
   const products = []
+
+  const prices = []
 
   for (let i = 0; i < orderItems.length + 1; i++) {
     const e = orderItems[i]
     if (e) {
       const product = await Product.findById(e.product)
+
       products.push(product)
       if (!product) {
         productsProblems.push({ id: e.product, error: 'removed' })
       } else if (product.countInStock === 0) {
+        prices.push(product.price)
+        prices.push(product.price * e.qty)
         productsProblems.push({ id: product._id, error: 'soldOut' })
       }
     } else if (i === orderItems.length) {
@@ -52,6 +75,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       }
       orderItems.forEach(async (e, i) => {
         const product = products[i]
+        prices.push(product.price * e.qty)
         if (product) {
           product.countInStock = product.countInStock - e.qty
           product.paidStock = product.paidStock + e.qty
@@ -60,6 +84,66 @@ const addOrderItems = asyncHandler(async (req, res) => {
         }
       })
     }
+  }
+
+  if (
+    couponDiscount &&
+    (!couponDiscount.discount ||
+      couponDiscount.isPercent === undefined ||
+      !couponDiscount.info.code ||
+      !couponDiscount.info.codeId)
+  ) {
+    throw new Error('Invalid Coupon Code')
+  }
+
+  const actualItemsPrice = prices.reduce((acc, price) => acc + price).toFixed(2)
+  const actualTaxPrice = Number(actualItemsPrice * (14 / 100)).toFixed(2)
+  const allItemsEligibleForFreeShipping = products.every(
+    (e) => e.freeShipping === true
+  )
+
+  const actualShippingPrice = Number(
+    Number(actualItemsPrice) + Number(actualTaxPrice) >= 2000 ||
+      allItemsEligibleForFreeShipping
+      ? 0
+      : 50
+  ).toFixed(2)
+  const total = Number(
+    Number(actualItemsPrice) + Number(actualTaxPrice)
+  ).toFixed(2)
+  const actualCouponDiscount = codeDiscount
+    ? Number(
+        codeDiscount.isPercent
+          ? (codeDiscount.amount / 100) * total
+          : Math.min(codeDiscount.amount, total)
+      ).toFixed(2)
+    : 0
+
+  const actualTotalPrice = Number(
+    Number(actualItemsPrice) +
+      Number(actualTaxPrice) +
+      Number(actualShippingPrice) -
+      Number(actualCouponDiscount)
+  ).toFixed(2)
+
+  const couponCondition = couponDiscount
+    ? !(actualCouponDiscount <= couponDiscount.discount + 0.005) ||
+      !(actualCouponDiscount >= couponDiscount.discount - 0.005)
+    : false
+
+  if (
+    !(actualItemsPrice <= itemsPrice + 0.005) ||
+    !(actualItemsPrice >= itemsPrice - 0.005) ||
+    !(actualShippingPrice <= shippingPrice + 0.005) ||
+    !(actualShippingPrice >= shippingPrice - 0.005) ||
+    couponCondition ||
+    !(actualTotalPrice <= totalPrice + 0.005) ||
+    !(actualTotalPrice >= totalPrice - 0.005)
+  ) {
+    res.status(400)
+    throw new Error(
+      "Lets be friends Hacker, Email me If you find any bugs, And you'll be rewarded @yassineldeeb94@gmail.com"
+    )
   }
 
   const order = new Order({
@@ -71,23 +155,22 @@ const addOrderItems = asyncHandler(async (req, res) => {
     shippingPrice,
     totalPrice,
     itemsPrice,
-    couponDiscount,
+    couponDiscount: couponDiscount ? couponDiscount : null,
   })
+
   await order.save()
-  if (code) {
-    const usedCoupon = await Coupon.findOne({ code })
-    if (usedCoupon) {
-      usedCoupon.numOfUsedTimes = usedCoupon.numOfUsedTimes + 1
-      if (usedCoupon.numOfUsedTimes === usedCoupon.limited) {
-        await usedCoupon.remove()
+
+  if (couponDiscount && couponDiscount.info.code && codeDiscount) {
+    if (codeDiscount) {
+      codeDiscount.numOfUsedTimes = codeDiscount.numOfUsedTimes + 1
+      if (codeDiscount.numOfUsedTimes === codeDiscount.limited) {
+        await codeDiscount.remove()
       } else {
-        await usedCoupon.save()
+        await codeDiscount.save()
       }
-    } else {
-      res.status(400)
-      throw new Error('Invalid Coupon Code')
     }
   }
+
   const user = await User.findById(order.user)
 
   orderPlaced(order, user.email)
@@ -254,6 +337,28 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
   if (req.query.packed) {
     findObj.packed = { $exists: req.query.packed === 'true' ? true : false }
+  }
+
+  const last = req.query.last
+  const lastValue = () => {
+    switch (last) {
+      case 'year':
+        return 365
+      case 'month':
+        return `/${new Date().getMonth()}/`
+      case 'week':
+        return 7
+      case 'day':
+        return 1
+    }
+  }
+  if (last) {
+    const previousDate = new Date()
+    previousDate.setDate(previousDate.getDate() - lastValue())
+    findObj.createdAt = {
+      $gte: '2021/5/15',
+      $lt: new Date(),
+    }
   }
 
   const orders = await Order.find(findObj)

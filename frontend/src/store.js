@@ -23,6 +23,7 @@ import productSearchReducer from './reducers/searchProduct'
 import loadedImagesReducer from './reducers/loadedImages'
 import getDashboardOrders from './reducers/dashboardOrders'
 import orderActions from './reducers/dashboardOrderActions'
+import discounts from './reducers/discounts'
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -49,6 +50,7 @@ const reducers = combineReducers({
   orderDeliver: orderDeliverReducer,
   dashboardOrders: getDashboardOrders,
   orderActions,
+  discounts,
 })
 let initialState
 

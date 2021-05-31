@@ -136,7 +136,6 @@ const StyledItem = styled.div`
       max-width: 100%;
       object-fit: cover;
       border-radius: 5px;
-      border: 0.5px solid rgba(0, 0, 0, 0.1);
     }
     h1 {
       font-weight: 400 !important;

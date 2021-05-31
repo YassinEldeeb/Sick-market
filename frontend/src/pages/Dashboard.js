@@ -22,6 +22,7 @@ import DashboardTab from '../components/DashboardTab'
 import Meta from '../components/Meta'
 import { useDispatch } from 'react-redux'
 import getDashboardOrdersAction from '../actions/getDashboardOrders'
+import getDashboardDiscounts from '../actions/getDiscounts'
 
 import NProgress from 'nprogress'
 import 'nprogress/styles125.css'
@@ -55,18 +56,23 @@ function Loading(props) {
 const DashboardCustomers = Loadable({
   loader: () => import('./DashboardCustomers'),
   loading: Loading,
-  delay: 100,
+  delay: 10,
 })
 
 const DashboardProducts = Loadable({
   loader: () => import('./DashboardProducts'),
   loading: Loading,
-  delay: 100,
+  delay: 10,
 })
 const DashboardOrders = Loadable({
   loader: () => import('./DashboardOrders'),
   loading: Loading,
-  delay: 100,
+  delay: 10,
+})
+const DashboardDiscounts = Loadable({
+  loader: () => import('./DashboardDiscounts'),
+  loading: Loading,
+  delay: 10,
 })
 
 const main = [
@@ -87,7 +93,10 @@ const communicate = [
 
 const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
   const dispatch = useDispatch()
-  const { loading } = useSelector((state) => state.dashboardOrders)
+  const { loading: orderLoading } = useSelector(
+    (state) => state.dashboardOrders
+  )
+  const { loading: discountsLoading } = useSelector((state) => state.discounts)
 
   const scrollRef = useRef(null)
   const lastLocation = useLastLocation()
@@ -98,6 +107,7 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
   const { user } = useSelector((state) => state.userInfo)
   const productList = useSelector((state) => state.productList)
   const dashboardOrders = useSelector((state) => state.dashboardOrders)
+  const dashboardDiscounts = useSelector((state) => state.discounts)
   const history = useHistory()
 
   useEffect(() => {
@@ -126,6 +136,7 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
     ) {
       dashboardUsers.loading = true
       dashboardOrders.loading = true
+      dashboardDiscounts.loading = true
 
       const content = document.querySelector('.view')
       if (content)
@@ -173,12 +184,32 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
     }
   }, [location.pathname])
 
-  const clickTab = () => {
-    if (!loading && location.pathname.split('/')[2] === 'orders') {
+  const clickOrders = () => {
+    if (!orderLoading && location.pathname.split('/')[2] === 'orders') {
       dispatch(getDashboardOrdersAction())
       setSkip(1)
     }
   }
+
+  const clickDiscounts = () => {
+    if (!discountsLoading && location.pathname.split('/')[2] === 'discounts') {
+      dispatch(getDashboardDiscounts())
+      setSkip(1)
+    }
+  }
+
+  const filter = (value) => {
+    switch (value) {
+      case 'Orders':
+        return clickOrders
+      case 'Discounts':
+        return clickDiscounts
+      default:
+        return ''
+    }
+  }
+  console.log(filter('Discounts'))
+
   const [skip, setSkip] = useState(1)
 
   return (
@@ -187,6 +218,9 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
         <Scrollbars
           renderView={(props) => <div {...props} className='view2' />}
           className='scrollable dashboardTabs'
+          renderTrackHorizontal={(props) => (
+            <div {...props} className='horizontal-scroll-tabs' />
+          )}
         >
           <DashboardTab
             providedClassName='backHome'
@@ -195,11 +229,7 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
           />
           <p>Main</p>
           {main.map((e) => (
-            <DashboardTab
-              onClickFN={e.text === 'Orders' ? clickTab : ''}
-              text={e.text}
-              Icon={e.i}
-            />
+            <DashboardTab onClickFN={filter(e.text)} text={e.text} Icon={e.i} />
           ))}
           <p className='last'>Communicate</p>
           {communicate.map((e) => (
@@ -241,6 +271,9 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
           <Route path='/dashboard/orders'>
             <DashboardOrders skip={skip} setSkip={setSkip} />
           </Route>
+          <Route path='/dashboard/discounts'>
+            <DashboardDiscounts />
+          </Route>
         </Switch>
       </Scrollbars>
       <Meta
@@ -252,6 +285,9 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
 }
 
 const StyledDashboard = styled.div`
+  .horizontal-scroll-tabs {
+    pointer-events: none;
+  }
   .view,
   .view2 {
     height: 100% !important;

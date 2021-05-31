@@ -694,7 +694,7 @@ const StyledCustomers = styled(motion.div)`
   }
 
   .title {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
   }
   padding: calc(3rem + 0.5vh) calc(2.5rem + 0.5vh);
   padding-bottom: 1rem;

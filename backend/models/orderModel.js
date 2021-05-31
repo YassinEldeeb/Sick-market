@@ -75,8 +75,12 @@ const orderSchema = mongoose.Schema(
       type: Date,
     },
     couponDiscount: {
-      type: Number,
-      default: 0,
+      discount: { type: Number, default: 0 },
+      isPercent: { type: Boolean, default: false },
+      info: {
+        code: { type: String },
+        codeId: { type: mongoose.Schema.Types.ObjectId },
+      },
     },
     approved: {
       type: Date,

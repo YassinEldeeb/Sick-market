@@ -1,19 +1,20 @@
 import asyncHandler from 'express-async-handler'
 import Coupon from '../models/couponModel.js'
+import Order from '../models/orderModel.js'
 
 const generateCouponCode = asyncHandler(async (req, res) => {
   const { code, limited, amount, isPercent } = req.body
 
   function coupongenerator() {
-    var coupon = ''
-    var possible =
+    let coupon = ''
+    let possible =
       'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789'
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
       coupon += possible.charAt(Math.floor(Math.random() * possible.length))
     }
     return coupon
   }
-  if (amount > 100) {
+  if (amount > 100 && isPercent === true) {
     throw new Error("Coupon Codes can't be above 100%")
   }
   const passedObj = async () => {
@@ -55,16 +56,43 @@ const generateCouponCode = asyncHandler(async (req, res) => {
   res.send({ code: couponCode })
 })
 
+const getAllCoupons = asyncHandler(async (req, res) => {
+  let sort = {}
+
+  if (req.query.createdAt) {
+    sort = { createdAt: req.query.createdAt === 'newest' ? -1 : 1 }
+  } else if (req.query.used) {
+    sort = {
+      numOfUsedTimes: req.query.used === 'highest' ? -1 : 1,
+    }
+  }
+
+  const coupons = await Coupon.find({})
+    .sort(sort)
+    .limit(parseInt(req.query.limit ? req.query.limit : 0))
+    .skip(parseInt(req.query.skip ? req.query.skip : 0))
+
+  const count = await Coupon.countDocuments({})
+
+  res.send({ coupons, count })
+})
+
 const validateCouponCode = asyncHandler(async (req, res) => {
   const { code } = req.body
   if (!code) {
     throw new Error("Code isn't Provided")
   }
   const validCode = await Coupon.findOne({ code })
+
   if (!validCode) {
     throw new Error('Invalid Code')
+  } else {
+    const usedBefore = await Order.findOne({
+      'couponDiscount.info.code': code,
+      'couponDiscount.info.codeId': validCode._id,
+    })
+    if (usedBefore) throw new Error('Code Used Before')
   }
-
   if (validCode.numOfUsedTimes >= validCode.limited) {
     await validCode.remove()
   }
@@ -93,4 +121,9 @@ const deleteCouponCode = asyncHandler(async (req, res) => {
   }
 })
 
-export { generateCouponCode, validateCouponCode, deleteCouponCode }
+export {
+  generateCouponCode,
+  validateCouponCode,
+  deleteCouponCode,
+  getAllCoupons,
+}

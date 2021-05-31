@@ -368,19 +368,25 @@ const DashboardOrderActions = ({ scrolled }) => {
                             : 'Free'}
                         </span>
                       </li>
-                      {order.couponDiscount > 0 && (
+                      {order.couponDiscount.discount > 0 && (
                         <li>
                           Coupon Discount:{' '}
                           <span>
-                            {order.couponDiscount}
+                            {order.couponDiscount.discount}
                             <h6>
-                              {`(${Math.round(
-                                100 /
-                                  ((Math.round(order.totalPrice) +
-                                    Math.round(order.couponDiscount) -
-                                    Math.round(order.shippingPrice)) /
-                                    Math.round(order.couponDiscount))
-                              )}%)`}
+                              {!order.couponDiscount.isPercent
+                                ? '(Voucher)'
+                                : `(${Math.round(
+                                    100 /
+                                      ((Math.round(order.totalPrice) +
+                                        Math.round(
+                                          order.couponDiscount.discount
+                                        ) -
+                                        Math.round(order.shippingPrice)) /
+                                        Math.round(
+                                          order.couponDiscount.discount
+                                        ))
+                                  )}% Coupon)`}
                             </h6>
                           </span>
                         </li>

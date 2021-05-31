@@ -61,19 +61,25 @@ const MyOrders = () => {
                       <td>{each.isPaid ? <TrueSVG /> : <FalseSVG />}</td>
                       <td>{each.isDelivered ? <TrueSVG /> : <FalseSVG />}</td>
                       <td>
-                        {each.couponDiscount === 0 ? (
+                        {!each.couponDiscount.discount ? (
                           <FalseSVG />
                         ) : (
                           <p className='discountAmount'>
-                            {each.couponDiscount}
+                            {each.couponDiscount.discount}
                             <span>
-                              {Math.round(
-                                100 /
-                                  ((Math.round(each.totalPrice) +
-                                    Math.round(each.couponDiscount) -
-                                    Math.round(each.shippingPrice)) /
-                                    Math.round(each.couponDiscount))
-                              )}
+                              {each.couponDiscount.isPercent
+                                ? ''
+                                : Math.round(
+                                    100 /
+                                      ((Math.round(each.totalPrice) +
+                                        Math.round(
+                                          each.couponDiscount.discount
+                                        ) -
+                                        Math.round(each.shippingPrice)) /
+                                        Math.round(
+                                          each.couponDiscount.discount
+                                        ))
+                                  )}
                               %
                             </span>
                           </p>
@@ -103,7 +109,7 @@ const StyledOrders = styled.div`
     span {
       position: absolute;
       top: 0;
-      right: 0;
+      right: -2px;
       color: #1eb174;
       font-size: 0.8rem;
       transform: translate(100%, 0);

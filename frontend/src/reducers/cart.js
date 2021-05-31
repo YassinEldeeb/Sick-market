@@ -52,6 +52,7 @@ const cartReducer = (state = initialState, action) => {
     case 'COUPON_FAIL':
       return {
         ...state,
+        discount: null,
         loadingCoupon: false,
         errorCoupon: action.payload,
       }

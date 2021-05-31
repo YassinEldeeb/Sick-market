@@ -106,7 +106,11 @@ const Payment = () => {
   useEffect(() => {
     if (discount) {
       dispatch(savePromoCode(discount))
-      setDiscount2(discount.code.amount + '% OFF')
+      setDiscount2(
+        discount.code.amount + `${discount.code.isPercent ? '%' : 'EGP'} OFF`
+      )
+    } else if (errorCoupon) {
+      localStorage.removeItem('sickDiscount')
     }
   }, [discount])
 
