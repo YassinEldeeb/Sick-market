@@ -20,7 +20,7 @@ import orderActions from '../actions/orderActions.js'
 import { parseISO, format } from 'date-fns'
 import Badge from '../components/Badge'
 import OrderItemDashboard from '../components/dashboardOrderItem'
-import mapboxgl from 'mapbox-gl'
+
 import { useInView } from 'react-intersection-observer'
 import { ReactComponent as Printer } from '../img/printer.svg'
 import { approveOrderAction } from '../actions/approveOrder'
@@ -30,16 +30,15 @@ import ConfirmPopup from '../components/confirmPopup'
 import OrderPaper from '../components/OrderPaper'
 import ReactToPrint from 'react-to-print'
 import socket from '../clientSocket/socket'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
-mapboxgl.accessToken =
-  'pk.eyJ1IjoieWFzc2luNzg5IiwiYSI6ImNraGNiZDc2cjBjcXoycm5nZDQzeWh5MGsifQ.vZNRBIwM6P8fwbZvoPgp1A'
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN
 
 const DashboardOrderActions = ({ scrolled }) => {
-  const lastLocation = useLastLocation()
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
-  const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
 
   const [element, inView] = useInView()
 

@@ -444,10 +444,6 @@ const DashboardOrders = ({ skip, setSkip }) => {
     ReactTooltip.rebuild()
   }, [orders])
 
-  const Row = ({ index, style }) => (
-    <OrderDashboard key={orders[index]._id} order={orders[index]} />
-  )
-
   return (
     <StyledOrders>
       <DashboardOrderActions scrolled={scrolled} setScrolled={setScrolled} />
@@ -487,7 +483,7 @@ const DashboardOrders = ({ skip, setSkip }) => {
                   fill='none'
                   xmlns='http://www.w3.org/2000/svg'
                 >
-                  <g clip-path='url(#clip0)'>
+                  <g clipPath='url(#clip0)'>
                     <path
                       d='M5.33335 6.61553C5.48026 6.77541 5.56092 6.98426 5.56092 7.20031V13.5667C5.56092 13.9498 6.02327 14.1443 6.29694 13.8749L8.07289 11.8397C8.31055 11.5545 8.44162 11.4133 8.44162 11.131V7.20175C8.44162 6.9857 8.52372 6.77685 8.6692 6.61695L13.7651 1.08746C14.1468 0.672643 13.853 0 13.2884 0H0.714129C0.149512 0 -0.145759 0.671203 0.237374 1.08746L5.33335 6.61553Z'
                       fill='white'
@@ -527,6 +523,7 @@ const DashboardOrders = ({ skip, setSkip }) => {
                               <div className='sortValueDropDown selectDropDown first'>
                                 {sortValues.map((e) => (
                                   <h3
+                                    key={e + Date.now()}
                                     className={`${
                                       sortValue === e ? 'active' : ''
                                     }`}
@@ -555,6 +552,7 @@ const DashboardOrders = ({ skip, setSkip }) => {
                               <div className='sortTypeDropDown selectDropDown'>
                                 {sortValueTypes.map((e) => (
                                   <h3
+                                    key={e + Date.now()}
                                     className={`${
                                       sortType === e ? 'active' : ''
                                     }`}
@@ -685,7 +683,7 @@ const DashboardOrders = ({ skip, setSkip }) => {
                 delayHide={100}
                 delayShow={400}
               />
-              {orders.map((each, i) => (
+              {orders.map((each) => (
                 <OrderDashboard key={each._id} order={each} />
               ))}
             </motion.div>

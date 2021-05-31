@@ -205,10 +205,9 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
       case 'Discounts':
         return clickDiscounts
       default:
-        return ''
+        return () => ''
     }
   }
-  console.log(filter('Discounts'))
 
   const [skip, setSkip] = useState(1)
 
@@ -229,11 +228,16 @@ const Dashboard = ({ setDashboardScrollPosition, dashboardScrollPosition }) => {
           />
           <p>Main</p>
           {main.map((e) => (
-            <DashboardTab onClickFN={filter(e.text)} text={e.text} Icon={e.i} />
+            <DashboardTab
+              key={e.text}
+              onClickFN={filter(e.text)}
+              text={e.text}
+              Icon={e.i}
+            />
           ))}
           <p className='last'>Communicate</p>
           {communicate.map((e) => (
-            <DashboardTab text={e.text} Icon={e.i} />
+            <DashboardTab key={e.text} text={e.text} Icon={e.i} />
           ))}
         </Scrollbars>
       </div>
