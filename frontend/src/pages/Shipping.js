@@ -407,7 +407,6 @@ const Shipping = () => {
       value: 'Entering another location manualy',
       label: 'Entering another location manualy',
     },
-    { value: 'Pointing to it on map', label: 'Pointing to it on map' },
   ]
 
   return (
