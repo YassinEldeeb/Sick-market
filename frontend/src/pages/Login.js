@@ -60,7 +60,7 @@ const Login = () => {
           )
         )
       }
-      localStorage.setItem('sickUserInfo', JSON.stringify(userObj))
+      if (userObj) localStorage.setItem('sickUserInfo', JSON.stringify(userObj))
     }
   }
 
@@ -123,7 +123,8 @@ const Login = () => {
               inputRef.current.focus()
               setShow(!show)
               setTimeout(function () {
-                inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
+                inputRef.current.selectionStart =
+                  inputRef.current.selectionEnd = 10000
               }, 0)
             }}
           />
@@ -138,7 +139,8 @@ const Login = () => {
               inputRef.current.focus()
               setShow(!show)
               setTimeout(function () {
-                inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000
+                inputRef.current.selectionStart =
+                  inputRef.current.selectionEnd = 10000
               }, 0)
             }}
           />

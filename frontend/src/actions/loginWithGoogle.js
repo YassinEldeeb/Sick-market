@@ -20,7 +20,7 @@ const loginWithGoogle = (name, email, profilePic) => async (dispatch) => {
       config
     )
     dispatch({ type: 'USER_LOGIN_SUCCESS', payload: data })
-    localStorage.setItem('sickUserInfo', JSON.stringify(data))
+    if (data) localStorage.setItem('sickUserInfo', JSON.stringify(data))
   } catch (error) {
     dispatch({
       type: 'USER_LOGIN_FAIL',
