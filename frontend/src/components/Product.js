@@ -63,11 +63,24 @@ const Product = ({
           <canvas className='canvasPreview' ref={previewCanvasRef} />
         ) : type === 'preview' ? (
           <>
-            <img
+            <SmoothImg
+              key={data._id}
+              contHeight={
+                'calc(((200px + 1vw) - (0.5rem + 0.4vw))* 0.796875 + 6px)'
+              }
+              contHeightS={'calc(((90vw - (0.8rem + 0.4vw) * 2)) * 0.796875)'}
+              preLoaderId='preLoader'
+              loaderId='preloader2'
+              src={data.image}
+              alt='product'
+              tiny={`/api/products/${data._id}/tiny`}
+              className='productLazy'
+            />
+            {/* <img
               src={noImage ? '/uploads/no.jpg' : data.image}
               alt='product'
               key={data.image}
-            />
+            /> */}
 
             <div className='addLayer'>
               <Add className='add' />
@@ -268,6 +281,7 @@ const StyledProduct = styled.div`
     border-radius: 7px;
     transition: 0.2s ease;
     opacity: 0;
+    z-index: 1;
     .add {
       position: absolute;
       left: 0;
