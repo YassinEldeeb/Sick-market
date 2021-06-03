@@ -57,18 +57,8 @@ const generateCouponCode = asyncHandler(async (req, res) => {
 })
 
 const getAllCoupons = asyncHandler(async (req, res) => {
-  let sort = {}
-
-  if (req.query.createdAt) {
-    sort = { createdAt: req.query.createdAt === 'newest' ? -1 : 1 }
-  } else if (req.query.used) {
-    sort = {
-      numOfUsedTimes: req.query.used === 'highest' ? -1 : 1,
-    }
-  }
-
   const coupons = await Coupon.find({})
-    .sort(sort)
+    .sort({ createdAt: -1 })
     .limit(parseInt(req.query.limit ? req.query.limit : 0))
     .skip(parseInt(req.query.skip ? req.query.skip : 0))
 
@@ -104,7 +94,8 @@ const validateCouponCode = asyncHandler(async (req, res) => {
 })
 
 const deleteCouponCode = asyncHandler(async (req, res) => {
-  const { code, deleteAll } = req.body
+  const code = req.params.code
+  const deleteAll = req.query.deleteAll
   if (!code && !deleteAll) {
     throw new Error('Code is required to delete it')
   }

@@ -639,7 +639,7 @@ const DashboardProducts = ({
           filtering ||
           searchedProducts ? (
             <div
-              id={`${location.pathname.split('/')[3] === 'add' ? 'blur' : ''}`}
+              id={`${location.pathname.split('/')[3] ? 'blur' : ''}`}
               className='cont'
             >
               {((!loading && !searches.search) ||
@@ -1047,6 +1047,9 @@ const DashboardProducts = ({
 }
 
 const StyledDashboardProducts = styled(motion.div)`
+  .cont {
+    transition: all 0.2s ease;
+  }
   .__react_component_tooltip {
     background: #1e203e;
     border-radius: 5px;

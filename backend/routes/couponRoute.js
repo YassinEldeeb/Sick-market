@@ -15,6 +15,6 @@ couponRouter.get('/', protect, getAllCoupons, generateCouponCode)
 
 couponRouter.post('/use', protect, validateCouponCode)
 
-couponRouter.delete('/', protect, admin, deleteCouponCode)
+couponRouter.delete('/:code', protect, admin, deleteCouponCode)
 
 export default couponRouter

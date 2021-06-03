@@ -24,6 +24,7 @@ import loadedImagesReducer from './reducers/loadedImages'
 import getDashboardOrders from './reducers/dashboardOrders'
 import orderActions from './reducers/dashboardOrderActions'
 import discounts from './reducers/discounts'
+import deleteDiscount from './reducers/deleteDiscount'
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -51,6 +52,7 @@ const reducers = combineReducers({
   dashboardOrders: getDashboardOrders,
   orderActions,
   discounts,
+  deleteDiscount,
 })
 let initialState
 

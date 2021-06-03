@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 import { motion, AnimatePresence } from 'framer-motion'
 import { slidePopup } from '../animations'
-import { useState } from 'react'
 
 const ConfirmPopup = ({
   action,
@@ -24,11 +23,13 @@ const ConfirmPopup = ({
     } else if (passedType === 'delete') {
       dispatch({ type: 'CONFIRM_DELETE_CANCEL' })
     } else if (passedType === 'deleteProduct') {
-      dispatch({ type: 'CONFIRM_DELETE_PRODUCT_CANCEL' })
+      dispatch({ type: 'CONFIRM_DELETE_DISCOUNT_CANCEL' })
     } else if (passedType === 'rejectOrder') {
       setSubmitedConfirm(false)
       dispatch({ type: 'REJECT_ORDER_CONFIRM_FAIL' })
       setInputValue('')
+    } else if (passedType === 'deleteDiscount') {
+      dispatch({ type: 'CONFIRM_DELETE_DISCOUNT_CANCEL' })
     }
 
     if (resetValue) {
@@ -49,10 +50,11 @@ const ConfirmPopup = ({
       } else {
         setSubmitedConfirm(true)
       }
+    } else if (passedType === 'deleteDiscount') {
+      dispatch({ type: 'CONFIRM_DELETE_DISCOUNT_SUCCESS' })
     }
   }
 
-  console.log(inputValue)
   return (
     <StyledCart className={`confirmationPopup ${condition ? 'active' : ''}`}>
       <AnimatePresence>

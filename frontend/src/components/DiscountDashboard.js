@@ -1,28 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { parseISO, format } from 'date-fns'
 import { ReactComponent as Trash } from '../img/trash.svg'
 
 import { motion } from 'framer-motion'
 import { popup } from '../animations'
-import { useLocation } from 'react-router-dom'
 import Loader from './loader'
 import { useSelector, useDispatch } from 'react-redux'
-import qs from 'qs'
 import { ReactComponent as Coupon } from '../img/coupon.svg'
 import { ReactComponent as Voucher } from '../img/voucher.svg'
 
-const ProductDashboard = ({
-  discount,
-  setClickedForDelete,
-  search,
-  setDashboardScrollPosition,
-}) => {
-  const location = useLocation()
-  //   const searches = qs.parse(location.search, { ignoreQueryPrefix: true })
-
-  const { loading: deleteLoading, discount: discountId } = useSelector(
-    (state) => state.deleteProduct
+const ProductDashboard = ({ discount, setClickedForDelete }) => {
+  const { loading: deleteLoading, discount: code } = useSelector(
+    (state) => state.deleteDiscount
   )
   const dispatch = useDispatch()
 
@@ -40,13 +30,21 @@ const ProductDashboard = ({
         </p>
       </div>
       <div className='Amount'>
-        <p data-for='discount-card-tooltip' data-tip={discount.amount}>
+        <p
+          data-for='discount-card-tooltip'
+          data-tip={`${discount.amount}${discount.isPercent ? '%' : ''}`}
+        >
           {discount.amount}
           {discount.isPercent ? '%' : ''}
         </p>
       </div>
       <div className='Limited'>
-        <p data-for='discount-card-tooltip' data-tip={discount.limited}>
+        <p
+          data-for='discount-card-tooltip'
+          data-tip={
+            discount.limited + discount.limited ? discount.limited : 'N/A'
+          }
+        >
           {discount.limited ? discount.limited : 'N/A'}
         </p>
       </div>
@@ -70,8 +68,8 @@ const ProductDashboard = ({
           <div
             onClick={() => {
               if (!deleteLoading) {
-                setClickedForDelete(discount)
-                dispatch({ type: 'CONFIRM_DELETE_PRODUCT_REQUEST' })
+                setClickedForDelete(discount.code)
+                dispatch({ type: 'CONFIRM_DELETE_DISCOUNT_REQUEST' })
               }
             }}
             id={`${deleteLoading ? 'deleting' : ''}`}
@@ -79,7 +77,7 @@ const ProductDashboard = ({
           >
             {!deleteLoading ? (
               <Trash className='gearImg' />
-            ) : discount._id === discountId ? (
+            ) : discount.code === code ? (
               <Loader />
             ) : (
               <Trash className='gearImg' />

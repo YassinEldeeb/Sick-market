@@ -326,7 +326,7 @@ const DashboardCustomers = () => {
           {condition2() && (
             <div
               className='cont'
-              id={`${location.pathname.split('/')[3] && user ? 'blur' : ''}`}
+              id={`${location.pathname.split('/')[3] ? 'blur' : ''}`}
             >
               <div className='title'>
                 <h1>Customers</h1>
@@ -483,6 +483,9 @@ const DashboardCustomers = () => {
 }
 
 const StyledCustomers = styled(motion.div)`
+  .cont {
+    transition: 0.2s ease;
+  }
   overflow-x: hidden;
   overflow-y: hidden;
   height: max-content;

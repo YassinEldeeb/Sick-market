@@ -446,7 +446,7 @@ const DashboardOrders = ({ skip, setSkip }) => {
 
   return (
     <StyledOrders>
-      <DashboardOrderActions scrolled={scrolled} setScrolled={setScrolled} />
+      <DashboardOrderActions scrolled={scrolled} />
 
       {error ? (
         <DashboardError error={error} />
@@ -456,249 +456,254 @@ const DashboardOrders = ({ skip, setSkip }) => {
         <Loader />
       ) : (
         <>
-          <div className='title'>
-            <h1>Orders</h1>
-            <p>{count !== undefined ? count : '..'} Orders Found</p>
-          </div>
-          <div className='search'>
-            {searches.search && <div></div>}
-            {!searches.search && (
-              <div
-                ref={filterRef}
-                onClick={(e) => {
-                  if (e.target.classList.contains('filter')) {
-                    setOpenFilter(!openFilter)
-                    setOpenType(false)
-                    setOpenValue(false)
-                  }
-                }}
-                className={`filter ${openFilter ? 'activeFilter' : ''}`}
-              >
-                <p className='filterTitle'>Fitler</p>
-                <svg
-                  className='filterSVG'
-                  width='14'
-                  height='14'
-                  viewBox='0 0 14 14'
-                  fill='none'
-                  xmlns='http://www.w3.org/2000/svg'
+          <div
+            className='cont'
+            id={`${location.pathname.split('/')[3] ? 'blur' : ''}`}
+          >
+            <div className='title'>
+              <h1>Orders</h1>
+              <p>{count !== undefined ? count : '..'} Orders Found</p>
+            </div>
+            <div className='search'>
+              {searches.search && <div></div>}
+              {!searches.search && (
+                <div
+                  ref={filterRef}
+                  onClick={(e) => {
+                    if (e.target.classList.contains('filter')) {
+                      setOpenFilter(!openFilter)
+                      setOpenType(false)
+                      setOpenValue(false)
+                    }
+                  }}
+                  className={`filter ${openFilter ? 'activeFilter' : ''}`}
                 >
-                  <g clipPath='url(#clip0)'>
-                    <path
-                      d='M5.33335 6.61553C5.48026 6.77541 5.56092 6.98426 5.56092 7.20031V13.5667C5.56092 13.9498 6.02327 14.1443 6.29694 13.8749L8.07289 11.8397C8.31055 11.5545 8.44162 11.4133 8.44162 11.131V7.20175C8.44162 6.9857 8.52372 6.77685 8.6692 6.61695L13.7651 1.08746C14.1468 0.672643 13.853 0 13.2884 0H0.714129C0.149512 0 -0.145759 0.671203 0.237374 1.08746L5.33335 6.61553Z'
-                      fill='white'
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id='clip0'>
-                      <rect width='14' height='14' fill='white' />
-                    </clipPath>
-                  </defs>
-                </svg>
-                <AnimatePresence>
-                  {openFilter && (
-                    <motion.div
-                      variants={popupLeft}
-                      animate='show'
-                      initial='hidden'
-                      exit='exit'
-                      className='filterDropDown'
-                    >
-                      <div className='sort'>
-                        <p>
-                          <span className='sortText'>Sort</span>
-                          <Sort />
-                        </p>
-                        <div className='sortDiv'>
-                          <div
-                            ref={typeRef}
-                            onClick={() => {
-                              setOpenType(!openType)
-                            }}
-                            className='sortValue'
-                          >
-                            <p>{sortValue}</p>
-                            <Arrow />
-                            {openType && (
-                              <div className='sortValueDropDown selectDropDown first'>
-                                {sortValues.map((e) => (
-                                  <h3
-                                    key={e + Date.now()}
-                                    className={`${
-                                      sortValue === e ? 'active' : ''
-                                    }`}
-                                    onClick={(e) => {
-                                      setSortValue(e.target.innerText)
-                                      setChangedValue(true)
-                                    }}
-                                  >
-                                    {e}
-                                  </h3>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                          <Connect />
-                          <div
-                            ref={valueRef}
-                            onClick={() => {
-                              setOpenValue(!openValue)
-                            }}
-                            className='sortType'
-                          >
-                            <p>{sortType}</p>
-                            <Arrow />
-                            {openValue && (
-                              <div className='sortTypeDropDown selectDropDown'>
-                                {sortValueTypes.map((e) => (
-                                  <h3
-                                    key={e + Date.now()}
-                                    className={`${
-                                      sortType === e ? 'active' : ''
-                                    }`}
-                                    onClick={(e) => {
-                                      setSortType(e.target.innerText)
-                                    }}
-                                  >
-                                    {e}
-                                  </h3>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className='filterCont'>
-                        <p>Filter</p>
-                        <div className='inputDiv filterDiv'>
-                          <Select
-                            styles={customStyles}
-                            isMulti
-                            options={filterOptions}
-                            value={filter}
-                            onChange={(e) => selectHandler(e)}
-                            closeMenuOnSelect={false}
-                          />
-                        </div>
-                      </div>
-                      <div className='brand'>
-                        <p>Governorate</p>
-                        <div className='inputDiv'>
-                          <Input
-                            value={governorate}
-                            setValue={setGovernorate}
-                          />
-                          {searches.governorate && (
-                            <SmallX
-                              className='clearFilter'
+                  <p className='filterTitle'>Fitler</p>
+                  <svg
+                    className='filterSVG'
+                    width='14'
+                    height='14'
+                    viewBox='0 0 14 14'
+                    fill='none'
+                    xmlns='http://www.w3.org/2000/svg'
+                  >
+                    <g clipPath='url(#clip0)'>
+                      <path
+                        d='M5.33335 6.61553C5.48026 6.77541 5.56092 6.98426 5.56092 7.20031V13.5667C5.56092 13.9498 6.02327 14.1443 6.29694 13.8749L8.07289 11.8397C8.31055 11.5545 8.44162 11.4133 8.44162 11.131V7.20175C8.44162 6.9857 8.52372 6.77685 8.6692 6.61695L13.7651 1.08746C14.1468 0.672643 13.853 0 13.2884 0H0.714129C0.149512 0 -0.145759 0.671203 0.237374 1.08746L5.33335 6.61553Z'
+                        fill='white'
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id='clip0'>
+                        <rect width='14' height='14' fill='white' />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <AnimatePresence>
+                    {openFilter && (
+                      <motion.div
+                        variants={popupLeft}
+                        animate='show'
+                        initial='hidden'
+                        exit='exit'
+                        className='filterDropDown'
+                      >
+                        <div className='sort'>
+                          <p>
+                            <span className='sortText'>Sort</span>
+                            <Sort />
+                          </p>
+                          <div className='sortDiv'>
+                            <div
+                              ref={typeRef}
                               onClick={() => {
-                                filterHandler('governorate')
+                                setOpenType(!openType)
                               }}
-                            />
-                          )}
-                        </div>
-                      </div>
-                      <div className='category'>
-                        <p>User (Email)</p>
-                        <div className='inputDiv'>
-                          <Input value={user} setValue={setUser} />
-                          {searches.user && (
-                            <SmallX
-                              onClick={() => {
-                                filterHandler('user')
-                              }}
-                              className='clearFilter'
-                            />
-                          )}
-                        </div>
-                      </div>
-                      <div className='btnDiv'>
-                        {Object.size(searches) > 0 &&
-                          (Object.keys(searches)[0] !== 'Date' ||
-                            searches[Object.keys(searches)[0]]
-                              .charAt(0)
-                              .toUpperCase() +
-                              searches[Object.keys(searches)[0]].slice(1) !==
-                              'Newest' ||
-                            searches.user ||
-                            searches.governorate ||
-                            searches.filter) && (
-                            <button
-                              onClick={() => filterHandler('all')}
-                              type='button'
-                              className='resetBtnSubmit'
+                              className='sortValue'
                             >
-                              Reset All
-                            </button>
-                          )}
-                        <button
-                          type='button'
-                          onClick={() => filterHandler()}
-                          className='filterBtnSubmit'
-                        >
-                          Filter & Sort
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                              <p>{sortValue}</p>
+                              <Arrow />
+                              {openType && (
+                                <div className='sortValueDropDown selectDropDown first'>
+                                  {sortValues.map((e) => (
+                                    <h3
+                                      key={e + Date.now()}
+                                      className={`${
+                                        sortValue === e ? 'active' : ''
+                                      }`}
+                                      onClick={(e) => {
+                                        setSortValue(e.target.innerText)
+                                        setChangedValue(true)
+                                      }}
+                                    >
+                                      {e}
+                                    </h3>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                            <Connect />
+                            <div
+                              ref={valueRef}
+                              onClick={() => {
+                                setOpenValue(!openValue)
+                              }}
+                              className='sortType'
+                            >
+                              <p>{sortType}</p>
+                              <Arrow />
+                              {openValue && (
+                                <div className='sortTypeDropDown selectDropDown'>
+                                  {sortValueTypes.map((e) => (
+                                    <h3
+                                      key={e + Date.now()}
+                                      className={`${
+                                        sortType === e ? 'active' : ''
+                                      }`}
+                                      onClick={(e) => {
+                                        setSortType(e.target.innerText)
+                                      }}
+                                    >
+                                      {e}
+                                    </h3>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className='filterCont'>
+                          <p>Filter</p>
+                          <div className='inputDiv filterDiv'>
+                            <Select
+                              styles={customStyles}
+                              isMulti
+                              options={filterOptions}
+                              value={filter}
+                              onChange={(e) => selectHandler(e)}
+                              closeMenuOnSelect={false}
+                            />
+                          </div>
+                        </div>
+                        <div className='brand'>
+                          <p>Governorate</p>
+                          <div className='inputDiv'>
+                            <Input
+                              value={governorate}
+                              setValue={setGovernorate}
+                            />
+                            {searches.governorate && (
+                              <SmallX
+                                className='clearFilter'
+                                onClick={() => {
+                                  filterHandler('governorate')
+                                }}
+                              />
+                            )}
+                          </div>
+                        </div>
+                        <div className='category'>
+                          <p>User (Email)</p>
+                          <div className='inputDiv'>
+                            <Input value={user} setValue={setUser} />
+                            {searches.user && (
+                              <SmallX
+                                onClick={() => {
+                                  filterHandler('user')
+                                }}
+                                className='clearFilter'
+                              />
+                            )}
+                          </div>
+                        </div>
+                        <div className='btnDiv'>
+                          {Object.size(searches) > 0 &&
+                            (Object.keys(searches)[0] !== 'Date' ||
+                              searches[Object.keys(searches)[0]]
+                                .charAt(0)
+                                .toUpperCase() +
+                                searches[Object.keys(searches)[0]].slice(1) !==
+                                'Newest' ||
+                              searches.user ||
+                              searches.governorate ||
+                              searches.filter) && (
+                              <button
+                                onClick={() => filterHandler('all')}
+                                type='button'
+                                className='resetBtnSubmit'
+                              >
+                                Reset All
+                              </button>
+                            )}
+                          <button
+                            type='button'
+                            onClick={() => filterHandler()}
+                            className='filterBtnSubmit'
+                          >
+                            Filter & Sort
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+            </div>
+            <div className='headers'>
+              <div className='id'>
+                <p>Id</p>
               </div>
+              <div className='user'>
+                <p>User</p>
+              </div>
+
+              <div className='total'>
+                <p>Total</p>
+              </div>
+              <div className='paid'>
+                <p>Paid</p>
+              </div>
+              <div className='delivered'>
+                <p>Delivered</p>
+              </div>
+              <div className='date'>
+                <p>Date</p>
+              </div>
+              <div className='actions'>
+                <p>Actions</p>
+              </div>
+            </div>
+            {filtering && <Loader providedClassName='filterLoading' />}
+            {orders && orders.length && !filtering ? (
+              <motion.div
+                variants={hide}
+                initial='hidden'
+                animate='show'
+                exit='exit'
+              >
+                <ReactTooltip
+                  id='order-card-tooltip'
+                  effect='solid'
+                  delayHide={100}
+                  delayShow={400}
+                />
+                {orders.map((each) => (
+                  <OrderDashboard key={each._id} order={each} />
+                ))}
+              </motion.div>
+            ) : count === 0 && !loading ? (
+              <p className='sorry'>Sorry nothing found!</p>
+            ) : (
+              ''
+            )}
+            {orders && !filtering && orders.length < count ? (
+              <Loader providedClassName='infiniteLoader' refElement={element} />
+            ) : (
+              !loading &&
+              orders &&
+              count !== 0 && <p className='end'>Yay! You have seen it all</p>
             )}
           </div>
-          <div className='headers'>
-            <div className='id'>
-              <p>Id</p>
-            </div>
-            <div className='user'>
-              <p>User</p>
-            </div>
-
-            <div className='total'>
-              <p>Total</p>
-            </div>
-            <div className='paid'>
-              <p>Paid</p>
-            </div>
-            <div className='delivered'>
-              <p>Delivered</p>
-            </div>
-            <div className='date'>
-              <p>Date</p>
-            </div>
-            <div className='actions'>
-              <p>Actions</p>
-            </div>
-          </div>
-          {filtering && <Loader providedClassName='filterLoading' />}
-          {orders && orders.length && !filtering ? (
-            <motion.div
-              variants={hide}
-              initial='hidden'
-              animate='show'
-              exit='exit'
-            >
-              <ReactTooltip
-                id='order-card-tooltip'
-                effect='solid'
-                delayHide={100}
-                delayShow={400}
-              />
-              {orders.map((each) => (
-                <OrderDashboard key={each._id} order={each} />
-              ))}
-            </motion.div>
-          ) : count === 0 && !loading ? (
-            <p className='sorry'>Sorry nothing found!</p>
-          ) : (
-            ''
-          )}
-          {orders && !filtering && orders.length < count ? (
-            <Loader providedClassName='infiniteLoader' refElement={element} />
-          ) : (
-            !loading &&
-            orders &&
-            count !== 0 && <p className='end'>Yay! You have seen it all</p>
-          )}
         </>
       )}
     </StyledOrders>
@@ -706,6 +711,12 @@ const DashboardOrders = ({ skip, setSkip }) => {
 }
 
 const StyledOrders = styled(motion.div)`
+  #blur {
+    filter: blur(2px);
+  }
+  .cont {
+    transition: all 0.2s ease;
+  }
   .__react_component_tooltip {
     background: #1e203e;
     border-radius: 5px;

@@ -1,10 +1,17 @@
 import axios from 'axios'
 
-const getDashboardDiscounts = (sortValue) => async (dispatch, getState) => {
+const getDashboardDiscounts = (skip) => async (dispatch, getState) => {
   try {
-    dispatch({
-      type: 'GET_DISCOUNTS_REQUEST',
-    })
+    if (skip) {
+      dispatch({
+        type: 'INFINITE_DISCOUNTS_REQUEST',
+      })
+    } else {
+      dispatch({
+        type: 'GET_DISCOUNTS_REQUEST',
+      })
+    }
+
     const { userInfo } = getState((state) => state.userInfo)
     const cancelToken = axios.CancelToken
     const source = cancelToken.source()
@@ -14,19 +21,39 @@ const getDashboardDiscounts = (sortValue) => async (dispatch, getState) => {
       },
       cancelToken: source.token,
     }
-    const { data } = await axios.get(`/api/coupons?limit=10`, config)
-    dispatch({
-      type: 'GET_DISCOUNTS_SUCCESS',
-      payload: { discounts: data.coupons, count: data.count },
-    })
+    const { data } = await axios.get(
+      `/api/coupons?limit=10&skip=${skip ? skip * 10 : 0}`,
+      config
+    )
+    if (skip) {
+      dispatch({
+        type: 'INFINITE_DISCOUNTS_SUCCESS',
+        payload: data.coupons,
+      })
+    } else {
+      dispatch({
+        type: 'GET_DISCOUNTS_SUCCESS',
+        payload: { discounts: data.coupons, count: data.count },
+      })
+    }
   } catch (error) {
-    dispatch({
-      type: 'GET_DISCOUNTS_FAIL',
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    })
+    if (skip) {
+      dispatch({
+        type: 'INFINITE_DISCOUNTS_FAIL',
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    } else {
+      dispatch({
+        type: 'GET_DISCOUNTS_FAIL',
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
   }
 }
 export default getDashboardDiscounts
