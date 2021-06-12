@@ -1,19 +1,19 @@
 import dotenv from 'dotenv'
-import connectDB from './db/mongoose.js'
+import connectDB from './db/mongoose'
 import colors from 'colors'
-import productRouter from './routes/productRoute.js'
-import { errRouter, notFoundRouter } from './middleware/errMiddleware.js'
-import userRouter from './routes/userRoute.js'
-import orderRouter from './routes/orderRoute.js'
-import couponRouter from './routes/couponRoute.js'
-import pushRouter from './routes/pushNotifications.js'
+import productRouter from './routes/productRoute'
+import { errRouter, notFoundRouter } from './middleware/errMiddleware'
+import userRouter from './routes/userRoute'
+import orderRouter from './routes/orderRoute'
+import couponRouter from './routes/couponRoute'
+import pushRouter from './routes/pushNotifications'
 import bodyparser from 'body-parser'
 import rateLimit from 'express-rate-limit'
 import path from 'path'
 import express from 'express'
-import SocketService from './webSockets/socketService.js'
+import SocketService from './webSockets/socketService'
 import prerender from 'prerender-node'
-import Category from './models/category.js'
+import Category from './models/category'
 import http from 'http'
 import cors from 'cors'
 import fs from 'fs'
@@ -24,7 +24,11 @@ const app = express()
 
 const server = http.createServer(app)
 
-app.use(cors())
+app.use(
+  cors({
+    origin: 'https://sickmarket.ml',
+  })
+)
 app.use(express.json())
 dotenv.config()
 app.use(prerender.set('prerenderToken', process.env.PRERENDER_TOKEN))

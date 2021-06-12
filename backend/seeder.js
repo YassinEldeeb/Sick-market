@@ -1,13 +1,13 @@
-import mongoose from "mongoose"
-import colors from "colors"
-import Product from "./models/productModel.js"
-import Order from "./models/orderModel.js"
-import Coupon from "./models/couponModel.js"
-import User from "./models/userModel.js"
-import users from "./data/users.js"
-import products from "./data/products.js"
-import connectDB from "./db/mongoose.js"
-import dotenv from "dotenv"
+import mongoose from 'mongoose'
+import colors from 'colors'
+import Product from './models/productModel.js'
+import Order from './models/orderModel.js'
+import Coupon from './models/couponModel.js'
+import User from './models/userModel.js'
+import users from './data/users.js'
+import products from './data/products.js'
+import connectDB from './db/mongoose.js'
+import dotenv from 'dotenv'
 
 dotenv.config()
 
@@ -26,7 +26,7 @@ const importData = async () => {
       return { ...product, user: adminUser }
     })
     await Product.insertMany(sampleProducts)
-    console.log("Data Imported".green.inverse)
+    console.log('Data Imported'.green.inverse)
     process.exit()
   } catch (err) {
     console.error(err.message.red.inverse)
@@ -39,14 +39,14 @@ const destroyData = async () => {
     await Product.deleteMany()
     await Order.deleteMany()
     await Coupon.deleteMany()
-    console.log("Data Destroyed".red.inverse)
+    console.log('Data Destroyed'.red.inverse)
     process.exit()
   } catch (err) {
     console.error(err.message.red.inverse)
     process.exit(1)
   }
 }
-if (process.argv[2] === "-d") {
+if (process.argv[2] === '-d') {
   destroyData()
 } else {
   importData()
