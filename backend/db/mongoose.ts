@@ -1,16 +1,17 @@
 import mongoose from 'mongoose'
+import chalk from 'chalk'
 
 const connectDB = async () => {
   try {
-    const connect = await mongoose.connect(process.env.MONGO_URI, {
+    const connect: any = await mongoose.connect(process.env.MONGO_URI as any, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
     })
-    console.log(connect.connection.host.cyan.underline.bold)
-  } catch (err) {
-    console.error(err.message.red.underline.bold)
+    console.log(chalk.underline.cyan.bold(connect.connection.host))
+  } catch (err: any) {
+    console.error(chalk.red.underline.bold(err.message))
     process.exit(1)
   }
 }

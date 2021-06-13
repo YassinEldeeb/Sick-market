@@ -11,8 +11,8 @@ import {
   getTinyProductImage,
   resizeProductImage,
   checkProducts,
-} from '../controllers/productsController.js'
-import { protect, admin } from '../middleware/authMiddleware.js'
+} from '../controllers/productsController'
+import { protect, admin } from '../middleware/authMiddleware'
 
 const productRouter = express.Router()
 
