@@ -302,7 +302,8 @@ const updateOrderToDelivered = asyncHandler(async (req: any, res) => {
 })
 
 const getMyOrders = asyncHandler(async (req: any, res) => {
-  const user = req as any
+  const user = req.user as any
+
   const orders = await Order.find({ user: user._id })
     .limit(parseInt(req.query.limit ? req.query.limit : 0))
     .skip(parseInt(req.query.skip ? req.query.skip : 0))

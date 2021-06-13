@@ -703,7 +703,7 @@ const DashboardOrders: FC<Props> = ({ skip, setSkip }) => {
               ''
             )}
             {orders && !filtering && orders.length < count ? (
-              <Loader providedClassName='infiniteLoader' ref={element} />
+              <Loader providedClassName='infiniteLoader' reference={element} />
             ) : (
               !loading &&
               orders &&

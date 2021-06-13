@@ -182,7 +182,7 @@ const DashboardDiscounts = () => {
               ))}
             </motion.div>
             {discounts && discounts.length < count ? (
-              <Loader providedClassName='infiniteLoader' ref={element} />
+              <Loader providedClassName='infiniteLoader' reference={element} />
             ) : (
               !loading &&
               discounts &&

@@ -460,7 +460,7 @@ const DashboardCustomers = () => {
           (searchedUsers &&
             searchedUsers.length < searchedCount &&
             searches.search) ? (
-            <Loader providedClassName='infiniteLoader' ref={element} />
+            <Loader providedClassName='infiniteLoader' reference={element} />
           ) : (
             ((searchedUsers &&
               searchedCount !== 0 &&

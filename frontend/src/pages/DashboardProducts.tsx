@@ -1037,7 +1037,7 @@ const DashboardProducts: FC<Props> = ({
           (searchedProducts &&
             searchedProducts.length < searchedCount &&
             searches.search) ? (
-            <Loader providedClassName='infiniteLoader' ref={element} />
+            <Loader providedClassName='infiniteLoader' reference={element} />
           ) : (
             !loading &&
             !searchLoading &&

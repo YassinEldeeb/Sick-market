@@ -2,15 +2,15 @@ import React, { FC } from 'react'
 import styled from 'styled-components'
 
 interface Props {
-  ref?: () => any
+  reference?: () => any
   providedClassName?: string
 }
 
-const Loader: FC<Props> = ({ ref, providedClassName }) => {
+const Loader: FC<Props> = ({ reference, providedClassName }) => {
   return (
     <StyledLoader
       className={`providedLoader ${providedClassName ? providedClassName : ''}`}
-      ref={ref ? ref : null}
+      ref={reference ? reference : null}
     >
       <svg
         id='loader'
