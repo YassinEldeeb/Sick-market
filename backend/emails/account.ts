@@ -7,7 +7,7 @@ import asyncHandler from 'express-async-handler'
 dotenv.config()
 
 const sendVerificationEmail = async (email: any, name: any) => {
-  const code = await SecretCode.findOne({ email })
+  const { code }: any = await SecretCode.findOne({ email })
   // Generate test SMTP service account from ethereal.email
   let transporter = nodemailer.createTransport({
     auth: {
