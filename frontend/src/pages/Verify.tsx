@@ -34,7 +34,7 @@ const Verify = () => {
       setTimeout(() => {
         if (timer > 0) {
           setTimer((prevTime) => prevTime - 1)
-          localStorage.setItem('sickTimerSeconds', timer as any)!
+          localStorage.setItem('sickTimerSeconds', timer as any)
         } else {
           setStartTimer(false)
           localStorage.removeItem('sickTimerSeconds')
@@ -85,21 +85,24 @@ const Verify = () => {
     dispatch(newCodeAction())
   }, [dispatch])
 
+  const [firstLoad, setFirstLoad] = useState(true)
   useEffect(() => {
-    if (!startTimer && newCodeError) {
+    if (!startTimer && newCodeError && firstLoad) {
       setTimer(timerSeconds)
       setStartTimer(true)
+      setFirstLoad(false)
     }
-  }, [newCodeError, startTimer, timerSeconds])
+  }, [newCodeError, startTimer])
 
   useEffect(() => {
-    if (newCodeLoading === false && !newCodeError) {
+    if (newCodeLoading === false && !newCodeError && firstLoad) {
+      setFirstLoad(false)
       setTimer(60)
       if (!startTimer) setStartTimer(true)
     } else if (newCodeError === 'Email already Verified') {
       history.push(redirect)
     }
-  }, [newCodeLoading, history, newCodeError, startTimer])
+  }, [newCodeLoading, newCodeError, startTimer])
 
   return (
     <StyledVerify>
