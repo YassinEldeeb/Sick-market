@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, FC } from 'react'
+import React, { useState, useRef, useCallback, FC, memo } from 'react'
 import styled from 'styled-components'
 import { parseISO, format } from 'date-fns'
 import { ReactComponent as Gear } from '../img/gear.svg'
@@ -398,4 +398,4 @@ const StyledUser = styled<any>(motion.div)`
   }
 `
 
-export default OrderDashboard
+export default memo(OrderDashboard)
