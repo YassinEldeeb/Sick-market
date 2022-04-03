@@ -1,8 +1,16 @@
 # Sick Market
 
-Unfortuantely my AWS credits has expired, but you can watch a full demo here
+Unfortuantely my AWS credits has expired, but you can watch the demos here
 
+### User/Admin
 [![Demo](https://i.ytimg.com/vi_webp/7I_kPDx-ej4/maxresdefault.webp)](https://www.youtube.com/watch?v=7I_kPDx-ej4)
+
+## Mobile User verifying QR Code to mark package as delivered
+[![Demo](https://i.ytimg.com/vi_webp/ogsDUDNVnak/maxresdefault.webp)](https://www.youtube.com/watch?v=ogsDUDNVnak)
+
+## Realtime reflections on user/admin actions to update UI without refreshing
+[![Demo](https://i.ytimg.com/vi_webp/GfSoidgq5ds/maxresdefault.webp)](https://www.youtube.com/watch?v=GfSoidgq5ds)
+
 
 ## Features
 - Email/Password auth and Google Oauth. 
