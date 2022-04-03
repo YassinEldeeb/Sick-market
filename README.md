@@ -14,6 +14,7 @@ Unfortuantely my AWS credits has expired, but you can watch a full demo here
 - Place orders.
 - Users can scan QR code to verify if they recieved the right order or not where the QR Code is the order ID and the user scans it to ensure that the right package was sent before the delivery go.
 - Unique Dashboard for admins for full control.
+- Realtime updates on any user/admin actions which reflect on active admins without refreshing that's done from scratch using MongoDB events and socket.io.
 - See customers
 - Edit customers rank to be a delivery or an admin.
 - Delete specific customers accounts.
