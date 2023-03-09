@@ -1,4 +1,4 @@
-# Sick Market
+# Sick Market - Ecommerce
 
 Unfortuantely my AWS credits has expired, but you can watch the demos here
 
